@@ -39,6 +39,7 @@ const inventory = [
   ...manifest.orchestrators,
   ...manifest.rules,
   ...manifest.skills,
+  ...manifest.workflows,
   ...manifest.vaultIndexes,
   manifest.entrypoint,
   manifest.orchestrationContract,
@@ -59,6 +60,34 @@ for (const path of manifest.skills) {
   }
 }
 
+const requiredWorkflowSections = [
+  "## Triggers",
+  "## Required inputs",
+  "## Applicable rules and skills",
+  "## Phases",
+  "## Quality gates",
+  "## Stop and escalation conditions",
+  "## Artifacts and completion",
+];
+for (const path of manifest.workflows) {
+  const source = await text(path);
+  const meta = frontmatter(source);
+  if (!meta) errors.push(`Workflow has no YAML frontmatter: ${path}`);
+  else {
+    const keys = Object.keys(meta).sort();
+    if (keys.join(",") !== "description,name,scope") {
+      errors.push(`Workflow frontmatter must contain only name, description, and scope: ${path}`);
+    }
+    if (!meta.name || !meta.description || !meta.scope) errors.push(`Workflow metadata is incomplete: ${path}`);
+    if (meta.name !== path.split("/").at(-1).replace(/\.md$/, "")) {
+      errors.push(`Workflow name does not match its filename: ${path}`);
+    }
+  }
+  for (const section of requiredWorkflowSections) {
+    if (!source.includes(section)) errors.push(`Workflow is missing ${section}: ${path}`);
+  }
+}
+
 for (const path of manifest.rules) {
   const meta = frontmatter(await text(path));
   if (!meta?.name || !meta?.description || !meta?.scope || !meta?.alwaysApply) {
@@ -68,16 +97,26 @@ for (const path of manifest.rules) {
 
 const actualRules = (await filesUnder("rules")).filter((path) => extname(path) === ".md").sort();
 const actualSkills = (await filesUnder("skills")).filter((path) => path.endsWith("/SKILL.md")).sort();
+const actualWorkflows = (await filesUnder("workflows")).filter((path) => extname(path) === ".md").sort();
 if (JSON.stringify(actualRules) !== JSON.stringify([...manifest.rules].sort())) errors.push("Rule inventory differs from context-manifest.json");
 if (JSON.stringify(actualSkills) !== JSON.stringify([...manifest.skills].sort())) errors.push("Skill inventory differs from context-manifest.json");
+if (JSON.stringify(actualWorkflows) !== JSON.stringify([...manifest.workflows].sort())) {
+  errors.push("Workflow inventory differs from context-manifest.json");
+}
 
 const rulesMap = await text("docs/Rules.md");
 const skillsMap = await text("docs/Skills.md");
+const workflowsMap = await text("docs/Workflows.md");
 for (const path of manifest.rules) {
   if (!rulesMap.includes(`[[${path.slice(0, -3)}`)) errors.push(`Rule is missing from docs/Rules.md: ${path}`);
 }
 for (const path of manifest.skills) {
   if (!skillsMap.includes(`[[${path.slice(0, -3)}`)) errors.push(`Skill is missing from docs/Skills.md: ${path}`);
+}
+for (const path of manifest.workflows) {
+  if (!workflowsMap.includes(`[[${path.slice(0, -3)}`)) {
+    errors.push(`Workflow is missing from docs/Workflows.md: ${path}`);
+  }
 }
 for (const path of manifest.orchestrators) {
   if (!(await text(path)).includes("orchestrator/SHARED.md")) errors.push(`Orchestrator does not defer to the shared contract: ${path}`);
@@ -113,4 +152,4 @@ if (errors.length) {
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
-console.log(`Context factory ${manifest.contextVersion} is valid: ${manifest.rules.length} rules, ${manifest.skills.length} skills, ${markdownFiles.length} Markdown files.`);
+console.log(`Context factory ${manifest.contextVersion} is valid: ${manifest.rules.length} rules, ${manifest.skills.length} skills, ${manifest.workflows.length} workflows, ${markdownFiles.length} Markdown files.`);

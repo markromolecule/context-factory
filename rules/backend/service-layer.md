@@ -7,7 +7,7 @@ alwaysApply: false
 
 # Service Layer
 
-Create a service when an operation coordinates multiple boundaries, owns a business invariant, requires a transaction, or has reusable policy. Skip pass-through services that only rename one repository call.
+Create a service when an operation coordinates multiple boundaries, owns a business invariant, requires a transaction, or has reusable policy. Skip pass-through services that only rename one repository call unless the project's adopted module architecture requires a stable use-case boundary; in that case, keep the service thin and do not invent business logic merely to justify the layer.
 
 - Accept dependencies explicitly and keep framework request/response objects outside services.
 - Model inputs and results around the use case, not database rows or UI state.

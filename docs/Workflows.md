@@ -6,16 +6,30 @@ tags: [workflow, delivery]
 
 # Workflows
 
-## Feature delivery
+Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop conditions across a development lifecycle. Load only the most-specific matching workflow and compose another only when the selected workflow requires it.
 
-1. Inspect repository context and relevant rules.
-2. Use [[skills/implementation-plan/SKILL|implementation-plan]] when the requested output is a plan.
-3. Save the plan under [[docs/tasks/README|Tasks]].
-4. Use [[skills/execution-plan/SKILL|execution-plan]] when asked to implement that plan.
-5. Verify behavior and update checkboxes/evidence.
-6. Record durable choices under [[docs/decisions/README|Architecture Decisions]].
-7. Validate context if rules, skills, or architecture changed.
+## Delivery
 
-## Decision workflow
+- [[workflows/feature-delivery|Feature delivery]] — deliver scoped behavior from evidence through handoff
+- [[workflows/defect-resolution|Defect resolution]] — reproduce, diagnose, regress, and safely fix defects
+- [[workflows/frontend-ux-change|Frontend UX change]] — improve affected interfaces with accessibility and usability evidence
+- [[workflows/release-readiness|Release readiness]] — make an evidence-backed ready/not-ready decision
 
-Use [[rules/global/1-3-1-rule|1-3-1]] only for material unresolved decisions. Do not force three options for routine implementation.
+## Risk-specific
+
+- [[workflows/security-sensitive-change|Security-sensitive change]] — threat-model and gate sensitive boundaries
+- [[workflows/database-migration|Database migration]] — evolve schemas/data compatibly and recoverably
+- [[workflows/dependency-upgrade|Dependency upgrade]] — migrate dependencies through bounded compatibility checks
+
+## Factory
+
+- [[workflows/context-maintenance|Context maintenance]] — evolve canonical agent behavior without drift
+
+## Selection rules
+
+- Use feature delivery as the default for material feature work, not for routine one-file edits.
+- Prefer defect resolution when observed behavior is wrong; do not implement before establishing evidence.
+- Add a risk-specific workflow only when that risk is central to the change.
+- Use release readiness to review and report; it does not authorize deployment.
+- Use [[rules/global/1-3-1-rule|1-3-1]] inside a workflow only for a material unresolved decision.
+- Use [[skills/implementation-plan/SKILL|implementation-plan]] for plan-only output and [[skills/execution-plan/SKILL|execution-plan]] when executing an existing task artifact.
