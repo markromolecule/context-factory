@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "contextVersion": "2.0.0",
+  "entrypoint": "README.md",
+  "orchestrationContract": "orchestrator/SHARED.md",
+  "orchestrators": [
+    "AGENTS.md",
+    "orchestrator/AGENTS.md",
+    "orchestrator/CLAUDE.md",
+    "orchestrator/GEMINI.md"
+  ],
+  "rules": [
+    "rules/global/1-3-1-rule.md",
+    "rules/global/git-commit.md",
+    "rules/global/naming-conventions.md",
+    "rules/backend/controllers-and-routes.md",
+    "rules/backend/data-access-via-api.md",
+    "rules/backend/data-access-via-db.md",
+    "rules/backend/schema-db.md",
+    "rules/backend/service-layer.md",
+    "rules/backend/testing-data-access-layer.md",
+    "rules/frontend/code-organization.md",
+    "rules/frontend/mutation-hooks.md",
+    "rules/frontend/next-react-project-structure.md",
+    "rules/frontend/query-hooks.md",
+    "rules/frontend/zustand-store.md"
+  ],
+  "skills": [
+    "skills/design-pattern/SKILL.md",
+    "skills/implementation-plan/SKILL.md",
+    "skills/execution-plan/SKILL.md"
+  ],
+  "vaultIndexes": [
+    "README.md",
+    "docs/Home.md",
+    "docs/ARCHITECTURE.md",
+    "docs/Agents.md",
+    "docs/Rules.md",
+    "docs/Skills.md",
+    "docs/Workflows.md",
+    "docs/tasks/README.md",
+    "docs/decisions/README.md"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "main": {
+    "id": "context-main",
+    "type": "split",
+    "children": [
+      {
+        "id": "context-tabs",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "home-leaf",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "docs/Home.md",
+                "mode": "preview",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "context-left",
+    "type": "split",
+    "children": [
+      {
+        "id": "left-tabs",
+        "type": "tabs",
+        "children": [
+          { "id": "files", "type": "leaf", "state": { "type": "file-explorer", "state": {} } },
+          { "id": "search", "type": "leaf", "state": { "type": "search", "state": { "query": "", "matchingCase": false, "explainSearch": false, "collapseAll": false, "extraContext": false, "sortOrder": "alphabetical" } } }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 320
+  },
+  "right": {
+    "id": "context-right",
+    "type": "split",
+    "children": [
+      {
+        "id": "right-tabs",
+        "type": "tabs",
+        "children": [
+          { "id": "backlinks", "type": "leaf", "state": { "type": "backlink", "state": { "file": "docs/Home.md", "collapseAll": false, "extraContext": false, "sortOrder": "alphabetical", "showSearch": false, "searchQuery": "", "backlinkCollapsed": false, "unlinkedCollapsed": true } } },
+          { "id": "outline", "type": "leaf", "state": { "type": "outline", "state": { "file": "docs/Home.md", "followCursor": false, "showSearch": false, "searchQuery": "" } } }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "active": "home-leaf",
+  "lastOpenFiles": [
+    "docs/Home.md",
+    "docs/ARCHITECTURE.md",
+    "docs/Rules.md",
+    "docs/Skills.md",
+    "orchestrator/SHARED.md",
+    "README.md"
+  ]
+}

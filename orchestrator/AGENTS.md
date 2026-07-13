@@ -1,0 +1,5 @@
+# Agent Adapter
+
+Use `orchestrator/SHARED.md` as the authoritative contract. Read `context-manifest.json`, select task-relevant rules and skills, and validate context changes with `node scripts/validate-context.mjs`.
+
+Do not invent personas or workflows that conflict with the shared contract.

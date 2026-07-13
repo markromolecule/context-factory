@@ -1,0 +1,4 @@
+interface:
+  display_name: "Execution Plan"
+  short_description: "Execute and verify an existing project plan"
+  default_prompt: "Use $execution-plan to execute the referenced implementation plan and maintain its evidence log."

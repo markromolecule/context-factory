@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Pattern"
+  short_description: "Design accessible, coherent web interfaces"
+  default_prompt: "Use $design-pattern to design and verify an accessible, responsive interface."
