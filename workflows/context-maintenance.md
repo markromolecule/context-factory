@@ -24,16 +24,17 @@ Always follow the shared orchestration contract, naming, code-quality, and 1-3-1
 1. Inspect the manifest, shared contract, relevant rules/skills/workflows, maps, validator, and existing decisions.
 2. Classify the change as clarification, new behavior, replacement, rename, or removal; identify overlap and conflicts.
 3. Update the canonical source with the smallest complete contract and progressive-disclosure boundaries.
-4. Update inventory, maps, architecture, links, templates, and decisions in the same change.
+4. Update inventory, maps, architecture, knowledge, links, templates, schemas, evaluations, and decisions in the same change.
 5. Update validator coverage when a new context type or invariant is introduced.
-6. Run context validation and relevant project checks; inspect diffs for unrelated or duplicated behavior.
-7. Report context version, inventory counts, compatibility impact, and validation evidence.
+6. Regenerate the context lock and run the context doctor; inspect diffs for unrelated or duplicated behavior.
+7. Report context version, lock digest, inventory counts, evaluation result, compatibility impact, and validation evidence.
 
 ## Quality gates
 
 - Rules state enforceable constraints and scope; skills state triggered specialized procedures; workflows state lifecycle sequencing and gates.
 - Model adapters remain thin and shared behavior remains model-neutral.
-- Inventory matches disk, maps link every entry, and wiki links/metadata validate.
+- Inventory matches disk, maps link every entry, Wiki authority/provenance validate, and the lock matches canonical content.
+- Behavioral evaluations cover new selection or completion behavior and all cases pass.
 - Durable decisions are recorded and context version changes intentionally.
 
 ## Stop and escalation conditions
@@ -42,4 +43,4 @@ Stop when new behavior conflicts with higher-priority instructions, a replacemen
 
 ## Artifacts and completion
 
-Record durable architecture in an ADR and multi-phase work in a task. Completion requires the source, manifest, maps, architecture, validator, and reported version to agree.
+Record durable architecture in an ADR and multi-phase work in a task. Completion requires the source, manifest, maps, architecture, Wiki, schemas, lock, evaluator, validator, and reported version to agree.

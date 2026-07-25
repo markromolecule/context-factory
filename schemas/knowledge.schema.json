@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-factory.local/schemas/knowledge.schema.json",
+  "title": "Context Factory knowledge frontmatter",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "type",
+    "status",
+    "scope",
+    "owner",
+    "authority",
+    "created",
+    "lastVerified",
+    "reviewAfter",
+    "sources"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "enum": ["fact", "concept", "contract", "procedure", "runbook", "example"]
+    },
+    "status": {
+      "enum": ["draft", "active", "deprecated", "superseded"]
+    },
+    "scope": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority": {
+      "enum": ["canonical", "reviewed", "reference", "example"]
+    },
+    "created": {
+      "type": "string",
+      "format": "date"
+    },
+    "lastVerified": {
+      "type": "string",
+      "format": "date"
+    },
+    "reviewAfter": {
+      "type": "string",
+      "format": "date"
+    },
+    "appliesTo": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "supersedes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

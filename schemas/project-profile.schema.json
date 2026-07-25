@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-factory.local/schemas/project-profile.schema.json",
+  "title": "Project architecture profile",
+  "type": "object",
+  "required": ["project", "boundaries"],
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["name", "architecture"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "architecture": { "type": "string", "minLength": 1 },
+        "runtime": { "type": "string" },
+        "transport": { "type": "string" },
+        "persistence": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "boundaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "mayDependOn"],
+        "properties": {
+          "from": { "type": "string", "minLength": 1 },
+          "mayDependOn": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "prohibited": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

@@ -9,7 +9,9 @@ tags: [rules, engineering]
 ## Global
 
 - [[rules/global/1-3-1-rule|1-3-1 decision framework]]
+- [[rules/global/architecture-conformance|Architecture conformance]]
 - [[rules/global/code-quality|Code quality]]
+- [[rules/global/evidence-and-claims|Evidence and claims]]
 - [[rules/global/git-commit|Git commits]]
 - [[rules/global/naming-conventions|Naming conventions]]
 - [[rules/global/security-guardrails|Security guardrails]]

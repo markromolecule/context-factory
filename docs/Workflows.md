@@ -10,6 +10,7 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 
 ## Delivery
 
+- [[workflows/architecture-change|Architecture change]] — evolve durable boundaries and shared patterns safely
 - [[workflows/feature-delivery|Feature delivery]] — deliver scoped behavior from evidence through handoff
 - [[workflows/defect-resolution|Defect resolution]] — reproduce, diagnose, regress, and safely fix defects
 - [[workflows/frontend-ux-change|Frontend UX change]] — improve affected interfaces with accessibility and usability evidence

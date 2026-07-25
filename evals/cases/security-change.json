@@ -1,0 +1,13 @@
+{
+  "name": "security-sensitive implementation selects security workflow",
+  "request": "Implement webhook signature verification, replay protection, and secret rotation",
+  "expected": {
+    "workflow": "workflows/security-sensitive-change.md",
+    "rules": [
+      "rules/global/security-guardrails.md"
+    ],
+    "skills": [
+      "skills/security-review/SKILL.md"
+    ]
+  }
+}

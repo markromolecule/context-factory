@@ -1,7 +1,7 @@
 ---
 name: schema-db
 description: Evolve Prisma schemas and migrations while generating accurate Kysely runtime types.
-scope: `schema.prisma`, `prisma.config.ts`, migrations, generated DB types, and database package exports.
+scope: schema.prisma, prisma.config.ts, migrations, generated DB types, and database package exports.
 alwaysApply: false
 ---
 

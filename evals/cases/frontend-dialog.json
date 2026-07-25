@@ -1,0 +1,18 @@
+{
+  "name": "dialog UX change selects focused frontend context",
+  "request": "Redesign the account settings form dialog with accessible validation and responsive interaction states",
+  "expected": {
+    "workflow": "workflows/frontend-ux-change.md",
+    "rules": [
+      "rules/frontend/dialogs-and-overlays.md",
+      "rules/frontend/forms-and-validation.md"
+    ],
+    "skills": [
+      "skills/design-pattern/SKILL.md",
+      "skills/form-dialog/SKILL.md"
+    ],
+    "excludedRules": [
+      "rules/backend/data-access-via-db.md"
+    ]
+  }
+}

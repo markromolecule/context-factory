@@ -1,4 +1,4 @@
 interface:
-  display_name: "Design Pattern"
-  short_description: "Design accessible, coherent web interfaces"
-  default_prompt: "Use $design-pattern to design and verify an accessible, responsive interface."
+  display_name: "Visual Design System"
+  short_description: "Define and review coherent visual design systems"
+  default_prompt: "Use $design-pattern to create a complete visual-system worksheet and translate it into reusable interface tokens."

@@ -15,14 +15,17 @@ This repository is the source of truth for agent behavior, engineering rules, re
 3. Select relevant rules through [[docs/Rules|Rules Map]].
 4. Select lifecycle orchestration through [[docs/Workflows|Workflows Map]].
 5. Invoke specialized procedures through [[docs/Skills|Skills Map]].
-6. Record durable decisions in [[docs/decisions/README|Architecture Decisions]] and work in [[docs/tasks/README|Tasks]].
+6. Ground durable knowledge through [[docs/Wiki|LLM Wiki]].
+7. Record durable decisions in [[docs/decisions/README|Architecture Decisions]] and work in [[docs/tasks/README|Tasks]].
 
 ## Sync contract
 
-`context-manifest.json` is the canonical inventory. Run:
+Resolve a request, compile an immutable bundle, or check the factory:
 
 ```sh
-node scripts/validate-context.mjs
+node scripts/context.mjs resolve "implement an authenticated orders endpoint"
+node scripts/context.mjs bundle "implement an authenticated orders endpoint"
+node scripts/context.mjs doctor
 ```
 
-Update the manifest and all affected index notes in the same change whenever a rule, skill, workflow, or canonical document is added, renamed, or removed.
+`context-manifest.json` is the canonical inventory and `context-lock.json` pins its exact content. Update the manifest and affected maps, regenerate the lock, and pass validation plus behavioral evaluations whenever canonical context changes.

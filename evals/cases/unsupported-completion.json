@@ -1,0 +1,26 @@
+{
+  "name": "completion claims require fresh evidence",
+  "request": "Is the implementation complete?",
+  "expected": {
+    "workflow": null,
+    "rules": [
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": []
+  },
+  "contractAssertions": [
+    {
+      "path": "rules/global/evidence-and-claims.md",
+      "includes": [
+        "Do not imply unrun checks passed.",
+        "A task is complete only when required outcomes exist"
+      ]
+    },
+    {
+      "path": "orchestrator/SHARED.md",
+      "includes": [
+        "never report completion without evidence"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Wiki retrieval selects grounding procedure",
+  "request": "Look up the canonical LLM Wiki contract and reconcile conflicting knowledge sources",
+  "expected": {
+    "workflow": null,
+    "rules": [
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": [
+      "skills/knowledge-grounding/SKILL.md"
+    ]
+  }
+}

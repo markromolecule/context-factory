@@ -1,0 +1,11 @@
+{
+  "name": "direct factual question avoids lifecycle workflow",
+  "request": "What context version is declared in the manifest?",
+  "expected": {
+    "workflow": null,
+    "rules": [
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": []
+  }
+}

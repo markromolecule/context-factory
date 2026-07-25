@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "contextVersion": "2.3.0",
+  "schemaVersion": 2,
+  "contextVersion": "3.1.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -11,7 +11,9 @@
   ],
   "rules": [
     "rules/global/1-3-1-rule.md",
+    "rules/global/architecture-conformance.md",
     "rules/global/code-quality.md",
+    "rules/global/evidence-and-claims.md",
     "rules/global/git-commit.md",
     "rules/global/naming-conventions.md",
     "rules/global/security-guardrails.md",
@@ -32,14 +34,26 @@
     "rules/frontend/zustand-store.md"
   ],
   "skills": [
+    "skills/architecture-decision/SKILL.md",
     "skills/backend-module/SKILL.md",
     "skills/design-pattern/SKILL.md",
     "skills/implementation-plan/SKILL.md",
     "skills/execution-plan/SKILL.md",
     "skills/form-dialog/SKILL.md",
-    "skills/security-review/SKILL.md"
+    "skills/knowledge-grounding/SKILL.md",
+    "skills/repository-discovery/SKILL.md",
+    "skills/security-review/SKILL.md",
+    "skills/verification-review/SKILL.md"
+  ],
+  "skillResources": [
+    "skills/design-pattern/agents/openai.yaml",
+    "skills/design-pattern/references/design-system-worksheet.md",
+    "skills/design-pattern/references/visual-system.md",
+    "skills/execution-plan/agents/openai.yaml",
+    "skills/implementation-plan/agents/openai.yaml"
   ],
   "workflows": [
+    "workflows/architecture-change.md",
     "workflows/context-maintenance.md",
     "workflows/database-migration.md",
     "workflows/defect-resolution.md",
@@ -49,6 +63,42 @@
     "workflows/release-readiness.md",
     "workflows/security-sensitive-change.md"
   ],
+  "knowledge": [
+    "knowledge/README.md"
+  ],
+  "schemas": [
+    "schemas/knowledge.schema.json",
+    "schemas/project-profile.schema.json"
+  ],
+  "templates": [
+    "docs/templates/Decision.md",
+    "docs/templates/Knowledge.md",
+    "docs/templates/Task.md"
+  ],
+  "decisions": [
+    "docs/decisions/0001-vertical-backend-modules.md",
+    "docs/decisions/0002-task-appropriate-form-surfaces.md",
+    "docs/decisions/0003-first-class-development-workflows.md",
+    "docs/decisions/0004-deterministic-context-harness.md"
+  ],
+  "tools": [
+    "scripts/context-core.mjs",
+    "scripts/context.mjs",
+    "scripts/validate-context.mjs"
+  ],
+  "automation": [
+    ".github/workflows/context-factory.yml"
+  ],
+  "evaluations": [
+    "evals/cases/architecture-change.json",
+    "evals/cases/defect-resolution.json",
+    "evals/cases/direct-question.json",
+    "evals/cases/frontend-dialog.json",
+    "evals/cases/knowledge-grounding.json",
+    "evals/cases/security-change.json",
+    "evals/cases/unsupported-completion.json",
+    "evals/cases/visual-design-system.json"
+  ],
   "vaultIndexes": [
     "README.md",
     "docs/Home.md",
@@ -56,6 +106,7 @@
     "docs/Agents.md",
     "docs/Rules.md",
     "docs/Skills.md",
+    "docs/Wiki.md",
     "docs/Workflows.md",
     "docs/tasks/README.md",
     "docs/decisions/README.md"

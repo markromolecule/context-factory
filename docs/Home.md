@@ -14,6 +14,7 @@ The vault root is `context-factory/`, so Obsidian can index the full factory rat
 - [[docs/Agents|Agents]]
 - [[docs/Rules|Rules]]
 - [[docs/Skills|Skills]]
+- [[docs/Wiki|LLM Wiki]]
 - [[docs/Workflows|Workflows]]
 - [[docs/tasks/README|Tasks]]
 - [[docs/decisions/README|Architecture Decisions]]
@@ -26,4 +27,4 @@ The vault root is `context-factory/`, so Obsidian can index the full factory rat
 
 ## Maintenance
 
-Run `node scripts/validate-context.mjs` after every context change. A context change is complete only when its source, manifest entry, and relevant map of content agree.
+Run `node scripts/context.mjs doctor` after every context change. A context change is complete only when its source, manifest entry, map, lock digest, validation, and behavioral evaluations agree.
