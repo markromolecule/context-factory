@@ -1,0 +1,40 @@
+{
+  "name": "new system begins with documented grilling",
+  "request": "Pre-plan a new customer support system before coding and cover its users, goals, scenarios, permissions, failures, and boundaries",
+  "expected": {
+    "workflow": "workflows/feature-delivery.md",
+    "rules": [
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": [
+      "skills/grill-with-docs/SKILL.md",
+      "skills/repository-discovery/SKILL.md",
+      "skills/implementation-plan/SKILL.md"
+    ]
+  },
+  "contractAssertions": [
+    {
+      "path": "orchestrator/SHARED.md",
+      "includes": [
+        "use `grill-with-docs` as the first pre-planning skill",
+        "do not begin production coding until the plan is approved"
+      ]
+    },
+    {
+      "path": "skills/grill-with-docs/SKILL.md",
+      "includes": [
+        "Ask exactly one unresolved question at a time",
+        "Record each resolved answer immediately",
+        "Stop without coding"
+      ]
+    },
+    {
+      "path": "docs/templates/Task.md",
+      "includes": [
+        "### Scenario coverage",
+        "### Decision ledger",
+        "Source goal/scenario/decision"
+      ]
+    }
+  ]
+}

@@ -10,10 +10,30 @@ tags: [task]
 
 ## Outcome
 
+## Pre-planning record
+
+### Actors and goals
+
+### Domain language
+
+Link the canonical glossary; do not duplicate implementation details here.
+
+### Scenario coverage
+
+| ID | Actor and situation | Preconditions | Expected outcome | Failure/recovery | Status |
+|---|---|---|---|---|---|
+
+### Decision ledger
+
+| ID | Question | Decision | Evidence or rationale | Alternatives rejected | Artifact |
+|---|---|---|---|---|---|
+
+### Unknowns and blockers
+
 ## Acceptance criteria
 
-| ID | Criterion | Implementation | Verification | Status |
-|---|---|---|---|---|
+| ID | Source goal/scenario/decision | Criterion | Implementation | Verification | Status |
+|---|---|---|---|---|---|
 
 ## Scope
 

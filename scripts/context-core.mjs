@@ -74,6 +74,7 @@ export function manifestPaths(manifest) {
     ...(manifest.rules ?? []),
     ...(manifest.skills ?? []),
     ...(manifest.skillResources ?? []),
+    ...(manifest.taste ?? []),
     ...(manifest.workflows ?? []),
     ...(manifest.knowledge ?? []),
     ...(manifest.schemas ?? []),
@@ -129,8 +130,11 @@ async function entries(paths) {
 
 const ACTION_TERMS = new Set([
   "add", "build", "change", "create", "deliver", "deploy", "design", "execute", "fix",
-  "implement", "migrate", "redesign", "release", "remove", "resolve", "review", "upgrade",
+  "implement", "migrate", "plan", "redesign", "release", "remove", "resolve", "review", "upgrade",
 ]);
+
+const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan))\b/i;
+const EXECUTION_PLAN_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b/i;
 
 const ROUTING_HINTS = [
   { test: /\b(defect|bug|broken|regression|fix)\b/i, workflow: "defect-resolution" },
@@ -141,6 +145,7 @@ const ROUTING_HINTS = [
   { test: /\b(frontend|interface|dialog|form|responsive|accessibility|ux|redesign)\b/i, workflow: "frontend-ux-change" },
   { test: /\b(release|readiness|production handoff)\b/i, workflow: "release-readiness" },
   { test: /\b(context factory|rule|skill|workflow|manifest).*\b(add|change|update|maintain|sync)\b/i, workflow: "context-maintenance" },
+  { test: PREPLANNING_TEST, workflow: "feature-delivery" },
 ];
 
 export async function resolveContext(request) {
@@ -150,6 +155,7 @@ export async function resolveContext(request) {
   const ruleEntries = await entries(manifest.rules);
   const skillEntries = await entries(manifest.skills);
   const workflowEntries = await entries(manifest.workflows);
+  const tasteEntries = await entries(manifest.taste ?? []);
 
   const selectedRules = ruleEntries
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
@@ -166,7 +172,17 @@ export async function resolveContext(request) {
 
   let selectedSkills = skillEntries
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
-    .filter((entry) => entry.relevance.score >= 6)
+    .filter((entry) => (
+      entry.relevance.score >= 6
+      && (
+        entry.meta.name !== "execution-plan"
+        || EXECUTION_PLAN_TEST.test(request)
+      )
+      && (
+        entry.meta.name !== "security-review"
+        || /\b(security|authentication|authorization|credential|secret|threat|vulnerability|abuse)\b/i.test(request)
+      )
+    ))
     .sort((a, b) => b.relevance.score - a.relevance.score || a.path.localeCompare(b.path))
     .map((entry) => ({
       path: entry.path,
@@ -200,12 +216,31 @@ export async function resolveContext(request) {
     );
     const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));
     for (const entry of skillEntries) {
+      if (entry.meta.name === "grill-with-docs" && !PREPLANNING_TEST.test(request)) continue;
+      if (entry.meta.name === "execution-plan" && !EXECUTION_PLAN_TEST.test(request)) continue;
       if (linkedSkillNames.has(entry.meta.name) && !selectedSkillPaths.has(entry.path)) {
         selectedSkills.push({ path: entry.path, reason: `required by ${selectedWorkflow.path}` });
         selectedSkillPaths.add(entry.path);
       }
     }
     selectedSkills = selectedSkills.sort((a, b) => a.path.localeCompare(b.path));
+  }
+
+  let selectedTaste = tasteEntries
+    .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
+    .filter((entry) => entry.relevance.score >= 4)
+    .sort((a, b) => b.relevance.score - a.relevance.score || a.path.localeCompare(b.path))
+    .map((entry) => ({
+      path: entry.path,
+      reason: `matched: ${entry.relevance.matches.join(", ")}`,
+    }));
+
+  const usesDesignPattern = selectedSkills.some((item) => item.path === "skills/design-pattern/SKILL.md");
+  if (usesDesignPattern && !selectedTaste.some((item) => item.path === "taste/README.md")) {
+    selectedTaste = [
+      { path: "taste/README.md", reason: "entry point required by skills/design-pattern/SKILL.md" },
+      ...selectedTaste,
+    ];
   }
 
   const basePaths = [
@@ -217,6 +252,7 @@ export async function resolveContext(request) {
     ...basePaths,
     ...selectedRules.map((item) => item.path),
     ...selectedSkills.map((item) => item.path),
+    ...selectedTaste.map((item) => item.path),
     ...(selectedWorkflow ? [selectedWorkflow.path] : []),
   ])];
 
@@ -228,6 +264,7 @@ export async function resolveContext(request) {
     workflow: selectedWorkflow,
     rules: selectedRules,
     skills: selectedSkills,
+    taste: selectedTaste,
     selectedPaths,
   };
 }
@@ -252,17 +289,24 @@ export function compareSelection(selection, expected) {
   }
   const actualRules = new Set(selection.rules.map((item) => item.path));
   const actualSkills = new Set(selection.skills.map((item) => item.path));
+  const actualTaste = new Set((selection.taste ?? []).map((item) => item.path));
   for (const path of expected.rules ?? []) {
     if (!actualRules.has(path)) errors.push(`missing rule: ${path}`);
   }
   for (const path of expected.skills ?? []) {
     if (!actualSkills.has(path)) errors.push(`missing skill: ${path}`);
   }
+  for (const path of expected.taste ?? []) {
+    if (!actualTaste.has(path)) errors.push(`missing taste: ${path}`);
+  }
   for (const path of expected.excludedRules ?? []) {
     if (actualRules.has(path)) errors.push(`unexpected rule: ${path}`);
   }
   for (const path of expected.excludedSkills ?? []) {
     if (actualSkills.has(path)) errors.push(`unexpected skill: ${path}`);
+  }
+  for (const path of expected.excludedTaste ?? []) {
+    if (actualTaste.has(path)) errors.push(`unexpected taste: ${path}`);
   }
   return errors;
 }

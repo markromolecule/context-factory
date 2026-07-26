@@ -8,6 +8,9 @@
     ],
     "skills": [
       "skills/design-pattern/SKILL.md"
+    ],
+    "taste": [
+      "taste/README.md"
     ]
   },
   "contractAssertions": [
@@ -31,6 +34,16 @@
         "## 7. Motion",
         "## 8. Voice and interface copy",
         "## 9. Tokens, documentation, and governance"
+      ]
+    },
+    {
+      "path": "taste/README.md",
+      "includes": [
+        "reusable design judgment layer",
+        "taste/component-contracts",
+        "taste/quality-bar",
+        "## Design crafting workflow",
+        "## Ready-for-planning checklist"
       ]
     }
   ]

@@ -162,6 +162,7 @@ if (command === "resolve") {
     workflow: bundle.selection.workflow,
     rules: bundle.selection.rules,
     skills: bundle.selection.skills,
+    taste: bundle.selection.taste,
     sources: bundle.sources.map(({ path: sourcePath, hash }) => ({ path: sourcePath, hash })),
   });
 } else if (command === "lock") {

@@ -10,18 +10,20 @@ Do not implement the feature while this skill is active unless the user explicit
 ## Workflow
 
 1. Restate the requested outcome and success criteria.
-2. Inspect relevant source, tests, configuration, schemas, and existing conventions.
-3. Separate verified facts, assumptions, open decisions, and out-of-scope work.
-4. Use the 1-3-1 rule only for material unresolved choices; make a recommendation.
-5. Identify affected files, public contracts, data changes, consumers, and rollback risks.
-6. Divide work into dependency-ordered phases with concrete verification.
-7. Save the plan under `docs/tasks/YYYY/MM/YYYY-MM-DD/<type>-<id>-<feature>.md` using `docs/templates/Task.md`.
+2. For new-system or materially ambiguous work, require a completed `grill-with-docs` discovery record; stop and return to grilling if goals, scenarios, boundaries, or material decisions remain unresolved.
+3. Inspect relevant source, tests, configuration, schemas, existing conventions, and the accepted pre-planning task record.
+4. Separate verified facts, assumptions, open decisions, and out-of-scope work.
+5. Use the 1-3-1 rule only for material unresolved choices; make a recommendation.
+6. Identify affected files, public contracts, data changes, consumers, and rollback risks.
+7. Divide work into dependency-ordered phases with concrete verification.
+8. Save or refine the plan under `docs/tasks/YYYY/MM/YYYY-MM-DD/<type>-<id>-<feature>.md` using `docs/templates/Task.md`.
 
 ## Plan requirements
 
 Include:
 
 - outcome and measurable acceptance criteria;
+- traceability from pre-planning goals, scenarios, constraints, and decisions to acceptance criteria;
 - current-state evidence with file paths;
 - scope and non-goals;
 - decisions and assumptions;

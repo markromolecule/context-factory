@@ -32,5 +32,6 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 - Prefer defect resolution when observed behavior is wrong; do not implement before establishing evidence.
 - Add a risk-specific workflow only when that risk is central to the change.
 - Use release readiness to review and report; it does not authorize deployment.
+- Begin new-system and materially ambiguous capability work with [[skills/grill-with-docs/SKILL|grill-with-docs]], then synthesize the confirmed discovery record with [[skills/implementation-plan/SKILL|implementation-plan]] before coding.
 - Use [[rules/global/1-3-1-rule|1-3-1]] inside a workflow only for a material unresolved decision.
 - Use [[skills/implementation-plan/SKILL|implementation-plan]] for plan-only output and [[skills/execution-plan/SKILL|execution-plan]] when executing an existing task artifact.

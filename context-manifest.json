@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 2,
-  "contextVersion": "3.1.0",
+  "schemaVersion": 3,
+  "contextVersion": "3.2.1",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -40,6 +40,7 @@
     "skills/implementation-plan/SKILL.md",
     "skills/execution-plan/SKILL.md",
     "skills/form-dialog/SKILL.md",
+    "skills/grill-with-docs/SKILL.md",
     "skills/knowledge-grounding/SKILL.md",
     "skills/repository-discovery/SKILL.md",
     "skills/security-review/SKILL.md",
@@ -50,7 +51,15 @@
     "skills/design-pattern/references/design-system-worksheet.md",
     "skills/design-pattern/references/visual-system.md",
     "skills/execution-plan/agents/openai.yaml",
+    "skills/grill-with-docs/agents/openai.yaml",
+    "skills/grill-with-docs/references/glossary-format.md",
     "skills/implementation-plan/agents/openai.yaml"
+  ],
+  "taste": [
+    "taste/README.md",
+    "taste/component-contracts.md",
+    "taste/product-experience.md",
+    "taste/quality-bar.md"
   ],
   "workflows": [
     "workflows/architecture-change.md",
@@ -79,7 +88,9 @@
     "docs/decisions/0001-vertical-backend-modules.md",
     "docs/decisions/0002-task-appropriate-form-surfaces.md",
     "docs/decisions/0003-first-class-development-workflows.md",
-    "docs/decisions/0004-deterministic-context-harness.md"
+    "docs/decisions/0004-deterministic-context-harness.md",
+    "docs/decisions/0005-preplanning-grill-gate.md",
+    "docs/decisions/0006-design-taste-layer.md"
   ],
   "tools": [
     "scripts/context-core.mjs",
@@ -95,9 +106,11 @@
     "evals/cases/direct-question.json",
     "evals/cases/frontend-dialog.json",
     "evals/cases/knowledge-grounding.json",
+    "evals/cases/preplanning-new-system.json",
     "evals/cases/security-change.json",
     "evals/cases/unsupported-completion.json",
-    "evals/cases/visual-design-system.json"
+    "evals/cases/visual-design-system.json",
+    "evals/cases/component-pattern-taste.json"
   ],
   "vaultIndexes": [
     "README.md",
@@ -106,6 +119,7 @@
     "docs/Agents.md",
     "docs/Rules.md",
     "docs/Skills.md",
+    "docs/Taste.md",
     "docs/Wiki.md",
     "docs/Workflows.md",
     "docs/tasks/README.md",

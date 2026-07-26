@@ -15,8 +15,9 @@ This repository is the source of truth for agent behavior, engineering rules, re
 3. Select relevant rules through [[docs/Rules|Rules Map]].
 4. Select lifecycle orchestration through [[docs/Workflows|Workflows Map]].
 5. Invoke specialized procedures through [[docs/Skills|Skills Map]].
-6. Ground durable knowledge through [[docs/Wiki|LLM Wiki]].
-7. Record durable decisions in [[docs/decisions/README|Architecture Decisions]] and work in [[docs/tasks/README|Tasks]].
+6. Apply task-relevant product and interface judgment through [[docs/Taste|Taste Map]].
+7. Ground durable knowledge through [[docs/Wiki|LLM Wiki]].
+8. Record durable decisions in [[docs/decisions/README|Architecture Decisions]] and work in [[docs/tasks/README|Tasks]].
 
 ## Sync contract
 

@@ -17,17 +17,18 @@ Use when work changes dependency direction, module ownership, a public contract 
 
 ## Applicable rules and skills
 
-Apply evidence-and-claims, architecture-conformance, code-quality, security, and 1-3-1. Use `repository-discovery` before proposing a boundary and `architecture-decision` to record a durable choice. Use implementation/execution planning for multi-phase migration.
+Apply evidence-and-claims, architecture-conformance, code-quality, security, and 1-3-1. For a new system or an architecture request with unresolved goals and scenarios, start with grill-with-docs. Use `repository-discovery` before proposing a boundary and `architecture-decision` to record a durable choice. Use implementation/execution planning for multi-phase migration.
 
 ## Phases
 
-1. Discover current boundaries, contracts, dependency direction, consumers, tests, and relevant decisions.
-2. Define the architecture problem, qualities, constraints, assumptions, non-goals, and authority.
-3. Compare exactly three viable approaches and record the accepted decision.
-4. Design compatibility, incremental migration, observability, rollback, and exception handling.
-5. Implement the smallest end-to-end boundary slice and conformance tests.
-6. Migrate consumers in dependency order without parallel sources of business policy.
-7. Verify contracts, dependency rules, behavior, operations, documentation, and removal of temporary bridges.
+1. When the system intent is not settled, grill goals, actors, scenarios, domain language, constraints, and non-goals before architecture planning.
+2. Discover current boundaries, contracts, dependency direction, consumers, tests, and relevant decisions.
+3. Define the architecture problem, qualities, constraints, assumptions, non-goals, and authority.
+4. Compare exactly three viable approaches and record the accepted decision.
+5. Design compatibility, incremental migration, observability, rollback, and exception handling.
+6. Implement the smallest end-to-end boundary slice and conformance tests.
+7. Migrate consumers in dependency order without parallel sources of business policy.
+8. Verify contracts, dependency rules, behavior, operations, documentation, and removal of temporary bridges.
 
 ## Quality gates
 

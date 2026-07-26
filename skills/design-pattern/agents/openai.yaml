@@ -1,4 +1,4 @@
 interface:
-  display_name: "Visual Design System"
-  short_description: "Define and review coherent visual design systems"
-  default_prompt: "Use $design-pattern to create a complete visual-system worksheet and translate it into reusable interface tokens."
+  display_name: "Product Design Patterns"
+  short_description: "Design coherent experiences and component systems"
+  default_prompt: "Use $design-pattern to shape this end-to-end experience, define its component contracts, and review it against the design quality bar."

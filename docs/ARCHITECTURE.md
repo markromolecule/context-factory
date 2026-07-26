@@ -20,6 +20,7 @@ The factory separates stable project knowledge from task-specific context so age
 | Adapters | `orchestrator/{AGENTS,CLAUDE,GEMINI}.md` | Thin model-specific presentation guidance |
 | Rules | `rules/{global,backend,frontend}/` | Scoped engineering constraints |
 | Skills | `skills/*/SKILL.md`, references, agents | Triggered procedures with progressively disclosed resources and synchronized interface metadata |
+| Taste | `taste/*.md` | Reusable product-experience, component-pattern, and design-quality judgment loaded only for relevant design work |
 | Workflows | `workflows/*.md` | Multi-stage lifecycle orchestration, quality gates, and stop conditions |
 | Knowledge | `knowledge/*.md`, `docs/` | Attributable LLM knowledge, Obsidian maps, tasks, and decisions |
 | Schemas | `schemas/*.json` | Machine-readable knowledge and project-profile contracts |
@@ -37,9 +38,11 @@ flowchart LR
   O --> R["Relevant rules"]
   O --> F["Matching workflow"]
   O --> S["Triggered skills"]
+  O --> T["Relevant taste"]
   R --> W["Implementation and verification"]
   F --> W
   S --> W
+  T --> S
   W --> D["Tasks and decisions"]
   D --> K["LLM Wiki knowledge"]
   K --> B["Immutable context bundle"]
@@ -50,6 +53,7 @@ flowchart LR
 
 - The root directory is the Obsidian vault.
 - The manifest contains every orchestrator, rule, skill, skill resource, and index note.
+- The manifest contains every taste reference, and the Taste map links every entry.
 - Model adapters defer to one shared contract.
 - Skill frontmatter contains only `name` and `description`.
 - Workflow frontmatter contains `name`, `description`, and `scope`; workflow inventory and map match disk.
@@ -57,6 +61,7 @@ flowchart LR
 - Durable decisions and active task state live in the vault, not only in chat.
 - Consequential claims use the evidence classes defined by the shared contract.
 - Architecture follows project profiles and accepted decisions rather than model preference.
+- Taste informs design judgment but never overrides user intent, product evidence, accessibility, or accepted system decisions.
 - Canonical knowledge has stable identity, authority, provenance, ownership, lifecycle, and review metadata.
 - `context-lock.json` hashes the manifest and complete canonical inventory, excluding only the generated lock itself.
 

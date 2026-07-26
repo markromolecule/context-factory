@@ -9,8 +9,9 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 3. Load the single most-specific workflow when its trigger matches a multi-stage request; compose workflows only when the selected workflow explicitly requires it.
 4. Load global rules, then only the backend/frontend rules relevant to the touched files.
 5. Load a skill only when its description matches the specialized task.
-6. Load canonical knowledge only when its scope, authority, lifecycle, and task terms match; retain provenance.
-7. Read linked references only when the selected skill, workflow, or knowledge item directs it.
+6. Load task-relevant taste guidance only for product, experience, interface, or component design.
+7. Load canonical knowledge only when its scope, authority, lifecycle, and task terms match; retain provenance.
+8. Read linked references only when the selected skill, workflow, taste item, or knowledge item directs it.
 
 ## Working contract
 
@@ -23,10 +24,12 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 - Follow workflow gates and stop conditions for multi-stage work; do not treat a workflow as permission for actions outside user scope.
 - Record durable architectural decisions under `docs/decisions/`.
 - Record multi-phase work under `docs/tasks/` using the task template.
+- For a new system, product, or materially ambiguous feature, use `grill-with-docs` as the first pre-planning skill. Resolve and persist goals, scenarios, language, boundaries, and unknowns before `implementation-plan`; do not begin production coding until the plan is approved.
 
 ## Roles
 
 - **Architect:** inspect constraints and choose a design. Use `implementation-plan` for plan-only requests.
+- **Discovery lead:** use `grill-with-docs` to establish shared understanding and a traceable scenario record before planning a new system or ambiguous capability.
 - **Developer:** implement approved work using applicable rules. Use `execution-plan` when a plan artifact already exists.
 - **Reviewer:** test outcomes, check rule compliance, and identify regressions or unresolved risks.
 
