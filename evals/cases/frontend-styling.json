@@ -16,8 +16,8 @@
       "includes": [
         "## Typography",
         "## Color",
-        "## Spacing, Layout and Responsiveness",
-        "## Table of Fonts",
+        "## Layout & Spacing",
+        "### Font Stack",
         "## Motion"
       ]
     },

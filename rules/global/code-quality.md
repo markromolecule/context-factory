@@ -15,7 +15,7 @@ alwaysApply: true
 - Keep framework objects at transport boundaries and model application logic with domain-oriented types.
 - Delete dead code and keep comments focused on constraints or intent that code cannot express.
 
-## Change discipline
+## Change Discipline
 
 - Make the smallest complete change and preserve backward compatibility unless a breaking change is intentional and documented.
 - Add or update tests for behavior changes, especially validation, error paths, authorization, and data mutations.
@@ -24,4 +24,9 @@ alwaysApply: true
 
 ## Review
 
-Reject changes that introduce unbounded work, implicit side effects, duplicated business policy, unstable public contracts, or code that cannot be tested without starting unrelated infrastructure.
+Reject changes that introduce:
+
+- Unbounded work or implicit side effects.
+- Duplicated business policy.
+- Unstable public contracts.
+- Code that can't be tested without starting unrelated infrastructure.

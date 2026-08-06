@@ -112,6 +112,9 @@
     "docs/Wiki.md",
     "docs/Workflows.md",
     "docs/tasks/README.md",
-    "docs/decisions/README.md"
+    "docs/decisions/README.md",
+    "docs/guide/README.md",
+    "docs/guide/skills.md",
+    "docs/guide/rules-and-workflows.md"
   ]
 }
