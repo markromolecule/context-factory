@@ -1,4 +1,0 @@
-interface:
-  display_name: "Product Design Patterns"
-  short_description: "Design coherent experiences and component systems"
-  default_prompt: "Use $design-pattern to shape this end-to-end experience, define its component contracts, and review it against the design quality bar."

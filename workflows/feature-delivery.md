@@ -8,7 +8,7 @@ scope: New features and material behavior changes that do not require a more spe
 
 ## Triggers
 
-Use when a request adds or materially changes user-visible or system behavior. Compose this workflow with a more specific workflow when security, migration, frontend UX, or dependency risk is central.
+Use when a request adds or materially changes user-visible or system behavior. Compose this workflow with a more specific workflow when security, migration, or dependency risk is central.
 
 ## Required inputs
 
@@ -18,7 +18,7 @@ Use when a request adds or materially changes user-visible or system behavior. C
 
 ## Applicable rules and skills
 
-Load global rules and only the domain rules relevant to touched files. For a new system, product, or materially ambiguous feature, start with `grill-with-docs`; it uses `repository-discovery` to answer code-discoverable questions and hands the stable record to `implementation-plan`. Use execution-plan only for an approved plan, and task-specific skills such as backend-module, design-pattern, or form-dialog when triggered.
+Load global rules and only the domain rules relevant to touched files. For a new system, product, or materially ambiguous feature, start with `grill-with-docs`; it uses `repository-discovery` to answer code-discoverable questions and hands the stable record to `implementation-plan`. Use execution-plan only for an approved plan, and task-specific skills such as backend-module or playground-styling when triggered.
 
 ## Phases
 

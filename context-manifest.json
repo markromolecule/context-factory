@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "3.2.1",
+  "contextVersion": "3.3.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -26,6 +26,7 @@
     "rules/backend/testing-data-access-layer.md",
     "rules/frontend/code-organization.md",
     "rules/frontend/dialogs-and-overlays.md",
+    "rules/frontend/frontend.md",
     "rules/frontend/forms-and-validation.md",
     "rules/frontend/interaction-feedback.md",
     "rules/frontend/mutation-hooks.md",
@@ -36,30 +37,21 @@
   "skills": [
     "skills/architecture-decision/SKILL.md",
     "skills/backend-module/SKILL.md",
-    "skills/design-pattern/SKILL.md",
     "skills/implementation-plan/SKILL.md",
     "skills/execution-plan/SKILL.md",
-    "skills/form-dialog/SKILL.md",
     "skills/grill-with-docs/SKILL.md",
     "skills/knowledge-grounding/SKILL.md",
+    "skills/playground/SKILL.md",
     "skills/repository-discovery/SKILL.md",
     "skills/security-review/SKILL.md",
     "skills/verification-review/SKILL.md"
   ],
   "skillResources": [
-    "skills/design-pattern/agents/openai.yaml",
-    "skills/design-pattern/references/design-system-worksheet.md",
-    "skills/design-pattern/references/visual-system.md",
     "skills/execution-plan/agents/openai.yaml",
     "skills/grill-with-docs/agents/openai.yaml",
     "skills/grill-with-docs/references/glossary-format.md",
-    "skills/implementation-plan/agents/openai.yaml"
-  ],
-  "taste": [
-    "taste/README.md",
-    "taste/component-contracts.md",
-    "taste/product-experience.md",
-    "taste/quality-bar.md"
+    "skills/implementation-plan/agents/openai.yaml",
+    "skills/playground/references/guide-to-avoiding-llm-styling.md"
   ],
   "workflows": [
     "workflows/architecture-change.md",
@@ -68,7 +60,6 @@
     "workflows/defect-resolution.md",
     "workflows/dependency-upgrade.md",
     "workflows/feature-delivery.md",
-    "workflows/frontend-ux-change.md",
     "workflows/release-readiness.md",
     "workflows/security-sensitive-change.md"
   ],
@@ -90,7 +81,8 @@
     "docs/decisions/0003-first-class-development-workflows.md",
     "docs/decisions/0004-deterministic-context-harness.md",
     "docs/decisions/0005-preplanning-grill-gate.md",
-    "docs/decisions/0006-design-taste-layer.md"
+    "docs/decisions/0006-design-taste-layer.md",
+    "docs/decisions/0007-simplify-styling-and-taste.md"
   ],
   "tools": [
     "scripts/context-core.mjs",
@@ -104,13 +96,11 @@
     "evals/cases/architecture-change.json",
     "evals/cases/defect-resolution.json",
     "evals/cases/direct-question.json",
-    "evals/cases/frontend-dialog.json",
+    "evals/cases/frontend-styling.json",
     "evals/cases/knowledge-grounding.json",
     "evals/cases/preplanning-new-system.json",
     "evals/cases/security-change.json",
-    "evals/cases/unsupported-completion.json",
-    "evals/cases/visual-design-system.json",
-    "evals/cases/component-pattern-taste.json"
+    "evals/cases/unsupported-completion.json"
   ],
   "vaultIndexes": [
     "README.md",
@@ -119,7 +109,6 @@
     "docs/Agents.md",
     "docs/Rules.md",
     "docs/Skills.md",
-    "docs/Taste.md",
     "docs/Wiki.md",
     "docs/Workflows.md",
     "docs/tasks/README.md",

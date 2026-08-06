@@ -80,17 +80,7 @@ for (const path of manifest.skillResources) {
   }
 }
 
-for (const path of manifest.taste ?? []) {
-  const meta = frontmatter(await readText(path));
-  if (!meta) error(`Taste item has no YAML frontmatter: ${path}`);
-  else {
-    const keys = Object.keys(meta).sort();
-    if (keys.join(",") !== "description,name,scope") {
-      error(`Taste frontmatter must contain only name, description, and scope: ${path}`);
-    }
-    if (!meta.name || !meta.description || !meta.scope) error(`Taste metadata is incomplete: ${path}`);
-  }
-}
+
 
 const requiredWorkflowSections = [
   "## Triggers",
@@ -130,7 +120,7 @@ for (const path of manifest.rules) {
 const actualRules = (await filesUnder("rules")).filter((path) => extname(path) === ".md");
 const actualSkills = (await filesUnder("skills")).filter((path) => path.endsWith("/SKILL.md"));
 const actualSkillResources = (await filesUnder("skills")).filter((path) => !path.endsWith("/SKILL.md"));
-const actualTaste = (await filesUnder("taste")).filter((path) => extname(path) === ".md");
+
 const actualWorkflows = (await filesUnder("workflows")).filter((path) => extname(path) === ".md");
 const actualKnowledge = (await filesUnder("knowledge")).filter((path) => extname(path) === ".md");
 const actualSchemas = (await filesUnder("schemas")).filter((path) => extname(path) === ".json");
@@ -147,7 +137,7 @@ if (!sameMembers(actualSkills, manifest.skills)) error("Skill inventory differs 
 if (!sameMembers(actualSkillResources, manifest.skillResources)) {
   error("Skill resource inventory differs from context-manifest.json");
 }
-if (!sameMembers(actualTaste, manifest.taste ?? [])) error("Taste inventory differs from context-manifest.json");
+
 if (!sameMembers(actualWorkflows, manifest.workflows)) error("Workflow inventory differs from context-manifest.json");
 if (!sameMembers(actualKnowledge, manifest.knowledge)) error("Knowledge inventory differs from context-manifest.json");
 if (!sameMembers(actualSchemas, manifest.schemas)) error("Schema inventory differs from context-manifest.json");
@@ -159,7 +149,7 @@ if (!sameMembers(actualEvaluations, manifest.evaluations)) error("Evaluation inv
 
 const rulesMap = await readText("docs/Rules.md");
 const skillsMap = await readText("docs/Skills.md");
-const tasteMap = await readText("docs/Taste.md");
+
 const workflowsMap = await readText("docs/Workflows.md");
 const wikiMap = await readText("docs/Wiki.md");
 for (const path of manifest.rules) {
@@ -168,9 +158,7 @@ for (const path of manifest.rules) {
 for (const path of manifest.skills) {
   if (!skillsMap.includes(`[[${path.slice(0, -3)}`)) error(`Skill is missing from docs/Skills.md: ${path}`);
 }
-for (const path of manifest.taste ?? []) {
-  if (!tasteMap.includes(`[[${path.slice(0, -3)}`)) error(`Taste item is missing from docs/Taste.md: ${path}`);
-}
+
 for (const path of manifest.workflows) {
   if (!workflowsMap.includes(`[[${path.slice(0, -3)}`)) error(`Workflow is missing from docs/Workflows.md: ${path}`);
 }
@@ -217,9 +205,7 @@ for (const path of manifest.evaluations) {
   for (const skill of [...(testCase.expected?.skills ?? []), ...(testCase.expected?.excludedSkills ?? [])]) {
     if (!manifest.skills.includes(skill)) error(`Evaluation references unknown skill in ${path}: ${skill}`);
   }
-  for (const taste of [...(testCase.expected?.taste ?? []), ...(testCase.expected?.excludedTaste ?? [])]) {
-    if (!(manifest.taste ?? []).includes(taste)) error(`Evaluation references unknown taste item in ${path}: ${taste}`);
-  }
+
   if (testCase.expected?.workflow && !manifest.workflows.includes(testCase.expected.workflow)) {
     error(`Evaluation references unknown workflow in ${path}: ${testCase.expected.workflow}`);
   }
@@ -292,7 +278,6 @@ if (errors.length) {
 console.log(
   `Context Factory ${manifest.contextVersion} is valid: `
   + `${manifest.rules.length} rules, ${manifest.skills.length} skills, `
-  + `${manifest.taste.length} taste items, `
   + `${manifest.workflows.length} workflows, ${manifest.knowledge.length} knowledge items, `
   + `${manifest.evaluations.length} evaluations, ${allMarkdown.length} Markdown files.`,
 );

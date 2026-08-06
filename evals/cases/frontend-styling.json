@@ -1,0 +1,32 @@
+{
+  "name": "styling request selects frontend general rule and playground skill",
+  "request": "Implement a custom login page using the typography, color, and spacing guidelines from our general frontend styling rules",
+  "expected": {
+    "workflow": "workflows/feature-delivery.md",
+    "rules": [
+      "rules/frontend/frontend.md"
+    ],
+    "skills": [
+      "skills/playground/SKILL.md"
+    ]
+  },
+  "contractAssertions": [
+    {
+      "path": "rules/frontend/frontend.md",
+      "includes": [
+        "## Typography",
+        "## Color",
+        "## Spacing, Layout and Responsiveness",
+        "## Table of Fonts",
+        "## Motion"
+      ]
+    },
+    {
+      "path": "skills/playground/SKILL.md",
+      "includes": [
+        "## Objective",
+        "## Workflow"
+      ]
+    }
+  ]
+}

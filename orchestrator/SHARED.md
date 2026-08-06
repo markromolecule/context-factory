@@ -9,9 +9,8 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 3. Load the single most-specific workflow when its trigger matches a multi-stage request; compose workflows only when the selected workflow explicitly requires it.
 4. Load global rules, then only the backend/frontend rules relevant to the touched files.
 5. Load a skill only when its description matches the specialized task.
-6. Load task-relevant taste guidance only for product, experience, interface, or component design.
-7. Load canonical knowledge only when its scope, authority, lifecycle, and task terms match; retain provenance.
-8. Read linked references only when the selected skill, workflow, taste item, or knowledge item directs it.
+6. Load canonical knowledge only when its scope, authority, lifecycle, and task terms match; retain provenance.
+7. Read linked references only when the selected skill, workflow, or knowledge item directs it.
 
 ## Working contract
 

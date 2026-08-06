@@ -1,12 +1,15 @@
 ---
 title: Design Taste Layer
 type: decision
-status: accepted
+status: superseded
 created: 2026-07-26
 tags: [adr, design, taste, components]
 ---
 
 # 0006 — Design Taste Layer
+
+> [!WARNING]
+> This decision has been **superseded** by [[docs/decisions/0007-simplify-styling-and-taste|0007 — Simplify Frontend Styling and Remove Taste Layer]].
 
 ## Context
 
