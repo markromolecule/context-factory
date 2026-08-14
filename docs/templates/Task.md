@@ -43,7 +43,8 @@ Link the canonical glossary; do not duplicate implementation details here.
 
 ## Phases
 
-- [ ] Phase 1 — concrete outcome
+- [ ] `phase-01-<feature>.md` — Phase 1: concrete outcome
+- [ ] `phase-02-<feature>.md` — Phase 2: concrete outcome
 
 ## Verification
 

@@ -9,19 +9,19 @@ This skill consumes a plan; it does not invent a replacement plan.
 
 ## Start
 
-1. Locate the user-specified plan or the relevant file under `docs/tasks/`.
-2. Read it fully and inspect every referenced source boundary.
+1. Locate the user-specified plan or the relevant task directory/file under `docs/tasks/`.
+2. Read the master plan (`README.md` / `<type>-<id>-<feature>.md`) and all associated phase files (`phase-01-...md`, etc.). Inspect every referenced source boundary.
 3. Confirm prerequisites, current state, and any already-completed work from evidence.
 4. If the plan is missing or a decision would materially change scope, report the blocker and request direction.
 
 ## Execute
 
-- Work in dependency order and keep at most one phase active.
+- Work in dependency order through the phase files and keep at most one phase active.
 - Modify only in-scope files plus necessary tests, generated artifacts, and documentation.
 - Follow applicable rules from `context-manifest.json`.
 - Run the narrowest useful verification after each task and broader checks at phase boundaries.
-- Mark a checkbox complete only after its outcome exists and its stated verification passes.
-- Record commands/results in the plan's Verification section.
+- Mark checkboxes and phase status complete only after its outcome exists and its stated verification passes.
+- Record commands/results in the phase artifact's and master plan's Verification section.
 - Record deviations with reason, impact, and user approval when scope changes materially.
 - Continue across phases without artificial approval pauses unless the plan/user requires a checkpoint or the next action is high-impact.
 

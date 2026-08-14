@@ -73,6 +73,7 @@
   "templates": [
     "docs/templates/Decision.md",
     "docs/templates/Knowledge.md",
+    "docs/templates/Phase.md",
     "docs/templates/Task.md"
   ],
   "decisions": [
@@ -115,6 +116,7 @@
     "docs/decisions/README.md",
     "docs/guide/README.md",
     "docs/guide/skills.md",
-    "docs/guide/rules-and-workflows.md"
+    "docs/guide/rules-and-workflows.md",
+    "docs/guide/cross-workspace-integration.md"
   ]
 }

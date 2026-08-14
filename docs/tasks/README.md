@@ -8,9 +8,12 @@ tags: [tasks, delivery]
 
 Store active and completed implementation plans by date:
 
-`docs/tasks/YYYY/MM/YYYY-MM-DD/<type>-<id>-<feature>.md`
+- **Single-file tasks:** `docs/tasks/YYYY/MM/YYYY-MM-DD/<type>-<id>-<feature>.md`
+- **Multi-phase task folders:** `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`
+  - Master summary: `README.md` (or `<type>-<id>-<feature>.md`) using [[docs/templates/Task|Task Template]]
+  - Phase breakdowns: `phase-01-<feature>.md`, `phase-02-<feature>.md`, etc. using [[docs/templates/Phase|Phase Template]]
 
-Start from [[docs/templates/Task|Task Template]]. Keep scope, decisions, checkboxes, verification evidence, deviations, and outcome in the same file.
+Keep scope, decisions, phase links, verification evidence, deviations, and outcome organized and synchronized.
 
 ## Completed
 

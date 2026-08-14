@@ -49,16 +49,16 @@ Here is the list of canonical skills available in the Context Factory, their tri
   > "Run repository-discovery to map the current database models and see where users are queried."
 
 ### 3. implementation-plan
-* **Purpose:** Create an evidence-backed, phased technical plan document (located under `docs/tasks/`) outlining steps, changes, and verification checks. No production code is changed while this is active.
-* **Trigger Keywords:** `plan`, `proposal`, `implementation breakdown`, `design doc`, `migration plan`.
+* **Purpose:** Ingests user context or context `.md` files end-to-end and creates an evidence-backed, phased technical plan organized under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/` with a master plan and dedicated phase breakdown files. No production code is changed while this is active.
+* **Trigger Keywords:** `plan`, `proposal`, `implementation breakdown`, `design doc`, `migration plan`, `breakdown context`.
 * **Example Prompt:**
-  > "Create an implementation plan to migrate our notification system to use Twilio."
+  > "Analyze docs/tasks/2026/07/2026-07-25/feature-001.md and create an end-to-end implementation plan breakdown."
 
 ### 4. execution-plan
-* **Purpose:** Execute a previously approved implementation plan step-by-step, keeping the task check-list and log updated.
+* **Purpose:** Execute a previously approved implementation plan and its phase breakdown files step-by-step, keeping task/phase checklists and verification evidence updated.
 * **Trigger Keywords:** `execute plan`, `implement approved plan`, `carry out plan`, `resume task`.
 * **Example Prompt:**
-  > "Execute the approved plan for the Stripe integration located under docs/tasks/2026-08-stripe-integration.md."
+  > "Execute the approved plan and phase files for the Stripe integration located under docs/tasks/2026/08/2026-08-15/001-feature-stripe-integration/."
 
 ### 5. architecture-decision
 * **Purpose:** Guides the analysis and creation of a durable Architecture Decision Record (ADR) under `docs/decisions/`.
