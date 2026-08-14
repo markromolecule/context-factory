@@ -16,6 +16,7 @@ The vault root is `context-factory/`, so Obsidian can index the full factory rat
 - [[docs/Skills|Skills]]
 - [[docs/Wiki|LLM Wiki]]
 - [[docs/Workflows|Workflows]]
+- [[docs/context/README|Context Specifications]]
 - [[docs/tasks/README|Tasks]]
 - [[docs/decisions/README|Architecture Decisions]]
 - [[docs/guide/README|User Guide]]

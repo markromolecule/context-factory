@@ -4,9 +4,16 @@
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
+    ".cursorrules",
+    ".github/copilot-instructions.md",
+    ".windsurfrules",
     "AGENTS.md",
+    "CLAUDE.md",
+    "CODEX.md",
+    "GEMINI.md",
     "orchestrator/AGENTS.md",
     "orchestrator/CLAUDE.md",
+    "orchestrator/CODEX.md",
     "orchestrator/GEMINI.md"
   ],
   "rules": [
@@ -71,6 +78,7 @@
     "schemas/project-profile.schema.json"
   ],
   "templates": [
+    "docs/templates/Context.md",
     "docs/templates/Decision.md",
     "docs/templates/Knowledge.md",
     "docs/templates/Phase.md",
@@ -112,6 +120,7 @@
     "docs/Skills.md",
     "docs/Wiki.md",
     "docs/Workflows.md",
+    "docs/context/README.md",
     "docs/tasks/README.md",
     "docs/decisions/README.md",
     "docs/guide/README.md",

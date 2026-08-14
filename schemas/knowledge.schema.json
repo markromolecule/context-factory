@@ -26,22 +26,41 @@
       "minLength": 1
     },
     "type": {
-      "enum": ["fact", "concept", "contract", "procedure", "runbook", "example"]
+      "enum": [
+        "fact",
+        "concept",
+        "contract",
+        "procedure",
+        "runbook",
+        "example"
+      ]
     },
     "status": {
-      "enum": ["draft", "active", "deprecated", "superseded"]
+      "enum": [
+        "draft",
+        "active",
+        "deprecated",
+        "superseded"
+      ]
     },
     "scope": {
       "type": "array",
       "minItems": 1,
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "owner": {
       "type": "string",
       "minLength": 1
     },
     "authority": {
-      "enum": ["canonical", "reviewed", "reference", "example"]
+      "enum": [
+        "canonical",
+        "reviewed",
+        "reference",
+        "example"
+      ]
     },
     "created": {
       "type": "string",
@@ -57,20 +76,28 @@
     },
     "appliesTo": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "supersedes": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "sources": {
       "type": "array",
       "minItems": 1,
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "tags": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     }
   },
   "additionalProperties": false
