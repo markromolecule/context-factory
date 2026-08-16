@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.3.0",
-  "digest": "sha256:027fcac02a7464d90fa550aee28bd0aadeb6e44dbfcc0a215463a30f6ebc5f51",
+  "digest": "sha256:0f5c9ae18ad241dbeff0faa24c509ce1f5885c728a3878624f65677ae34c1028",
   "files": {
     ".cursorrules": "sha256:eccb6fe75e8ee1593593439a7ac8bec89ccff56274e5885e21f5c4a69f735527",
-    ".github/copilot-instructions.md": "sha256:8607958b650a84e08d1209ba2423be9222e51c3e84a5e00ab9dd1ac4b314a45b",
+    ".github/copilot-instructions.md": "sha256:f1ac3d6c4f79573b0476bc78ecb58336c1e793c3ec3bba6fc2ba44bdf2606467",
     ".github/workflows/context-factory.yml": "sha256:582feee41d980b280e64299eeb2baccf2fe6bc4baf386195599c51d02abeb44f",
     ".windsurfrules": "sha256:0837165b48dd62c992e76ce4d5ca329fa3f7d64983b77dddb6e3cc5457aa8a91",
     "AGENTS.md": "sha256:3173983c6425c795ce09536836c123c921aef09223d05a6bd9e8596f85383a87",
