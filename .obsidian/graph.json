@@ -2,25 +2,50 @@
   "collapse-filter": false,
   "search": "-path:docs/templates -path:docs/inbox",
   "showTags": true,
-  "showAttachmentsOnly": false,
+  "showAttachments": true,
   "hideUnresolved": true,
   "showOrphans": true,
   "collapse-color-groups": false,
   "colorGroups": [
-    { "query": "path:rules", "color": { "a": 1, "rgb": 15592635 } },
-    { "query": "path:skills", "color": { "a": 1, "rgb": 5025616 } },
-    { "query": "path:orchestrator", "color": { "a": 1, "rgb": 16753920 } },
-    { "query": "path:docs", "color": { "a": 1, "rgb": 7506394 } }
+    {
+      "query": "path:rules",
+      "color": {
+        "a": 1,
+        "rgb": 15592635
+      }
+    },
+    {
+      "query": "path:skills",
+      "color": {
+        "a": 1,
+        "rgb": 5025616
+      }
+    },
+    {
+      "query": "path:orchestrator",
+      "color": {
+        "a": 1,
+        "rgb": 16753920
+      }
+    },
+    {
+      "query": "path:docs",
+      "color": {
+        "a": 1,
+        "rgb": 7506394
+      }
+    }
   ],
   "collapse-display": false,
   "showArrow": true,
-  "textFadeMultiplier": 0,
-  "nodeSizeMultiplier": 1,
-  "lineSizeMultiplier": 1,
+  "textFadeMultiplier": -0.6,
+  "nodeSizeMultiplier": 1.69611260053619,
+  "lineSizeMultiplier": 0.854540884718499,
+  "collapse-forces": false,
   "centerStrength": 0.5,
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 1,
-  "close": false
+  "scale": 0.6412804590412087,
+  "close": true
 }
