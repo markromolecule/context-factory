@@ -127,10 +127,15 @@ const actualSchemas = (await filesUnder("schemas")).filter((path) => extname(pat
 const actualTemplates = (await filesUnder("docs/templates")).filter((path) => extname(path) === ".md");
 const actualDecisions = (await filesUnder("docs/decisions"))
   .filter((path) => /\/\d{4}-[^/]+\.md$/.test(path));
-const actualTools = (await filesUnder("scripts")).filter((path) => extname(path) === ".mjs");
+const actualTools = [
+  ...(await filesUnder("scripts")).filter((path) => extname(path) === ".mjs"),
+  ...(await filesUnder("orchestrator")).filter((path) => extname(path) === ".mjs"),
+  ...(await filesUnder("evals")).filter((path) => extname(path) === ".mjs"),
+].sort();
 const actualAutomation = (await filesUnder(".github/workflows"))
   .filter((path) => [".yml", ".yaml"].includes(extname(path)));
 const actualEvaluations = (await filesUnder("evals/cases")).filter((path) => extname(path) === ".json");
+const actualDatasets = (await filesUnder("evals/datasets")).filter((path) => extname(path) === ".json");
 
 if (!sameMembers(actualRules, manifest.rules)) error("Rule inventory differs from context-manifest.json");
 if (!sameMembers(actualSkills, manifest.skills)) error("Skill inventory differs from context-manifest.json");
@@ -146,6 +151,7 @@ if (!sameMembers(actualDecisions, manifest.decisions)) error("Decision inventory
 if (!sameMembers(actualTools, manifest.tools)) error("Tool inventory differs from context-manifest.json");
 if (!sameMembers(actualAutomation, manifest.automation)) error("Automation inventory differs from context-manifest.json");
 if (!sameMembers(actualEvaluations, manifest.evaluations)) error("Evaluation inventory differs from context-manifest.json");
+if (!sameMembers(actualDatasets, manifest.datasets ?? [])) error("Dataset inventory differs from context-manifest.json");
 
 const rulesMap = await readText("docs/Rules.md");
 const skillsMap = await readText("docs/Skills.md");

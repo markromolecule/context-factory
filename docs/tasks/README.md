@@ -18,3 +18,5 @@ Keep scope, decisions, phase links, verification evidence, deviations, and outco
 ## Completed
 
 - [[docs/tasks/2026/07/2026-07-26/context-0001-preplanning-taste|Pre-planning gate and design taste layer]]
+- [[docs/tasks/2026/08/2026-08-17/0001-task-typescript-ecosystem-context/README|TypeScript ecosystem rules and skills integration]]
+- [[docs/tasks/2026/08/2026-08-17/0002-task-strengthen-ai-harness/README|Strengthen Context Factory AI harness]]

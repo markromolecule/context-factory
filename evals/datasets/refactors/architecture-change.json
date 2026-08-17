@@ -1,0 +1,23 @@
+{
+  "id": "ds-arch-01",
+  "name": "Architecture Refactoring Workflow Evaluation",
+  "domain": "refactors",
+  "request": "Design and implement a new cross-module architecture and migrate its consumers",
+  "expected": {
+    "workflow": "workflows/architecture-change.md",
+    "rules": [
+      "rules/global/architecture-conformance.md",
+      "rules/global/code-quality.md",
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": [
+      "skills/architecture-decision/SKILL.md",
+      "skills/backend-module/SKILL.md",
+      "skills/repository-discovery/SKILL.md"
+    ]
+  },
+  "goldenOutput": {
+    "workflow": "workflows/architecture-change.md",
+    "status": "completed"
+  }
+}

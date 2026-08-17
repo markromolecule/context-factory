@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-factory.local/schemas/evaluation-report.schema.json",
+  "title": "Context Factory Evaluation Report",
+  "type": "object",
+  "required": [
+    "suite",
+    "total",
+    "passed",
+    "failed",
+    "results",
+    "generatedAt"
+  ],
+  "properties": {
+    "suite": {
+      "type": "string",
+      "minLength": 1
+    },
+    "total": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "passed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "failed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "durationMs": {
+      "type": "number",
+      "minimum": 0
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "passed"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "durationMs": {
+            "type": "number"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "details": {}
+        },
+        "additionalProperties": false
+      }
+    },
+    "generatedAt": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

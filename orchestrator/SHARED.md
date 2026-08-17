@@ -38,6 +38,16 @@ Workflows coordinate these roles across a delivery lifecycle; they do not replac
 
 Follow system/user instructions first, then repository instructions, this contract, applicable rules, and finally skill defaults. More specific instructions override general ones at the same level.
 
+## Execution & Harness Contract
+
+- Model invocations, evaluations, and skill executions are coordinated via `orchestrator/runner.mjs`.
+- The runner enforces an explicit 3-stage lifecycle:
+  1. `beforeContext`: preprocess input and runtime parameters.
+  2. `onPromptPrepare`: assemble context bundle, system prompt, and schemas.
+  3. `afterResponseValidate`: validate structured outputs against `/schemas` via `orchestrator/validator.mjs`.
+- Default to deterministic `mock` provider in CI/CD and offline evaluations; live runs use native `fetch` provider adapters (`openai`, `anthropic`, `gemini`).
+
+
 ## Context maintenance
 
 When changing the factory, follow the `context-maintenance` workflow:

@@ -82,6 +82,7 @@ export function manifestPaths(manifest) {
     ...(manifest.tools ?? []),
     ...(manifest.automation ?? []),
     ...(manifest.evaluations ?? []),
+    ...(manifest.datasets ?? []),
     ...(manifest.vaultIndexes ?? []),
   ])].sort();
 }

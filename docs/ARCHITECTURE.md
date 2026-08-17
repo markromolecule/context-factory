@@ -16,17 +16,19 @@ The factory separates stable project knowledge from task-specific context so age
 |---|---|---|
 | Inventory | `context-manifest.json` | Versioned list of canonical context files |
 | Entry points | `README.md`, `AGENTS.md` | Discovery and minimum startup instructions |
-| Orchestration | `orchestrator/SHARED.md` | Model-neutral load order and working contract |
+| Orchestration | `orchestrator/SHARED.md` | Model-neutral load order, execution contract, and working rules |
+| Execution Runner | `orchestrator/runner.mjs` | Pluggable provider execution (`openai`, `anthropic`, `gemini`), 3-stage hooks, and mock replay |
+| Output Validator | `orchestrator/validator.mjs` | Pure ESM JSON Schema validator enforcing output contracts |
 | Adapters | `orchestrator/{AGENTS,CLAUDE,GEMINI}.md` | Thin model-specific presentation guidance |
-| Rules | `rules/{global,backend,frontend}/` | Scoped engineering constraints |
+| Rules | `rules/{global,backend,frontend,typescript}/` | Scoped engineering constraints |
 | Skills | `skills/*/SKILL.md`, references, agents | Triggered procedures with progressively disclosed resources and synchronized interface metadata |
 | Workflows | `workflows/*.md` | Multi-stage lifecycle orchestration, quality gates, and stop conditions |
 | Knowledge | `knowledge/*.md`, `docs/` | Attributable LLM knowledge, Obsidian maps, tasks, and decisions |
-| Schemas | `schemas/*.json` | Machine-readable knowledge and project-profile contracts |
+| Schemas | `schemas/*.json` | Output contracts (`run-result`, `evaluation-report`, `claim-evidence`) and knowledge schemas |
 | Templates and decisions | `docs/templates/`, `docs/decisions/` | Valid artifact shapes and durable architectural history |
-| Harness | `scripts/context.mjs` | Deterministic resolution, bundles, traces, lock generation, and evaluations |
+| Harness CLI | `scripts/harness-cli.mjs`, `scripts/context.mjs` | Unified CLI interface, context resolution, bundling, execution, locking, and diagnostics |
 | Automation | `.github/workflows/context-factory.yml` | Cross-platform health enforcement on pushes and pull requests |
-| Validation | `scripts/validate-context.mjs`, `evals/` | Structural, semantic, link, lock, vault, and behavioral checks |
+| Evaluation Suites | `evals/run-evals.mjs`, `evals/{cases,datasets}/` | Multi-tier unit resolution cases and golden workflow regression suites |
 
 ## Context flow
 
@@ -43,7 +45,8 @@ flowchart LR
   W --> D["Tasks and decisions"]
   D --> K["LLM Wiki knowledge"]
   K --> B["Immutable context bundle"]
-  B --> V["Validation and evaluations"]
+  B --> RN["Execution Runner (3-stage hooks)"]
+  RN --> V["Validator & Evals"]
 ```
 
 ## Invariants
@@ -66,3 +69,7 @@ flowchart LR
 - [[docs/decisions/0002-task-appropriate-form-surfaces|Task-appropriate form surfaces]]
 - [[docs/decisions/0003-first-class-development-workflows|First-class development workflows]]
 - [[docs/decisions/0004-deterministic-context-harness|Deterministic context harness]]
+- [[docs/decisions/0005-preplanning-grill-gate|Pre-planning grill gate]]
+- [[docs/decisions/0006-design-taste-layer|Design taste layer]]
+- [[docs/decisions/0007-simplify-styling-and-taste|Simplify frontend styling and remove taste layer]]
+- [[docs/decisions/0008-pluggable-ai-execution-harness|Pluggable AI execution harness, hooks, and schema validation]]

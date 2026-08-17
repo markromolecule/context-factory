@@ -1,0 +1,21 @@
+{
+  "id": "ds-defect-01",
+  "name": "Defect Resolution Workflow Evaluation",
+  "domain": "defects",
+  "request": "Fix the checkout defect that charges an order twice when the request is retried",
+  "expected": {
+    "workflow": "workflows/defect-resolution.md",
+    "rules": [
+      "rules/global/architecture-conformance.md",
+      "rules/global/code-quality.md",
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": [
+      "skills/security-review/SKILL.md"
+    ]
+  },
+  "goldenOutput": {
+    "workflow": "workflows/defect-resolution.md",
+    "status": "completed"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-factory.local/schemas/claim-evidence.schema.json",
+  "title": "Context Factory Claim Evidence Contract",
+  "type": "object",
+  "required": [
+    "id",
+    "claimType",
+    "statement",
+    "source",
+    "status",
+    "verifiedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claimType": {
+      "type": "string",
+      "enum": [
+        "verified-fact",
+        "assumption",
+        "decision",
+        "unknown",
+        "result"
+      ]
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "unverified",
+        "falsified",
+        "pending"
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string"
+        },
+        "exitCode": {
+          "type": "integer"
+        },
+        "outputFragment": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "verifiedAt": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

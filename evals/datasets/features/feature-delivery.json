@@ -1,0 +1,22 @@
+{
+  "id": "ds-feat-01",
+  "name": "Feature Delivery Workflow Evaluation",
+  "domain": "features",
+  "request": "Deliver a new user profile dashboard feature with notification preferences",
+  "expected": {
+    "workflow": "workflows/feature-delivery.md",
+    "rules": [
+      "rules/global/architecture-conformance.md",
+      "rules/global/code-quality.md",
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": [
+      "skills/implementation-plan/SKILL.md",
+      "skills/repository-discovery/SKILL.md"
+    ]
+  },
+  "goldenOutput": {
+    "workflow": "workflows/feature-delivery.md",
+    "status": "completed"
+  }
+}

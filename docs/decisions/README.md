@@ -15,3 +15,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0005-preplanning-grill-gate|0005 — Pre-planning grill gate]]
 - [[docs/decisions/0006-design-taste-layer|0006 — Design taste layer]]
 - [[docs/decisions/0007-simplify-styling-and-taste|0007 — Simplify frontend styling and remove taste layer]]
+- [[docs/decisions/0008-pluggable-ai-execution-harness|0008 — Pluggable AI execution harness, hooks, and schema validation]]
