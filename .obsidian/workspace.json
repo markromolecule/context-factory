@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEMINI.md",
+                "file": "rules/backend/module-architecture.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "GEMINI"
+              "title": "module-architecture"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "GEMINI.md",
+                "file": "rules/backend/module-architecture.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -188,17 +188,25 @@
   },
   "active": "9e9d3aae6bd030a0",
   "lastOpenFiles": [
+    "rules/backend/data-access-via-db.md",
+    "rules/backend/data-access-via-api.md",
+    "rules/backend/controllers-and-routes.md",
+    "skills/verification-review/SKILL.md",
+    "skills/execution-plan/SKILL.md",
+    "skills/implementation-plan/SKILL.md",
+    "GEMINI.md",
+    "docs/guide/rules-and-workflows.md",
+    "docs/guide/README.md",
+    "docs/guide/cross-workspace-integration.md",
     "AGENTS.md",
     "CLAUDE.md",
     "CODEX.md",
-    "GEMINI.md",
     "skills/grill-with-docs/references/glossary-format.md",
     "skills/architecture-decision/SKILL.md",
     "knowledge/README.md",
     "orchestrator/CODEX.md",
     "orchestrator/CLAUDE.md",
     "orchestrator/AGENTS.md",
-    "docs/guide/cross-workspace-integration.md",
     "docs/Home.md",
     "docs/templates/Context.md",
     "docs/context/README.md",
@@ -207,14 +215,6 @@
     "docs/decisions/0005-preplanning-grill-gate.md",
     "docs/decisions/0003-first-class-development-workflows.md",
     "docs/decisions/0002-task-appropriate-form-surfaces.md",
-    "docs/decisions/0001-vertical-backend-modules.md",
-    "docs/templates/Decision.md",
-    "docs/templates/Knowledge.md",
-    "docs/templates/Phase.md",
-    "docs/templates/Task.md",
-    "docs/decisions/README.md",
-    "skills/playground/SKILL.md",
-    "docs/context",
-    "rules/global/code-quality.md"
+    "docs/context"
   ]
 }

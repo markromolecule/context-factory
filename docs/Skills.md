@@ -15,7 +15,9 @@ tags: [skills, workflows]
 - [[skills/playground/SKILL|Playground styling]] — custom craft playground to hone skills and eliminate generic styling
 - [[skills/repository-discovery/SKILL|Repository discovery]] — map relevant code, contracts, tests, and conventions
 - [[skills/security-review/SKILL|Security review]] — threat-model and review application security boundaries
+- [[skills/typescript-diagnostics/SKILL|TypeScript diagnostics]] — diagnose and resolve TypeScript compiler and type failures
 - [[skills/verification-review/SKILL|Verification review]] — audit completion claims against fresh evidence
+- [[skills/zod-schema-modeling/SKILL|Zod schema modeling]] — model runtime validation schemas and DTO contracts with Zod
 
 Skills trigger through their YAML descriptions. Load their references only when directed by the selected skill.
 

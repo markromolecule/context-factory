@@ -1,0 +1,3 @@
+display_name: "TypeScript Diagnostics"
+short_description: "Diagnose and resolve TypeScript compiler and type failures"
+default_prompt: "Diagnose TypeScript compiler and type errors using $typescript-diagnostics"

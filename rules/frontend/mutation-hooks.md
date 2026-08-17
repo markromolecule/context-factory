@@ -1,7 +1,7 @@
 ---
 name: mutation-hooks
 description: Implement TanStack Query mutations with typed variables, safe cache updates, and explicit error/retry behavior.
-scope: `useMutation` wrappers, optimistic updates, invalidation, and mutation tests.
+scope: useMutation wrappers, optimistic updates, invalidation, and mutation tests.
 alwaysApply: false
 ---
 

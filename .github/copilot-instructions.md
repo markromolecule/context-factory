@@ -10,6 +10,7 @@ Read `orchestrator/SHARED.md` before changing this factory or using it to guide 
   - Global rules: `rules/global/` (`1-3-1-rule.md`, `code-quality.md`, `evidence-and-claims.md`, `security-guardrails.md`, `naming-conventions.md`, `architecture-conformance.md`, `git-commit.md`).
   - Backend rules: `rules/backend/` (`module-architecture.md`, `controllers-and-routes.md`, `service-layer.md`, `schema-db.md`, `data-access-via-db.md`, `data-access-via-api.md`, `testing-data-access-layer.md`).
   - Frontend rules: `rules/frontend/` (`frontend.md`, `next-react-project-structure.md`, `code-organization.md`, `forms-and-validation.md`, `interaction-feedback.md`, `mutation-hooks.md`, `query-hooks.md`, `dialogs-and-overlays.md`, `zustand-store.md`).
+  - TypeScript rules: `rules/typescript/` (`type-safety.md`, `runtime-validation.md`, `error-handling.md`, `async-discipline.md`, `module-and-imports.md`).
 - MUST: Route multi-stage engineering lifecycles to the appropriate workflow from `workflows/` (`feature-delivery.md`, `defect-resolution.md`, `database-migration.md`, `security-sensitive-change.md`, `architecture-change.md`, `context-maintenance.md`, `dependency-upgrade.md`, `release-readiness.md`).
 - MUST: Activate and read the matching skill under `skills/<skill_name>/SKILL.md` whenever user request mentions or matches skill trigger concepts.
 - MUST: Activate `skills/grill-with-docs/SKILL.md` before planning when working on a new system, product, or materially ambiguous feature.
@@ -32,7 +33,9 @@ When any user request mentions or matches these concepts, immediately activate a
 | `architecture decision`, `adr`, `tech stack choice`, `tradeoff` | [`skills/architecture-decision/SKILL.md`](../skills/architecture-decision/SKILL.md) | Output to `docs/decisions/` using `docs/templates/Decision.md`. |
 | `backend module`, `api endpoint`, `controller`, `service layer` | [`skills/backend-module/SKILL.md`](../skills/backend-module/SKILL.md) | Follow vertical module pattern & backend rules. |
 | `security review`, `auth audit`, `vulnerability`, `guardrails` | [`skills/security-review/SKILL.md`](../skills/security-review/SKILL.md) | Review authentication, authorization, and data isolation. |
+| `tsc`, `compiler error`, `type error`, `circular types` | [`skills/typescript-diagnostics/SKILL.md`](../skills/typescript-diagnostics/SKILL.md) | Diagnose and resolve compiler errors and type failures. |
 | `verification`, `verify`, `test review`, `qa check` | [`skills/verification-review/SKILL.md`](../skills/verification-review/SKILL.md) | Validate acceptance criteria against verified evidence. |
+| `zod`, `schema validation`, `runtime validation`, `dto parsing` | [`skills/zod-schema-modeling/SKILL.md`](../skills/zod-schema-modeling/SKILL.md) | Model runtime schemas, DTOs, and boundary validation contracts. |
 | `knowledge`, `wiki`, `glossary`, `grounding` | [`skills/knowledge-grounding/SKILL.md`](../skills/knowledge-grounding/SKILL.md) | Query canonical knowledge items before making claims. |
 | `explore codebase`, `repo discovery`, `map dependencies` | [`skills/repository-discovery/SKILL.md`](../skills/repository-discovery/SKILL.md) | Inspect and document existing architecture and patterns. |
 | `playground`, `styling`, `frontend component demo` | [`skills/playground/SKILL.md`](../skills/playground/SKILL.md) | Build isolated UI prototypes avoiding generic LLM styling. |

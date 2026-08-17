@@ -1,0 +1,3 @@
+display_name: "Zod Schema Modeling"
+short_description: "Model runtime validation schemas and DTO contracts with Zod"
+default_prompt: "Model runtime schemas and boundary validation using $zod-schema-modeling"

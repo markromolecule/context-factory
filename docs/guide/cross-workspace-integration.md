@@ -28,8 +28,9 @@ From the root of your consumer / host repository, run:
 
 ```sh
 # Add the submodule into .context-factory (recommended hidden directory)
-git submodule add -b main <context-factory-git-url> .context-factory
+git submodule add https://github.com/markromolecule/context-factory.git <folder>
 git commit -m "chore: add context-factory submodule"
+	- create .gitignore # To ignore the tasks folder & context
 ```
 
 > [!TIP]

@@ -39,7 +39,12 @@
     "rules/frontend/mutation-hooks.md",
     "rules/frontend/next-react-project-structure.md",
     "rules/frontend/query-hooks.md",
-    "rules/frontend/zustand-store.md"
+    "rules/frontend/zustand-store.md",
+    "rules/typescript/async-discipline.md",
+    "rules/typescript/error-handling.md",
+    "rules/typescript/module-and-imports.md",
+    "rules/typescript/runtime-validation.md",
+    "rules/typescript/type-safety.md"
   ],
   "skills": [
     "skills/architecture-decision/SKILL.md",
@@ -51,14 +56,18 @@
     "skills/playground/SKILL.md",
     "skills/repository-discovery/SKILL.md",
     "skills/security-review/SKILL.md",
-    "skills/verification-review/SKILL.md"
+    "skills/typescript-diagnostics/SKILL.md",
+    "skills/verification-review/SKILL.md",
+    "skills/zod-schema-modeling/SKILL.md"
   ],
   "skillResources": [
     "skills/execution-plan/agents/openai.yaml",
     "skills/grill-with-docs/agents/openai.yaml",
     "skills/grill-with-docs/references/glossary-format.md",
     "skills/implementation-plan/agents/openai.yaml",
-    "skills/playground/references/guide-to-avoiding-llm-styling.md"
+    "skills/playground/references/guide-to-avoiding-llm-styling.md",
+    "skills/typescript-diagnostics/agents/openai.yaml",
+    "skills/zod-schema-modeling/agents/openai.yaml"
   ],
   "workflows": [
     "workflows/architecture-change.md",
