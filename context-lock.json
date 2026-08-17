@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.4.0",
-  "digest": "sha256:58df381fffb8cf4734035ec620c5245d7117542c7e8e330b202b937893e0a728",
+  "digest": "sha256:1b6ab52d255e8ef440bbed9b434b69cca08d1a45338f4391127768b92d180d5b",
   "files": {
     ".cursorrules": "sha256:450fffa33f1c7d0ae1bc79308b0931979e1609c53041b5d9e4cbda3bd17b5084",
     ".github/copilot-instructions.md": "sha256:978ab17c448d85442ab2030413aba362279eac7103d0952a2391b7052f917ee1",
@@ -49,8 +49,8 @@
     "evals/cases/security-change.json": "sha256:44f2862e998c7356bf98021ecf5109416d3430cfee09ff70af645fe36fa01a0c",
     "evals/cases/unsupported-completion.json": "sha256:95679764dadfe313f2e31ac97a9785a5a9136ca0dc724fe469f4486c0b360e9e",
     "evals/datasets/defects/defect-resolution.json": "sha256:6e85d65109681ab18391b480ca77890bb8177d9ea26c003dc2f949e36b3be3c9",
-    "evals/datasets/features/feature-delivery.json": "sha256:3dcc66074ee1bd9f08d12a346f8412136dba312a631026547dc8dcd847e4604b",
-    "evals/datasets/refactors/architecture-change.json": "sha256:eea1a49ba5275ec961f8eb1af666304b017a724f313b04ed39cc8d378f6d3ff2",
+    "evals/datasets/features/feature-delivery.json": "sha256:18bbff6b2701ed5e59f24af7e0249d645fcdcb0adc733bdcd637cf36b8da37b3",
+    "evals/datasets/refactors/architecture-change.json": "sha256:52a4f0ee8d247eb2d7ef461873c493d93bdc580c08871fcb48241ae965bf701c",
     "evals/run-evals.mjs": "sha256:3d168b51a3ad05fb2c2058fdefc6d09a2ad437b07065eddfe7db048b6b55831d",
     "knowledge/README.md": "sha256:ed9e2334450a74a1debac1c3f69f8081d7988eb2224f1204e49ab78a1aea66c5",
     "orchestrator/AGENTS.md": "sha256:b15bc8f4b7bdbecac32645e9c96707638bcd91f000caa62db955111f0f671eeb",
