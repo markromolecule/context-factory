@@ -71,6 +71,7 @@ export function manifestPaths(manifest) {
     manifest.entrypoint,
     manifest.orchestrationContract,
     ...(manifest.orchestrators ?? []),
+    ...(manifest.agents ?? []),
     ...(manifest.rules ?? []),
     ...(manifest.skills ?? []),
     ...(manifest.skillResources ?? []),

@@ -33,6 +33,7 @@ graph TD
 
 Explore the detailed guides below to learn how to trigger and use these factory elements:
 
+- **[[docs/guide/subagents-lifecycle|Coding Lifecycle Subagents Guide]]**: How to use, switch, and delegate tasks to specialized lifecycle subagents (BA, PM, DevOps) across your development workflow.
 - **[[docs/guide/skills|Skills Guide]]**: How to use and trigger specialized agent procedures, with prompt examples and explicit invocation details.
 - **[[docs/guide/rules-and-workflows|Rules and Workflows Guide]]**: How the context resolver automatically selects rules and workflows, routing hints, and lifecycle phases.
 - **[[docs/guide/cross-workspace-integration|Cross-Workspace Integration Guide]]**: How to use Context Factory across other repositories as a Git submodule, Git subtree, or symlink, and manage workspace scoping.

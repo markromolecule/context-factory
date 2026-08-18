@@ -2,7 +2,7 @@
 name: module-architecture
 description: Organize backend capabilities as vertical modules with explicit DTO, controller, service, and data boundaries.
 scope: Backend modules, DTOs, routes, controllers, services, data access, and their tests.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Backend Module Architecture

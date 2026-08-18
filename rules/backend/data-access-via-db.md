@@ -2,7 +2,7 @@
 name: data-access-via-db
 description: Keep Kysely database access explicit, transaction-aware, parameterized, and isolated from transport concerns.
 scope: Repositories, query functions, transactions, persistence mapping, and database errors.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Data Access via Database

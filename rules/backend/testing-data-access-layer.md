@@ -2,7 +2,7 @@
 name: testing-data-access-layer
 description: Verify database and API adapters at the boundary with isolated, deterministic tests.
 scope: Repository tests, API-client tests, fixtures, database harnesses, and transport mocks.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Testing Data Access

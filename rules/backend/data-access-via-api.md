@@ -2,7 +2,7 @@
 name: data-access-via-api
 description: Implement typed, observable, and testable access to external or internal HTTP APIs.
 scope: API clients, remote repositories, transport adapters, and response mapping.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Data Access via API

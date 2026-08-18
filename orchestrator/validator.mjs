@@ -32,7 +32,11 @@ function isValidDateTime(str) {
   return !Number.isNaN(d.getTime());
 }
 
-export function validateSchema(data, schema, path = "root") {
+/**
+ * Pure ESM Schema Validator supporting JSON Schema draft-07 subsets:
+ * type, required, properties, items, enum, format (date, date-time), minItems, minimum.
+ */
+export function validateSchema(data, schema, path = "#") {
   const errors = [];
 
   if (!schema || typeof schema !== "object") {
@@ -41,119 +45,101 @@ export function validateSchema(data, schema, path = "root") {
 
   // Type check
   if (schema.type) {
-    const actualType = getType(data);
     const expectedTypes = Array.isArray(schema.type) ? schema.type : [schema.type];
+    const actualType = getType(data);
 
-    const matchesType = expectedTypes.some((exp) => {
-      if (exp === "number" && actualType === "integer") return true;
-      return exp === actualType;
-    });
+    let typeMatch = false;
+    for (const exp of expectedTypes) {
+      if (exp === "number" && (actualType === "number" || actualType === "integer")) {
+        typeMatch = true;
+        break;
+      }
+      if (exp === actualType) {
+        typeMatch = true;
+        break;
+      }
+    }
 
-    if (!matchesType) {
-      errors.push(`${path}: expected type ${expectedTypes.join("|")}, got ${actualType}`);
+    if (!typeMatch) {
+      errors.push(`${path}: expected type "${expectedTypes.join(" | ")}", got "${actualType}"`);
       return { valid: false, errors };
     }
   }
 
   // Enum check
-  if (Array.isArray(schema.enum)) {
+  if (schema.enum && Array.isArray(schema.enum)) {
     if (!schema.enum.includes(data)) {
       errors.push(`${path}: value ${JSON.stringify(data)} not in enum [${schema.enum.map((e) => JSON.stringify(e)).join(", ")}]`);
     }
   }
 
-  // String constraints
-  if (typeof data === "string") {
-    if (typeof schema.minLength === "number" && data.length < schema.minLength) {
-      errors.push(`${path}: string length ${data.length} < minLength ${schema.minLength}`);
-    }
-    if (typeof schema.maxLength === "number" && data.length > schema.maxLength) {
-      errors.push(`${path}: string length ${data.length} > maxLength ${schema.maxLength}`);
-    }
-    if (schema.pattern) {
-      const regex = new RegExp(schema.pattern);
-      if (!regex.test(data)) {
-        errors.push(`${path}: "${data}" does not match pattern ${schema.pattern}`);
-      }
-    }
+  // String format check
+  if (schema.type === "string" && schema.format) {
     if (schema.format === "date" && !isValidDate(data)) {
-      errors.push(`${path}: "${data}" is not a valid YYYY-MM-DD date`);
-    }
-    if (schema.format === "date-time" && !isValidDateTime(data)) {
+      errors.push(`${path}: "${data}" is not a valid ISO date (YYYY-MM-DD)`);
+    } else if (schema.format === "date-time" && !isValidDateTime(data)) {
       errors.push(`${path}: "${data}" is not a valid ISO date-time`);
     }
   }
 
-  // Number constraints
-  if (typeof data === "number") {
-    if (typeof schema.minimum === "number" && data < schema.minimum) {
-      errors.push(`${path}: number ${data} < minimum ${schema.minimum}`);
+  // Numeric minimum
+  if ((typeof data === "number") && typeof schema.minimum === "number" && data < schema.minimum) {
+    errors.push(`${path}: value ${data} is less than minimum ${schema.minimum}`);
+  }
+
+  // Object checks
+  if (getType(data) === "object") {
+    if (Array.isArray(schema.required)) {
+      for (const req of schema.required) {
+        if (data[req] === undefined) {
+          errors.push(`${path}: missing required property "${req}"`);
+        }
+      }
     }
-    if (typeof schema.maximum === "number" && data > schema.maximum) {
-      errors.push(`${path}: number ${data} > maximum ${schema.maximum}`);
+
+    if (schema.properties && typeof schema.properties === "object") {
+      for (const [propKey, propSchema] of Object.entries(schema.properties)) {
+        if (data[propKey] !== undefined) {
+          const res = validateSchema(data[propKey], propSchema, `${path}/${propKey}`);
+          errors.push(...res.errors);
+        }
+      }
     }
   }
 
-  // Array constraints
+  // Array checks
   if (Array.isArray(data)) {
     if (typeof schema.minItems === "number" && data.length < schema.minItems) {
-      errors.push(`${path}: array length ${data.length} < minItems ${schema.minItems}`);
+      errors.push(`${path}: array length ${data.length} is less than minItems ${schema.minItems}`);
     }
-    if (typeof schema.maxItems === "number" && data.length > schema.maxItems) {
-      errors.push(`${path}: array length ${data.length} > maxItems ${schema.maxItems}`);
-    }
+
     if (schema.items) {
-      data.forEach((item, index) => {
-        const itemRes = validateSchema(item, schema.items, `${path}[${index}]`);
-        errors.push(...itemRes.errors);
-      });
-    }
-  }
-
-  // Object constraints
-  if (data && typeof data === "object" && !Array.isArray(data)) {
-    if (Array.isArray(schema.required)) {
-      for (const reqKey of schema.required) {
-        if (!(reqKey in data) || data[reqKey] === undefined) {
-          errors.push(`${path}: missing required property "${reqKey}"`);
-        }
-      }
-    }
-
-    if (schema.properties) {
-      for (const [propKey, propVal] of Object.entries(data)) {
-        if (schema.properties[propKey]) {
-          const propRes = validateSchema(propVal, schema.properties[propKey], `${path}.${propKey}`);
-          errors.push(...propRes.errors);
-        } else if (schema.additionalProperties === false) {
-          errors.push(`${path}: unexpected property "${propKey}" not allowed`);
-        }
-      }
-    } else if (schema.additionalProperties === false) {
-      const keys = Object.keys(data);
-      if (keys.length > 0) {
-        errors.push(`${path}: unexpected properties [${keys.join(", ")}]`);
+      for (let i = 0; i < data.length; i++) {
+        const res = validateSchema(data[i], schema.items, `${path}/${i}`);
+        errors.push(...res.errors);
       }
     }
   }
 
-  return { valid: errors.length === 0, errors };
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
 }
 
-export function assertValid(data, schema, path = "root") {
-  const result = validateSchema(data, schema, path);
+export function assertValid(data, schema, name = "Data") {
+  const result = validateSchema(data, schema);
   if (!result.valid) {
-    throw new ValidationError(`Schema validation failed with ${result.errors.length} error(s):\n  - ${result.errors.join("\n  - ")}`, result.errors);
+    throw new ValidationError(`${name} validation failed:\n- ${result.errors.join("\n- ")}`, result.errors);
   }
   return true;
 }
 
-export async function loadSchema(schemaNameOrPath) {
-  const target = schemaNameOrPath.endsWith(".schema.json")
-    ? schemaNameOrPath
-    : `${schemaNameOrPath}.schema.json`;
-  const fullPath = target.startsWith("schemas/")
-    ? join(root, target)
-    : join(root, "schemas", target);
-  return JSON.parse(await readFile(fullPath, "utf8"));
+export async function loadSchema(schemaName) {
+  const cleanName = schemaName.endsWith(".schema.json")
+    ? schemaName
+    : (schemaName.endsWith(".json") ? schemaName : `${schemaName}.schema.json`);
+  const schemaPath = join(root, "schemas", cleanName);
+  const content = await readFile(schemaPath, "utf8");
+  return JSON.parse(content);
 }

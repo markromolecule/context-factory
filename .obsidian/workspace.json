@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "rules/backend/module-architecture.md",
+                "file": "docs/guide/cross-workspace-integration.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "module-architecture"
+              "title": "cross-workspace-integration"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "rules/backend/module-architecture.md",
+                "file": "docs/guide/cross-workspace-integration.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -188,9 +188,12 @@
   },
   "active": "9e9d3aae6bd030a0",
   "lastOpenFiles": [
-    "rules/backend/data-access-via-db.md",
+    "rules/backend/testing-data-access-layer.md",
+    "rules/backend/service-layer.md",
     "rules/backend/data-access-via-api.md",
     "rules/backend/controllers-and-routes.md",
+    "rules/backend/data-access-via-db.md",
+    "rules/backend/module-architecture.md",
     "skills/verification-review/SKILL.md",
     "skills/execution-plan/SKILL.md",
     "skills/implementation-plan/SKILL.md",
@@ -212,9 +215,6 @@
     "docs/context/README.md",
     "README.md",
     "Untitled.base",
-    "docs/decisions/0005-preplanning-grill-gate.md",
-    "docs/decisions/0003-first-class-development-workflows.md",
-    "docs/decisions/0002-task-appropriate-form-surfaces.md",
     "docs/context"
   ]
 }

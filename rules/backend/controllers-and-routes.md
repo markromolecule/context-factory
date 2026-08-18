@@ -2,7 +2,7 @@
 name: controllers-and-routes
 description: Keep HTTP transport code thin, validated, framework-idiomatic, and separate from business/data logic.
 scope: API route declarations, controllers, handlers, middleware, and HTTP response mapping.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Controllers and Routes

@@ -117,6 +117,16 @@ for (const path of manifest.rules) {
   }
 }
 
+for (const path of manifest.agents ?? []) {
+  if (path.endsWith("/AGENT.md") || path.endsWith("/AGENT_TEMPLATE.md")) {
+    const meta = frontmatter(await readText(path));
+    if (!meta?.name || !meta?.title || !meta?.role || !meta?.description) {
+      error(`Agent metadata is incomplete: ${path}`);
+    }
+  }
+}
+
+const actualAgents = (await filesUnder("agents")).filter((path) => extname(path) === ".md");
 const actualRules = (await filesUnder("rules")).filter((path) => extname(path) === ".md");
 const actualSkills = (await filesUnder("skills")).filter((path) => path.endsWith("/SKILL.md"));
 const actualSkillResources = (await filesUnder("skills")).filter((path) => !path.endsWith("/SKILL.md"));
@@ -137,6 +147,7 @@ const actualAutomation = (await filesUnder(".github/workflows"))
 const actualEvaluations = (await filesUnder("evals/cases")).filter((path) => extname(path) === ".json");
 const actualDatasets = (await filesUnder("evals/datasets")).filter((path) => extname(path) === ".json");
 
+if (!sameMembers(actualAgents, manifest.agents ?? [])) error("Agent inventory differs from context-manifest.json");
 if (!sameMembers(actualRules, manifest.rules)) error("Rule inventory differs from context-manifest.json");
 if (!sameMembers(actualSkills, manifest.skills)) error("Skill inventory differs from context-manifest.json");
 if (!sameMembers(actualSkillResources, manifest.skillResources)) {
@@ -155,9 +166,15 @@ if (!sameMembers(actualDatasets, manifest.datasets ?? [])) error("Dataset invent
 
 const rulesMap = await readText("docs/Rules.md");
 const skillsMap = await readText("docs/Skills.md");
+const agentsMap = await readText("docs/Agents.md");
 
 const workflowsMap = await readText("docs/Workflows.md");
 const wikiMap = await readText("docs/Wiki.md");
+for (const path of manifest.agents ?? []) {
+  if (path.endsWith("/AGENT.md")) {
+    if (!agentsMap.includes(`[[${path.slice(0, -3)}`)) error(`Agent is missing from docs/Agents.md: ${path}`);
+  }
+}
 for (const path of manifest.rules) {
   if (!rulesMap.includes(`[[${path.slice(0, -3)}`)) error(`Rule is missing from docs/Rules.md: ${path}`);
 }
@@ -284,6 +301,6 @@ if (errors.length) {
 console.log(
   `Context Factory ${manifest.contextVersion} is valid: `
   + `${manifest.rules.length} rules, ${manifest.skills.length} skills, `
-  + `${manifest.workflows.length} workflows, ${manifest.knowledge.length} knowledge items, `
+  + `${manifest.workflows.length} workflows, ${(manifest.agents ?? []).length} agent resources, ${manifest.knowledge.length} knowledge items, `
   + `${manifest.evaluations.length} evaluations, ${allMarkdown.length} Markdown files.`,
 );

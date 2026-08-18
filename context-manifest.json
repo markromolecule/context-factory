@@ -16,6 +16,19 @@
     "orchestrator/CODEX.md",
     "orchestrator/GEMINI.md"
   ],
+  "agents": [
+    "agents/README.md",
+    "agents/ba-agent/AGENT.md",
+    "agents/ba-agent/prompts/subagent-invocation.md",
+    "agents/ba-agent/prompts/system-prompt.md",
+    "agents/devops-agent/AGENT.md",
+    "agents/devops-agent/prompts/subagent-invocation.md",
+    "agents/devops-agent/prompts/system-prompt.md",
+    "agents/pm-agent/AGENT.md",
+    "agents/pm-agent/prompts/subagent-invocation.md",
+    "agents/pm-agent/prompts/system-prompt.md",
+    "agents/templates/AGENT_TEMPLATE.md"
+  ],
   "rules": [
     "rules/global/1-3-1-rule.md",
     "rules/global/architecture-conformance.md",
@@ -145,9 +158,11 @@
     "docs/context/README.md",
     "docs/tasks/README.md",
     "docs/decisions/README.md",
+    "agents/README.md",
     "docs/guide/README.md",
     "docs/guide/skills.md",
     "docs/guide/rules-and-workflows.md",
-    "docs/guide/cross-workspace-integration.md"
+    "docs/guide/cross-workspace-integration.md",
+    "docs/guide/subagents-lifecycle.md"
   ]
 }

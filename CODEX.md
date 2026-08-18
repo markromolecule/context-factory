@@ -51,6 +51,12 @@ For multi-stage engineering lifecycles, load the appropriate workflow from `work
 - **Dependency Upgrades:** `workflows/dependency-upgrade.md`
 - **Release Readiness:** `workflows/release-readiness.md`
 
+## Coding Lifecycle Subagents
+When addressing lifecycle-specific phases, adopt or delegate to the corresponding subagent from `agents/`:
+- **Business Analyst (`agents/ba-agent/AGENT.md`):** Use for requirements discovery, user stories, domain terms, and scenario matrices.
+- **Project Manager (`agents/pm-agent/AGENT.md`):** Use for phased task plans, milestone tracking, and blocker resolution.
+- **DevOps Specialist (`agents/devops-agent/AGENT.md`):** Use for CI/CD pipelines (`.github/workflows/`), Docker containerization, environment hygiene (`.env.example`), and release readiness.
+
 ## Codex / OpenAI Operating Guidelines
 - MUST: Adhere strictly to vertical backend module boundaries and frontend styling guidelines.
 - MUST: Never write or edit production code when fulfilling plan-only requests.

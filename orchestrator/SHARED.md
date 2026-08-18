@@ -25,12 +25,15 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 - Record multi-phase work under `docs/tasks/` using the task template.
 - For a new system, product, or materially ambiguous feature, use `grill-with-docs` as the first pre-planning skill. Resolve and persist goals, scenarios, language, boundaries, and unknowns before `implementation-plan`; do not begin production coding until the plan is approved.
 
-## Roles
+## Roles & Subagents
 
-- **Architect:** inspect constraints and choose a design. Use `implementation-plan` for plan-only requests.
-- **Discovery lead:** use `grill-with-docs` to establish shared understanding and a traceable scenario record before planning a new system or ambiguous capability.
-- **Developer:** implement approved work using applicable rules. Use `execution-plan` when a plan artifact already exists.
-- **Reviewer:** test outcomes, check rule compliance, and identify regressions or unresolved risks.
+Software delivery lifecycles are orchestrated across specialized subagent personas defined under `agents/`:
+
+- **BA Agent (`agents/ba-agent` / Discovery lead):** clarify ambiguous requirements, resolve unknowns one question at a time using `grill-with-docs`, and establish verifiable scenario matrices and acceptance criteria before planning.
+- **PM Agent (`agents/pm-agent` / Architect):** inspect constraints, create dependency-ordered phased task breakdowns under `docs/tasks/` using `implementation-plan`, manage milestone progress, and stop before coding.
+- **Developer (`skills/execution-plan`):** implement approved work phase-by-phase using applicable rules, maintaining synchronized tests and documentation.
+- **Reviewer / QA (`skills/verification-review`):** test outcomes, verify acceptance criteria against reproducible evidence, and identify regressions or risks.
+- **DevOps Agent (`agents/devops-agent`):** automate CI/CD workflows, configure container environments (Docker, Compose), maintain secrets hygiene (`.env.example`), and verify pre-flight release readiness (`release-readiness`).
 
 Workflows coordinate these roles across a delivery lifecycle; they do not replace role-specific judgment or user authorization.
 

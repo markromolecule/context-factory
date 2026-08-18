@@ -2,7 +2,7 @@
 name: service-layer
 description: Place multi-step business workflows and invariants in testable services with explicit dependencies.
 scope: Application services, use cases, business orchestration, and domain error handling.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Service Layer
