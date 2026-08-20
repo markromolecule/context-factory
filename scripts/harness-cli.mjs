@@ -11,6 +11,7 @@ import {
   root,
   sha256,
 } from "./context-core.mjs";
+import { listTasks, scaffoldTask } from "./task-workflow.mjs";
 import { executeRun } from "../orchestrator/runner.mjs";
 import { assertValid, loadSchema, validateSchema } from "../orchestrator/validator.mjs";
 import { runAllEvaluations } from "../evals/run-evals.mjs";
@@ -23,6 +24,8 @@ Usage:
   node scripts/harness-cli.mjs bundle <request> [--out <path>]
   node scripts/harness-cli.mjs explain <run-id-or-bundle-path>
   node scripts/harness-cli.mjs run <request> [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>]
+  node scripts/harness-cli.mjs task:new <title> [--type <feature|defect|refactor|migration>] [--dry-run]
+  node scripts/harness-cli.mjs task:list [--json]
   node scripts/harness-cli.mjs validate <file-path> --schema <schema-name>
   node scripts/harness-cli.mjs eval [--unit] [--datasets] [--json] [--quiet] [--provider <name>]
   node scripts/harness-cli.mjs lock [--check]
@@ -148,6 +151,42 @@ export async function handleCli(argv = process.argv.slice(2)) {
       taste: bundle.selection.taste,
       sources: bundle.sources.map(({ path: sourcePath, hash }) => ({ path: sourcePath, hash })),
     });
+    return 0;
+  }
+
+  if (command === "task:new") {
+    const typeIndex = rawArgs.indexOf("--type");
+    const type = typeIndex >= 0 ? rawArgs[typeIndex + 1] : "feature";
+    const dryRun = rawArgs.includes("--dry-run");
+    const titleArgs = typeIndex >= 0
+      ? [...rawArgs.slice(0, typeIndex), ...rawArgs.slice(typeIndex + 2)].filter((arg) => arg !== "--dry-run")
+      : rawArgs.filter((arg) => arg !== "--dry-run");
+    const title = titleArgs.join(" ").trim();
+    if (!title) throw new Error("task:new requires a task title");
+
+    const result = await scaffoldTask({ title, type, dryRun });
+    if (dryRun) {
+      console.log(`[DRY RUN] Would scaffold task: ${result.taskDirectory}`);
+    } else {
+      console.log(`Scaffolded task ${result.taskId} (${result.type}) at ${result.taskDirectory}:`);
+      for (const file of result.files) {
+        console.log(`  - ${file}`);
+      }
+    }
+    return 0;
+  }
+
+  if (command === "task:list") {
+    const tasks = await listTasks();
+    if (rawArgs.includes("--json")) {
+      output(tasks);
+    } else {
+      console.log(`\n--- Context Factory Tasks (${tasks.length}) ---`);
+      for (const t of tasks) {
+        console.log(`[${t.status.toUpperCase()}] ${t.title} (${t.created}) -> ${t.path}`);
+      }
+      console.log("");
+    }
     return 0;
   }
 

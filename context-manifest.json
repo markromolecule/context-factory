@@ -117,7 +117,8 @@
     "docs/decisions/0005-preplanning-grill-gate.md",
     "docs/decisions/0006-design-taste-layer.md",
     "docs/decisions/0007-simplify-styling-and-taste.md",
-    "docs/decisions/0008-pluggable-ai-execution-harness.md"
+    "docs/decisions/0008-pluggable-ai-execution-harness.md",
+    "docs/decisions/0009-session-keyword-triggers-and-workflow-automation.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
@@ -126,6 +127,7 @@
     "scripts/context-core.mjs",
     "scripts/context.mjs",
     "scripts/harness-cli.mjs",
+    "scripts/task-workflow.mjs",
     "scripts/validate-context.mjs"
   ],
   "automation": [
@@ -139,6 +141,7 @@
     "evals/cases/knowledge-grounding.json",
     "evals/cases/preplanning-new-system.json",
     "evals/cases/security-change.json",
+    "evals/cases/slash-commands.json",
     "evals/cases/unsupported-completion.json"
   ],
   "datasets": [

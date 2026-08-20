@@ -73,3 +73,4 @@ flowchart LR
 - [[docs/decisions/0006-design-taste-layer|Design taste layer]]
 - [[docs/decisions/0007-simplify-styling-and-taste|Simplify frontend styling and remove taste layer]]
 - [[docs/decisions/0008-pluggable-ai-execution-harness|Pluggable AI execution harness, hooks, and schema validation]]
+- [[docs/decisions/0009-session-keyword-triggers-and-workflow-automation|Session keyword triggers and automated workflow dispatch]]

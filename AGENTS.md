@@ -40,6 +40,22 @@ When any user request mentions or matches these concepts, immediately activate a
 | `explore codebase`, `repo discovery`, `map dependencies` | [`skills/repository-discovery/SKILL.md`](skills/repository-discovery/SKILL.md) | Inspect and document existing architecture and patterns. |
 | `playground`, `styling`, `frontend component demo` | [`skills/playground/SKILL.md`](skills/playground/SKILL.md) | Build isolated UI prototypes avoiding generic LLM styling. |
 
+## Session Slash Commands & Prefix Triggers
+When the user's prompt begins with a slash command or bracket prefix, prioritize the matching workflow and subagent:
+
+| Command / Prefix | Target Workflow | Active Skill / Subagent | Key Mandatory Action |
+| :--- | :--- | :--- | :--- |
+| `/grill`, `[DISCOVERY]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/ba-agent`](agents/ba-agent/AGENT.md) + [`skills/grill-with-docs`](skills/grill-with-docs/SKILL.md) | Pre-planning interview: clarify 1 unknown at a time before planning |
+| `/plan`, `[PLAN]`, `[FEATURE]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/pm-agent`](agents/pm-agent/AGENT.md) + [`skills/implementation-plan`](skills/implementation-plan/SKILL.md) | Output to `docs/tasks/` via `task:new`. **Stop before coding.** |
+| `/exec`, `[EXEC]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`skills/execution-plan`](skills/execution-plan/SKILL.md) | Execute approved task phases incrementally with verification. |
+| `/fix`, `[HOTFIX]`, `[BUG]` | [`workflows/defect-resolution.md`](workflows/defect-resolution.md) | [`workflows/defect-resolution.md`](workflows/defect-resolution.md) | Capture reproduction test before modifying code. |
+| `/migrate`, `[MIGRATE]`, `[DB]` | [`workflows/database-migration.md`](workflows/database-migration.md) | Database domain rules | Plan forward migration, rollback script, and consumer types. |
+| `/sec`, `[SEC]`, `[SECURITY]` | [`workflows/security-sensitive-change.md`](workflows/security-sensitive-change.md) | [`skills/security-review`](skills/security-review/SKILL.md) | Review auth, credentials, data isolation, and abuse cases. |
+| `/arch`, `/adr`, `[ADR]` | [`workflows/architecture-change.md`](workflows/architecture-change.md) | [`skills/architecture-decision`](skills/architecture-decision/SKILL.md) | Output to `docs/decisions/` using `Decision.md`. |
+| `/deps`, `/upgrade`, `[UPGRADE]` | [`workflows/dependency-upgrade.md`](workflows/dependency-upgrade.md) | Dependency rules | Audit compatibility boundaries and run canary tests. |
+| `/release`, `/verify`, `[RELEASE]` | [`workflows/release-readiness.md`](workflows/release-readiness.md) | [`agents/devops-agent`](agents/devops-agent/AGENT.md) + [`skills/verification-review`](skills/verification-review/SKILL.md) | Verify tests, lint, typecheck, and readiness evidence. |
+| `/context`, `[CONTEXT]` | [`workflows/context-maintenance.md`](workflows/context-maintenance.md) | Context Maintenance | Run `node scripts/harness-cli.mjs lock` and `doctor`. |
+
 ## Workflow Routing
 For multi-stage engineering lifecycles, load the appropriate workflow from `workflows/`:
 - **New Feature Delivery:** `workflows/feature-delivery.md`

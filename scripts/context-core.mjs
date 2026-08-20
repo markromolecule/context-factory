@@ -130,16 +130,28 @@ async function entries(paths) {
 }
 
 const ACTION_TERMS = new Set([
-  "add", "build", "change", "create", "deliver", "deploy", "design", "execute", "fix",
-  "implement", "migrate", "plan", "redesign", "release", "remove", "resolve", "review", "upgrade",
+  "add", "build", "change", "create", "deliver", "deploy", "design", "discovery", "execute",
+  "fix", "grill", "hotfix", "implement", "migrate", "plan", "redesign", "refactor", "release",
+  "remove", "resolve", "review", "sec", "security", "sync", "upgrade", "verify",
 ]);
 
-const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan))\b/i;
-const EXECUTION_PLAN_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b/i;
+const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan))\b|^\/(?:grill|discovery)\b|^\[(?:GRILL|DISCOVERY)\]/i;
+const EXECUTION_PLAN_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b|^\/(?:exec|execute)\b|^\[(?:EXEC|EXECUTE)\]/i;
 
 const ROUTING_HINTS = [
-  { test: /\b(defect|bug|broken|regression|fix)\b/i, workflow: "defect-resolution" },
-  { test: /\b(architecture|cross-module|dependency direction|system boundary)\b/i, workflow: "architecture-change" },
+  // 1. Explicit Slash Commands and Bracket Prefix Tags (Highest Precedence)
+  { test: /^\/(?:fix|hotfix|bug)\b|^\[(?:BUG|HOTFIX|DEFECT)\]/i, workflow: "defect-resolution" },
+  { test: /^\/(?:migrate|db|schema)\b|^\[(?:MIGRATE|DB|SCHEMA)\]/i, workflow: "database-migration" },
+  { test: /^\/(?:sec|security|auth)\b|^\[(?:SEC|SECURITY|AUTH)\]/i, workflow: "security-sensitive-change" },
+  { test: /^\/(?:arch|refactor|adr)\b|^\[(?:ARCH|REFACTOR|ADR)\]/i, workflow: "architecture-change" },
+  { test: /^\/(?:upgrade|deps)\b|^\[(?:DEPS|UPGRADE)\]/i, workflow: "dependency-upgrade" },
+  { test: /^\/(?:release|ready|deploy)\b|^\[(?:RELEASE|DEPLOY)\]/i, workflow: "release-readiness" },
+  { test: /^\/(?:context|sync|lock)\b|^\[(?:CONTEXT|MAINTENANCE)\]/i, workflow: "context-maintenance" },
+  { test: /^\/(?:plan|feature|grill|discovery)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY)\]/i, workflow: "feature-delivery" },
+
+  // 2. Keyword & Concept matchers
+  { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },
+  { test: /\b(architecture|cross-module|dependency direction|system boundary|refactor)\b/i, workflow: "architecture-change" },
   { test: /\b(webhook|credential|secret|authorization|authentication|security|signature|replay)\b/i, workflow: "security-sensitive-change" },
   { test: /\b(database migration|schema migration|backfill)\b/i, workflow: "database-migration" },
   { test: /\b(dependency|package|library|framework).*\b(upgrade|update|migrate)\b/i, workflow: "dependency-upgrade" },
@@ -152,7 +164,7 @@ const ROUTING_HINTS = [
 export async function resolveContext(request) {
   const manifest = await readJson("context-manifest.json");
   const requestTerms = terms(request);
-  const hasAction = requestTerms.some((term) => ACTION_TERMS.has(term));
+  const hasAction = requestTerms.some((term) => ACTION_TERMS.has(term)) || /^\/[a-z0-9_-]+|^\[[a-z0-9_-]+\]/i.test(request.trim());
   const ruleEntries = await entries(manifest.rules);
   const skillEntries = await entries(manifest.skills);
   const workflowEntries = await entries(manifest.workflows);
