@@ -91,6 +91,7 @@
     "workflows/defect-resolution.md",
     "workflows/dependency-upgrade.md",
     "workflows/feature-delivery.md",
+    "workflows/new-project-delivery.md",
     "workflows/release-readiness.md",
     "workflows/security-sensitive-change.md"
   ],
@@ -121,7 +122,8 @@
     "docs/decisions/0007-simplify-styling-and-taste.md",
     "docs/decisions/0008-pluggable-ai-execution-harness.md",
     "docs/decisions/0009-session-keyword-triggers-and-workflow-automation.md",
-    "docs/decisions/0010-data-layer-query-optimization-and-performance-architecture.md"
+    "docs/decisions/0010-data-layer-query-optimization-and-performance-architecture.md",
+    "docs/decisions/0011-progressive-contract-driven-loop-engineering.md"
   ],
   "tools": [
     "evals/run-evals.mjs",

@@ -47,6 +47,7 @@ When the user's prompt begins with a slash command or bracket prefix, prioritize
 
 | Command / Prefix | Target Workflow | Active Skill / Subagent | Key Mandatory Action |
 | :--- | :--- | :--- | :--- |
+| `/new-project`, `[NEW_PROJECT]` | [`workflows/new-project-delivery.md`](workflows/new-project-delivery.md) | [`skills/grill-with-docs`](skills/grill-with-docs/SKILL.md) + [`skills/implementation-plan`](skills/implementation-plan/SKILL.md) | Progressive vertical-slice scaffolding with 4-layer testing and loop engineering |
 | `/grill`, `[DISCOVERY]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/ba-agent`](agents/ba-agent/AGENT.md) + [`skills/grill-with-docs`](skills/grill-with-docs/SKILL.md) | Pre-planning interview: clarify 1 unknown at a time before planning |
 | `/plan`, `[PLAN]`, `[FEATURE]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/pm-agent`](agents/pm-agent/AGENT.md) + [`skills/implementation-plan`](skills/implementation-plan/SKILL.md) | Output to `docs/tasks/` via `task:new`. **Stop before coding.** |
 | `/exec`, `[EXEC]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`skills/execution-plan`](skills/execution-plan/SKILL.md) | Execute approved task phases incrementally with verification. |
@@ -60,6 +61,7 @@ When the user's prompt begins with a slash command or bracket prefix, prioritize
 
 ## Workflow Routing
 For multi-stage engineering lifecycles, load the appropriate workflow from `workflows/`:
+- **New Project & Greenfield Delivery:** `workflows/new-project-delivery.md`
 - **New Feature Delivery:** `workflows/feature-delivery.md`
 - **Bug & Defect Fixes:** `workflows/defect-resolution.md`
 - **Database & Schema Changes:** `workflows/database-migration.md`

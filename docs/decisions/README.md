@@ -18,3 +18,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0008-pluggable-ai-execution-harness|0008 — Pluggable AI execution harness, hooks, and schema validation]]
 - [[docs/decisions/0009-session-keyword-triggers-and-workflow-automation|0009 — Session keyword triggers and automated workflow dispatch]]
 - [[docs/decisions/0010-data-layer-query-optimization-and-performance-architecture|0010 — Data layer query optimization and performance architecture]]
+- [[docs/decisions/0011-progressive-contract-driven-loop-engineering|0011 — Progressive contract-driven and loop-engineered architecture]]

@@ -15,7 +15,7 @@ Prefer names that describe domain intent over implementation mechanics.
 | React components/classes/types | PascalCase                               | `UserProfile`          |
 | Functions/variables            | camelCase                                | `getUserProfile`       |
 | Constants                      | UPPER_SNAKE_CASE                         | `MAX_RETRY_COUNT`      |
-| Hooks                          | `use` prefix; file `use-*.ts`            | `useCurrentUser`       |
+| Hooks                          | `use` prefix with category suffix (`use-*-query.ts`, `use-*-mutation.ts`, `use-*-*.ts`) | `use-user-query.ts` (`useUserQuery`), `use-update-user-mutation.ts` (`useUpdateUserMutation`) |
 | Tests                          | source name + `.test`                    | `user-service.test.ts` |
 | REST paths                     | lowercase kebab-case nouns               | `/api/user-profiles`   |
 | Database identifiers           | snake_case unless ORM convention differs | `created_at`           |

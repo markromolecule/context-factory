@@ -44,6 +44,7 @@ When any user request mentions or matches these concepts, immediately activate a
 
 ## Workflow Routing
 For multi-stage engineering lifecycles, load the appropriate workflow from `workflows/`:
+- **New Project & Greenfield Delivery:** `workflows/new-project-delivery.md`
 - **New Feature Delivery:** `workflows/feature-delivery.md`
 - **Bug & Defect Fixes:** `workflows/defect-resolution.md`
 - **Database & Schema Changes:** `workflows/database-migration.md`

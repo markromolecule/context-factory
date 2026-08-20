@@ -12,6 +12,7 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 
 - [[workflows/architecture-change|Architecture change]] — evolve durable boundaries and shared patterns safely
 - [[workflows/feature-delivery|Feature delivery]] — deliver scoped behavior from evidence through handoff
+- [[workflows/new-project-delivery|New project progressive delivery]] — scaffold greenfield systems through progressive vertical slices, grilling, 4-layer testing, and loop-engineering
 - [[workflows/defect-resolution|Defect resolution]] — reproduce, diagnose, regress, and safely fix defects
 - [[workflows/release-readiness|Release readiness]] — make an evidence-backed ready/not-ready decision
 
@@ -29,6 +30,7 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 
 Use leading slash commands or bracket prefix tags for instant, deterministic workflow activation:
 
+- `/new-project`, `[NEW_PROJECT]` $\rightarrow$ [[workflows/new-project-delivery|New project progressive delivery]]: progressive vertical-slice execution with grilling and 4-layer tests
 - `/grill`, `[DISCOVERY]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: clarify 1 unknown at a time with `grill-with-docs` before planning
 - `/plan`, `[PLAN]`, `[FEATURE]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: scaffold task under `docs/tasks/` with `implementation-plan`, stop before coding
 - `/exec`, `[EXEC]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: execute approved task phases incrementally with `execution-plan`

@@ -147,6 +147,7 @@ const ROUTING_HINTS = [
   { test: /^\/(?:upgrade|deps)\b|^\[(?:DEPS|UPGRADE)\]/i, workflow: "dependency-upgrade" },
   { test: /^\/(?:release|ready|deploy)\b|^\[(?:RELEASE|DEPLOY)\]/i, workflow: "release-readiness" },
   { test: /^\/(?:context|sync|lock)\b|^\[(?:CONTEXT|MAINTENANCE)\]/i, workflow: "context-maintenance" },
+  { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "new-project-delivery" },
   { test: /^\/(?:plan|feature|grill|discovery)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY)\]/i, workflow: "feature-delivery" },
 
   // 2. Keyword & Concept matchers
