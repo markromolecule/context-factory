@@ -8,8 +8,8 @@ Read `orchestrator/SHARED.md` before changing this factory or using it to guide 
 - MUST: Deterministically resolve required context before executing non-trivial requests by running `node scripts/context.mjs resolve "<user request>"` or checking the Trigger Dispatch Matrix below.
 - MUST: Inspect and load applicable rules from `rules/` matching the touched files and domain:
   - Global rules: `rules/global/` (`1-3-1-rule.md`, `code-quality.md`, `evidence-and-claims.md`, `security-guardrails.md`, `naming-conventions.md`, `architecture-conformance.md`, `git-commit.md`).
-  - Backend rules: `rules/backend/` (`module-architecture.md`, `controllers-and-routes.md`, `service-layer.md`, `schema-db.md`, `data-access-via-db.md`, `data-access-via-api.md`, `testing-data-access-layer.md`).
-  - Frontend rules: `rules/frontend/` (`frontend.md`, `next-react-project-structure.md`, `code-organization.md`, `forms-and-validation.md`, `interaction-feedback.md`, `mutation-hooks.md`, `query-hooks.md`, `dialogs-and-overlays.md`, `zustand-store.md`).
+  - Backend rules: `rules/backend/` (`module-architecture.md`, `controllers-and-routes.md`, `service-layer.md`, `schema-db.md`, `data-access-via-db.md`, `data-access-via-api.md`, `testing-data-access-layer.md`, `query-optimization-and-pagination.md`).
+  - Frontend rules: `rules/frontend/` (`frontend.md`, `next-react-project-structure.md`, `code-organization.md`, `custom-hooks.md`, `forms-and-validation.md`, `interaction-feedback.md`, `mutation-hooks.md`, `query-hooks.md`, `dialogs-and-overlays.md`, `zustand-store.md`).
   - TypeScript rules: `rules/typescript/` (`type-safety.md`, `runtime-validation.md`, `error-handling.md`, `async-discipline.md`, `module-and-imports.md`).
 - MUST: Route multi-stage engineering lifecycles to the appropriate workflow from `workflows/` (`feature-delivery.md`, `defect-resolution.md`, `database-migration.md`, `security-sensitive-change.md`, `architecture-change.md`, `context-maintenance.md`, `dependency-upgrade.md`, `release-readiness.md`).
 - MUST: Activate and read the matching skill under `skills/<skill_name>/SKILL.md` whenever user request mentions or matches skill trigger concepts.

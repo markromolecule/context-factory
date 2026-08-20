@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "3.4.0",
+  "contextVersion": "3.5.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -41,10 +41,12 @@
     "rules/backend/data-access-via-api.md",
     "rules/backend/data-access-via-db.md",
     "rules/backend/module-architecture.md",
+    "rules/backend/query-optimization-and-pagination.md",
     "rules/backend/schema-db.md",
     "rules/backend/service-layer.md",
     "rules/backend/testing-data-access-layer.md",
     "rules/frontend/code-organization.md",
+    "rules/frontend/custom-hooks.md",
     "rules/frontend/dialogs-and-overlays.md",
     "rules/frontend/frontend.md",
     "rules/frontend/forms-and-validation.md",
@@ -118,7 +120,8 @@
     "docs/decisions/0006-design-taste-layer.md",
     "docs/decisions/0007-simplify-styling-and-taste.md",
     "docs/decisions/0008-pluggable-ai-execution-harness.md",
-    "docs/decisions/0009-session-keyword-triggers-and-workflow-automation.md"
+    "docs/decisions/0009-session-keyword-triggers-and-workflow-automation.md",
+    "docs/decisions/0010-data-layer-query-optimization-and-performance-architecture.md"
   ],
   "tools": [
     "evals/run-evals.mjs",

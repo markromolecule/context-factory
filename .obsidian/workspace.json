@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "workflows/defect-resolution.md",
+                "file": "rules/backend/data-access-via-db.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "defect-resolution"
+              "title": "data-access-via-db"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "workflows/defect-resolution.md",
+                "file": "rules/backend/data-access-via-db.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -188,9 +188,22 @@
   },
   "active": "e5472c025c6e1cac",
   "lastOpenFiles": [
+    "rules/frontend/custom-hooks.md",
+    "rules/backend/query-optimization-and-pagination.md",
+    "docs/decisions/0010-data-layer-query-optimization-and-performance-architecture.md",
+    "docs/tasks/2026/08/2026-08-20/0002-task-data-layer-optimization-and-system-performance-arc/phase-04-verification-and-release.md",
+    "docs/tasks/2026/08/2026-08-20/0002-task-data-layer-optimization-and-system-performance-arc/phase-03-implementation-and-tests.md",
+    "docs/tasks/2026/08/2026-08-20/0002-task-data-layer-optimization-and-system-performance-arc/phase-02-architecture-and-contracts.md",
+    "docs/tasks/2026/08/2026-08-20/0002-task-data-layer-optimization-and-system-performance-arc/phase-01-discovery-and-scenarios.md",
+    "docs/tasks/2026/08/2026-08-20/0002-task-data-layer-optimization-and-system-performance-arc/README.md",
+    "docs/tasks/2026/08/2026-08-20/0002-task-data-layer-optimization-and-system-performance-arc",
+    "rules/backend/controllers-and-routes.md",
+    "README.md",
+    "docs/Workflows.md",
     "workflows/dependency-upgrade.md",
-    "workflows/database-migration.md",
     "workflows/context-maintenance.md",
+    "workflows/database-migration.md",
+    "workflows/defect-resolution.md",
     "workflows/architecture-change.md",
     "agents/pm-agent/AGENT.md",
     "agents/devops-agent/AGENT.md",
@@ -199,21 +212,9 @@
     "rules/backend/testing-data-access-layer.md",
     "rules/backend/service-layer.md",
     "rules/backend/data-access-via-api.md",
-    "rules/backend/controllers-and-routes.md",
     "rules/backend/data-access-via-db.md",
     "rules/backend/module-architecture.md",
     "skills/verification-review/SKILL.md",
-    "skills/execution-plan/SKILL.md",
-    "skills/implementation-plan/SKILL.md",
-    "GEMINI.md",
-    "docs/guide/rules-and-workflows.md",
-    "docs/guide/README.md",
-    "AGENTS.md",
-    "CLAUDE.md",
-    "CODEX.md",
-    "skills/grill-with-docs/references/glossary-format.md",
-    "skills/architecture-decision/SKILL.md",
-    "knowledge/README.md",
     "Untitled.base",
     "docs/context"
   ]
