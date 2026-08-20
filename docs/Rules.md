@@ -16,29 +16,19 @@ tags: [rules, engineering]
 - [[rules/global/naming-conventions|Naming conventions]]
 - [[rules/global/security-guardrails|Security guardrails]]
 
+## Database
+
+- [[rules/database/data-access-via-db|Database data access]]
+- [[rules/database/query-optimization-and-pagination|Query optimization and pagination]]
+- [[rules/database/schema-db|Prisma and Kysely schema]]
+- [[rules/database/testing-data-access-layer|Data-access testing]]
+
 ## Backend
 
 - [[rules/backend/controllers-and-routes|Controllers and routes]]
 - [[rules/backend/data-access-via-api|API data access]]
-- [[rules/backend/data-access-via-db|Database data access]]
 - [[rules/backend/module-architecture|Module architecture]]
-- [[rules/backend/query-optimization-and-pagination|Query optimization and pagination]]
-- [[rules/backend/schema-db|Prisma and Kysely schema]]
 - [[rules/backend/service-layer|Service layer]]
-- [[rules/backend/testing-data-access-layer|Data-access testing]]
-
-## Frontend
-
-- [[rules/frontend/code-organization|Code organization]]
-- [[rules/frontend/custom-hooks|Custom hooks]]
-- [[rules/frontend/dialogs-and-overlays|Dialogs and overlays]]
-- [[rules/frontend/forms-and-validation|Forms and validation]]
-- [[rules/frontend/frontend|Frontend styling and craftsmanship]]
-- [[rules/frontend/interaction-feedback|Interaction feedback]]
-- [[rules/frontend/next-react-project-structure|React and Next.js structure]]
-- [[rules/frontend/query-hooks|Query hooks]]
-- [[rules/frontend/mutation-hooks|Mutation hooks]]
-- [[rules/frontend/zustand-store|Zustand stores]]
 
 ## TypeScript
 
@@ -47,3 +37,19 @@ tags: [rules, engineering]
 - [[rules/typescript/module-and-imports|Module resolution and imports]]
 - [[rules/typescript/runtime-validation|Runtime validation and boundaries]]
 - [[rules/typescript/type-safety|Strict type safety]]
+
+## Hooks
+
+- [[rules/hooks/custom-hooks|Custom hooks]]
+- [[rules/hooks/mutation-hooks|Mutation hooks]]
+- [[rules/hooks/query-hooks|Query hooks]]
+- [[rules/hooks/zustand-store|Zustand stores]]
+
+## UI
+
+- [[rules/ui/code-organization|Code organization]]
+- [[rules/ui/dialogs-and-overlays|Dialogs and overlays]]
+- [[rules/ui/forms-and-validation|Forms and validation]]
+- [[rules/ui/frontend|Frontend styling and craftsmanship]]
+- [[rules/ui/interaction-feedback|Interaction feedback]]
+- [[rules/ui/next-react-project-structure|React and Next.js structure]]

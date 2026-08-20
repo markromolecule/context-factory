@@ -14,7 +14,7 @@ Hone frontend craftsmanship using specific project-defined constraints, avoiding
 ## Workflow
 
 1. **Define Constraints**: Specify the exact design rules, typography scale, palette, and component contracts for your playground component.
-2. **Consult General Rule**: Read and align with [[rules/frontend/frontend|Frontend Styling and Craftsmanship]].
+2. **Consult General Rule**: Read and align with [[rules/ui/frontend|Frontend Styling and Craftsmanship]].
 3. **Build Component**: Author clean, minimal HTML/CSS or React code focusing on semantic tags, proper accessibility (ARIA roles), and responsive behavior.
 4. **Iterate and Refine**: Adjust constraints to check how the styling holds up under different layouts and viewport sizes.
 5. **Verify Outcomes**: Verify that no generic or uncurated styles are introduced, and review page layouts across standard breakpoints.

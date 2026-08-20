@@ -11,7 +11,7 @@ alwaysApply: true
 - Accept a `Kysely<DB>` or transaction dependency instead of importing a hidden global when atomic composition is needed.
 - Select explicit columns at public boundaries; strictly avoid schema coupling or memory bloat through `selectAll`.
 - Keep queries parameterized and express dynamic filters strictly with the Kysely query builder.
-- Follow `rules/backend/query-optimization-and-pagination.md` for cursor/keyset pagination, limit enforcement, and ESR composite index alignment.
+- Follow `rules/database/query-optimization-and-pagination.md` for cursor/keyset pagination, limit enforcement, and ESR composite index alignment.
 - Return domain-oriented results and define not-found semantics explicitly (`undefined`, `null`, or a domain error).
 - Use transactions for multi-write invariants; pass the transaction through every participating function. Keep transactions free of external I/O or sleep operations.
 - Translate only known constraint failures; preserve unexpected database errors for centralized handling.

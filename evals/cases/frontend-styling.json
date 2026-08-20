@@ -4,7 +4,7 @@
   "expected": {
     "workflow": "workflows/feature-delivery.md",
     "rules": [
-      "rules/frontend/frontend.md"
+      "rules/ui/frontend.md"
     ],
     "skills": [
       "skills/playground/SKILL.md"
@@ -12,7 +12,7 @@
   },
   "contractAssertions": [
     {
-      "path": "rules/frontend/frontend.md",
+      "path": "rules/ui/frontend.md",
       "includes": [
         "## Typography",
         "## Color",
