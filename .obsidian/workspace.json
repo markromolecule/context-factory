@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "6a9a13a2228a0848",
+        "id": "17f0fe9093db4a64",
         "type": "tabs",
         "children": [
           {
-            "id": "9e9d3aae6bd030a0",
+            "id": "e5472c025c6e1cac",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/guide/cross-workspace-integration.md",
+                "file": "workflows/defect-resolution.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "cross-workspace-integration"
+              "title": "defect-resolution"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/guide/cross-workspace-integration.md",
+                "file": "workflows/defect-resolution.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -186,8 +186,16 @@
       "bases:Create new base": false
     }
   },
-  "active": "9e9d3aae6bd030a0",
+  "active": "e5472c025c6e1cac",
   "lastOpenFiles": [
+    "workflows/dependency-upgrade.md",
+    "workflows/database-migration.md",
+    "workflows/context-maintenance.md",
+    "workflows/architecture-change.md",
+    "agents/pm-agent/AGENT.md",
+    "agents/devops-agent/AGENT.md",
+    "agents/ba-agent/AGENT.md",
+    "docs/guide/cross-workspace-integration.md",
     "rules/backend/testing-data-access-layer.md",
     "rules/backend/service-layer.md",
     "rules/backend/data-access-via-api.md",
@@ -200,20 +208,12 @@
     "GEMINI.md",
     "docs/guide/rules-and-workflows.md",
     "docs/guide/README.md",
-    "docs/guide/cross-workspace-integration.md",
     "AGENTS.md",
     "CLAUDE.md",
     "CODEX.md",
     "skills/grill-with-docs/references/glossary-format.md",
     "skills/architecture-decision/SKILL.md",
     "knowledge/README.md",
-    "orchestrator/CODEX.md",
-    "orchestrator/CLAUDE.md",
-    "orchestrator/AGENTS.md",
-    "docs/Home.md",
-    "docs/templates/Context.md",
-    "docs/context/README.md",
-    "README.md",
     "Untitled.base",
     "docs/context"
   ]
