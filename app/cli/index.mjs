@@ -1,0 +1,23 @@
+export { generateBridge } from "./core/bridge-generator.mjs";
+export { compileBundle } from "./core/bundler.mjs";
+export { computeDiff } from "./core/differ.mjs";
+export { colors, badges, table, box, banner } from "./core/formatter.mjs";
+export { syncFactoryInventory } from "./core/indexer.mjs";
+export { parseArgs } from "./core/options.mjs";
+
+export { handleBridgeCommand } from "./commands/bridge.mjs";
+export { handleBuildCommand } from "./commands/build.mjs";
+export { handleDiffCommand } from "./commands/diff.mjs";
+export { handleDoctorCommand } from "./commands/doctor.mjs";
+export { handleEvalCommand } from "./commands/eval.mjs";
+export { handleExportCommand } from "./commands/export.mjs";
+export { handleLintCommand } from "./commands/lint.mjs";
+export { handleLockCommand } from "./commands/lock.mjs";
+export { handlePullCommand } from "./commands/pull.mjs";
+export { handleResolveCommand } from "./commands/resolve.mjs";
+export { handleRunCommand } from "./commands/run.mjs";
+export { handleStatusCommand } from "./commands/status.mjs";
+export { handleSyncCommand } from "./commands/sync.mjs";
+export { handleTaskCommand } from "./commands/task.mjs";
+export { handleValidateCommand } from "./commands/validate.mjs";
+export { main } from "./bin/context-cli.mjs";

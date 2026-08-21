@@ -1,0 +1,43 @@
+{
+  "name": "context-factory",
+  "version": "3.5.0",
+  "description": "Source of truth for agent behavior, engineering rules, reusable skills, development workflows, and cross-repo bridging",
+  "type": "module",
+  "main": "app/cli/index.mjs",
+  "bin": {
+    "context-cli": "./app/cli/bin/context-cli.mjs"
+  },
+  "scripts": {
+    "cli": "node app/cli/bin/context-cli.mjs",
+    "bridge": "node app/cli/bin/context-cli.mjs bridge",
+    "pull": "node app/cli/bin/context-cli.mjs pull",
+    "update": "node app/cli/bin/context-cli.mjs pull",
+    "build": "node app/cli/bin/context-cli.mjs build",
+    "compile": "node app/cli/bin/context-cli.mjs build",
+    "lint": "node app/cli/bin/context-cli.mjs lint",
+    "validate": "node app/cli/bin/context-cli.mjs validate",
+    "doctor": "node app/cli/bin/context-cli.mjs doctor",
+    "eval": "node app/cli/bin/context-cli.mjs eval",
+    "test": "node app/cli/bin/context-cli.mjs eval",
+    "diff": "node app/cli/bin/context-cli.mjs diff",
+    "lock": "node app/cli/bin/context-cli.mjs lock",
+    "sync": "node app/cli/bin/context-cli.mjs sync",
+    "resolve": "node app/cli/bin/context-cli.mjs resolve",
+    "run": "node app/cli/bin/context-cli.mjs run",
+    "status": "node app/cli/bin/context-cli.mjs status",
+    "export": "node app/cli/bin/context-cli.mjs export"
+  },
+  "keywords": [
+    "context-factory",
+    "agent-orchestration",
+    "rules",
+    "skills",
+    "workflows",
+    "bridge",
+    "submodule",
+    "pull",
+    "cli"
+  ],
+  "author": "Joseph",
+  "license": "MIT"
+}
