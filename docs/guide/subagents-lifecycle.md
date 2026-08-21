@@ -49,7 +49,7 @@ flowchart TD
 - **When to Use:** At the very start of any new feature, product idea, or ambiguous request.
 - **Key Actions:**
   - Asks **one** clarifying question at a time using `skills/grill/SKILL.md`.
-  - Establishes domain language in `knowledge/` using `skills/knowledge-grounding/SKILL.md`.
+  - Establishes domain language in `knowledge/` using `skills/grounding/SKILL.md`.
   - Generates a **Scenario Coverage Matrix** and **Acceptance Criteria Ledger**.
   - **Rule:** Never writes implementation code; ensures requirements are rock solid first.
 

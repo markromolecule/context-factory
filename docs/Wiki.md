@@ -30,7 +30,7 @@ Canonical knowledge follows `schemas/knowledge.schema.json` and starts from [[do
 
 ## Retrieval
 
-Use the [[skills/knowledge-grounding/SKILL|knowledge-grounding]] skill. Filter by metadata and task terms, prefer the highest applicable authority, follow relevant links one hop, and retain hashes plus selection reasons in the context bundle.
+Use the [[skills/grounding/SKILL|grounding]] skill. Filter by metadata and task terms, prefer the highest applicable authority, follow relevant links one hop, and retain hashes plus selection reasons in the context bundle.
 
 ## Maintenance
 

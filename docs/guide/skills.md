@@ -6,7 +6,16 @@ tags: [guide, skills, documentation, slash-commands]
 
 # Skills Guide
 
-Skills in the Context Factory are specialized, step-by-step procedures that guide an AI agent or a developer through complex tasks. They range from planning and code generation to security auditing and architecture recording.
+Skills in the Context Factory are specialized, step-by-step procedures and interactive playbooks that guide an AI agent or a developer through complex development actions.
+
+---
+
+## Skills vs. Rules: The Architectural Separation
+
+A core principle of Context Factory is the strict separation between **Rules** and **Skills**:
+
+- **Rules (`rules/**/*.md`):** Declarative coding standards, architectural invariants, and security boundaries that must *always* or *conditionally* be obeyed when authoring code (e.g. TypeScript type safety, Zod runtime validation, ESR database indexing, vertical backend modules, and UI design systems).
+- **Skills (`skills/*/SKILL.md`):** Procedural, interactive workflows and specialized toolkits that an agent *executes* when triggered by slash commands or during a workflow phase.
 
 ---
 
@@ -17,9 +26,8 @@ Skills are loaded into an agent's context dynamically using three mechanisms:
 1. **Semantic Relevance Scoring (Score >= 6):**
    The context harness processes your request and extracts search terms. It matches these terms against the skill folder name, name, and description. If the relevance score is **6 or higher**, the skill is loaded.
 2. **Slash Command & Bracket Prefix Shortcuts:**
-   Directly invoke skills and workflows using concise slash commands (e.g. `/grill`, `/plan`, `/execution`, `/adr`, `/sec`, `/verify`, `/tsc`, `/zod`, `/explore`, `/api`, `/query`, `/ui`, `/test`).
+   Directly invoke skills using concise slash commands (e.g. `/grill`, `/plan`, `/execution`, `/adr`, `/sec`, `/verify`, `/explore`, `/grounding`).
 3. **Specialized Regex Guards:**
-   Some skills have hardcoded checks that must pass to prevent them from being loaded accidentally:
    - `execution` is only loaded if the request specifically mentions execution terms (e.g. "execute plan", "implement approved phase", "resume task", `/execution`, `[EXEC]`).
    - `security` is only loaded if the request contains security-related terms (e.g. "security", "credentials", "authentication", "threat", `/sec`, `[SEC]`).
 4. **Workflow Inclusion:**
@@ -27,9 +35,9 @@ Skills are loaded into an agent's context dynamically using three mechanisms:
 
 ---
 
-## Skill Inventory and Usage
+## Canonical 8-Skill Inventory
 
-Here is the list of 16 canonical skills available in the Context Factory, their slash triggers, and practical prompt examples:
+The Context Factory provides exactly 8 procedural skills:
 
 ### 1. grill (`skills/grill`)
 * **Slash Commands:** `/grill`, `[GRILL]`, `[DISCOVERY]`
@@ -67,62 +75,14 @@ Here is the list of 16 canonical skills available in the Context Factory, their 
 * **Example Prompt:**
   > "/sec Review webhook signature verification and rate-limiting controls."
 
-### 7. typescript (`skills/typescript`)
-* **Slash Commands:** `/tsc`, `/typescript`, `[TSC]`
-* **Purpose:** Diagnoses and resolves TypeScript compiler errors, circular types, build failures, and strictness violations without resorting to `any` or `ts-ignore`.
-* **Example Prompt:**
-  > "/tsc Fix type errors across the checkout module."
-
-### 8. zod (`skills/zod`)
-* **Slash Commands:** `/zod`, `[ZOD]`
-* **Purpose:** Designs runtime validation schemas, DTOs, branded types, and boundary transformations using Zod.
-* **Example Prompt:**
-  > "/zod Define request and response schemas for user onboarding."
-
-### 9. explore (`skills/explore`)
+### 7. explore (`skills/explore`)
 * **Slash Commands:** `/explore`, `[EXPLORE]`
 * **Purpose:** Maps out code, contracts, database schemas, test suites, and project conventions of a target codebase.
 * **Example Prompt:**
   > "/explore Map the current database models and trace where users are queried."
 
-### 10. backend-module (`skills/backend-module`)
-* **Slash Commands:** `/backend`, `/backend-module`, `[BACKEND]`
-* **Purpose:** Standardizes the creation of vertical backend features using Express or Hono across `routes → controllers → services → data`.
-* **Example Prompt:**
-  > "/backend Add a customer profile vertical feature module."
-
-### 11. api-contract (`skills/api-contract`)
-* **Slash Commands:** `/api-contract`, `/api`, `[API]`
-* **Purpose:** Designs type-safe OpenAPI/Scalar API specifications, endpoint DTO schemas, and client SDK contracts.
-* **Example Prompt:**
-  > "/api Generate Scalar API documentation and typed fetch hooks for the billing endpoints."
-
-### 12. database-query (`skills/database-query`)
-* **Slash Commands:** `/database-query`, `/query`, `[QUERY]`
-* **Purpose:** Optimizes database queries, indexes, Kysely/Prisma construction, and keyset cursor pagination.
-* **Example Prompt:**
-  > "/query Optimize the transaction feed query and implement keyset pagination."
-
-### 13. component-craft (`skills/component-craft`)
-* **Slash Commands:** `/component-craft`, `/component`, `/ui`, `[UI]`
-* **Purpose:** Authors accessible, responsive, high-taste React and Next.js UI components with robust state handling and zero layout shifts.
-* **Example Prompt:**
-  > "/component Build an accessible multi-step checkout stepper component."
-
-### 14. test-suite (`skills/test-suite`)
-* **Slash Commands:** `/test-suite`, `/test`, `[TEST]`
-* **Purpose:** Synthesizes 4-layer backend test suites (`*.data.test.ts`, `*.service.test.ts`, `*.controller.test.ts`, `*.routes.test.ts`) and React hook smoke tests.
-* **Example Prompt:**
-  > "/test Scaffold 4-layer tests for the authentication module."
-
-### 15. knowledge-grounding (`skills/knowledge-grounding`)
-* **Slash Commands:** `/wiki`, `/grounding`, `[WIKI]`
+### 8. grounding (`skills/grounding`)
+* **Slash Commands:** `/grounding`, `/wiki`, `[WIKI]`
 * **Purpose:** Access and query the LLM Wiki (attributable project knowledge under `knowledge/`) with authority and provenance.
 * **Example Prompt:**
-  > "/wiki Retrieve the deployment credentials runbook."
-
-### 16. playground (`skills/playground`)
-* **Slash Commands:** `/playground`, `[PLAYGROUND]`
-* **Purpose:** Guidelines for styling visual playgrounds and frontends with premium HSL-tailored colors, smooth animations, and high taste levels, avoiding generic layouts.
-* **Example Prompt:**
-  > "/playground Design a dark-mode interactive calendar widget on the playground."
+  > "/grounding Retrieve the deployment credentials runbook."

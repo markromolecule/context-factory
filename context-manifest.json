@@ -63,30 +63,19 @@
   ],
   "skills": [
     "skills/adr/SKILL.md",
-    "skills/api-contract/SKILL.md",
-    "skills/backend-module/SKILL.md",
-    "skills/component-craft/SKILL.md",
-    "skills/database-query/SKILL.md",
     "skills/execution/SKILL.md",
     "skills/explore/SKILL.md",
     "skills/grill/SKILL.md",
-    "skills/knowledge-grounding/SKILL.md",
+    "skills/grounding/SKILL.md",
     "skills/plan/SKILL.md",
-    "skills/playground/SKILL.md",
     "skills/security/SKILL.md",
-    "skills/test-suite/SKILL.md",
-    "skills/typescript/SKILL.md",
-    "skills/verify/SKILL.md",
-    "skills/zod/SKILL.md"
+    "skills/verify/SKILL.md"
   ],
   "skillResources": [
     "skills/execution/agents/openai.yaml",
     "skills/grill/agents/openai.yaml",
     "skills/grill/references/glossary-format.md",
-    "skills/plan/agents/openai.yaml",
-    "skills/playground/references/guide-to-avoiding-llm-styling.md",
-    "skills/typescript/agents/openai.yaml",
-    "skills/zod/agents/openai.yaml"
+    "skills/plan/agents/openai.yaml"
   ],
   "workflows": [
     "workflows/architecture-change.md",
@@ -128,7 +117,8 @@
     "docs/decisions/0009-session-keyword-triggers-and-workflow-automation.md",
     "docs/decisions/0010-data-layer-query-optimization-and-performance-architecture.md",
     "docs/decisions/0011-progressive-contract-driven-loop-engineering.md",
-    "docs/decisions/0012-skill-taxonomy-and-slash-ergonomics-optimization.md"
+    "docs/decisions/0012-skill-taxonomy-and-slash-ergonomics-optimization.md",
+    "docs/decisions/0013-streamline-procedural-skills-inventory.md"
   ],
   "tools": [
     "evals/run-evals.mjs",

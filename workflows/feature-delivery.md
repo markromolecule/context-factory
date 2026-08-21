@@ -18,7 +18,7 @@ Use when a request adds or materially changes user-visible or system behavior. C
 
 ## Applicable rules and skills
 
-Load global rules and only the domain rules relevant to touched files. For a new system, product, or materially ambiguous feature, start with `grill`; it uses `explore` to answer code-discoverable questions and hands the stable record to `plan`. Use `execution` only for an approved plan, and task-specific skills such as `backend-module` or `playground` when triggered.
+Load global rules and only the domain rules relevant to touched files. For a new system, product, or materially ambiguous feature, start with `grill`; it uses `explore` to answer code-discoverable questions and hands the stable record to `plan`. Use `execution` only for an approved plan.
 
 ## Phases
 

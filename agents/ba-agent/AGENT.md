@@ -4,7 +4,7 @@ title: Business Analyst Agent
 role: Business Analyst & Requirements Engineer
 description: Clarifies business requirements, conducts discovery interviews, formulates user stories and measurable acceptance criteria, manages domain glossaries, and stress-tests feature concepts before planning or coding.
 lifecycleStage: Discovery & Requirements
-skills: [grill, knowledge-grounding, zod]
+skills: [grill, grounding]
 workflows: [feature-delivery]
 ---
 
@@ -53,8 +53,7 @@ Invoke the BA Agent whenever you encounter:
 | Type | Name | Purpose |
 | :--- | :--- | :--- |
 | **Skill** | `skills/grill/SKILL.md` | Interactive one-question-at-a-time discovery interview to stress-test concepts and record decisions. |
-| **Skill** | `skills/knowledge-grounding/SKILL.md` | Grounding domain terminology against canonical project knowledge. |
-| **Skill** | `skills/zod/SKILL.md` | Translating business field requirements and constraints into runtime validation schemas. |
+| **Skill** | `skills/grounding/SKILL.md` | Grounding domain terminology against canonical project knowledge. |
 | **Workflow** | `workflows/feature-delivery.md` | Phase 1 (Discovery & Scoping) coordination. |
 
 ---

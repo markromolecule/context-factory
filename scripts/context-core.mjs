@@ -130,11 +130,11 @@ async function entries(paths) {
 }
 
 const ACTION_TERMS = new Set([
-  "add", "adr", "api", "build", "change", "component", "create", "deliver", "deploy",
-  "design", "discovery", "execute", "execution", "explore", "fix", "grill", "hotfix",
-  "implement", "migrate", "plan", "query", "redesign", "refactor", "release",
-  "remove", "resolve", "review", "sec", "security", "sync", "test", "tsc", "typescript",
-  "upgrade", "verify", "zod",
+  "add", "adr", "build", "change", "create", "deliver", "deploy",
+  "design", "discovery", "execute", "execution", "explore", "fix", "grill", "grounding", "hotfix",
+  "implement", "migrate", "plan", "redesign", "refactor", "release",
+  "remove", "resolve", "review", "sec", "security", "sync", "test",
+  "upgrade", "verify", "wiki",
 ]);
 
 const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan))\b|^\/(?:grill|discovery)\b|^\[(?:GRILL|DISCOVERY)\]/i;

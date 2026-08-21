@@ -47,9 +47,9 @@ flowchart LR
 
 | Agent | Directory | Role & Responsibility | Core Skills & Workflows |
 | :--- | :--- | :--- | :--- |
-| **BA Agent** | [[agents/ba-agent/AGENT|`agents/ba-agent`]] | Clarifies business requirements, conducts discovery grilling interviews, creates user scenario coverage tables, and defines verifiable acceptance criteria. | `grill-with-docs`, `knowledge-grounding`, `zod-schema-modeling`, `feature-delivery` |
-| **PM Agent** | [[agents/pm-agent/AGENT|`agents/pm-agent`]] | Breaks requirements into phased implementation plans, dependency-ordered phase files, milestone schedules, and execution progress tracking. | `implementation-plan`, `execution-plan`, `architecture-decision`, `verification-review` |
-| **DevOps Agent** | [[agents/devops-agent/AGENT|`agents/devops-agent`]] | Automates CI/CD pipelines (GitHub Actions, etc.), containerization (Docker, Compose), environment hygiene (`.env.example`), and release verification. | `release-readiness`, `security-sensitive-change`, `security-review`, `dependency-upgrade` |
+| **BA Agent** | [[agents/ba-agent/AGENT|`agents/ba-agent`]] | Clarifies business requirements, conducts discovery grilling interviews, creates user scenario coverage tables, and defines verifiable acceptance criteria. | `grill`, `grounding`, `feature-delivery` |
+| **PM Agent** | [[agents/pm-agent/AGENT|`agents/pm-agent`]] | Breaks requirements into phased implementation plans, dependency-ordered phase files, milestone schedules, and execution progress tracking. | `plan`, `execution`, `adr`, `verify` |
+| **DevOps Agent** | [[agents/devops-agent/AGENT|`agents/devops-agent`]] | Automates CI/CD pipelines (GitHub Actions, etc.), containerization (Docker, Compose), environment hygiene (`.env.example`), and release verification. | `security`, `verify`, `release-readiness`, `security-sensitive-change`, `dependency-upgrade` |
 
 ---
 

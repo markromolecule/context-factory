@@ -34,4 +34,4 @@ Canonical LLM knowledge lives under `knowledge/`. Each note is independently ret
 - Link evidence and related knowledge rather than copying their contents.
 - Use `supersedes` for replacement and retain historical notes.
 - Add new canonical notes to `context-manifest.json`.
-- Use [[skills/knowledge-grounding/SKILL|knowledge-grounding]] for retrieval.
+- Use [[skills/grounding/SKILL|grounding]] for retrieval.
