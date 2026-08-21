@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "rules/backend/controllers-and-routes.md",
+                "file": "app/cli/README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "controllers-and-routes"
+              "title": "README"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "rules/backend/controllers-and-routes.md",
+                "file": "app/cli/README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -188,6 +188,10 @@
   },
   "active": "e5472c025c6e1cac",
   "lastOpenFiles": [
+    "dist/context-bundle.json",
+    "dist",
+    "app/README.md",
+    "rules/backend/controllers-and-routes.md",
     "workflows/new-project-delivery.md",
     "docs/decisions/0011-progressive-contract-driven-loop-engineering.md",
     "docs/tasks/2026/08/2026-08-20/0004-task-new-project-progressive-contract-driven-workflow/phase-04-verification-and-release.md",
@@ -216,9 +220,6 @@
     "rules/ui",
     "rules/hooks",
     "rules/database",
-    "docs/tasks/2026/08/2026-08-20/0003-task-categorical-restructuring-of-context-factory-rules/phase-03-integration-tests.md",
-    "docs/tasks/2026/08/2026-08-20/0003-task-categorical-restructuring-of-context-factory-rules/phase-02-vertical-slice-refactoring.md",
-    "docs/tasks/2026/08/2026-08-20/0003-task-categorical-restructuring-of-context-factory-rules/phase-01-boundary-analysis.md",
     "docs/tasks/2026/08/2026-08-20/0003-task-categorical-restructuring-of-context-factory-rules",
     "docs/tasks/2026/08/2026-08-20/0002-task-data-layer-optimization-and-system-performance-arc",
     "Untitled.base",

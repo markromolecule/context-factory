@@ -49,11 +49,20 @@ Pulls the latest changes from upstream Context Factory and automatically validat
 # Pull updates in host repository or factory
 context-cli pull
 
+# Pull a specific branch from remote (e.g. master or main)
+context-cli pull --branch master
+
+# Automatically stash and restore uncommitted local changes
+context-cli pull --autostash
+
 # Use git rebase instead of merge
 context-cli pull --rebase
 
 # Skip post-pull doctor health verification
 context-cli pull --no-doctor
+
+# Machine-readable JSON output
+context-cli pull --json
 ```
 
 ---
