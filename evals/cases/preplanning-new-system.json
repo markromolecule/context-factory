@@ -7,21 +7,21 @@
       "rules/global/evidence-and-claims.md"
     ],
     "skills": [
-      "skills/grill-with-docs/SKILL.md",
-      "skills/repository-discovery/SKILL.md",
-      "skills/implementation-plan/SKILL.md"
+      "skills/explore/SKILL.md",
+      "skills/grill/SKILL.md",
+      "skills/plan/SKILL.md"
     ]
   },
   "contractAssertions": [
     {
       "path": "orchestrator/SHARED.md",
       "includes": [
-        "use `grill-with-docs` as the first pre-planning skill",
+        "use `grill` as the first pre-planning skill",
         "do not begin production coding until the plan is approved"
       ]
     },
     {
-      "path": "skills/grill-with-docs/SKILL.md",
+      "path": "skills/grill/SKILL.md",
       "includes": [
         "Ask exactly one unresolved question at a time",
         "Record each resolved answer immediately",

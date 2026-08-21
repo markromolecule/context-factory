@@ -1,6 +1,6 @@
 ---
 name: backend-module
-description: Create or refactor a Hono or Express capability into a vertical module with DTO, route, controller, service, data, and test boundaries.
+description: Create or refactor a Hono or Express capability into a vertical module with DTO, route, controller, service, data, and test boundaries (/backend, /backend-module, [BACKEND]).
 ---
 
 # Backend Module

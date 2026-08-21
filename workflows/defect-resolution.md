@@ -17,7 +17,7 @@ Use for diagnosis-and-fix requests. For diagnosis-only requests, complete eviden
 
 ## Applicable rules and skills
 
-Load rules for the failing boundary. Add `security-review` when exploitation or data exposure is plausible and compose with the migration or dependency workflow when those are causal.
+Load rules for the failing boundary. Add `security` when exploitation or data exposure is plausible and compose with the migration or dependency workflow when those are causal.
 
 ## Phases
 

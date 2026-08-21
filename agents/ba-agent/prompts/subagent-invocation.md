@@ -9,7 +9,7 @@ Use these quick prompts and patterns to invoke or delegate to the **BA Agent** i
 ```markdown
 Act as the BA Agent (@agents/ba-agent/AGENT.md).
 I want to build a feature: [Feature Name or Summary].
-Please grill me on the requirements, edge cases, user roles, and data boundaries one question at a time using `skills/grill-with-docs/SKILL.md`. Formulate the final scenario matrix and acceptance criteria before stopping.
+Please grill me on the requirements, edge cases, user roles, and data boundaries one question at a time using `skills/grill/SKILL.md`. Formulate the final scenario matrix and acceptance criteria before stopping.
 ```
 
 ---

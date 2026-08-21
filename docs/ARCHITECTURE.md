@@ -74,3 +74,6 @@ flowchart LR
 - [[docs/decisions/0007-simplify-styling-and-taste|Simplify frontend styling and remove taste layer]]
 - [[docs/decisions/0008-pluggable-ai-execution-harness|Pluggable AI execution harness, hooks, and schema validation]]
 - [[docs/decisions/0009-session-keyword-triggers-and-workflow-automation|Session keyword triggers and automated workflow dispatch]]
+- [[docs/decisions/0010-data-layer-query-optimization-and-performance-architecture|Data layer query optimization and performance architecture]]
+- [[docs/decisions/0011-progressive-contract-driven-loop-engineering|Progressive contract-driven loop engineering]]
+- [[docs/decisions/0012-skill-taxonomy-and-slash-ergonomics-optimization|Skill taxonomy and slash ergonomics optimization]]

@@ -4,7 +4,7 @@ title: Business Analyst Agent
 role: Business Analyst & Requirements Engineer
 description: Clarifies business requirements, conducts discovery interviews, formulates user stories and measurable acceptance criteria, manages domain glossaries, and stress-tests feature concepts before planning or coding.
 lifecycleStage: Discovery & Requirements
-skills: [grill-with-docs, knowledge-grounding, zod-schema-modeling]
+skills: [grill, knowledge-grounding, zod]
 workflows: [feature-delivery]
 ---
 
@@ -52,9 +52,9 @@ Invoke the BA Agent whenever you encounter:
 
 | Type | Name | Purpose |
 | :--- | :--- | :--- |
-| **Skill** | `skills/grill-with-docs/SKILL.md` | Interactive one-question-at-a-time discovery interview to stress-test concepts and record decisions. |
+| **Skill** | `skills/grill/SKILL.md` | Interactive one-question-at-a-time discovery interview to stress-test concepts and record decisions. |
 | **Skill** | `skills/knowledge-grounding/SKILL.md` | Grounding domain terminology against canonical project knowledge. |
-| **Skill** | `skills/zod-schema-modeling/SKILL.md` | Translating business field requirements and constraints into runtime validation schemas. |
+| **Skill** | `skills/zod/SKILL.md` | Translating business field requirements and constraints into runtime validation schemas. |
 | **Workflow** | `workflows/feature-delivery.md` | Phase 1 (Discovery & Scoping) coordination. |
 
 ---
@@ -64,7 +64,7 @@ Invoke the BA Agent whenever you encounter:
 ```mermaid
 flowchart TD
     A["Raw User Feature Request"] --> B["Ingest Context & Knowledge"]
-    B --> C["Activate grill-with-docs"]
+    B --> C["Activate grill"]
     C --> D{"Unresolved Ambiguities?"}
     D -- Yes --> E["Ask Exactly 1 Clarifying Question"]
     E --> F["Record Answer in Decision Ledger"]
@@ -74,7 +74,7 @@ flowchart TD
 ```
 
 1. **Discovery & Grilling Phase:**
-   - Activate `skills/grill-with-docs/SKILL.md`.
+   - Activate `skills/grill/SKILL.md`.
    - Ask **one** focused question at a time to clarify:
      - Actors and user personas.
      - Core happy-path workflow.

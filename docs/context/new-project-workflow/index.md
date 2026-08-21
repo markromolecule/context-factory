@@ -77,7 +77,7 @@ Across modules, the engine progresses sequentially:
 
 ## Non-Negotiable Guardrails
 
-- **Grill before Planning:** `@skills/grill-with-docs/SKILL.md` must be executed and audited before generating any implementation plan with `@skills/implementation-plan/SKILL.md`. Never plan on unverified assumptions.
+- **Grill before Planning:** `@skills/grill/SKILL.md` must be executed and audited before generating any implementation plan with `@skills/plan/SKILL.md`. Never plan on unverified assumptions.
 - **Strict Progressive Delivery (Anti-One-Tap):** Never attempt to generate all project modules simultaneously. Build one vertical module slice at a time (e.g., finish `auth` completely, verify it, lock it, then proceed to `tenants`, then `users`).
 - **Backend & Architecture Foundation First:** Solid backend boundaries (`routes → controllers → services → data` + DTOs) must be established, verified, and locked before UI code is drafted.
 - **Layer-by-Layer Backend Testing:** Every module must include explicit test files covering all 4 architectural tiers: data access, service policies, controller validation/mapping, and route/HTTP integration.
@@ -103,7 +103,7 @@ Before writing code or committing to architectural designs, resolve ambiguity by
 ---
 
 ### Phase 1 — Grill the Docs & Codify Decisions
-Invoke **`@skills/grill-with-docs/SKILL.md`**.
+Invoke **`@skills/grill/SKILL.md`**.
 1. Inspect repository documentation, existing schemas, configurations, and decisions before asking questions the codebase already answers.
 2. Interrogate open requirements **one question at a time**, explaining why each question matters and presenting a recommended option with trade-offs.
 3. Establish canonical domain vocabulary in the project glossary (following `references/glossary-format.md`).
@@ -126,7 +126,7 @@ This schema serves as the **single source of truth** for all downstream layers.
 ---
 
 ### Phase 3 — Phased Implementation Plan
-Invoke **`@skills/implementation-plan/SKILL.md`**, utilizing the outputs of Phases 0–2:
+Invoke **`@skills/plan/SKILL.md`**, utilizing the outputs of Phases 0–2:
 - Author the Master Plan (`README.md` using `docs/templates/Task.md`) under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`.
 - Author individual Phase Breakdown artifacts (`phase-01-<module>.md`, `phase-02-<module>.md`, etc. using `docs/templates/Phase.md`).
 - Sequence feature modules in strict vertical dependency order:
@@ -219,9 +219,9 @@ Once all required backend modules have passed Phase 7 sign-off:
 
 For each module to be certified complete, every item below must be verified with reproducible evidence:
 
-- [ ] **Discovery & Grilling:** Pre-planning questions resolved, glossary updated, and ADRs recorded (`@skills/grill-with-docs`).
+- [ ] **Discovery & Grilling:** Pre-planning questions resolved, glossary updated, and ADRs recorded (`@skills/grill`).
 - [ ] **Data Schema Locked:** Prisma model / Kysely types applied and verified via migrations.
-- [ ] **Implementation Plan Approved:** Sequenced phase files exist under `docs/tasks/` (`@skills/implementation-plan`).
+- [ ] **Implementation Plan Approved:** Sequenced phase files exist under `docs/tasks/` (`@skills/plan`).
 - [ ] **Vertical Architecture Implemented:** `dto`, `data`, `services`, `controllers`, `routes` adhere to `rules/backend/module-architecture.md`.
 - [ ] **Inner Loop 4-Layer Tests Passing:**
   - [ ] `*.data.test.ts` (database constraints, queries, transactions)

@@ -11,9 +11,9 @@
       "rules/global/evidence-and-claims.md"
     ],
     "skills": [
-      "skills/architecture-decision/SKILL.md",
+      "skills/adr/SKILL.md",
       "skills/backend-module/SKILL.md",
-      "skills/repository-discovery/SKILL.md"
+      "skills/explore/SKILL.md"
     ]
   },
   "goldenOutput": {

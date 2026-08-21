@@ -1,26 +1,28 @@
 ---
 title: Skills
 type: moc
-tags: [skills, workflows]
+tags: [skills, workflows, development, tools]
 ---
 
 # Skills
 
-- [[skills/architecture-decision/SKILL|Architecture decision]] — analyze and record durable boundary choices
-- [[skills/backend-module/SKILL|Backend module]] — create vertical Hono or Express feature modules
-- [[skills/implementation-plan/SKILL|Implementation plan]] — create evidence-backed plan artifacts without coding
-- [[skills/execution-plan/SKILL|Execution plan]] — execute an existing plan and maintain its log
-- [[skills/grill-with-docs/SKILL|Grill with docs]] — stress-test new systems and ambiguous features before implementation planning
-- [[skills/knowledge-grounding/SKILL|Knowledge grounding]] — retrieve Wiki knowledge with authority and provenance
-- [[skills/playground/SKILL|Playground styling]] — custom craft playground to hone skills and eliminate generic styling
-- [[skills/repository-discovery/SKILL|Repository discovery]] — map relevant code, contracts, tests, and conventions
-- [[skills/security-review/SKILL|Security review]] — threat-model and review application security boundaries
-- [[skills/typescript-diagnostics/SKILL|TypeScript diagnostics]] — diagnose and resolve TypeScript compiler and type failures
-- [[skills/verification-review/SKILL|Verification review]] — audit completion claims against fresh evidence
-- [[skills/zod-schema-modeling/SKILL|Zod schema modeling]] — model runtime validation schemas and DTO contracts with Zod
+- [[skills/adr/SKILL|Architecture Decision (ADR)]] — `/adr`, `[ADR]`: analyze and record durable 1-3-1 boundary choices
+- [[skills/api-contract/SKILL|API Contract Design]] — `/api-contract`, `/api`, `[API]`: design type-safe OpenAPI/Scalar endpoints, DTOs, and client SDK contracts
+- [[skills/backend-module/SKILL|Backend Module]] — `/backend`, `/backend-module`, `[BACKEND]`: create vertical Hono or Express feature modules
+- [[skills/component-craft/SKILL|Component Craft]] — `/component-craft`, `/component`, `[UI]`: author polished, accessible React/Next.js UI components
+- [[skills/database-query/SKILL|Database Query Optimization]] — `/database-query`, `/query`, `[QUERY]`: optimize SQL, index plans, Kysely/Prisma queries, and cursor pagination
+- [[skills/execution/SKILL|Execution Plan]] — `/execution`, `/exec`, `[EXEC]`: execute approved task phases step-by-step with verified evidence
+- [[skills/explore/SKILL|Explore Repository]] — `/explore`, `[EXPLORE]`: map unfamiliar repository code, contracts, tests, and conventions
+- [[skills/grill/SKILL|Grill Discovery]] — `/grill`, `[GRILL]`, `[DISCOVERY]`: stress-test new systems and ambiguous features before planning
+- [[skills/knowledge-grounding/SKILL|Knowledge Grounding]] — `/wiki`, `/grounding`, `[WIKI]`: retrieve Wiki knowledge with authority and provenance
+- [[skills/plan/SKILL|Implementation Plan]] — `/plan`, `[PLAN]`: create evidence-backed phased task artifacts without changing production code
+- [[skills/playground/SKILL|Playground Styling]] — `/playground`, `[PLAYGROUND]`: custom craft playground to eliminate generic LLM styling clichés
+- [[skills/security/SKILL|Security Review]] — `/sec`, `/security`, `[SEC]`: threat-model and review application trust boundaries and credentials
+- [[skills/test-suite/SKILL|Test Suite Engineering]] — `/test-suite`, `/test`, `[TEST]`: synthesize 4-layer backend test suites and client hook smoke tests
+- [[skills/typescript/SKILL|TypeScript Diagnostics]] — `/tsc`, `/typescript`, `[TSC]`: diagnose and resolve compiler errors, circular types, and type failures
+- [[skills/verify/SKILL|Verification Review]] — `/verify`, `[VERIFY]`, `[QA]`: audit completion claims against fresh, reproducible evidence
+- [[skills/zod/SKILL|Zod Schema Modeling]] — `/zod`, `[ZOD]`: model runtime validation schemas and DTO contracts with Zod
 
-Skills trigger through their YAML descriptions. Load their references only when directed by the selected skill.
+Skills trigger through their YAML descriptions and slash command shortcuts. Load their references only when directed by the selected skill.
 
-For a new system or materially ambiguous capability, the skill sequence is `grill-with-docs` → `repository-discovery` → `implementation-plan` → approval → `execution-plan`. Repository discovery may run inside the grill to answer evidence-discoverable questions.
-
-The canonical `grill-with-docs` is a reviewed Context Factory adaptation. `npx skills update grill-with-docs --project` updates an installed agent copy, not this canonical source; inspect upstream changes and port compatible behavior through the context-maintenance workflow.
+For a new system or materially ambiguous capability, the skill sequence is `grill` → `explore` → `plan` → approval → `execution`. Repository discovery may run inside the grill to answer evidence-discoverable questions.

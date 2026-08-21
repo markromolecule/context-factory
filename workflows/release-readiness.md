@@ -17,7 +17,7 @@ Use before a production release, handoff, or claim that a material feature/migra
 
 ## Applicable rules and skills
 
-Load rules for changed domains and use `security-review` for sensitive scope. Consume evidence from feature, migration, dependency, and frontend workflows rather than repeating work without reason.
+Load rules for changed domains and use `security` for sensitive scope. Consume evidence from feature, migration, dependency, and frontend workflows rather than repeating work without reason.
 
 ## Phases
 

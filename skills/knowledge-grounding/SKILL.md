@@ -1,6 +1,6 @@
 ---
 name: knowledge-grounding
-description: Retrieve and reconcile canonical LLM Wiki knowledge by scope, authority, provenance, lifecycle state, recency, links, and task relevance.
+description: Retrieve and reconcile canonical LLM Wiki knowledge by scope, authority, provenance, lifecycle state, recency, links, and task relevance (/wiki, /grounding, [WIKI]).
 ---
 
 # Knowledge Grounding

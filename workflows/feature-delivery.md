@@ -18,15 +18,15 @@ Use when a request adds or materially changes user-visible or system behavior. C
 
 ## Applicable rules and skills
 
-Load global rules and only the domain rules relevant to touched files. For a new system, product, or materially ambiguous feature, start with `grill-with-docs`; it uses `repository-discovery` to answer code-discoverable questions and hands the stable record to `implementation-plan`. Use execution-plan only for an approved plan, and task-specific skills such as backend-module or playground-styling when triggered.
+Load global rules and only the domain rules relevant to touched files. For a new system, product, or materially ambiguous feature, start with `grill`; it uses `explore` to answer code-discoverable questions and hands the stable record to `plan`. Use `execution` only for an approved plan, and task-specific skills such as `backend-module` or `playground` when triggered.
 
 ## Phases
 
-1. For a new system or materially ambiguous capability, open pre-planning with `grill-with-docs`; inspect repository evidence and resolve one decision at a time.
+1. For a new system or materially ambiguous capability, open pre-planning with `grill`; inspect repository evidence and resolve one decision at a time.
 2. Persist actors, goals, terminology, scenarios, constraints, non-goals, decisions, and unknowns in the correct glossary, task, and ADR artifacts.
 3. Audit scenario coverage and obtain confirmation of shared understanding before implementation planning.
-4. Use `implementation-plan` to turn the accepted discovery record into dependency-ordered work and measurable verification.
-5. Require explicit plan approval before `execution-plan` or production implementation begins.
+4. Use `plan` to turn the accepted discovery record into dependency-ordered work and measurable verification.
+5. Require explicit plan approval before `execution` or production implementation begins.
 6. Implement the smallest complete vertical slice with tests and documentation.
 7. Run focused checks, then the broader affected typecheck, test, lint, and build checks.
 8. Review acceptance criteria, security, accessibility, observability, rollout, and rollback impact.

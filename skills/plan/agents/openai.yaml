@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan"
+  short_description: "Create evidence-backed implementation plans"
+  default_prompt: "Use $plan to inspect this codebase and create a phased implementation plan without coding."

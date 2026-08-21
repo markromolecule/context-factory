@@ -23,11 +23,11 @@ flowchart LR
     end
 
     subgraph S3["Development Phase"]
-        DEV["Developer / Architect<br/>(skills/execution-plan)"]
+        DEV["Developer / Architect<br/>(skills/execution)"]
     end
 
     subgraph S4["Verification Phase"]
-        QA["Reviewer / QA<br/>(skills/verification-review)"]
+        QA["Reviewer / QA<br/>(skills/verify)"]
     end
 
     subgraph S5["Deployment Phase"]

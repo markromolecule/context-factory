@@ -4,7 +4,7 @@ title: DevOps & Infrastructure Agent
 role: DevOps Engineer & Site Reliability Specialist
 description: Manages CI/CD automation pipelines, containerization (Docker, Compose), environment configuration hygiene, deployment workflows, release verification, and security guardrails.
 lifecycleStage: Deployment, Infrastructure & Release
-skills: [security-review, verification-review]
+skills: [security, verify]
 workflows: [release-readiness, security-sensitive-change, dependency-upgrade]
 ---
 
@@ -56,8 +56,8 @@ Invoke the DevOps Agent whenever you encounter:
 | **Workflow** | `workflows/release-readiness.md` | Pre-flight release verification, health checks, rollback plans, and deployment sign-off. |
 | **Workflow** | `workflows/security-sensitive-change.md` | Handling secrets, authentication keys, credentials, and webhook endpoints safely. |
 | **Workflow** | `workflows/dependency-upgrade.md` | Systematic dependency upgrades and vulnerability patching. |
-| **Skill** | `skills/security-review/SKILL.md` | Auditing authorization, secrets exposure, and infrastructure boundaries. |
-| **Skill** | `skills/verification-review/SKILL.md` | Verifying automated test suites and build outputs before deployment. |
+| **Skill** | `skills/security/SKILL.md` | Auditing authorization, secrets exposure, and infrastructure boundaries. |
+| **Skill** | `skills/verify/SKILL.md` | Verifying automated test suites and build outputs before deployment. |
 
 ---
 

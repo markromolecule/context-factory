@@ -130,13 +130,15 @@ async function entries(paths) {
 }
 
 const ACTION_TERMS = new Set([
-  "add", "build", "change", "create", "deliver", "deploy", "design", "discovery", "execute",
-  "fix", "grill", "hotfix", "implement", "migrate", "plan", "redesign", "refactor", "release",
-  "remove", "resolve", "review", "sec", "security", "sync", "upgrade", "verify",
+  "add", "adr", "api", "build", "change", "component", "create", "deliver", "deploy",
+  "design", "discovery", "execute", "execution", "explore", "fix", "grill", "hotfix",
+  "implement", "migrate", "plan", "query", "redesign", "refactor", "release",
+  "remove", "resolve", "review", "sec", "security", "sync", "test", "tsc", "typescript",
+  "upgrade", "verify", "zod",
 ]);
 
 const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan))\b|^\/(?:grill|discovery)\b|^\[(?:GRILL|DISCOVERY)\]/i;
-const EXECUTION_PLAN_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b|^\/(?:exec|execute)\b|^\[(?:EXEC|EXECUTE)\]/i;
+const EXECUTION_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b|^\/(?:exec|execute|execution)\b|^\[(?:EXEC|EXECUTE|EXECUTION)\]/i;
 
 const ROUTING_HINTS = [
   // 1. Explicit Slash Commands and Bracket Prefix Tags (Highest Precedence)
@@ -188,11 +190,11 @@ export async function resolveContext(request) {
     .filter((entry) => (
       entry.relevance.score >= 6
       && (
-        entry.meta.name !== "execution-plan"
-        || EXECUTION_PLAN_TEST.test(request)
+        (entry.meta.name !== "execution" && entry.meta.name !== "execution-plan")
+        || EXECUTION_TEST.test(request)
       )
       && (
-        entry.meta.name !== "security-review"
+        (entry.meta.name !== "security" && entry.meta.name !== "security-review")
         || /\b(security|authentication|authorization|credential|secret|threat|vulnerability|abuse)\b/i.test(request)
       )
     ))
@@ -229,8 +231,8 @@ export async function resolveContext(request) {
     );
     const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));
     for (const entry of skillEntries) {
-      if (entry.meta.name === "grill-with-docs" && !PREPLANNING_TEST.test(request)) continue;
-      if (entry.meta.name === "execution-plan" && !EXECUTION_PLAN_TEST.test(request)) continue;
+      if ((entry.meta.name === "grill" || entry.meta.name === "grill-with-docs") && !PREPLANNING_TEST.test(request)) continue;
+      if ((entry.meta.name === "execution" || entry.meta.name === "execution-plan") && !EXECUTION_TEST.test(request)) continue;
       if (linkedSkillNames.has(entry.meta.name) && !selectedSkillPaths.has(entry.path)) {
         selectedSkills.push({ path: entry.path, reason: `required by ${selectedWorkflow.path}` });
         selectedSkillPaths.add(entry.path);

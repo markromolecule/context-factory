@@ -62,27 +62,31 @@
     "rules/ui/next-react-project-structure.md"
   ],
   "skills": [
-    "skills/architecture-decision/SKILL.md",
+    "skills/adr/SKILL.md",
+    "skills/api-contract/SKILL.md",
     "skills/backend-module/SKILL.md",
-    "skills/implementation-plan/SKILL.md",
-    "skills/execution-plan/SKILL.md",
-    "skills/grill-with-docs/SKILL.md",
+    "skills/component-craft/SKILL.md",
+    "skills/database-query/SKILL.md",
+    "skills/execution/SKILL.md",
+    "skills/explore/SKILL.md",
+    "skills/grill/SKILL.md",
     "skills/knowledge-grounding/SKILL.md",
+    "skills/plan/SKILL.md",
     "skills/playground/SKILL.md",
-    "skills/repository-discovery/SKILL.md",
-    "skills/security-review/SKILL.md",
-    "skills/typescript-diagnostics/SKILL.md",
-    "skills/verification-review/SKILL.md",
-    "skills/zod-schema-modeling/SKILL.md"
+    "skills/security/SKILL.md",
+    "skills/test-suite/SKILL.md",
+    "skills/typescript/SKILL.md",
+    "skills/verify/SKILL.md",
+    "skills/zod/SKILL.md"
   ],
   "skillResources": [
-    "skills/execution-plan/agents/openai.yaml",
-    "skills/grill-with-docs/agents/openai.yaml",
-    "skills/grill-with-docs/references/glossary-format.md",
-    "skills/implementation-plan/agents/openai.yaml",
+    "skills/execution/agents/openai.yaml",
+    "skills/grill/agents/openai.yaml",
+    "skills/grill/references/glossary-format.md",
+    "skills/plan/agents/openai.yaml",
     "skills/playground/references/guide-to-avoiding-llm-styling.md",
-    "skills/typescript-diagnostics/agents/openai.yaml",
-    "skills/zod-schema-modeling/agents/openai.yaml"
+    "skills/typescript/agents/openai.yaml",
+    "skills/zod/agents/openai.yaml"
   ],
   "workflows": [
     "workflows/architecture-change.md",
@@ -123,7 +127,8 @@
     "docs/decisions/0008-pluggable-ai-execution-harness.md",
     "docs/decisions/0009-session-keyword-triggers-and-workflow-automation.md",
     "docs/decisions/0010-data-layer-query-optimization-and-performance-architecture.md",
-    "docs/decisions/0011-progressive-contract-driven-loop-engineering.md"
+    "docs/decisions/0011-progressive-contract-driven-loop-engineering.md",
+    "docs/decisions/0012-skill-taxonomy-and-slash-ergonomics-optimization.md"
   ],
   "tools": [
     "evals/run-evals.mjs",

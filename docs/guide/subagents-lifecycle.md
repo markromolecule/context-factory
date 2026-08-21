@@ -48,7 +48,7 @@ flowchart TD
 - **Role:** Business Analyst & Requirements Engineer.
 - **When to Use:** At the very start of any new feature, product idea, or ambiguous request.
 - **Key Actions:**
-  - Asks **one** clarifying question at a time using `skills/grill-with-docs/SKILL.md`.
+  - Asks **one** clarifying question at a time using `skills/grill/SKILL.md`.
   - Establishes domain language in `knowledge/` using `skills/knowledge-grounding/SKILL.md`.
   - Generates a **Scenario Coverage Matrix** and **Acceptance Criteria Ledger**.
   - **Rule:** Never writes implementation code; ensures requirements are rock solid first.
@@ -126,7 +126,7 @@ Here is a practical example of how the three agents collaborate on a feature fro
 ### Step 1: Requirements Discovery (BA Agent)
 - **User Prompt:** *"I want to add webhook event notifications when an order is created."*
 - **BA Agent Action:**
-  - Invokes `skills/grill-with-docs/SKILL.md`.
+  - Invokes `skills/grill/SKILL.md`.
   - Asks: *"What delivery retry strategy and timeout policy should we use for failed webhook deliveries?"*
   - Asks: *"How should outgoing webhooks be cryptographically signed (e.g. HMAC-SHA256 with a secret)?"*
   - Output: Records the resolved decisions in `docs/tasks/2026/08/2026-08-18/feat-order-webhooks/README.md` with complete scenario coverage and acceptance criteria.
@@ -142,7 +142,7 @@ Here is a practical example of how the three agents collaborate on a feature fro
   - Stops and presents the plan for user approval.
 
 ### Step 3: Implementation & Verification (Developer)
-- Developer agent executes `phase-01`, `phase-02`, and `phase-03` sequentially using `skills/execution-plan/SKILL.md`, running unit tests after each phase.
+- Developer agent executes `phase-01`, `phase-02`, and `phase-03` sequentially using `skills/execution/SKILL.md`, running unit tests after each phase.
 
 ### Step 4: CI/CD & Deployment (DevOps Agent)
 - **User Prompt:** *"We're ready to deploy. Setup the CI/CD pipeline and release checks."*

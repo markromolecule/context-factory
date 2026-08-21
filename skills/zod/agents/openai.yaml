@@ -1,0 +1,4 @@
+interface:
+  display_name: "Zod Schema Modeling"
+  short_description: "Model runtime schemas and boundary validation"
+  default_prompt: "Model runtime schemas and boundary validation using $zod"

@@ -1,6 +1,6 @@
 ---
 name: playground
-description: Apply custom, hand-crafted frontend styling rules in the playground to eliminate generic LLM styling patterns and refine component craftsmanship.
+description: Apply custom, hand-crafted frontend styling rules in the playground to eliminate generic LLM styling patterns and refine component craftsmanship (/playground, [PLAYGROUND]).
 ---
 
 # Playground for Custom Craft and Styling

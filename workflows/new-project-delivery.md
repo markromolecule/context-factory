@@ -15,17 +15,17 @@ Use when scaffolding a new project from scratch, establishing a new subsystem, o
 - Desired system outcome, business value, and measurable success criteria.
 - Target domain boundaries, actors, authority levels, and multi-tenant constraints.
 - Existing codebase conventions, architectural patterns, and tech stack choices.
-- Traceable discovery record from `grill-with-docs`.
+- Traceable discovery record from `grill`.
 
 ## Applicable rules and skills
 
-Load global rules and relevant domain rules for touched files. Start with `grill-with-docs` for pre-planning discovery; use `implementation-plan` to author phased task breakdowns under `docs/tasks/`; use `execution-plan` to execute approved phases. Adhere to `rules/backend/module-architecture.md`, `rules/database/schema-db.md`, `rules/database/testing-data-access-layer.md`, `rules/hooks/query-hooks.md`, `rules/hooks/mutation-hooks.md`, and `rules/ui/frontend.md`.
+Load global rules and relevant domain rules for touched files. Start with `grill` for pre-planning discovery; use `plan` to author phased task breakdowns under `docs/tasks/`; use `execution` to execute approved phases. Adhere to `rules/backend/module-architecture.md`, `rules/database/schema-db.md`, `rules/database/testing-data-access-layer.md`, `rules/hooks/query-hooks.md`, `rules/hooks/mutation-hooks.md`, and `rules/ui/frontend.md`.
 
 ## Phases
 
-1. **Pre-Planning Discovery & Grilling (`grill-with-docs`):** Interrogate requirements 1 question at a time. Record domain vocabulary in glossary (`references/glossary-format.md`) and architectural trade-offs in ADRs (`docs/decisions/`). Complete coverage audit before planning.
+1. **Pre-Planning Discovery & Grilling (`grill`):** Interrogate requirements 1 question at a time. Record domain vocabulary in glossary (`references/glossary-format.md`) and architectural trade-offs in ADRs (`docs/decisions/`). Complete coverage audit before planning.
 2. **Architecture & Database Schema Locking:** Draft entity models, `schema.prisma`, Kysely query layer types, and Zod boundary DTOs.
-3. **Phased Implementation Plan (`implementation-plan`):** Author Master Plan (`docs/templates/Task.md`) and Phase Breakdowns (`docs/templates/Phase.md`) under `docs/tasks/`. Sequence modules in strict vertical dependency order. Stop and obtain approval before coding.
+3. **Phased Implementation Plan (`plan`):** Author Master Plan (`docs/templates/Task.md`) and Phase Breakdowns (`docs/templates/Phase.md`) under `docs/tasks/`. Sequence modules in strict vertical dependency order. Stop and obtain approval before coding.
 4. **Vertical Backend Module Slices:** Per module, build strictly along `routes → controllers → services → data` with transport DTO validation.
 5. **Inner Loop 4-Layer Testing & Self-Correction:** Build and execute dedicated test files for every tier (`*.data.test.ts`, `*.service.test.ts`, `*.controller.test.ts`, `*.routes.test.ts`) + `tsc --noEmit`. Auto-correct diagnostics until 100% green.
 6. **Scalar API Contract Docs & Client Hook Smoke Test:** Expose verified endpoints in Scalar docs. Create typed `useQuery` / `useMutation` hooks and smoke-test against live endpoints to prove client-backend connectivity.

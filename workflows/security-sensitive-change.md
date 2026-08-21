@@ -18,7 +18,7 @@ Use whenever compromise could expose data, cross an authorization boundary, exec
 
 ## Applicable rules and skills
 
-Always load security guardrails plus boundary-specific rules and use the `security-review` skill. Compose with feature delivery, database migration, dependency upgrade, or release readiness as needed.
+Always load security guardrails plus boundary-specific rules and use the `security` skill. Compose with feature delivery, database migration, dependency upgrade, or release readiness as needed.
 
 ## Phases
 

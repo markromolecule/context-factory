@@ -31,9 +31,9 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 Use leading slash commands or bracket prefix tags for instant, deterministic workflow activation:
 
 - `/new-project`, `[NEW_PROJECT]` $\rightarrow$ [[workflows/new-project-delivery|New project progressive delivery]]: progressive vertical-slice execution with grilling and 4-layer tests
-- `/grill`, `[DISCOVERY]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: clarify 1 unknown at a time with `grill-with-docs` before planning
-- `/plan`, `[PLAN]`, `[FEATURE]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: scaffold task under `docs/tasks/` with `implementation-plan`, stop before coding
-- `/exec`, `[EXEC]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: execute approved task phases incrementally with `execution-plan`
+- `/grill`, `[DISCOVERY]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: clarify 1 unknown at a time with `grill` before planning
+- `/plan`, `[PLAN]`, `[FEATURE]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: scaffold task under `docs/tasks/` with `plan`, stop before coding
+- `/execution`, `/exec`, `[EXEC]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: execute approved task phases incrementally with `execution`
 - `/fix`, `[HOTFIX]`, `[BUG]` $\rightarrow$ [[workflows/defect-resolution|Defect resolution]]: capture reproduction test before modifying code
 - `/migrate`, `[MIGRATE]`, `[DB]` $\rightarrow$ [[workflows/database-migration|Database migration]]: plan forward migration, rollback script, and consumer types
 - `/sec`, `[SEC]`, `[SECURITY]` $\rightarrow$ [[workflows/security-sensitive-change|Security-sensitive change]]: review auth, credentials, data isolation, and abuse cases
@@ -48,6 +48,6 @@ Use leading slash commands or bracket prefix tags for instant, deterministic wor
 - Prefer defect resolution when observed behavior is wrong; do not implement before establishing evidence.
 - Add a risk-specific workflow only when that risk is central to the change.
 - Use release readiness to review and report; it does not authorize deployment.
-- Begin new-system and materially ambiguous capability work with [[skills/grill-with-docs/SKILL|grill-with-docs]], then synthesize the confirmed discovery record with [[skills/implementation-plan/SKILL|implementation-plan]] before coding.
+- Begin new-system and materially ambiguous capability work with [[skills/grill/SKILL|grill]], then synthesize the confirmed discovery record with [[skills/plan/SKILL|plan]] before coding.
 - Use [[rules/global/1-3-1-rule|1-3-1]] inside a workflow only for a material unresolved decision.
-- Use [[skills/implementation-plan/SKILL|implementation-plan]] for plan-only output and [[skills/execution-plan/SKILL|execution-plan]] when executing an existing task artifact.
+- Use [[skills/plan/SKILL|plan]] for plan-only output and [[skills/execution/SKILL|execution]] when executing an existing task artifact.

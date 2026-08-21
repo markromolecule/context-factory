@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grill Discovery"
+  short_description: "Interrogate and stress-test system concepts before planning"
+  default_prompt: "Use $grill to challenge this system idea, resolve its decisions one at a time, and stop before implementation."
