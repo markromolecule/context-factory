@@ -142,7 +142,7 @@ Here is a practical example of how the three agents collaborate on a feature fro
   - Stops and presents the plan for user approval.
 
 ### Step 3: Implementation & Verification (Developer)
-- Developer agent executes `phase-01`, `phase-02`, and `phase-03` sequentially using `skills/execution/SKILL.md`, running unit tests after each phase.
+- Developer agent executes `phase-01`, `phase-02`, and `phase-03` sequentially using `skills/execute/SKILL.md`, stopping at each phase for developer review and verification.
 
 ### Step 4: CI/CD & Deployment (DevOps Agent)
 - **User Prompt:** *"We're ready to deploy. Setup the CI/CD pipeline and release checks."*

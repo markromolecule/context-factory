@@ -17,7 +17,7 @@ Read `orchestrator/SHARED.md` before changing this factory or using it to guide 
 - MUST: Activate and read the matching skill under `skills/<skill_name>/SKILL.md` whenever user request mentions or matches skill trigger concepts.
 - MUST: Activate `skills/grill/SKILL.md` before planning when working on a new system, product, or materially ambiguous feature.
 - MUST: Activate `skills/plan/SKILL.md` for task breakdowns, plans, and design proposals; output to `docs/tasks/` using `docs/templates/Task.md` & `Phase.md`. **Stop before coding.**
-- MUST: Activate `skills/execution/SKILL.md` when executing approved phase tasks, working incrementally with verification.
+- MUST: Activate `skills/execute/SKILL.md` when executing approved phase tasks, working strictly one phase at a time with developer review stops.
 - MUST: Follow vertical backend module boundaries and prevent layer leaking (`rules/backend/module-architecture.md`).
 - MUST: Ground claims using canonical knowledge under `knowledge/` (`skills/grounding/SKILL.md`).
 - MUST: Verify claims with fresh, reproducible test evidence before reporting completion (`rules/global/evidence-and-claims.md`, `skills/verify/SKILL.md`).
@@ -30,7 +30,8 @@ When any user request mentions or matches these concepts, immediately activate a
 | :--- | :--- | :--- |
 | `context specification`, `context spec`, `author context`, `create context`, `write context` | [`skills/context/SKILL.md`](skills/context/SKILL.md) | Output to `docs/context/` using `docs/templates/Context.md` with embedded grilling. |
 | `implementation plan`, `plan`, `breakdown`, `task breakdown`, `design proposal` | [`skills/plan/SKILL.md`](skills/plan/SKILL.md) | Output to `docs/tasks/` using `docs/templates/Task.md` & `Phase.md`. **Stop before coding.** |
-| `execute plan`, `run task`, `phase execution`, `implement phase` | [`skills/execution/SKILL.md`](skills/execution/SKILL.md) | Execute approved task phases incrementally with verification. |
+| `execute plan`, `run task`, `phase execution`, `implement phase` | [`skills/execute/SKILL.md`](skills/execute/SKILL.md) | Execute approved task phases strictly one at a time with developer review stops. |
+| `refactor`, `modularize`, `break down file`, `code complexity` | [`skills/refactor/SKILL.md`](skills/refactor/SKILL.md) | Decompose complex code into modular single-responsibility files. |
 | `grill`, `grill me`, `discovery`, `interview`, `clarify requirements`, `new system` | [`skills/grill/SKILL.md`](skills/grill/SKILL.md) | Clarify ambiguity and establish discovery records before planning. |
 | `architecture decision`, `adr`, `tech stack choice`, `tradeoff` | [`skills/adr/SKILL.md`](skills/adr/SKILL.md) | Output to `docs/decisions/` using `docs/templates/Decision.md`. |
 | `security review`, `auth audit`, `vulnerability`, `guardrails` | [`skills/security/SKILL.md`](skills/security/SKILL.md) | Review authentication, authorization, and data isolation. |
@@ -47,7 +48,9 @@ When the user's prompt begins with a slash command or bracket prefix, prioritize
 | `/context`, `[CONTEXT]`, `[CONTEXT_SPEC]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/ba-agent`](agents/ba-agent/AGENT.md) + [`skills/context`](skills/context/SKILL.md) | Author and grill context specifications in `docs/context/` before planning |
 | `/grill`, `[DISCOVERY]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/ba-agent`](agents/ba-agent/AGENT.md) + [`skills/grill`](skills/grill/SKILL.md) | Pre-planning interview: clarify 1 unknown at a time before planning |
 | `/plan`, `[PLAN]`, `[FEATURE]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/pm-agent`](agents/pm-agent/AGENT.md) + [`skills/plan`](skills/plan/SKILL.md) | Output to `docs/tasks/` via `task:new`. **Stop before coding.** |
-| `/execution`, `/exec`, `[EXEC]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`skills/execution`](skills/execution/SKILL.md) | Execute approved task phases incrementally with verification. |
+| `/execute`, `/exec`, `[EXEC]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`skills/execute`](skills/execute/SKILL.md) | Execute approved task phases incrementally with strict stops |
+| `/optimize`, `/review-code`, `[OPTIMIZE]`, `[CODE_REVIEW]` | [`workflows/code-review-and-optimization.md`](workflows/code-review-and-optimization.md) | [`agents/pm-agent`](agents/pm-agent/AGENT.md) + [`skills/refactor`](skills/refactor/SKILL.md) | Post-implementation review: audit ESR queries, types, and modularity |
+| `/refactor`, `[REFACTOR]` | [`skills/refactor/SKILL.md`](skills/refactor/SKILL.md) | [`skills/refactor`](skills/refactor/SKILL.md) | Decompose complex code into modular, single-responsibility files |
 | `/fix`, `[HOTFIX]`, `[BUG]` | [`workflows/defect-resolution.md`](workflows/defect-resolution.md) | [`workflows/defect-resolution.md`](workflows/defect-resolution.md) | Capture reproduction test before modifying code. |
 | `/migrate`, `[MIGRATE]`, `[DB]` | [`workflows/database-migration.md`](workflows/database-migration.md) | Database domain rules | Plan forward migration, rollback script, and consumer types. |
 | `/sec`, `[SEC]`, `[SECURITY]` | [`workflows/security-sensitive-change.md`](workflows/security-sensitive-change.md) | [`skills/security`](skills/security/SKILL.md) | Review auth, credentials, data isolation, and abuse cases. |
@@ -62,6 +65,7 @@ When the user's prompt begins with a slash command or bracket prefix, prioritize
 For multi-stage engineering lifecycles, load the appropriate workflow from `workflows/`:
 - **New Project & Greenfield Delivery:** `workflows/new-project-delivery.md`
 - **New Feature Delivery:** `workflows/feature-delivery.md`
+- **Code Review & Optimization:** `workflows/code-review-and-optimization.md`
 - **Bug & Defect Fixes:** `workflows/defect-resolution.md`
 - **Database & Schema Changes:** `workflows/database-migration.md`
 - **Security Changes:** `workflows/security-sensitive-change.md`

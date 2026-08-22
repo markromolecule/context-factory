@@ -14,6 +14,7 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 - [[workflows/feature-delivery|Feature delivery]] — deliver scoped behavior from evidence through handoff
 - [[workflows/new-project-delivery|New project progressive delivery]] — scaffold greenfield systems through progressive vertical slices, grilling, 4-layer testing, and loop-engineering
 - [[workflows/defect-resolution|Defect resolution]] — reproduce, diagnose, regress, and safely fix defects
+- [[workflows/code-review-and-optimization|Code review and optimization]] — audit, optimize, and refactor plan-affected code for performance, type safety, and modularity
 - [[workflows/release-readiness|Release readiness]] — make an evidence-backed ready/not-ready decision
 
 ## Risk-specific
@@ -31,16 +32,18 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 Use leading slash commands or bracket prefix tags for instant, deterministic workflow activation:
 
 - `/new-project`, `[NEW_PROJECT]` $\rightarrow$ [[workflows/new-project-delivery|New project progressive delivery]]: progressive vertical-slice execution with grilling and 4-layer tests
+- `/context`, `[CONTEXT]`, `[CONTEXT_SPEC]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: author and grill context specifications in `docs/context/`
 - `/grill`, `[DISCOVERY]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: clarify 1 unknown at a time with `grill` before planning
 - `/plan`, `[PLAN]`, `[FEATURE]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: scaffold task under `docs/tasks/` with `plan`, stop before coding
-- `/execution`, `/exec`, `[EXEC]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: execute approved task phases incrementally with `execution`
+- `/execute`, `/exec`, `[EXEC]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: execute approved task phases incrementally with `execute`
+- `/optimize`, `/review-code`, `[OPTIMIZE]`, `[CODE_REVIEW]` $\rightarrow$ [[workflows/code-review-and-optimization|Code review and optimization]]: audit, optimize, and refactor plan-affected code
 - `/fix`, `[HOTFIX]`, `[BUG]` $\rightarrow$ [[workflows/defect-resolution|Defect resolution]]: capture reproduction test before modifying code
 - `/migrate`, `[MIGRATE]`, `[DB]` $\rightarrow$ [[workflows/database-migration|Database migration]]: plan forward migration, rollback script, and consumer types
 - `/sec`, `[SEC]`, `[SECURITY]` $\rightarrow$ [[workflows/security-sensitive-change|Security-sensitive change]]: review auth, credentials, data isolation, and abuse cases
 - `/arch`, `/adr`, `[ADR]` $\rightarrow$ [[workflows/architecture-change|Architecture change]]: scaffold durable decision under `docs/decisions/`
 - `/deps`, `/upgrade`, `[UPGRADE]` $\rightarrow$ [[workflows/dependency-upgrade|Dependency upgrade]]: audit compatibility boundaries and run canary tests
 - `/release`, `/verify`, `[RELEASE]` $\rightarrow$ [[workflows/release-readiness|Release readiness]]: verify tests, lint, typecheck, and readiness evidence
-- `/context`, `[CONTEXT]` $\rightarrow$ [[workflows/context-maintenance|Context maintenance]]: run `node scripts/harness-cli.mjs lock` and `doctor`
+- `/sync`, `/maintain`, `[MAINTENANCE]` $\rightarrow$ [[workflows/context-maintenance|Context maintenance]]: run `node scripts/harness-cli.mjs lock` and `doctor`
 
 ## Selection rules
 
@@ -50,4 +53,4 @@ Use leading slash commands or bracket prefix tags for instant, deterministic wor
 - Use release readiness to review and report; it does not authorize deployment.
 - Begin new-system and materially ambiguous capability work with [[skills/grill/SKILL|grill]], then synthesize the confirmed discovery record with [[skills/plan/SKILL|plan]] before coding.
 - Use [[rules/global/1-3-1-rule|1-3-1]] inside a workflow only for a material unresolved decision.
-- Use [[skills/plan/SKILL|plan]] for plan-only output and [[skills/execution/SKILL|execution]] when executing an existing task artifact.
+- Use [[skills/plan/SKILL|plan]] for plan-only output and [[skills/execute/SKILL|execute]] when executing an existing task artifact.

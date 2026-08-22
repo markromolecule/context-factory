@@ -145,6 +145,7 @@ const ROUTING_HINTS = [
   { test: /^\/(?:fix|hotfix|bug)\b|^\[(?:BUG|HOTFIX|DEFECT)\]/i, workflow: "defect-resolution" },
   { test: /^\/(?:migrate|db|schema)\b|^\[(?:MIGRATE|DB|SCHEMA)\]/i, workflow: "database-migration" },
   { test: /^\/(?:sec|security|auth)\b|^\[(?:SEC|SECURITY|AUTH)\]/i, workflow: "security-sensitive-change" },
+  { test: /^\/(?:optimize|review-code)\b|^\[(?:OPTIMIZE|CODE_REVIEW)\]/i, workflow: "code-review-and-optimization" },
   { test: /^\/(?:arch|refactor|adr)\b|^\[(?:ARCH|REFACTOR|ADR)\]/i, workflow: "architecture-change" },
   { test: /^\/(?:upgrade|deps)\b|^\[(?:DEPS|UPGRADE)\]/i, workflow: "dependency-upgrade" },
   { test: /^\/(?:release|ready|deploy)\b|^\[(?:RELEASE|DEPLOY)\]/i, workflow: "release-readiness" },
@@ -154,6 +155,7 @@ const ROUTING_HINTS = [
 
   // 2. Keyword & Concept matchers
   { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },
+  { test: /\b(optimize|code review|review code|clean code|code quality guardrail)\b/i, workflow: "code-review-and-optimization" },
   { test: /\b(architecture|cross-module|dependency direction|system boundary|refactor)\b/i, workflow: "architecture-change" },
   { test: /\b(webhook|credential|secret|authorization|authentication|security|signature|replay)\b/i, workflow: "security-sensitive-change" },
   { test: /\b(database migration|schema migration|backfill)\b/i, workflow: "database-migration" },
@@ -190,7 +192,7 @@ export async function resolveContext(request) {
     .filter((entry) => (
       entry.relevance.score >= 6
       && (
-        (entry.meta.name !== "execution" && entry.meta.name !== "execution-plan")
+        (entry.meta.name !== "execute" && entry.meta.name !== "execution" && entry.meta.name !== "execution-plan")
         || EXECUTION_TEST.test(request)
       )
       && (

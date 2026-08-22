@@ -23,32 +23,28 @@ flowchart LR
     end
 
     subgraph S3["Development Phase"]
-        DEV["Developer / Architect<br/>(skills/execution)"]
+        DEV["Developer / Architect<br/>(skills/execute)"]
     end
-
-    subgraph S4["Verification Phase"]
-        QA["Reviewer / QA<br/>(skills/verify)"]
+    
+    subgraph VerifyDeploy ["Verification & Deployment"]
+        DEVOPS["DevOps Specialist<br/>(agents/devops-agent)"]
+        QA["QA Specialist<br/>(skills/verify)"]
     end
-
-    subgraph S5["Deployment Phase"]
-        OPS["DevOps Agent<br/>(agents/devops-agent)"]
-    end
-
-    BA -->|"Acceptance Criteria & Scenarios"| PM
-    PM -->|"Approved Phase Task Plan"| DEV
+    
+    BA -->|"Requirements & User Stories"| PM
+    PM -->|"Phased Task Plan"| DEV
     DEV -->|"Code & Unit Tests"| QA
-    QA -->|"Verified Release Gate"| OPS
-    OPS -->|"CI/CD & Live Deployment"| DONE["Production Ready"]
+    QA -->|"Verified Release Candidate"| DEVOPS
 ```
 
 ---
 
-## Agent Directory & Responsibilities
+## Available Subagents
 
-| Agent | Directory | Role & Responsibility | Core Skills & Workflows |
+| Subagent | Path | Role & Capabilities | Primary Skills |
 | :--- | :--- | :--- | :--- |
-| **BA Agent** | [[agents/ba-agent/AGENT|`agents/ba-agent`]] | Clarifies business requirements, conducts discovery grilling interviews, creates user scenario coverage tables, and defines verifiable acceptance criteria. | `grill`, `grounding`, `feature-delivery` |
-| **PM Agent** | [[agents/pm-agent/AGENT|`agents/pm-agent`]] | Breaks requirements into phased implementation plans, dependency-ordered phase files, milestone schedules, and execution progress tracking. | `plan`, `execution`, `adr`, `verify` |
+| **BA Agent** | [[agents/ba-agent/AGENT|`agents/ba-agent`]] | Gathers and clarifies requirements, interviews the user, creates context specifications, user stories, domain definitions, and scenario test matrices. | `grill`, `grounding`, `context` |
+| **PM Agent** | [[agents/pm-agent/AGENT|`agents/pm-agent`]] | Breaks requirements into phased implementation plans, dependency-ordered phase files, milestone schedules, and execution progress tracking. | `plan`, `execute`, `adr`, `verify`, `refactor` |
 | **DevOps Agent** | [[agents/devops-agent/AGENT|`agents/devops-agent`]] | Automates CI/CD pipelines (GitHub Actions, etc.), containerization (Docker, Compose), environment hygiene (`.env.example`), and release verification. | `security`, `verify`, `release-readiness`, `security-sensitive-change`, `dependency-upgrade` |
 
 ---

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Modular Refactoring"
+  short_description: "Decompose complex code into modular, maintainable files"
+  default_prompt: "Use $refactor to modularize and decompose the specified code files while preserving contracts."

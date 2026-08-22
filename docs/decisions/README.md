@@ -22,4 +22,6 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0012-skill-taxonomy-and-slash-ergonomics-optimization|0012 — Skill taxonomy and slash ergonomics optimization]]
 - [[docs/decisions/0013-streamline-procedural-skills-inventory|0013 — Streamline procedural skills inventory and eliminate rule duplications]]
 - [[docs/decisions/0014-context-specification-skill-with-embedded-grilling|0014 — Context specification authoring skill with embedded grilling]]
+- [[docs/decisions/0015-execute-skill-strict-phase-stops-and-modular-refactoring|0015 — Execute skill strict phase stops, code review optimization workflow, and modular refactoring]]
+
 

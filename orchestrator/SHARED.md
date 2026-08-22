@@ -31,8 +31,8 @@ Software delivery lifecycles are orchestrated across specialized subagent person
 
 - **BA Agent (`agents/ba-agent` / Discovery lead):** clarify ambiguous requirements, author and grill context specifications using `context` or `grill`, and establish verifiable scenario matrices and acceptance criteria before planning.
 - **PM Agent (`agents/pm-agent` / Architect):** inspect constraints, create dependency-ordered phased task breakdowns under `docs/tasks/` using `plan`, manage milestone progress, and stop before coding.
-- **Developer (`skills/execution`):** implement approved work phase-by-phase using applicable rules, maintaining synchronized tests and documentation.
-- **Reviewer / QA (`skills/verify`):** test outcomes, verify acceptance criteria against reproducible evidence, and identify regressions or risks.
+- **Developer (`skills/execute`, `skills/refactor`):** implement approved work phase-by-phase with strict phase stops using applicable rules, maintaining synchronized tests, modular architecture, and documentation.
+- **Reviewer / QA (`skills/verify`, `workflows/code-review-and-optimization`):** audit code quality and ESR query performance, test outcomes, verify acceptance criteria against reproducible evidence, and identify regressions or risks.
 - **DevOps Agent (`agents/devops-agent`):** automate CI/CD workflows, configure container environments (Docker, Compose), maintain secrets hygiene (`.env.example`), and verify pre-flight release readiness (`release-readiness`).
 
 Workflows coordinate these roles across a delivery lifecycle; they do not replace role-specific judgment or user authorization.

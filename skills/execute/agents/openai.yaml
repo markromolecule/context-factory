@@ -1,0 +1,4 @@
+interface:
+  display_name: "Execute Plan"
+  short_description: "Execute implementation plan phases with strict stops"
+  default_prompt: "Use $execute to execute the referenced task phase and stop for review."

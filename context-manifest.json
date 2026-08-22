@@ -64,23 +64,26 @@
   "skills": [
     "skills/adr/SKILL.md",
     "skills/context/SKILL.md",
-    "skills/execution/SKILL.md",
+    "skills/execute/SKILL.md",
     "skills/explore/SKILL.md",
     "skills/grill/SKILL.md",
     "skills/grounding/SKILL.md",
     "skills/plan/SKILL.md",
+    "skills/refactor/SKILL.md",
     "skills/security/SKILL.md",
     "skills/verify/SKILL.md"
   ],
   "skillResources": [
     "skills/context/agents/openai.yaml",
-    "skills/execution/agents/openai.yaml",
+    "skills/execute/agents/openai.yaml",
     "skills/grill/agents/openai.yaml",
     "skills/grill/references/glossary-format.md",
-    "skills/plan/agents/openai.yaml"
+    "skills/plan/agents/openai.yaml",
+    "skills/refactor/agents/openai.yaml"
   ],
   "workflows": [
     "workflows/architecture-change.md",
+    "workflows/code-review-and-optimization.md",
     "workflows/context-maintenance.md",
     "workflows/database-migration.md",
     "workflows/defect-resolution.md",
@@ -121,7 +124,8 @@
     "docs/decisions/0011-progressive-contract-driven-loop-engineering.md",
     "docs/decisions/0012-skill-taxonomy-and-slash-ergonomics-optimization.md",
     "docs/decisions/0013-streamline-procedural-skills-inventory.md",
-    "docs/decisions/0014-context-specification-skill-with-embedded-grilling.md"
+    "docs/decisions/0014-context-specification-skill-with-embedded-grilling.md",
+    "docs/decisions/0015-execute-skill-strict-phase-stops-and-modular-refactoring.md"
   ],
   "tools": [
     "evals/run-evals.mjs",

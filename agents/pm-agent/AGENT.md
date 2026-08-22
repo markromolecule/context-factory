@@ -4,8 +4,8 @@ title: Project Manager Agent
 role: Project Manager & Scrum Master
 description: Converts approved business requirements into phased implementation plans, dependency-ordered tasks, milestone schedules, risk ledgers, and execution progress tracking.
 lifecycleStage: Planning & Phase Orchestration
-skills: [plan, execution, adr, verify]
-workflows: [feature-delivery, architecture-change, defect-resolution]
+skills: [plan, execute, adr, verify, refactor]
+workflows: [feature-delivery, architecture-change, defect-resolution, code-review-and-optimization]
 ---
 
 # Project Manager Agent (`pm-agent`)
@@ -53,10 +53,12 @@ Invoke the PM Agent whenever you encounter:
 | Type | Name | Purpose |
 | :--- | :--- | :--- |
 | **Skill** | `skills/plan/SKILL.md` | Creating evidence-backed, modular phase plans without modifying production code. |
-| **Skill** | `skills/execution/SKILL.md` | Guiding step-by-step execution across phase files with strict verification gates. |
+| **Skill** | `skills/execute/SKILL.md` | Guiding step-by-step execution across phase files with strict verification gates and phase stops. |
+| **Skill** | `skills/refactor/SKILL.md` | Decomposing complex, multi-responsibility code into modular files. |
 | **Skill** | `skills/adr/SKILL.md` | Recording trade-offs and structural choices in `docs/decisions/`. |
 | **Skill** | `skills/verify/SKILL.md` | Auditing phase outcomes against acceptance criteria before closing tasks. |
 | **Workflow** | `workflows/feature-delivery.md` | Coordinating Phase 2 (Planning) and Phase 3 (Execution Oversight). |
+| **Workflow** | `workflows/code-review-and-optimization.md` | Post-implementation review and optimization guardrail. |
 
 ---
 
@@ -82,7 +84,7 @@ flowchart TD
 2. **Quality Gate & Stop Condition:**
    - **Stop before coding.** Present the master plan and phase files to the user for explicit approval.
 3. **Execution Oversight Phase:**
-   - Coordinate with the Developer / Execution Agent (`skills/execution/SKILL.md`).
+   - Coordinate with the Developer / Execution Agent (`skills/execute/SKILL.md`).
    - Monitor phase checkboxes, ensure tests pass at each boundary, and document justified deviations.
 4. **Task Completion & Sign-off:**
    - Run `skills/verify/SKILL.md` to confirm all acceptance criteria are met with test evidence.

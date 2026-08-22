@@ -28,16 +28,17 @@ Skills are loaded into an agent's context dynamically using three mechanisms:
 2. **Slash Command & Bracket Prefix Shortcuts:**
    Directly invoke skills using concise slash commands (e.g. `/grill`, `/plan`, `/execution`, `/adr`, `/sec`, `/verify`, `/explore`, `/grounding`).
 3. **Specialized Regex Guards:**
-   - `execution` is only loaded if the request specifically mentions execution terms (e.g. "execute plan", "implement approved phase", "resume task", `/execution`, `[EXEC]`).
+   - `execute` is only loaded if the request specifically mentions execution terms (e.g. "execute plan", "implement approved phase", "resume task", `/execute`, `/execution`, `[EXEC]`).
+   - `refactor` is loaded when refactoring, modularizing, or splitting complex code files (`/refactor`, `[REFACTOR]`).
    - `security` is only loaded if the request contains security-related terms (e.g. "security", "credentials", "authentication", "threat", `/sec`, `[SEC]`).
 4. **Workflow Inclusion:**
    If a workflow is triggered, the harness scans the workflow markdown file for skill names enclosed in backticks (e.g., `` `grill` ``). It automatically loads these referenced skills into context.
 
 ---
 
-## Canonical 9-Skill Inventory
+## Canonical 10-Skill Inventory
 
-The Context Factory provides exactly 9 procedural skills:
+The Context Factory provides exactly 10 procedural skills:
 
 ### 1. context (`skills/context`)
 * **Slash Commands:** `/context`, `[CONTEXT]`, `[CONTEXT_SPEC]`
@@ -57,37 +58,43 @@ The Context Factory provides exactly 9 procedural skills:
 * **Example Prompt:**
   > "/plan Analyze docs/context/billing/stripe.md and create an end-to-end implementation plan breakdown."
 
-### 4. execution (`skills/execution`)
-* **Slash Commands:** `/execution`, `/exec`, `[EXEC]`
-* **Purpose:** Execute a previously approved implementation plan and its phase breakdown files step-by-step, keeping task/phase checklists and verification evidence updated.
+### 4. execute (`skills/execute`)
+* **Slash Commands:** `/execute`, `/exec`, `[EXEC]`
+* **Purpose:** Executes an approved implementation plan strictly one phase at a time, keeping task checklists and verification evidence updated. Mandates strict phase stops at every boundary so developers can inspect changes before authorizing the next phase.
 * **Example Prompt:**
-  > "/execution Execute Phase 1 for the Stripe integration task under docs/tasks/2026/08/2026-08-15/001-feature-stripe-integration/."
+  > "/execute Phase 1 for the Stripe integration task under docs/tasks/2026/08/2026-08-15/001-feature-stripe-integration/."
 
-### 5. adr (`skills/adr`)
+### 5. refactor (`skills/refactor`)
+* **Slash Commands:** `/refactor`, `[REFACTOR]`
+* **Purpose:** Decomposes complex, lengthy (>200 lines) or multi-responsibility code files into modular, maintainable, single-responsibility files (sub-components, custom hooks, domain services) while preserving public contracts and verified behavioral equivalence.
+* **Example Prompt:**
+  > "/refactor src/services/billing.service.ts to split payment processing from invoice generation."
+
+### 6. adr (`skills/adr`)
 * **Slash Commands:** `/adr`, `/arch`, `[ADR]`
 * **Purpose:** Guides the analysis and creation of a durable Architecture Decision Record (ADR) under `docs/decisions/` using the 1-3-1 decision rule.
 * **Example Prompt:**
   > "/adr Record an architecture decision regarding our move to PostgreSQL instead of MySQL."
 
-### 6. verify (`skills/verify`)
+### 7. verify (`skills/verify`)
 * **Slash Commands:** `/verify`, `/release`, `[RELEASE]`, `[QA]`
 * **Purpose:** Audits completed work against fresh evidence (running tests, verifying files, build checks) before declaring a task finished.
 * **Example Prompt:**
   > "/verify Audit the checkout bug fix and confirm all tests pass."
 
-### 7. security (`skills/security`)
+### 8. security (`skills/security`)
 * **Slash Commands:** `/sec`, `/security`, `[SEC]`, `[SECURITY]`
 * **Purpose:** Performs a threat-modeling exercise and audits application security boundaries (credentials, auth/authz, signatures, etc.).
 * **Example Prompt:**
   > "/sec Review webhook signature verification and rate-limiting controls."
 
-### 8. explore (`skills/explore`)
+### 9. explore (`skills/explore`)
 * **Slash Commands:** `/explore`, `[EXPLORE]`
 * **Purpose:** Maps out code, contracts, database schemas, test suites, and project conventions of a target codebase.
 * **Example Prompt:**
   > "/explore Map the current database models and trace where users are queried."
 
-### 9. grounding (`skills/grounding`)
+### 10. grounding (`skills/grounding`)
 * **Slash Commands:** `/grounding`, `/wiki`, `[WIKI]`
 * **Purpose:** Access and query the LLM Wiki (attributable project knowledge under `knowledge/`) with authority and provenance.
 * **Example Prompt:**
