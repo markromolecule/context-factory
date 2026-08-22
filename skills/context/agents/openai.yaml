@@ -1,0 +1,4 @@
+interface:
+  display_name: "Context Specification"
+  short_description: "Author and grill context specifications before planning"
+  default_prompt: "Use $context to grill requirements and author a structured context specification under docs/context/ before planning."

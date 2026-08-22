@@ -29,18 +29,35 @@ When any user request mentions or matches these concepts, immediately activate a
 
 | Trigger Keywords / Concepts | Active Skill | Mandatory Template / Action |
 | :--- | :--- | :--- |
-| `implementation plan`, `plan`, `breakdown`, `task breakdown`, `design proposal` | [`skills/implementation-plan/SKILL.md`](../skills/implementation-plan/SKILL.md) | Output to `docs/tasks/` using `docs/templates/Task.md` & `Phase.md`. **Stop before coding.** |
-| `execute plan`, `run task`, `phase execution`, `implement phase` | [`skills/execution-plan/SKILL.md`](../skills/execution-plan/SKILL.md) | Execute approved task phases incrementally with verification. |
-| `grill`, `grill me`, `discovery`, `interview`, `clarify requirements`, `new system` | [`skills/grill-with-docs/SKILL.md`](../skills/grill-with-docs/SKILL.md) | Clarify ambiguity and establish discovery records before planning. |
-| `architecture decision`, `adr`, `tech stack choice`, `tradeoff` | [`skills/architecture-decision/SKILL.md`](../skills/architecture-decision/SKILL.md) | Output to `docs/decisions/` using `docs/templates/Decision.md`. |
-| `backend module`, `api endpoint`, `controller`, `service layer` | [`skills/backend-module/SKILL.md`](../skills/backend-module/SKILL.md) | Follow vertical module pattern & backend rules. |
-| `security review`, `auth audit`, `vulnerability`, `guardrails` | [`skills/security-review/SKILL.md`](../skills/security-review/SKILL.md) | Review authentication, authorization, and data isolation. |
-| `tsc`, `compiler error`, `type error`, `circular types` | [`skills/typescript-diagnostics/SKILL.md`](../skills/typescript-diagnostics/SKILL.md) | Diagnose and resolve compiler errors and type failures. |
-| `verification`, `verify`, `test review`, `qa check` | [`skills/verification-review/SKILL.md`](../skills/verification-review/SKILL.md) | Validate acceptance criteria against verified evidence. |
-| `zod`, `schema validation`, `runtime validation`, `dto parsing` | [`skills/zod-schema-modeling/SKILL.md`](../skills/zod-schema-modeling/SKILL.md) | Model runtime schemas, DTOs, and boundary validation contracts. |
-| `knowledge`, `wiki`, `glossary`, `grounding` | [`skills/knowledge-grounding/SKILL.md`](../skills/knowledge-grounding/SKILL.md) | Query canonical knowledge items before making claims. |
-| `explore codebase`, `repo discovery`, `map dependencies` | [`skills/repository-discovery/SKILL.md`](../skills/repository-discovery/SKILL.md) | Inspect and document existing architecture and patterns. |
-| `playground`, `styling`, `frontend component demo` | [`skills/playground/SKILL.md`](../skills/playground/SKILL.md) | Build isolated UI prototypes avoiding generic LLM styling. |
+| `context specification`, `context spec`, `author context`, `create context`, `write context` | [`skills/context/SKILL.md`](../skills/context/SKILL.md) | Output to `docs/context/` using `docs/templates/Context.md` with embedded grilling. |
+| `implementation plan`, `plan`, `breakdown`, `task breakdown`, `design proposal` | [`skills/plan/SKILL.md`](../skills/plan/SKILL.md) | Output to `docs/tasks/` using `docs/templates/Task.md` & `Phase.md`. **Stop before coding.** |
+| `execute plan`, `run task`, `phase execution`, `implement phase` | [`skills/execution/SKILL.md`](../skills/execution/SKILL.md) | Execute approved task phases incrementally with verification. |
+| `grill`, `grill me`, `discovery`, `interview`, `clarify requirements`, `new system` | [`skills/grill/SKILL.md`](../skills/grill/SKILL.md) | Clarify ambiguity and establish discovery records before planning. |
+| `architecture decision`, `adr`, `tech stack choice`, `tradeoff` | [`skills/adr/SKILL.md`](../skills/adr/SKILL.md) | Output to `docs/decisions/` using `docs/templates/Decision.md`. |
+| `security review`, `auth audit`, `vulnerability`, `guardrails` | [`skills/security/SKILL.md`](../skills/security/SKILL.md) | Review authentication, authorization, and data isolation. |
+| `verification`, `verify`, `test review`, `qa check` | [`skills/verify/SKILL.md`](../skills/verify/SKILL.md) | Validate acceptance criteria against verified evidence. |
+| `knowledge`, `wiki`, `glossary`, `grounding` | [`skills/grounding/SKILL.md`](../skills/grounding/SKILL.md) | Query canonical knowledge items before making claims. |
+| `explore codebase`, `repo discovery`, `map dependencies` | [`skills/explore/SKILL.md`](../skills/explore/SKILL.md) | Inspect and document existing architecture and patterns. |
+
+## Session Slash Commands & Prefix Triggers
+When the user's prompt begins with a slash command or bracket prefix, prioritize the matching workflow and subagent:
+
+| Command / Prefix | Target Workflow / Skill | Active Skill / Subagent | Key Mandatory Action |
+| :--- | :--- | :--- | :--- |
+| `/new-project`, `[NEW_PROJECT]` | [`workflows/new-project-delivery.md`](../workflows/new-project-delivery.md) | [`skills/grill`](../skills/grill/SKILL.md) + [`skills/plan`](../skills/plan/SKILL.md) | Progressive vertical-slice scaffolding with 4-layer testing and loop engineering |
+| `/context`, `[CONTEXT]`, `[CONTEXT_SPEC]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`agents/ba-agent`](../agents/ba-agent/AGENT.md) + [`skills/context`](../skills/context/SKILL.md) | Author and grill context specifications in `docs/context/` before planning |
+| `/grill`, `[DISCOVERY]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`agents/ba-agent`](../agents/ba-agent/AGENT.md) + [`skills/grill`](../skills/grill/SKILL.md) | Pre-planning interview: clarify 1 unknown at a time before planning |
+| `/plan`, `[PLAN]`, `[FEATURE]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`agents/pm-agent`](../agents/pm-agent/AGENT.md) + [`skills/plan`](../skills/plan/SKILL.md) | Output to `docs/tasks/` via `task:new`. **Stop before coding.** |
+| `/execution`, `/exec`, `[EXEC]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`skills/execution`](../skills/execution/SKILL.md) | Execute approved task phases incrementally with verification. |
+| `/fix`, `[HOTFIX]`, `[BUG]` | [`workflows/defect-resolution.md`](../workflows/defect-resolution.md) | [`workflows/defect-resolution.md`](../workflows/defect-resolution.md) | Capture reproduction test before modifying code. |
+| `/migrate`, `[MIGRATE]`, `[DB]` | [`workflows/database-migration.md`](../workflows/database-migration.md) | Database domain rules | Plan forward migration, rollback script, and consumer types. |
+| `/sec`, `[SEC]`, `[SECURITY]` | [`workflows/security-sensitive-change.md`](../workflows/security-sensitive-change.md) | [`skills/security`](../skills/security/SKILL.md) | Review auth, credentials, data isolation, and abuse cases. |
+| `/arch`, `/adr`, `[ADR]` | [`workflows/architecture-change.md`](../workflows/architecture-change.md) | [`skills/adr`](../skills/adr/SKILL.md) | Output to `docs/decisions/` using `Decision.md`. |
+| `/deps`, `/upgrade`, `[UPGRADE]` | [`workflows/dependency-upgrade.md`](../workflows/dependency-upgrade.md) | Dependency rules | Audit compatibility boundaries and run canary tests. |
+| `/release`, `/verify`, `[RELEASE]` | [`workflows/release-readiness.md`](../workflows/release-readiness.md) | [`agents/devops-agent`](../agents/devops-agent/AGENT.md) + [`skills/verify`](../skills/verify/SKILL.md) | Verify tests, lint, typecheck, and readiness evidence. |
+| `/grounding`, `/wiki`, `[WIKI]` | [`skills/grounding/SKILL.md`](../skills/grounding/SKILL.md) | [`skills/grounding`](../skills/grounding/SKILL.md) | Query and reconcile canonical LLM Wiki knowledge. |
+| `/explore`, `[EXPLORE]` | [`skills/explore/SKILL.md`](../skills/explore/SKILL.md) | [`skills/explore`](../skills/explore/SKILL.md) | Map code contracts, schemas, tests, and conventions. |
+| `/sync`, `/maintain`, `[MAINTENANCE]` | [`workflows/context-maintenance.md`](../workflows/context-maintenance.md) | Context Maintenance | Run `node scripts/harness-cli.mjs lock` and `doctor`. |
 
 ## Workflow Routing
 For multi-stage engineering lifecycles, load the appropriate workflow from `workflows/`:

@@ -16,15 +16,14 @@ Writing a dedicated `.md` context file allows you or your AI IDE agent to inspec
 
 ```mermaid
 graph LR
-    A[Context Spec<br/>docs/context/] -->|Analyze & Resolve| B[Discovery & Grilling<br/>grill-with-docs]
-    B -->|Phase Breakdown| C[Implementation Plan<br/>docs/tasks/YYYY/MM/...]
-    C -->|Approved Execution| D[Code & Tests<br/>web/ / api/ / mobile/]
+    A[Raw Idea / Brief] -->|/context Skill<br/>Author & Grill| B[Context Specification<br/>docs/context/... status: ready]
+    B -->|/plan Skill<br/>Phase Breakdown| C[Implementation Plan<br/>docs/tasks/YYYY/MM/...]
+    C -->|/execution Skill<br/>Approved Execution| D[Code & Tests<br/>web/ / api/ / mobile/]
 ```
 
-1. **Write Context:** Create a `.md` specification in `docs/context/` outlining the problem, requirements, constraints, and scope (use [[docs/templates/Context|Context Template]]).
-2. **Feed to AI IDE:** Prompt the agent with the context file.
-3. **Generate Plan:** The agent analyzes the context, checks codebase constraints, and generates a structured task in `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`.
-4. **Execute:** Run the generated phase files (`phase-01-*.md`, `phase-02-*.md`) with verification gates.
+1. **Author & Grill Context:** Invoke the `/context` skill to create a `.md` specification under `docs/context/` (using [[docs/templates/Context|Context Template]]). The skill conducts an embedded `grill` discovery session to resolve goals, actors, edge cases, and technical constraints one question at a time before marking `status: ready`.
+2. **Synchronize with `/plan`:** Invoke `/plan` to ingest the grilled context file. The agent inspects codebase boundaries and decomposes the requirements into structured tasks and phases under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`.
+3. **Execute:** Execute the generated phase files (`phase-01-*.md`, `phase-02-*.md`) via `/execution` with verification gates.
 
 ---
 
@@ -114,14 +113,14 @@ Use the [[docs/templates/Context|Context Template]] (`docs/templates/Context.md`
 
 Once your context file is created in `docs/context/`, use one of the prompt patterns below in your AI assistant or IDE chat:
 
-### 1. Generating an Implementation Plan
-> *"Analyze the context in `docs/context/features/auth/social-login.md` and create a phased implementation plan under `docs/tasks/` using the `implementation-plan` skill."*
+### 1. Authoring and Grilling a Context Specification
+> *"/context Author a comprehensive context specification for Stripe subscription checkout under docs/context/billing/stripe-subscription-checkout.md. Grill the requirements and edge cases first."*
 
-### 2. Pre-Planning Discovery (When Requirements Have Ambiguity)
-> *"Read `docs/context/billing/stripe-subscription-checkout.md`. Use `grill-with-docs` to identify open questions and edge cases before creating the plan."*
+### 2. Generating an Implementation Plan from Context
+> *"/plan Ingest the grilled context specification in docs/context/features/auth/social-login.md and create a phased implementation plan under docs/tasks/."*
 
 ### 3. Quick Bug Fix / Refactor Context
-> *"Inspect the bug context in `docs/context/fixes/2026-08-15-session-timeout-fix.md` and follow the `defect-resolution` workflow."*
+> *"/context Author and grill defect context in docs/context/fixes/2026-08-15-session-timeout-fix.md before proceeding with the defect-resolution workflow."*
 
 ---
 

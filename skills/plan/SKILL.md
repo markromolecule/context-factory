@@ -9,9 +9,9 @@ Do not implement the feature while this skill is active unless the user explicit
 
 ## Workflow
 
-1. Ingest and analyze the user-provided context (e.g. a general `.md` context specification for a feature, fix, or enhancement, or direct user input) end-to-end.
+1. Ingest and analyze the user-provided context (e.g. a grilled context specification under `docs/context/` created via `context`, or direct user input) end-to-end.
 2. Restate the requested outcome, boundaries, and measurable success criteria.
-3. For new-system or materially ambiguous work, require a completed `grill` discovery record; stop and return to grilling if goals, scenarios, boundaries, or material decisions remain unresolved.
+3. For new-system, feature, or materially ambiguous work, ensure requirements and scenarios are grounded in a completed `context` specification or `grill` discovery record; stop and trigger `context` / `grill` if goals, scenarios, edge cases, boundaries, or material decisions remain unresolved.
 4. Inspect relevant source files, tests, configuration, schemas, and existing conventions.
 5. Separate verified facts, assumptions, open decisions, and out-of-scope work.
 6. Use the 1-3-1 rule only for material unresolved choices; make a recommendation.

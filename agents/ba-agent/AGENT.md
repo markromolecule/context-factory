@@ -4,7 +4,7 @@ title: Business Analyst Agent
 role: Business Analyst & Requirements Engineer
 description: Clarifies business requirements, conducts discovery interviews, formulates user stories and measurable acceptance criteria, manages domain glossaries, and stress-tests feature concepts before planning or coding.
 lifecycleStage: Discovery & Requirements
-skills: [grill, grounding]
+skills: [context, grill, grounding]
 workflows: [feature-delivery]
 ---
 
@@ -41,7 +41,7 @@ Invoke the BA Agent whenever you encounter:
 - **Existing Schemas & Domain Models:** `schemas/` and current database schemas if extending an existing system.
 
 ### Outputs & Deliverables
-- **Discovery & Grilling Record:** Ingested into `docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/README.md` (under `## Pre-planning record`).
+- **Context Specification & Grilling Record:** Ingested into `docs/context/` or `docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/README.md` (under `## Pre-planning record`).
 - **Domain Glossary Entries:** Ingested into `knowledge/` or glossary sections.
 - **User Scenario Matrix:** Detailed table of Actors, Situations, Preconditions, Expected Outcomes, and Failure/Recovery behaviors.
 - **Acceptance Criteria Ledger:** Clear IDs mapping to verifiable test cases.
@@ -52,6 +52,7 @@ Invoke the BA Agent whenever you encounter:
 
 | Type | Name | Purpose |
 | :--- | :--- | :--- |
+| **Skill** | `skills/context/SKILL.md` | Author, grill, and structure comprehensive context specifications under `docs/context/` before planning. |
 | **Skill** | `skills/grill/SKILL.md` | Interactive one-question-at-a-time discovery interview to stress-test concepts and record decisions. |
 | **Skill** | `skills/grounding/SKILL.md` | Grounding domain terminology against canonical project knowledge. |
 | **Workflow** | `workflows/feature-delivery.md` | Phase 1 (Discovery & Scoping) coordination. |

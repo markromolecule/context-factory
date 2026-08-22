@@ -137,7 +137,7 @@ const ACTION_TERMS = new Set([
   "upgrade", "verify", "wiki",
 ]);
 
-const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan))\b|^\/(?:grill|discovery)\b|^\[(?:GRILL|DISCOVERY)\]/i;
+const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan)|context spec(?:ification)?|author context|create context)\b|^\/(?:grill|discovery|context)\b|^\[(?:GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i;
 const EXECUTION_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b|^\/(?:exec|execute|execution)\b|^\[(?:EXEC|EXECUTE|EXECUTION)\]/i;
 
 const ROUTING_HINTS = [
@@ -148,9 +148,9 @@ const ROUTING_HINTS = [
   { test: /^\/(?:arch|refactor|adr)\b|^\[(?:ARCH|REFACTOR|ADR)\]/i, workflow: "architecture-change" },
   { test: /^\/(?:upgrade|deps)\b|^\[(?:DEPS|UPGRADE)\]/i, workflow: "dependency-upgrade" },
   { test: /^\/(?:release|ready|deploy)\b|^\[(?:RELEASE|DEPLOY)\]/i, workflow: "release-readiness" },
-  { test: /^\/(?:context|sync|lock)\b|^\[(?:CONTEXT|MAINTENANCE)\]/i, workflow: "context-maintenance" },
+  { test: /^\/(?:sync|lock|maintain)\b|^\[(?:SYNC|LOCK|MAINTENANCE)\]/i, workflow: "context-maintenance" },
   { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "new-project-delivery" },
-  { test: /^\/(?:plan|feature|grill|discovery)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY)\]/i, workflow: "feature-delivery" },
+  { test: /^\/(?:plan|feature|grill|discovery|context)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i, workflow: "feature-delivery" },
 
   // 2. Keyword & Concept matchers
   { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },
@@ -231,7 +231,7 @@ export async function resolveContext(request) {
     );
     const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));
     for (const entry of skillEntries) {
-      if ((entry.meta.name === "grill" || entry.meta.name === "grill-with-docs") && !PREPLANNING_TEST.test(request)) continue;
+      if ((entry.meta.name === "grill" || entry.meta.name === "grill-with-docs" || entry.meta.name === "context") && !PREPLANNING_TEST.test(request)) continue;
       if ((entry.meta.name === "execution" || entry.meta.name === "execution-plan") && !EXECUTION_TEST.test(request)) continue;
       if (linkedSkillNames.has(entry.meta.name) && !selectedSkillPaths.has(entry.path)) {
         selectedSkills.push({ path: entry.path, reason: `required by ${selectedWorkflow.path}` });

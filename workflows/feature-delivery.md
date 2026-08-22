@@ -18,14 +18,14 @@ Use when a request adds or materially changes user-visible or system behavior. C
 
 ## Applicable rules and skills
 
-Load global rules and only the domain rules relevant to touched files. For a new system, product, or materially ambiguous feature, start with `grill`; it uses `explore` to answer code-discoverable questions and hands the stable record to `plan`. Use `execution` only for an approved plan.
+Load global rules and only the domain rules relevant to touched files. For a new system, product, or feature context, author and grill requirements with `context` or `grill`; they use `explore` to answer code-discoverable questions and hand the stable context record to `plan`. Use `execution` only for an approved plan.
 
 ## Phases
 
-1. For a new system or materially ambiguous capability, open pre-planning with `grill`; inspect repository evidence and resolve one decision at a time.
-2. Persist actors, goals, terminology, scenarios, constraints, non-goals, decisions, and unknowns in the correct glossary, task, and ADR artifacts.
+1. For a new feature, system, or materially ambiguous capability, open pre-planning with `context` or `grill`; inspect repository evidence and resolve one decision at a time.
+2. Persist actors, goals, terminology, scenarios, constraints, non-goals, decisions, and unknowns in the correct context specification (`docs/context/`), glossary, task, and ADR artifacts.
 3. Audit scenario coverage and obtain confirmation of shared understanding before implementation planning.
-4. Use `plan` to turn the accepted discovery record into dependency-ordered work and measurable verification.
+4. Use `plan` to turn the accepted context/discovery record into dependency-ordered work and measurable verification.
 5. Require explicit plan approval before `execution` or production implementation begins.
 6. Implement the smallest complete vertical slice with tests and documentation.
 7. Run focused checks, then the broader affected typecheck, test, lint, and build checks.

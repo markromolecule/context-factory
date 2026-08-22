@@ -28,6 +28,7 @@ When any user request mentions or matches these concepts, immediately activate a
 
 | Trigger Keywords / Concepts | Active Skill | Mandatory Template / Action |
 | :--- | :--- | :--- |
+| `context specification`, `context spec`, `author context`, `create context`, `write context` | [`skills/context/SKILL.md`](skills/context/SKILL.md) | Output to `docs/context/` using `docs/templates/Context.md` with embedded grilling. |
 | `implementation plan`, `plan`, `breakdown`, `task breakdown`, `design proposal` | [`skills/plan/SKILL.md`](skills/plan/SKILL.md) | Output to `docs/tasks/` using `docs/templates/Task.md` & `Phase.md`. **Stop before coding.** |
 | `execute plan`, `run task`, `phase execution`, `implement phase` | [`skills/execution/SKILL.md`](skills/execution/SKILL.md) | Execute approved task phases incrementally with verification. |
 | `grill`, `grill me`, `discovery`, `interview`, `clarify requirements`, `new system` | [`skills/grill/SKILL.md`](skills/grill/SKILL.md) | Clarify ambiguity and establish discovery records before planning. |
@@ -43,6 +44,7 @@ When the user's prompt begins with a slash command or bracket prefix, prioritize
 | Command / Prefix | Target Workflow / Skill | Active Skill / Subagent | Key Mandatory Action |
 | :--- | :--- | :--- | :--- |
 | `/new-project`, `[NEW_PROJECT]` | [`workflows/new-project-delivery.md`](workflows/new-project-delivery.md) | [`skills/grill`](skills/grill/SKILL.md) + [`skills/plan`](skills/plan/SKILL.md) | Progressive vertical-slice scaffolding with 4-layer testing and loop engineering |
+| `/context`, `[CONTEXT]`, `[CONTEXT_SPEC]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/ba-agent`](agents/ba-agent/AGENT.md) + [`skills/context`](skills/context/SKILL.md) | Author and grill context specifications in `docs/context/` before planning |
 | `/grill`, `[DISCOVERY]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/ba-agent`](agents/ba-agent/AGENT.md) + [`skills/grill`](skills/grill/SKILL.md) | Pre-planning interview: clarify 1 unknown at a time before planning |
 | `/plan`, `[PLAN]`, `[FEATURE]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`agents/pm-agent`](agents/pm-agent/AGENT.md) + [`skills/plan`](skills/plan/SKILL.md) | Output to `docs/tasks/` via `task:new`. **Stop before coding.** |
 | `/execution`, `/exec`, `[EXEC]` | [`workflows/feature-delivery.md`](workflows/feature-delivery.md) | [`skills/execution`](skills/execution/SKILL.md) | Execute approved task phases incrementally with verification. |
@@ -54,7 +56,7 @@ When the user's prompt begins with a slash command or bracket prefix, prioritize
 | `/release`, `/verify`, `[RELEASE]` | [`workflows/release-readiness.md`](workflows/release-readiness.md) | [`agents/devops-agent`](agents/devops-agent/AGENT.md) + [`skills/verify`](skills/verify/SKILL.md) | Verify tests, lint, typecheck, and readiness evidence. |
 | `/grounding`, `/wiki`, `[WIKI]` | [`skills/grounding/SKILL.md`](skills/grounding/SKILL.md) | [`skills/grounding`](skills/grounding/SKILL.md) | Query and reconcile canonical LLM Wiki knowledge. |
 | `/explore`, `[EXPLORE]` | [`skills/explore/SKILL.md`](skills/explore/SKILL.md) | [`skills/explore`](skills/explore/SKILL.md) | Map code contracts, schemas, tests, and conventions. |
-| `/context`, `[CONTEXT]` | [`workflows/context-maintenance.md`](workflows/context-maintenance.md) | Context Maintenance | Run `node scripts/harness-cli.mjs lock` and `doctor`. |
+| `/sync`, `/maintain`, `[MAINTENANCE]` | [`workflows/context-maintenance.md`](workflows/context-maintenance.md) | Context Maintenance | Run `node scripts/harness-cli.mjs lock` and `doctor`. |
 
 ## Workflow Routing
 For multi-stage engineering lifecycles, load the appropriate workflow from `workflows/`:
