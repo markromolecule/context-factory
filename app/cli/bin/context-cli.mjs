@@ -86,7 +86,7 @@ export async function main(argv = process.argv.slice(2)) {
       const manifest = await readJson("context-manifest.json");
       console.log(`context-factory v${manifest.contextVersion}`);
     } catch {
-      console.log("context-factory v3.6.0");
+      console.log("context-factory v3.7.0");
     }
     return 0;
   }

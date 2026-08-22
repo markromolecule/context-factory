@@ -32,8 +32,8 @@ graph LR
     - Extract presentational sub-components into dedicated component files (`<SubComponent>.tsx`).
     - Extract shared types and schemas into `types.ts` or `<feature>.schemas.ts`.
   - **Backend / Services:**
-    - Separate HTTP routing/controller layer from domain business logic (`rules/backend/controllers-and-routes.md`).
-    - Separate domain service orchestration from raw database queries (`rules/backend/service-layer.md`, `rules/database/data-access-via-db.md`).
+    - Separate HTTP routing/controller layer from domain business logic (`rules/typescript/backend/controllers-and-routes.md`).
+    - Separate domain service orchestration from raw database queries (`rules/typescript/backend/service-layer.md`, `rules/typescript/database/data-access-via-db.md`).
     - Extract shared DTO parsers, utility helpers, and constants.
 
 ### 2. Map Contracts & Consumers
@@ -43,7 +43,7 @@ graph LR
 
 ### 3. Surgical Modular Extraction
 - Create new, well-named files in the appropriate vertical module or component directory:
-  - Keep related files co-located within vertical module boundaries (`rules/backend/module-architecture.md`).
+  - Keep related files co-located within vertical module boundaries (`rules/typescript/backend/module-architecture.md`).
   - Follow naming conventions (`rules/global/naming-conventions.md`).
 - Move the targeted functions, hooks, or components cleanly into their new dedicated files.
 - Ensure all dependencies and internal helper imports are explicitly resolved.

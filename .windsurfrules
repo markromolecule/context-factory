@@ -8,17 +8,17 @@ Read `orchestrator/SHARED.md` before changing this factory or using it to guide 
 - MUST: Deterministically resolve required context before executing non-trivial requests by running `node scripts/context.mjs resolve "<user request>"` or checking the Trigger Dispatch Matrix below.
 - MUST: Inspect and load applicable rules from `rules/` matching the touched files and domain:
   - Global rules: `rules/global/` (`1-3-1-rule.md`, `code-quality.md`, `evidence-and-claims.md`, `security-guardrails.md`, `naming-conventions.md`, `architecture-conformance.md`, `git-commit.md`).
-  - Database rules: `rules/database/` (`schema-db.md`, `data-access-via-db.md`, `query-optimization-and-pagination.md`, `testing-data-access-layer.md`).
-  - Backend rules: `rules/backend/` (`module-architecture.md`, `controllers-and-routes.md`, `service-layer.md`, `data-access-via-api.md`).
-  - TypeScript rules: `rules/typescript/` (`type-safety.md`, `runtime-validation.md`, `error-handling.md`, `async-discipline.md`, `module-and-imports.md`).
-  - Hooks rules: `rules/hooks/` (`custom-hooks.md`, `query-hooks.md`, `mutation-hooks.md`, `zustand-store.md`).
-  - UI rules: `rules/ui/` (`frontend.md`, `next-react-project-structure.md`, `code-organization.md`, `forms-and-validation.md`, `dialogs-and-overlays.md`, `interaction-feedback.md`).
+  - TypeScript rules: `rules/typescript/common/` (`type-safety.md`, `runtime-validation.md`, `error-handling.md`, `async-discipline.md`, `module-and-imports.md`, `next-react-project-structure.md`).
+  - Database rules: `rules/typescript/database/` (`schema-db.md`, `data-access-via-db.md`, `query-optimization-and-pagination.md`, `testing-data-access-layer.md`).
+  - Backend rules: `rules/typescript/backend/` (`module-architecture.md`, `controllers-and-routes.md`, `service-layer.md`, `data-access-via-api.md`).
+  - Hooks rules: `rules/typescript/hooks/` (`custom-hooks.md`, `query-hooks.md`, `mutation-hooks.md`, `zustand-store.md`).
+  - UI rules: `rules/typescript/ui/` (`frontend.md`, `code-organization.md`, `forms-and-validation.md`, `dialogs-and-overlays.md`, `interaction-feedback.md`).
 - MUST: Route multi-stage engineering lifecycles to the appropriate workflow from `workflows/` (`feature-delivery.md`, `defect-resolution.md`, `database-migration.md`, `security-sensitive-change.md`, `architecture-change.md`, `context-maintenance.md`, `dependency-upgrade.md`, `release-readiness.md`).
 - MUST: Activate and read the matching skill under `skills/<skill_name>/SKILL.md` whenever user request mentions or matches skill trigger concepts.
 - MUST: Activate `skills/grill/SKILL.md` before planning when working on a new system, product, or materially ambiguous feature.
 - MUST: Activate `skills/plan/SKILL.md` for task breakdowns, plans, and design proposals; output to `docs/tasks/` using `docs/templates/Task.md` & `Phase.md`. **Stop before coding.**
 - MUST: Activate `skills/execute/SKILL.md` when executing approved phase tasks, working strictly one phase at a time with developer review stops.
-- MUST: Follow vertical backend module boundaries and prevent layer leaking (`rules/backend/module-architecture.md`).
+- MUST: Follow vertical backend module boundaries and prevent layer leaking (`rules/typescript/backend/module-architecture.md`).
 - MUST: Ground claims using canonical knowledge under `knowledge/` (`skills/grounding/SKILL.md`).
 - MUST: Verify claims with fresh, reproducible test evidence before reporting completion (`rules/global/evidence-and-claims.md`, `skills/verify/SKILL.md`).
 - MUST: Run `node scripts/context.mjs lock` and `node scripts/context.mjs doctor` after modifying context rules, skills, workflows, or templates.

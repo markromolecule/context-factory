@@ -4,13 +4,13 @@
   "expected": {
     "workflow": "workflows/feature-delivery.md",
     "rules": [
-      "rules/ui/frontend.md"
+      "rules/typescript/ui/frontend.md"
     ],
     "skills": []
   },
   "contractAssertions": [
     {
-      "path": "rules/ui/frontend.md",
+      "path": "rules/typescript/ui/frontend.md",
       "includes": [
         "## Typography",
         "## Color",

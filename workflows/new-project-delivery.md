@@ -19,7 +19,7 @@ Use when scaffolding a new project from scratch, establishing a new subsystem, o
 
 ## Applicable rules and skills
 
-Load global rules and relevant domain rules for touched files. Start with `grill` for pre-planning discovery; use `plan` to author phased task breakdowns under `docs/tasks/`; use `execution` to execute approved phases. Adhere to `rules/backend/module-architecture.md`, `rules/database/schema-db.md`, `rules/database/testing-data-access-layer.md`, `rules/hooks/query-hooks.md`, `rules/hooks/mutation-hooks.md`, and `rules/ui/frontend.md`.
+Load global rules and relevant domain rules for touched files. Start with `grill` for pre-planning discovery; use `plan` to author phased task breakdowns under `docs/tasks/`; use `execute` to execute approved phases. Adhere to `rules/typescript/backend/module-architecture.md`, `rules/typescript/database/schema-db.md`, `rules/typescript/database/testing-data-access-layer.md`, `rules/typescript/hooks/query-hooks.md`, `rules/typescript/hooks/mutation-hooks.md`, and `rules/typescript/ui/frontend.md`.
 
 ## Phases
 

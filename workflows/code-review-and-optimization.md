@@ -20,10 +20,10 @@ Use after executing an implementation plan phase, before declaring release readi
 
 - Global rules: `rules/global/code-quality.md`, `rules/global/evidence-and-claims.md`, `rules/global/1-3-1-rule.md`.
 - Domain rules matching touched files:
-  - Database: `rules/database/query-optimization-and-pagination.md`, `rules/database/data-access-via-db.md`.
-  - Backend: `rules/backend/module-architecture.md`, `rules/backend/service-layer.md`.
-  - TypeScript: `rules/typescript/type-safety.md`, `rules/typescript/async-discipline.md`, `rules/typescript/runtime-validation.md`.
-  - UI: `rules/ui/code-organization.md`, `rules/ui/interaction-feedback.md`.
+  - Database: `rules/typescript/database/query-optimization-and-pagination.md`, `rules/typescript/database/data-access-via-db.md`.
+  - Backend: `rules/typescript/backend/module-architecture.md`, `rules/typescript/backend/service-layer.md`.
+  - TypeScript: `rules/typescript/common/type-safety.md`, `rules/typescript/common/async-discipline.md`, `rules/typescript/common/runtime-validation.md`.
+  - UI: `rules/typescript/ui/code-organization.md`, `rules/typescript/ui/interaction-feedback.md`.
 - Skills: `refactor` (for modular decomposition of oversized files), `verify` (for regression validation).
 
 ## Phases
