@@ -7,7 +7,7 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 1. Read `README.md` and `context-manifest.json`.
 2. Inspect the target repository before proposing changes.
 3. Load the single most-specific workflow when its trigger matches a multi-stage request; compose workflows only when the selected workflow explicitly requires it.
-4. Load global rules, then only the backend/frontend/typescript rules relevant to the touched files.
+4. Load global rules, then only the backend/frontend/typescript/solid rules relevant to the touched files.
 5. Load a skill only when its description matches the specialized task.
 6. Load canonical knowledge only when its scope, authority, lifecycle, and task terms match; retain provenance.
 7. Read linked references only when the selected skill, workflow, or knowledge item directs it.
@@ -15,6 +15,7 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 ## Working contract
 
 - Preserve user changes and existing conventions unless a requirement explicitly replaces them.
+- Strictly adhere to SOLID architectural principles (`rules/solid/`) across backend services, repositories, hooks, and UI components.
 - Classify consequential claims as verified facts, assumptions, decisions, unknowns, or results and retain their evidence.
 - Prefer the smallest complete change and avoid speculative dependencies.
 - Keep architecture, rules, tests, and documentation synchronized with behavior.

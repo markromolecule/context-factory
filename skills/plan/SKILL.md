@@ -16,8 +16,9 @@ Do not implement the feature while this skill is active unless the user explicit
 5. Separate verified facts, assumptions, open decisions, and out-of-scope work.
 6. Use the 1-3-1 rule only for material unresolved choices; make a recommendation.
 7. Identify affected files, public contracts, data changes, consumers, and rollback risks.
-8. Divide work into dependency-ordered phases with concrete verification steps.
-9. Organize and create the task directory under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`:
+8. Audit architectural choices against SOLID principles (`rules/solid/`): enforce single-responsibility decomposition, open/closed extension strategies, substitutable contracts, lean client interfaces, and dependency inversion before finalizing task breakdowns.
+9. Divide work into dependency-ordered phases with concrete verification steps.
+10. Organize and create the task directory under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`:
    - **Master Plan Artifact:** `README.md` (or `<type>-<id>-<feature>.md`) using `docs/templates/Task.md` containing outcome, criteria, scope, decision ledger, and phase index.
    - **Phase Breakdown Artifacts:** `phase-01-<feature>.md`, `phase-02-<feature>.md`, etc. using `docs/templates/Phase.md` detailing step-by-step tasks, affected files, verification checks, and rollback plans for each phase.
 

@@ -20,6 +20,7 @@ Do not introduce a new layer, abstraction, repository-wide pattern, library, or 
 
 ## Boundary rules
 
+- Enforce SOLID architectural boundaries (`rules/solid/`): high-level policies depend on abstractions rather than details (`rules/solid/dependency-inversion.md`), interfaces are segregated to client use cases (`rules/solid/interface-segregation.md`), and modules maintain a single reason to change (`rules/solid/single-responsibility.md`).
 - Keep transport, application, domain, persistence, and presentation responsibilities in their declared boundaries.
 - Dependencies point inward or in the direction declared by the project profile; reject circular dependencies.
 - Cross-module access uses public contracts rather than internal implementation paths.

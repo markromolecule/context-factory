@@ -131,9 +131,9 @@ async function entries(paths) {
 
 const ACTION_TERMS = new Set([
   "add", "adr", "build", "change", "create", "deliver", "deploy",
-  "design", "discovery", "execute", "execution", "explore", "fix", "grill", "grounding", "hotfix",
-  "implement", "migrate", "plan", "redesign", "refactor", "release",
-  "remove", "resolve", "review", "sec", "security", "sync", "test",
+  "design", "dip", "discovery", "execute", "execution", "explore", "fix", "grill", "grounding", "hotfix",
+  "implement", "isp", "lsp", "migrate", "ocp", "plan", "redesign", "refactor", "release",
+  "remove", "resolve", "review", "sec", "security", "solid", "srp", "sync", "test",
   "upgrade", "verify", "wiki",
 ]);
 
@@ -156,7 +156,7 @@ const ROUTING_HINTS = [
   // 2. Keyword & Concept matchers
   { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },
   { test: /\b(optimize|code review|review code|clean code|code quality guardrail)\b/i, workflow: "code-review-and-optimization" },
-  { test: /\b(architecture|cross-module|dependency direction|system boundary|refactor)\b/i, workflow: "architecture-change" },
+  { test: /\b(architecture|cross-module|dependency direction|system boundary|refactor|solid|srp|ocp|lsp|isp|dip)\b/i, workflow: "architecture-change" },
   { test: /\b(webhook|credential|secret|authorization|authentication|security|signature|replay)\b/i, workflow: "security-sensitive-change" },
   { test: /\b(database migration|schema migration|backfill)\b/i, workflow: "database-migration" },
   { test: /\b(dependency|package|library|framework).*\b(upgrade|update|migrate)\b/i, workflow: "dependency-upgrade" },

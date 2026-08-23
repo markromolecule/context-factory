@@ -28,6 +28,16 @@ Canonical LLM knowledge lives under `knowledge/`. Each note is independently ret
 - `runbook` — diagnosis, mitigation, and recovery.
 - `example` — an approved illustration that is not independently authoritative.
 
+## Canonical Knowledge Items
+
+### Architectural Principles (SOLID)
+
+- [[knowledge/principles/solid-srp|Single Responsibility Principle (`factory.principles.solid.srp`)]]
+- [[knowledge/principles/solid-ocp|Open/Closed Principle (`factory.principles.solid.ocp`)]]
+- [[knowledge/principles/solid-lsp|Liskov Substitution Principle (`factory.principles.solid.lsp`)]]
+- [[knowledge/principles/solid-isp|Interface Segregation Principle (`factory.principles.solid.isp`)]]
+- [[knowledge/principles/solid-dip|Dependency Inversion Principle (`factory.principles.solid.dip`)]]
+
 ## Rules
 
 - Keep one primary subject per note and use stable dotted IDs.
@@ -35,3 +45,4 @@ Canonical LLM knowledge lives under `knowledge/`. Each note is independently ret
 - Use `supersedes` for replacement and retain historical notes.
 - Add new canonical notes to `context-manifest.json`.
 - Use [[skills/grounding/SKILL|grounding]] for retrieval.
+

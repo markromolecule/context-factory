@@ -25,15 +25,17 @@ graph LR
 ## Session Procedure
 
 ### 1. Analyze & Target Decomposition
-- Inspect the target file and measure its cyclomatic complexity, length, and concerns.
-- Identify distinct single-responsibility extraction boundaries:
+- Inspect the target file and measure its cyclomatic complexity, length, and concerns against SOLID principles (`rules/solid/`).
+- Identify distinct single-responsibility (`rules/solid/single-responsibility.md`) and interface segregation (`rules/solid/interface-segregation.md`) extraction boundaries:
   - **Frontend / React:**
     - Extract stateful logic and data fetching into custom hooks (`use<Feature>.ts`).
     - Extract presentational sub-components into dedicated component files (`<SubComponent>.tsx`).
+    - Narrow component props to avoid fat interfaces (`rules/solid/interface-segregation.md`).
     - Extract shared types and schemas into `types.ts` or `<feature>.schemas.ts`.
   - **Backend / Services:**
     - Separate HTTP routing/controller layer from domain business logic (`rules/typescript/backend/controllers-and-routes.md`).
     - Separate domain service orchestration from raw database queries (`rules/typescript/backend/service-layer.md`, `rules/typescript/database/data-access-via-db.md`).
+    - Invert dependencies by extracting repository interfaces and ports (`rules/solid/dependency-inversion.md`).
     - Extract shared DTO parsers, utility helpers, and constants.
 
 ### 2. Map Contracts & Consumers

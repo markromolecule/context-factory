@@ -1,0 +1,14 @@
+{
+  "name": "solid principles selects solid rules and refactor skill",
+  "request": "Refactor the payment service to adhere to single responsibility and dependency inversion",
+  "expected": {
+    "workflow": "workflows/architecture-change.md",
+    "rules": [
+      "rules/solid/single-responsibility.md",
+      "rules/solid/dependency-inversion.md"
+    ],
+    "skills": [
+      "skills/refactor/SKILL.md"
+    ]
+  }
+}

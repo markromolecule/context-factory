@@ -19,6 +19,7 @@ Use after executing an implementation plan phase, before declaring release readi
 ## Applicable rules and skills
 
 - Global rules: `rules/global/code-quality.md`, `rules/global/evidence-and-claims.md`, `rules/global/1-3-1-rule.md`.
+- SOLID Architectural rules: `rules/solid/single-responsibility.md`, `rules/solid/open-closed.md`, `rules/solid/liskov-substitution.md`, `rules/solid/interface-segregation.md`, `rules/solid/dependency-inversion.md`.
 - Domain rules matching touched files:
   - Database: `rules/typescript/database/query-optimization-and-pagination.md`, `rules/typescript/database/data-access-via-db.md`.
   - Backend: `rules/typescript/backend/module-architecture.md`, `rules/typescript/backend/service-layer.md`.
@@ -34,9 +35,12 @@ Use after executing an implementation plan phase, before declaring release readi
    - Backend & TypeScript: Verify strict type narrowing (no `any`), explicit error handling, and clean async/await discipline.
    - UI / Frontend: Check for unnecessary re-renders, optimize React hook dependency arrays, and verify accessible interaction states.
    - Hygiene: Clean up debug logs, commented-out dead code, and unused imports.
-3. **Modularity & Single-Responsibility Check:**
-   - Detect files that are overly lengthy (>200 lines) or handle multiple mixed concerns.
-   - Identify candidate boundaries for helper utilities, sub-components, or custom hooks.
+3. **SOLID & Modularity Audit:**
+   - Single Responsibility: Detect files that are overly lengthy (>200 lines) or handle multiple mixed concerns.
+   - Open/Closed: Flag rigid switch cascades that should use polymorphic strategies or registries.
+   - Liskov Substitution: Verify that mocks, fakes, and sub-types preserve identical contract invariants without throwing `NotSupportedError`.
+   - Interface Segregation: Identify bloated interfaces or overly broad React component props.
+   - Dependency Inversion: Verify domain services depend on ports/interfaces and accept dependencies via constructor injection.
 4. **Targeted Optimization & Refactoring:**
    - Present concrete 1-3-1 optimization suggestions.
    - If modular decomposition is warranted, invoke or recommend `skills/refactor/SKILL.md` to split files safely while keeping imports in sync.

@@ -9,6 +9,7 @@ alwaysApply: true
 
 ## Design
 
+- Strictly adhere to the 5 SOLID principles (`rules/solid/`): Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion across backend services, repositories, and React UI components.
 - Keep modules cohesive and dependencies directional; do not create circular imports.
 - Prefer explicit inputs, return types at public boundaries, and dependency injection over hidden mutable globals.
 - Avoid `any`, unchecked type assertions, swallowed errors, boolean parameter traps, and speculative abstractions.

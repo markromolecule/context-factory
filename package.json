@@ -1,6 +1,6 @@
 {
   "name": "context-factory",
-  "version": "3.7.0",
+  "version": "3.8.0",
   "description": "Source of truth for agent behavior, engineering rules, reusable skills, development workflows, and cross-repo bridging",
   "type": "module",
   "main": "app/cli/index.mjs",

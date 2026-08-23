@@ -18,7 +18,7 @@ This skill consumes an approved plan; it does not invent a replacement plan or e
 ## Execute Active Phase
 
 1. Modify only the in-scope files for the active phase plus necessary tests, generated artifacts, and documentation.
-2. Follow all applicable domain rules from `rules/` matching touched files (TypeScript type safety, runtime validation, ESR query optimization, vertical backend modules, and UI guidelines).
+2. Follow all applicable domain rules from `rules/` matching touched files (TypeScript type safety, runtime validation, ESR query optimization, vertical backend modules, UI guidelines, and strict SOLID principles under `rules/solid/`).
 3. Run the narrowest useful verification checks after each task (unit tests, typecheck, lint).
 4. For database and configuration changes:
    - Review migration SQL before applying.

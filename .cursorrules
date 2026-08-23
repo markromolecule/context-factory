@@ -8,6 +8,7 @@ Read `orchestrator/SHARED.md` before changing this factory or using it to guide 
 - MUST: Deterministically resolve required context before executing non-trivial requests by running `node scripts/context.mjs resolve "<user request>"` or checking the Trigger Dispatch Matrix below.
 - MUST: Inspect and load applicable rules from `rules/` matching the touched files and domain:
   - Global rules: `rules/global/` (`1-3-1-rule.md`, `code-quality.md`, `evidence-and-claims.md`, `security-guardrails.md`, `naming-conventions.md`, `architecture-conformance.md`, `git-commit.md`).
+  - SOLID rules: `rules/solid/` (`single-responsibility.md`, `open-closed.md`, `liskov-substitution.md`, `interface-segregation.md`, `dependency-inversion.md`).
   - TypeScript rules: `rules/typescript/common/` (`type-safety.md`, `runtime-validation.md`, `error-handling.md`, `async-discipline.md`, `module-and-imports.md`, `next-react-project-structure.md`).
   - Database rules: `rules/typescript/database/` (`schema-db.md`, `data-access-via-db.md`, `query-optimization-and-pagination.md`, `testing-data-access-layer.md`).
   - Backend rules: `rules/typescript/backend/` (`module-architecture.md`, `controllers-and-routes.md`, `service-layer.md`, `data-access-via-api.md`).

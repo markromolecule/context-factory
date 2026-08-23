@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "3.7.0",
+  "contextVersion": "3.8.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -37,6 +37,11 @@
     "rules/global/git-commit.md",
     "rules/global/naming-conventions.md",
     "rules/global/security-guardrails.md",
+    "rules/solid/dependency-inversion.md",
+    "rules/solid/interface-segregation.md",
+    "rules/solid/liskov-substitution.md",
+    "rules/solid/open-closed.md",
+    "rules/solid/single-responsibility.md",
     "rules/typescript/backend/controllers-and-routes.md",
     "rules/typescript/backend/data-access-via-api.md",
     "rules/typescript/backend/module-architecture.md",
@@ -94,7 +99,12 @@
     "workflows/security-sensitive-change.md"
   ],
   "knowledge": [
-    "knowledge/README.md"
+    "knowledge/README.md",
+    "knowledge/principles/solid-dip.md",
+    "knowledge/principles/solid-isp.md",
+    "knowledge/principles/solid-lsp.md",
+    "knowledge/principles/solid-ocp.md",
+    "knowledge/principles/solid-srp.md"
   ],
   "schemas": [
     "schemas/claim-evidence.schema.json",
@@ -149,6 +159,7 @@
     "evals/cases/preplanning-new-system.json",
     "evals/cases/security-change.json",
     "evals/cases/slash-commands.json",
+    "evals/cases/solid-principles.json",
     "evals/cases/unsupported-completion.json"
   ],
   "datasets": [
