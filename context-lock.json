@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.9.0",
-  "digest": "sha256:762bff9f648ef36deaf48674fb46f8b724ae57f5459a45010055800f8ae08d47",
+  "digest": "sha256:2ecf5607854363ba061f3bacdf4ec11b1b3a86bc2ae162bd70c4f98499379d5a",
   "files": {
     ".cursorrules": "sha256:a7d03fbecf64b3fb97aa7d317b40173c946ad9ef6e85dd9326a5c789c938f14f",
     ".github/copilot-instructions.md": "sha256:55189fa5edd3e088512e7fccaa2934663f681841c62843f0d081cedd1ea72e01",
@@ -148,7 +148,7 @@
     "scripts/context.mjs": "sha256:3ab8c1e11c3528a9227cfe11e10632894ced6ab8b2a3cbfcad5caa757342b0f2",
     "scripts/harness-cli.mjs": "sha256:fcc7e555fa7f9a74bd6ae948566957d56a04e26ba2dedddd57e2d8f93537ceed",
     "scripts/task-workflow.mjs": "sha256:54d23eae3dde7f5678246645c6deb8a8463a32aeb18258c5963932149f17cfdc",
-    "scripts/validate-context.mjs": "sha256:86b57d32779b3d6b8e1dd771cfba5a0b4b9b2153ddb775ad8e9b920edd47d4d4",
+    "scripts/validate-context.mjs": "sha256:3e7c52a7bc51089fe1d22742eb8612c2aadd6dad1f0692d2f5b9bcee9b890450",
     "skills/adr/SKILL.md": "sha256:13e718494ea5399432f0ff864736e5700d425fb2e3c6d2347f8b61a2e450e642",
     "skills/context/SKILL.md": "sha256:0e9682cd8d726c1f4902933ea086bcabed0087f2a6dc65aed7a6f3a532aa3183",
     "skills/context/agents/openai.yaml": "sha256:8baea09101c4fe3b9e2afd94f8b6a289638895875af0ffa79ee3d94a9bdf4167",

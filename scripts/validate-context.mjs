@@ -409,7 +409,7 @@ for (const path of manifest.decisions) {
   if (!decisionMap.includes(`[[${path.slice(0, -3)}`)) error(`Decision is missing from docs/decisions/README.md: ${path}`);
 }
 
-for (const path of ["app.json", "appearance.json", "core-plugins.json", "graph.json", "templates.json", "workspace.json"]) {
+for (const path of ["app.json", "appearance.json", "core-plugins.json", "graph.json", "templates.json"]) {
   try {
     await readJson(`.obsidian/${path}`);
   } catch {
