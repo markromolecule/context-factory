@@ -2,7 +2,7 @@
 name: open-closed
 description: Design software entities to be open for extension without requiring modification of existing, tested source code.
 scope: System architecture, polymorphic handlers, strategy registries, plugin mechanisms, and React component composition.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Open/Closed Principle (OCP)

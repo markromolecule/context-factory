@@ -2,7 +2,7 @@
 name: interface-segregation
 description: Keep interfaces, types, and component prop definitions fine-grained, cohesive, and client-specific.
 scope: TypeScript interfaces, type definitions, service ports, component props, and API contracts.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Interface Segregation Principle (ISP)

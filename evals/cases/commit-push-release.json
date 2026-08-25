@@ -1,0 +1,12 @@
+{
+  "name": "commit-push-release resolves workflow and git commit rules",
+  "request": "/ship verified changes to remote repository",
+  "expected": {
+    "workflow": "workflows/commit-push-release.md",
+    "rules": [
+      "rules/global/git-commit.md",
+      "rules/global/security-guardrails.md",
+      "rules/global/evidence-and-claims.md"
+    ]
+  }
+}

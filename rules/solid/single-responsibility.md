@@ -2,7 +2,7 @@
 name: single-responsibility
 description: Ensure each module, class, service, and React component/hook has a single, cohesive reason to change.
 scope: System architecture, backend modules, services, controllers, repositories, frontend components, and custom hooks.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Single Responsibility Principle (SRP)

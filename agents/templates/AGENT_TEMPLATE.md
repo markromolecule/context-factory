@@ -3,9 +3,18 @@ name: agent-template
 title: Agent Specification Template
 role: Role Title (e.g. Quality Assurance Engineer)
 description: Concise description of the agent's core responsibility, scope, and key deliverables.
-lifecycleStage: Lifecycle Phase (e.g. Discovery, Planning, Implementation, Verification, Deployment)
+lifecycleStage: Lifecycle Phase (e.g. Discovery, Planning, Architecture, Data, UX, Implementation, Threat, Deployment)
+aliases: ["/template", "[TEMPLATE]"]
+defaultWorkflow: feature-delivery
 skills: [skill-name-1, skill-name-2]
-workflows: [workflow-name]
+workflows: [workflow-name-1, workflow-name-2]
+rules:
+  - rules/global/architecture-conformance.md
+  - rules/global/evidence-and-claims.md
+  - rules/global/security-guardrails.md
+handoffs:
+  upstream: [ba-agent]
+  downstream: [pm-agent]
 ---
 
 # {{agent_title}} (`{{agent_name}}`)

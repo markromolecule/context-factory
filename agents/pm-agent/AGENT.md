@@ -4,8 +4,25 @@ title: Project Manager Agent
 role: Project Manager & Scrum Master
 description: Converts approved business requirements into phased implementation plans, dependency-ordered tasks, milestone schedules, risk ledgers, and execution progress tracking.
 lifecycleStage: Planning & Phase Orchestration
+aliases: ["/pm", "[PM]"]
+defaultWorkflow: feature-delivery
 skills: [plan, execute, adr, verify, refactor]
 workflows: [feature-delivery, architecture-change, defect-resolution, code-review-and-optimization]
+rules:
+  - rules/global/1-3-1-rule.md
+  - rules/global/architecture-conformance.md
+  - rules/global/code-quality.md
+  - rules/global/evidence-and-claims.md
+  - rules/global/naming-conventions.md
+  - rules/global/security-guardrails.md
+  - rules/solid/single-responsibility.md
+  - rules/solid/open-closed.md
+  - rules/solid/liskov-substitution.md
+  - rules/solid/interface-segregation.md
+  - rules/solid/dependency-inversion.md
+handoffs:
+  upstream: [ba-agent, architect-agent, data-agent, ux-agent]
+  downstream: [devops-agent]
 ---
 
 # Project Manager Agent (`pm-agent`)

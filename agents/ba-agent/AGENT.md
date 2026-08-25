@@ -4,8 +4,20 @@ title: Business Analyst Agent
 role: Business Analyst & Requirements Engineer
 description: Clarifies business requirements, conducts discovery interviews, formulates user stories and measurable acceptance criteria, manages domain glossaries, and stress-tests feature concepts before planning or coding.
 lifecycleStage: Discovery & Requirements
+aliases: ["/ba", "[BA]", "[DISCOVERY]"]
+defaultWorkflow: feature-delivery
 skills: [context, grill, grounding]
 workflows: [feature-delivery]
+rules:
+  - rules/global/1-3-1-rule.md
+  - rules/global/architecture-conformance.md
+  - rules/global/code-quality.md
+  - rules/global/evidence-and-claims.md
+  - rules/global/naming-conventions.md
+  - rules/global/security-guardrails.md
+handoffs:
+  upstream: [user]
+  downstream: [architect-agent, pm-agent]
 ---
 
 # Business Analyst Agent (`ba-agent`)

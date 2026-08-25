@@ -16,6 +16,7 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 - [[workflows/defect-resolution|Defect resolution]] — reproduce, diagnose, regress, and safely fix defects
 - [[workflows/code-review-and-optimization|Code review and optimization]] — audit, optimize, and refactor plan-affected code for performance, type safety, and modularity
 - [[workflows/release-readiness|Release readiness]] — make an evidence-backed ready/not-ready decision
+- [[workflows/commit-push-release|Commit, push and release]] — safely stage, craft conventional commits, push to remote, tag releases, and trigger CI/CD pipelines
 
 ## Risk-specific
 
@@ -43,6 +44,7 @@ Use leading slash commands or bracket prefix tags for instant, deterministic wor
 - `/arch`, `/adr`, `[ADR]` $\rightarrow$ [[workflows/architecture-change|Architecture change]]: scaffold durable decision under `docs/decisions/`
 - `/deps`, `/upgrade`, `[UPGRADE]` $\rightarrow$ [[workflows/dependency-upgrade|Dependency upgrade]]: audit compatibility boundaries and run canary tests
 - `/release`, `/verify`, `[RELEASE]` $\rightarrow$ [[workflows/release-readiness|Release readiness]]: verify tests, lint, typecheck, and readiness evidence
+- `/ship`, `/commit-push-release`, `[SHIP]` $\rightarrow$ [[workflows/commit-push-release|Commit, push & release]]: stage, commit with conventional format, push to remote, tag release
 - `/sync`, `/maintain`, `[MAINTENANCE]` $\rightarrow$ [[workflows/context-maintenance|Context maintenance]]: run `node scripts/harness-cli.mjs lock` and `doctor`
 
 ## Selection rules

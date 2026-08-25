@@ -2,7 +2,7 @@
 name: liskov-substitution
 description: Guarantee that subclasses, implementations, and test doubles are completely substitutable for their base types without breaking behavioral invariants.
 scope: Interface implementations, class inheritance, repository fakes, mock adapters, and TypeScript type contracts.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Liskov Substitution Principle (LSP)

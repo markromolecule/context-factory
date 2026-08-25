@@ -14,7 +14,7 @@ export async function readJson(path) {
 }
 
 export async function filesUnder(path, options = {}) {
-  const ignored = new Set(options.ignored ?? [".git", ".context-runs", "node_modules"]);
+  const ignored = new Set(options.ignored ?? [".git", ".context-runs", "node_modules", ".DS_Store"]);
   const output = [];
 
   async function walk(current) {
@@ -48,11 +48,49 @@ export function frontmatter(source) {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return null;
   const result = {};
-  for (const line of match[1].split(/\r?\n/)) {
+  const lines = match[1].split(/\r?\n/);
+  let currentKey = null;
+  let currentArray = null;
+  let currentObject = null;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     if (!line.trim() || line.trimStart().startsWith("#")) continue;
+
+    // Indented list item under currentKey: "  - value"
+    const listMatch = line.match(/^\s+-\s+(.*)$/);
+    if (listMatch && currentKey) {
+      if (!currentArray) {
+        currentArray = [];
+        result[currentKey] = currentArray;
+      }
+      currentArray.push(parseScalar(listMatch[1]));
+      continue;
+    }
+
+    // Indented nested object key-value: "  key: value"
+    const nestedMatch = line.match(/^\s+([a-zA-Z0-9_-]+):\s*(.*)$/);
+    if (nestedMatch && currentKey && !line.trimStart().startsWith("-")) {
+      if (!currentObject || typeof result[currentKey] !== "object" || Array.isArray(result[currentKey])) {
+        currentObject = {};
+        result[currentKey] = currentObject;
+      }
+      currentObject[nestedMatch[1]] = parseScalar(nestedMatch[2]);
+      continue;
+    }
+
+    // Top-level key
     const index = line.indexOf(":");
     if (index < 0) continue;
-    result[line.slice(0, index).trim()] = parseScalar(line.slice(index + 1));
+    currentKey = line.slice(0, index).trim();
+    currentArray = null;
+    currentObject = null;
+    const rawVal = line.slice(index + 1).trim();
+    if (rawVal === "") {
+      result[currentKey] = null;
+    } else {
+      result[currentKey] = parseScalar(rawVal);
+    }
   }
   return result;
 }
@@ -130,32 +168,43 @@ async function entries(paths) {
 }
 
 const ACTION_TERMS = new Set([
-  "add", "adr", "build", "change", "create", "deliver", "deploy",
+  "add", "adr", "architect", "build", "change", "commit", "create", "data", "deliver", "deploy",
   "design", "dip", "discovery", "execute", "execution", "explore", "fix", "grill", "grounding", "hotfix",
-  "implement", "isp", "lsp", "migrate", "ocp", "plan", "redesign", "refactor", "release",
-  "remove", "resolve", "review", "sec", "security", "solid", "srp", "sync", "test",
-  "upgrade", "verify", "wiki",
+  "implement", "isp", "lsp", "migrate", "ocp", "plan", "push", "redesign", "refactor", "release",
+  "remove", "resolve", "review", "sec", "security", "ship", "solid", "srp", "sync", "test",
+  "threat", "upgrade", "ux", "verify", "wiki",
 ]);
 
 const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan)|context spec(?:ification)?|author context|create context)\b|^\/(?:grill|discovery|context)\b|^\[(?:GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i;
 const EXECUTION_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b|^\/(?:exec|execute|execution)\b|^\[(?:EXEC|EXECUTE|EXECUTION)\]/i;
 
 const ROUTING_HINTS = [
-  // 1. Explicit Slash Commands and Bracket Prefix Tags (Highest Precedence)
+  // 1. Explicit Agent Commands (Highest Precedence)
+  { test: /^\/architect\b|^\[ARCHITECT\]/i, workflow: "architecture-change" },
+  { test: /^\/data\b|^\[DATA\]/i, workflow: "database-migration" },
+  { test: /^\/ux\b|^\[UX\]/i, workflow: "feature-delivery" },
+  { test: /^\/threat\b|^\[THREAT\]/i, workflow: "security-sensitive-change" },
+  { test: /^\/ba\b|^\[BA\]/i, workflow: "feature-delivery" },
+  { test: /^\/pm\b|^\[PM\]/i, workflow: "feature-delivery" },
+  { test: /^\/devops\b|^\[DEVOPS\]/i, workflow: "release-readiness" },
+
+  // 2. Explicit Slash Commands and Bracket Prefix Tags
   { test: /^\/(?:fix|hotfix|bug)\b|^\[(?:BUG|HOTFIX|DEFECT)\]/i, workflow: "defect-resolution" },
   { test: /^\/(?:migrate|db|schema)\b|^\[(?:MIGRATE|DB|SCHEMA)\]/i, workflow: "database-migration" },
   { test: /^\/(?:sec|security|auth)\b|^\[(?:SEC|SECURITY|AUTH)\]/i, workflow: "security-sensitive-change" },
   { test: /^\/(?:optimize|review-code)\b|^\[(?:OPTIMIZE|CODE_REVIEW)\]/i, workflow: "code-review-and-optimization" },
   { test: /^\/(?:arch|refactor|adr)\b|^\[(?:ARCH|REFACTOR|ADR)\]/i, workflow: "architecture-change" },
   { test: /^\/(?:upgrade|deps)\b|^\[(?:DEPS|UPGRADE)\]/i, workflow: "dependency-upgrade" },
+  { test: /^\/(?:ship|commit-push-release)\b|^\[(?:SHIP|COMMIT_PUSH_RELEASE)\]/i, workflow: "commit-push-release" },
   { test: /^\/(?:release|ready|deploy)\b|^\[(?:RELEASE|DEPLOY)\]/i, workflow: "release-readiness" },
   { test: /^\/(?:sync|lock|maintain)\b|^\[(?:SYNC|LOCK|MAINTENANCE)\]/i, workflow: "context-maintenance" },
   { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "new-project-delivery" },
   { test: /^\/(?:plan|feature|grill|discovery|context)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i, workflow: "feature-delivery" },
 
-  // 2. Keyword & Concept matchers
+  // 3. Keyword & Concept matchers
   { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },
   { test: /\b(optimize|code review|review code|clean code|code quality guardrail)\b/i, workflow: "code-review-and-optimization" },
+  { test: /\b(commit and push|commit push release|push to remote|tag release|ship changes)\b/i, workflow: "commit-push-release" },
   { test: /\b(architecture|cross-module|dependency direction|system boundary|refactor|solid|srp|ocp|lsp|isp|dip)\b/i, workflow: "architecture-change" },
   { test: /\b(webhook|credential|secret|authorization|authentication|security|signature|replay)\b/i, workflow: "security-sensitive-change" },
   { test: /\b(database migration|schema migration|backfill)\b/i, workflow: "database-migration" },
@@ -173,7 +222,28 @@ export async function resolveContext(request) {
   const ruleEntries = await entries(manifest.rules);
   const skillEntries = await entries(manifest.skills);
   const workflowEntries = await entries(manifest.workflows);
+  const agentPaths = [...new Set([...(manifest.agents ?? []), ...(await filesUnder("agents"))])].filter((p) => p.endsWith("/AGENT.md"));
+  const agentEntries = await entries(agentPaths);
 
+  // 1. Check for explicit agent invocation via aliases
+  let selectedAgent = null;
+  const trimmedRequest = request.trim();
+  for (const agent of agentEntries) {
+    const aliases = Array.isArray(agent.meta.aliases) ? agent.meta.aliases : [];
+    for (const alias of aliases) {
+      const isBracket = alias.startsWith("[") && alias.endsWith("]");
+      const pattern = isBracket
+        ? new RegExp(`^\\${alias.slice(0, -1)}\\]`, "i")
+        : new RegExp(`^${alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+      if (pattern.test(trimmedRequest)) {
+        selectedAgent = agent;
+        break;
+      }
+    }
+    if (selectedAgent) break;
+  }
+
+  // 2. Rule selection (scored + alwaysApply + agent declared rules)
   const selectedRules = ruleEntries
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
     .filter((entry) => (
@@ -187,6 +257,17 @@ export async function resolveContext(request) {
         : `matched: ${entry.relevance.matches.join(", ")}`,
     }));
 
+  if (selectedAgent && Array.isArray(selectedAgent.meta.rules)) {
+    const selectedRulePaths = new Set(selectedRules.map((item) => item.path));
+    for (const rulePath of selectedAgent.meta.rules) {
+      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath)) {
+        selectedRules.push({ path: rulePath, reason: `declared by agent ${selectedAgent.meta.name}` });
+        selectedRulePaths.add(rulePath);
+      }
+    }
+  }
+
+  // 3. Skill selection (scored + execution/security filters + agent declared skills)
   let selectedSkills = skillEntries
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
     .filter((entry) => (
@@ -206,10 +287,24 @@ export async function resolveContext(request) {
       reason: `matched: ${entry.relevance.matches.join(", ")}`,
     }));
 
+  if (selectedAgent && Array.isArray(selectedAgent.meta.skills)) {
+    const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));
+    for (const skillName of selectedAgent.meta.skills) {
+      const skillPath = `skills/${skillName}/SKILL.md`;
+      if (!selectedSkillPaths.has(skillPath) && manifest.skills.includes(skillPath)) {
+        selectedSkills.push({ path: skillPath, reason: `declared by agent ${selectedAgent.meta.name}` });
+        selectedSkillPaths.add(skillPath);
+      }
+    }
+    selectedSkills.sort((a, b) => a.path.localeCompare(b.path));
+  }
+
+  // 4. Workflow selection
   let selectedWorkflow = null;
   let selectedWorkflowSource = "";
   if (hasAction) {
-    const hintedName = ROUTING_HINTS.find((hint) => hint.test.test(request))?.workflow;
+    const hintedName = ROUTING_HINTS.find((hint) => hint.test.test(request))?.workflow
+      ?? (selectedAgent?.meta.defaultWorkflow ? selectedAgent.meta.defaultWorkflow.replace(/\.md$/, "") : null);
     const ranked = workflowEntries
       .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
       .sort((a, b) => b.relevance.score - a.relevance.score || a.path.localeCompare(b.path));
@@ -228,6 +323,17 @@ export async function resolveContext(request) {
   }
 
   if (selectedWorkflow) {
+    const linkedRulePaths = new Set(
+      [...selectedWorkflowSource.matchAll(/`(rules\/[^`]+)`/g)].map((match) => match[1]),
+    );
+    const selectedRulePaths = new Set(selectedRules.map((item) => item.path));
+    for (const rulePath of linkedRulePaths) {
+      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath)) {
+        selectedRules.push({ path: rulePath, reason: `required by ${selectedWorkflow.path}` });
+        selectedRulePaths.add(rulePath);
+      }
+    }
+
     const linkedSkillNames = new Set(
       [...selectedWorkflowSource.matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]),
     );
@@ -242,8 +348,6 @@ export async function resolveContext(request) {
     }
     selectedSkills = selectedSkills.sort((a, b) => a.path.localeCompare(b.path));
   }
-
-
 
   const basePaths = [
     manifest.entrypoint,
@@ -262,6 +366,16 @@ export async function resolveContext(request) {
     contextVersion: manifest.contextVersion,
     request,
     requestTerms,
+    agent: selectedAgent ? {
+      name: selectedAgent.meta.name,
+      title: selectedAgent.meta.title,
+      role: selectedAgent.meta.role,
+      path: selectedAgent.path,
+      defaultWorkflow: selectedAgent.meta.defaultWorkflow
+        ? (selectedAgent.meta.defaultWorkflow.endsWith(".md") ? selectedAgent.meta.defaultWorkflow : `workflows/${selectedAgent.meta.defaultWorkflow}.md`)
+        : null,
+      handoffs: selectedAgent.meta.handoffs ?? null,
+    } : null,
     workflow: selectedWorkflow,
     rules: selectedRules,
     skills: selectedSkills,
@@ -284,6 +398,12 @@ export async function createLock(manifestInput) {
 
 export function compareSelection(selection, expected) {
   const errors = [];
+  if (expected.agent !== undefined) {
+    const actualAgent = selection.agent?.name ?? null;
+    if (actualAgent !== expected.agent) {
+      errors.push(`agent: expected ${expected.agent ?? "none"}, got ${actualAgent ?? "none"}`);
+    }
+  }
   const actualWorkflow = selection.workflow?.path ?? null;
   if (actualWorkflow !== expected.workflow) {
     errors.push(`workflow: expected ${expected.workflow ?? "none"}, got ${actualWorkflow ?? "none"}`);

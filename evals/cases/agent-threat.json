@@ -1,0 +1,15 @@
+{
+  "name": "threat alias resolves threat-agent and security-sensitive-change workflow",
+  "request": "/threat audit api key secrets storage and timing safety",
+  "expected": {
+    "agent": "threat-agent",
+    "workflow": "workflows/security-sensitive-change.md",
+    "rules": [
+      "rules/global/security-guardrails.md",
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": [
+      "skills/security/SKILL.md"
+    ]
+  }
+}

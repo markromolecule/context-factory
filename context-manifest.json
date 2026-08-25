@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "3.8.0",
+  "contextVersion": "3.9.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -18,16 +18,28 @@
   ],
   "agents": [
     "agents/README.md",
+    "agents/architect-agent/AGENT.md",
+    "agents/architect-agent/prompts/subagent-invocation.md",
+    "agents/architect-agent/prompts/system-prompt.md",
     "agents/ba-agent/AGENT.md",
     "agents/ba-agent/prompts/subagent-invocation.md",
     "agents/ba-agent/prompts/system-prompt.md",
+    "agents/data-agent/AGENT.md",
+    "agents/data-agent/prompts/subagent-invocation.md",
+    "agents/data-agent/prompts/system-prompt.md",
     "agents/devops-agent/AGENT.md",
     "agents/devops-agent/prompts/subagent-invocation.md",
     "agents/devops-agent/prompts/system-prompt.md",
     "agents/pm-agent/AGENT.md",
     "agents/pm-agent/prompts/subagent-invocation.md",
     "agents/pm-agent/prompts/system-prompt.md",
-    "agents/templates/AGENT_TEMPLATE.md"
+    "agents/templates/AGENT_TEMPLATE.md",
+    "agents/threat-agent/AGENT.md",
+    "agents/threat-agent/prompts/subagent-invocation.md",
+    "agents/threat-agent/prompts/system-prompt.md",
+    "agents/ux-agent/AGENT.md",
+    "agents/ux-agent/prompts/subagent-invocation.md",
+    "agents/ux-agent/prompts/system-prompt.md"
   ],
   "rules": [
     "rules/global/1-3-1-rule.md",
@@ -89,6 +101,7 @@
   "workflows": [
     "workflows/architecture-change.md",
     "workflows/code-review-and-optimization.md",
+    "workflows/commit-push-release.md",
     "workflows/context-maintenance.md",
     "workflows/database-migration.md",
     "workflows/defect-resolution.md",
@@ -135,7 +148,8 @@
     "docs/decisions/0012-skill-taxonomy-and-slash-ergonomics-optimization.md",
     "docs/decisions/0013-streamline-procedural-skills-inventory.md",
     "docs/decisions/0014-context-specification-skill-with-embedded-grilling.md",
-    "docs/decisions/0015-execute-skill-strict-phase-stops-and-modular-refactoring.md"
+    "docs/decisions/0015-execute-skill-strict-phase-stops-and-modular-refactoring.md",
+    "docs/decisions/0016-declarative-lifecycle-specialist-agents.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
@@ -151,7 +165,12 @@
     ".github/workflows/context-factory.yml"
   ],
   "evaluations": [
+    "evals/cases/agent-architect.json",
+    "evals/cases/agent-data.json",
+    "evals/cases/agent-threat.json",
+    "evals/cases/agent-ux.json",
     "evals/cases/architecture-change.json",
+    "evals/cases/commit-push-release.json",
     "evals/cases/defect-resolution.json",
     "evals/cases/direct-question.json",
     "evals/cases/frontend-styling.json",

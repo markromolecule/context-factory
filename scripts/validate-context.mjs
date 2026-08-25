@@ -117,11 +117,146 @@ for (const path of manifest.rules) {
   }
 }
 
+const protectedTriggers = new Set([
+  "/fix", "/hotfix", "/bug", "[BUG]", "[HOTFIX]", "[DEFECT]",
+  "/migrate", "/db", "/schema", "[MIGRATE]", "[DB]", "[SCHEMA]",
+  "/sec", "/security", "/auth", "[SEC]", "[SECURITY]", "[AUTH]",
+  "/optimize", "/review-code", "[OPTIMIZE]", "[CODE_REVIEW]",
+  "/arch", "/refactor", "/adr", "[ARCH]", "[REFACTOR]", "[ADR]",
+  "/upgrade", "/deps", "[DEPS]", "[UPGRADE]",
+  "/release", "/ready", "/deploy", "[RELEASE]", "[DEPLOY]",
+  "/sync", "/lock", "/maintain", "[SYNC]", "[LOCK]", "[MAINTENANCE]",
+  "/new-project", "/progressive", "[NEW_PROJECT]", "[PROGRESSIVE]",
+  "/plan", "/feature", "/grill", "/discovery", "/context",
+  "[PLAN]", "[FEATURE]", "[GRILL]", "[DISCOVERY]", "[CONTEXT]", "[CONTEXT_SPEC]",
+  "/exec", "/execute", "/execution", "[EXEC]", "[EXECUTE]", "[EXECUTION]",
+  "/tsc", "/typescript", "[TSC]", "/zod", "[ZOD]", "/explore", "[EXPLORE]",
+  "/grounding", "/wiki", "[WIKI]", "/verify", "[VERIFY]", "[QA]",
+]);
+
+const registeredAliases = new Map();
+const knownAgentNames = new Set([
+  "user",
+  "ba-agent",
+  "pm-agent",
+  "architect-agent",
+  "data-agent",
+  "ux-agent",
+  "threat-agent",
+  "devops-agent",
+]);
+
 for (const path of manifest.agents ?? []) {
-  if (path.endsWith("/AGENT.md") || path.endsWith("/AGENT_TEMPLATE.md")) {
+  if (path.endsWith("/AGENT.md")) {
+    const meta = frontmatter(await readText(path));
+    if (meta?.name) knownAgentNames.add(meta.name);
+  }
+}
+
+for (const path of manifest.agents ?? []) {
+  if (path.endsWith("/AGENT.md")) {
+    const meta = frontmatter(await readText(path));
+    if (!meta) {
+      error(`Agent has no YAML frontmatter: ${path}`);
+      continue;
+    }
+    const requiredAgentFields = [
+      "name", "title", "role", "description", "lifecycleStage",
+      "aliases", "defaultWorkflow", "skills", "workflows", "rules", "handoffs",
+    ];
+    for (const field of requiredAgentFields) {
+      if (meta[field] === undefined || meta[field] === null || meta[field] === "") {
+        error(`Agent metadata ${field} is missing: ${path}`);
+      }
+    }
+    const agentFolder = path.split("/").at(-2);
+    if (meta.name !== agentFolder) {
+      error(`Agent name (${meta.name}) does not match its folder (${agentFolder}): ${path}`);
+    }
+    if (!Array.isArray(meta.aliases) || meta.aliases.length === 0) {
+      error(`Agent aliases must be a non-empty array: ${path}`);
+    } else {
+      for (const alias of meta.aliases) {
+        if (typeof alias !== "string" || !alias.trim()) {
+          error(`Agent alias is invalid in ${path}: ${alias}`);
+        } else {
+          const lowerAlias = alias.toLowerCase();
+          if (protectedTriggers.has(lowerAlias)) {
+            error(`Agent alias '${alias}' collides with protected command in ${path}`);
+          }
+          if (registeredAliases.has(lowerAlias)) {
+            error(`Duplicate agent alias '${alias}': ${registeredAliases.get(lowerAlias)} and ${path}`);
+          } else {
+            registeredAliases.set(lowerAlias, path);
+          }
+        }
+      }
+    }
+
+    if (!Array.isArray(meta.skills) || meta.skills.length === 0) {
+      error(`Agent skills must be a non-empty array: ${path}`);
+    } else {
+      for (const skillName of meta.skills) {
+        const skillPath = skillName.endsWith(".md") ? skillName : `skills/${skillName}/SKILL.md`;
+        if (!manifest.skills.includes(skillPath)) {
+          error(`Agent references unknown skill in ${path}: ${skillName}`);
+        }
+      }
+    }
+
+    if (!Array.isArray(meta.workflows) || meta.workflows.length === 0) {
+      error(`Agent workflows must be a non-empty array: ${path}`);
+    } else {
+      for (const wf of meta.workflows) {
+        const wfPath = wf.endsWith(".md") ? wf : `workflows/${wf}.md`;
+        if (!manifest.workflows.includes(wfPath)) {
+          error(`Agent references unknown workflow in ${path}: ${wf}`);
+        }
+      }
+    }
+
+    const defaultWfPath = meta.defaultWorkflow?.endsWith(".md") ? meta.defaultWorkflow : `workflows/${meta.defaultWorkflow}.md`;
+    if (!manifest.workflows.includes(defaultWfPath)) {
+      error(`Agent defaultWorkflow references unknown workflow in ${path}: ${meta.defaultWorkflow}`);
+    } else if (Array.isArray(meta.workflows)) {
+      const declaredWfPaths = meta.workflows.map((w) => (w.endsWith(".md") ? w : `workflows/${w}.md`));
+      if (!declaredWfPaths.includes(defaultWfPath)) {
+        error(`Agent defaultWorkflow '${meta.defaultWorkflow}' is not in workflows list: ${path}`);
+      }
+    }
+
+    if (!Array.isArray(meta.rules) || meta.rules.length === 0) {
+      error(`Agent rules must be a non-empty array: ${path}`);
+    } else {
+      for (const rule of meta.rules) {
+        if (!manifest.rules.includes(rule)) {
+          error(`Agent references unknown rule in ${path}: ${rule}`);
+        }
+      }
+    }
+
+    if (meta.handoffs && typeof meta.handoffs === "object") {
+      const upstreams = Array.isArray(meta.handoffs.upstream) ? meta.handoffs.upstream : [];
+      const downstreams = Array.isArray(meta.handoffs.downstream) ? meta.handoffs.downstream : [];
+      for (const target of [...upstreams, ...downstreams]) {
+        if (!knownAgentNames.has(target)) {
+          error(`Agent handoff references unknown agent in ${path}: ${target}`);
+        }
+      }
+    }
+
+    const invocationPromptPath = `agents/${agentFolder}/prompts/subagent-invocation.md`;
+    const systemPromptPath = `agents/${agentFolder}/prompts/system-prompt.md`;
+    if (!await exists(invocationPromptPath)) {
+      error(`Agent is missing invocation prompt: ${invocationPromptPath}`);
+    }
+    if (!await exists(systemPromptPath)) {
+      error(`Agent is missing system prompt: ${systemPromptPath}`);
+    }
+  } else if (path.endsWith("/AGENT_TEMPLATE.md")) {
     const meta = frontmatter(await readText(path));
     if (!meta?.name || !meta?.title || !meta?.role || !meta?.description) {
-      error(`Agent metadata is incomplete: ${path}`);
+      error(`Agent template metadata is incomplete: ${path}`);
     }
   }
 }

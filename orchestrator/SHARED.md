@@ -30,11 +30,15 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 
 Software delivery lifecycles are orchestrated across specialized subagent personas defined under `agents/`:
 
-- **BA Agent (`agents/ba-agent` / Discovery lead):** clarify ambiguous requirements, author and grill context specifications using `context` or `grill`, and establish verifiable scenario matrices and acceptance criteria before planning.
-- **PM Agent (`agents/pm-agent` / Architect):** inspect constraints, create dependency-ordered phased task breakdowns under `docs/tasks/` using `plan`, manage milestone progress, and stop before coding.
-- **Developer (`skills/execute`, `skills/refactor`):** implement approved work phase-by-phase with strict phase stops using applicable rules, maintaining synchronized tests, modular architecture, and documentation.
-- **Reviewer / QA (`skills/verify`, `workflows/code-review-and-optimization`):** audit code quality and ESR query performance, test outcomes, verify acceptance criteria against reproducible evidence, and identify regressions or risks.
-- **DevOps Agent (`agents/devops-agent`):** automate CI/CD workflows, configure container environments (Docker, Compose), maintain secrets hygiene (`.env.example`), and verify pre-flight release readiness (`release-readiness`).
+- **BA Agent (`agents/ba-agent` / Discovery lead):** clarify ambiguous requirements, author and grill context specifications using `context` or `grill`, and establish verifiable scenario matrices and acceptance criteria before planning (`/ba`, `[BA]`, `[DISCOVERY]`).
+- **Architect & ADR Specialist (`agents/architect-agent` / System design lead):** evaluate system boundaries, dependency direction, SOLID principles conformance, and author durable ADRs in `docs/decisions/` using `adr` (`/architect`, `[ARCHITECT]`).
+- **Data Modeler (`agents/data-agent` / Database architect):** design normalized schemas, forward/rollback migration scripts, ESR compound indexing, cursor pagination, and isolated data-access layers (`/data`, `[DATA]`).
+- **PM Agent (`agents/pm-agent` / Delivery coordinator):** inspect constraints, create dependency-ordered phased task breakdowns under `docs/tasks/` using `plan`, manage milestone progress, and enforce stops before coding (`/pm`, `[PM]`, `[PLAN]`).
+- **UX & Design System Specialist (`agents/ux-agent` / Frontend lead):** compose accessible UI components (WCAG 2.1 AA), design token systems, interaction feedback states, and encapsulate client state in custom hooks/stores (`/ux`, `[UX]`).
+- **Security & Threat Specialist (`agents/threat-agent` / Trust verification):** execute STRIDE threat modeling, audit trust boundaries, verify authentication/authorization policies, timing safety, and secrets hygiene (`/threat`, `[THREAT]`).
+- **Developer (`skills/execute`, `skills/refactor`):** implement approved work phase-by-phase with strict phase stops using applicable rules, maintaining synchronized tests, modular architecture, and documentation (`/exec`, `[EXEC]`, `/refactor`, `[REFACTOR]`).
+- **Reviewer / QA (`skills/verify`, `workflows/code-review-and-optimization`):** audit code quality and ESR query performance, test outcomes, verify acceptance criteria against reproducible evidence, and identify regressions or risks (`/verify`, `[VERIFY]`, `/optimize`, `[OPTIMIZE]`).
+- **DevOps Agent (`agents/devops-agent` / Infrastructure specialist):** automate CI/CD workflows, configure container environments (Docker, Compose), maintain secrets hygiene (`.env.example`), and verify pre-flight release readiness (`/devops`, `[DEVOPS]`, `/release`, `[RELEASE]`).
 
 Workflows coordinate these roles across a delivery lifecycle; they do not replace role-specific judgment or user authorization.
 

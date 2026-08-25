@@ -1,0 +1,13 @@
+{
+  "name": "data alias resolves data-agent and database-migration workflow",
+  "request": "/data create tenant billing schema with rollback script",
+  "expected": {
+    "agent": "data-agent",
+    "workflow": "workflows/database-migration.md",
+    "rules": [
+      "rules/typescript/database/schema-db.md",
+      "rules/typescript/database/data-access-via-db.md",
+      "rules/typescript/database/query-optimization-and-pagination.md"
+    ]
+  }
+}

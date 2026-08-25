@@ -1,0 +1,17 @@
+{
+  "name": "architect alias resolves architect-agent and architecture-change workflow",
+  "request": "/architect design microservice boundaries and audit solid rules",
+  "expected": {
+    "agent": "architect-agent",
+    "workflow": "workflows/architecture-change.md",
+    "rules": [
+      "rules/global/architecture-conformance.md",
+      "rules/solid/single-responsibility.md",
+      "rules/solid/dependency-inversion.md",
+      "rules/typescript/backend/module-architecture.md"
+    ],
+    "skills": [
+      "skills/adr/SKILL.md"
+    ]
+  }
+}

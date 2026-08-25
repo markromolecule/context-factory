@@ -1,0 +1,14 @@
+{
+  "name": "ux alias resolves ux-agent and feature-delivery workflow",
+  "request": "/ux create accessible user profile modal and custom hook",
+  "expected": {
+    "agent": "ux-agent",
+    "workflow": "workflows/feature-delivery.md",
+    "rules": [
+      "rules/typescript/ui/frontend.md",
+      "rules/typescript/ui/dialogs-and-overlays.md",
+      "rules/typescript/ui/interaction-feedback.md",
+      "rules/typescript/hooks/custom-hooks.md"
+    ]
+  }
+}

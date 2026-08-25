@@ -47,8 +47,12 @@ When the user's prompt begins with a slash command or bracket prefix, prioritize
 | :--- | :--- | :--- | :--- |
 | `/new-project`, `[NEW_PROJECT]` | [`workflows/new-project-delivery.md`](../workflows/new-project-delivery.md) | [`skills/grill`](../skills/grill/SKILL.md) + [`skills/plan`](../skills/plan/SKILL.md) | Progressive vertical-slice scaffolding with 4-layer testing and loop engineering |
 | `/context`, `[CONTEXT]`, `[CONTEXT_SPEC]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`agents/ba-agent`](../agents/ba-agent/AGENT.md) + [`skills/context`](../skills/context/SKILL.md) | Author and grill context specifications in `docs/context/` before planning |
-| `/grill`, `[DISCOVERY]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`agents/ba-agent`](../agents/ba-agent/AGENT.md) + [`skills/grill`](../skills/grill/SKILL.md) | Pre-planning interview: clarify 1 unknown at a time before planning |
-| `/plan`, `[PLAN]`, `[FEATURE]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`agents/pm-agent`](../agents/pm-agent/AGENT.md) + [`skills/plan`](../skills/plan/SKILL.md) | Output to `docs/tasks/` via `task:new`. **Stop before coding.** |
+| `/grill`, `[DISCOVERY]`, `/ba`, `[BA]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`agents/ba-agent`](../agents/ba-agent/AGENT.md) + [`skills/grill`](../skills/grill/SKILL.md) | Pre-planning interview: clarify 1 unknown at a time before planning |
+| `/architect`, `[ARCHITECT]` | [`workflows/architecture-change.md`](../workflows/architecture-change.md) | [`agents/architect-agent`](../agents/architect-agent/AGENT.md) + [`skills/adr`](../skills/adr/SKILL.md) | Evaluate boundaries, SOLID principles, and author ADRs |
+| `/data`, `[DATA]` | [`workflows/database-migration.md`](../workflows/database-migration.md) | [`agents/data-agent`](../agents/data-agent/AGENT.md) + Database domain rules | Design schemas, ESR indexes, migrations, and rollback runbooks |
+| `/plan`, `[PLAN]`, `[FEATURE]`, `/pm`, `[PM]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`agents/pm-agent`](../agents/pm-agent/AGENT.md) + [`skills/plan`](../skills/plan/SKILL.md) | Output to `docs/tasks/` via `task:new`. **Stop before coding.** |
+| `/ux`, `[UX]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`agents/ux-agent`](../agents/ux-agent/AGENT.md) + UI/Hook domain rules | Build accessible UI components (WCAG AA), interaction feedback, and custom hooks |
+| `/threat`, `[THREAT]` | [`workflows/security-sensitive-change.md`](../workflows/security-sensitive-change.md) | [`agents/threat-agent`](../agents/threat-agent/AGENT.md) + [`skills/security`](../skills/security/SKILL.md) | STRIDE threat modeling, trust boundaries, secrets hygiene, and adversarial tests |
 | `/execute`, `/exec`, `[EXEC]` | [`workflows/feature-delivery.md`](../workflows/feature-delivery.md) | [`skills/execute`](../skills/execute/SKILL.md) | Execute approved task phases incrementally with strict stops |
 | `/optimize`, `/review-code`, `[OPTIMIZE]`, `[CODE_REVIEW]` | [`workflows/code-review-and-optimization.md`](../workflows/code-review-and-optimization.md) | [`agents/pm-agent`](../agents/pm-agent/AGENT.md) + [`skills/refactor`](../skills/refactor/SKILL.md) | Post-implementation review: audit ESR queries, types, and modularity |
 | `/refactor`, `[REFACTOR]` | [`skills/refactor/SKILL.md`](../skills/refactor/SKILL.md) | [`skills/refactor`](../skills/refactor/SKILL.md) | Decompose complex code into modular, single-responsibility files |
@@ -57,16 +61,18 @@ When the user's prompt begins with a slash command or bracket prefix, prioritize
 | `/sec`, `[SEC]`, `[SECURITY]` | [`workflows/security-sensitive-change.md`](../workflows/security-sensitive-change.md) | [`skills/security`](../skills/security/SKILL.md) | Review auth, credentials, data isolation, and abuse cases. |
 | `/arch`, `/adr`, `[ADR]` | [`workflows/architecture-change.md`](../workflows/architecture-change.md) | [`skills/adr`](../skills/adr/SKILL.md) | Output to `docs/decisions/` using `Decision.md`. |
 | `/deps`, `/upgrade`, `[UPGRADE]` | [`workflows/dependency-upgrade.md`](../workflows/dependency-upgrade.md) | Dependency rules | Audit compatibility boundaries and run canary tests. |
-| `/release`, `/verify`, `[RELEASE]` | [`workflows/release-readiness.md`](../workflows/release-readiness.md) | [`agents/devops-agent`](../agents/devops-agent/AGENT.md) + [`skills/verify`](../skills/verify/SKILL.md) | Verify tests, lint, typecheck, and readiness evidence. |
-| `/grounding`, `/wiki`, `[WIKI]` | [`skills/grounding/SKILL.md`](../skills/grounding/SKILL.md) | [`skills/grounding`](../skills/grounding/SKILL.md) | Query and reconcile canonical LLM Wiki knowledge. |
-| `/explore`, `[EXPLORE]` | [`skills/explore/SKILL.md`](../skills/explore/SKILL.md) | [`skills/explore`](../skills/explore/SKILL.md) | Map code contracts, schemas, tests, and conventions. |
-| `/sync`, `/maintain`, `[MAINTENANCE]` | [`workflows/context-maintenance.md`](../workflows/context-maintenance.md) | Context Maintenance | Run `node scripts/harness-cli.mjs lock` and `doctor`. |
+| `/release`, `/verify`, `[RELEASE]`, `/devops`, `[DEVOPS]` | [`workflows/release-readiness.md`](workflows/release-readiness.md) | [`agents/devops-agent`](agents/devops-agent/AGENT.md) + [`skills/verify`](skills/verify/SKILL.md) | Verify tests, lint, typecheck, and readiness evidence. |
+| `/ship`, `/commit-push-release`, `[SHIP]` | [`workflows/commit-push-release.md`](workflows/commit-push-release.md) | [`agents/devops-agent`](agents/devops-agent/AGENT.md) + [`skills/verify`](skills/verify/SKILL.md) | Stage changes, commit with Conventional Commits, push to remote, tag release. |
+| `/grounding`, `/wiki`, `[WIKI]` | [`skills/grounding/SKILL.md`](skills/grounding/SKILL.md) | [`skills/grounding`](../skills/grounding/SKILL.md) | Query and reconcile canonical LLM Wiki knowledge. |
+| `/explore`, `[EXPLORE]` | [`skills/explore/SKILL.md`](skills/explore/SKILL.md) | [`skills/explore`](../skills/explore/SKILL.md) | Map code contracts, schemas, tests, and conventions. |
+| `/sync`, `/maintain`, `[MAINTENANCE]` | [`workflows/context-maintenance.md`](workflows/context-maintenance.md) | Context Maintenance | Run `node scripts/harness-cli.mjs lock` and `doctor`. |
 
 ## Workflow Routing
 For multi-stage engineering lifecycles, load the appropriate workflow from `workflows/`:
 - **New Project & Greenfield Delivery:** `workflows/new-project-delivery.md`
 - **New Feature Delivery:** `workflows/feature-delivery.md`
 - **Code Review & Optimization:** `workflows/code-review-and-optimization.md`
+- **Commit, Push & Release:** `workflows/commit-push-release.md`
 - **Bug & Defect Fixes:** `workflows/defect-resolution.md`
 - **Database & Schema Changes:** `workflows/database-migration.md`
 - **Security Changes:** `workflows/security-sensitive-change.md`
@@ -77,9 +83,13 @@ For multi-stage engineering lifecycles, load the appropriate workflow from `work
 
 ## Coding Lifecycle Subagents
 When addressing lifecycle-specific phases, adopt or delegate to the corresponding subagent from `agents/`:
-- **Business Analyst (`agents/ba-agent/AGENT.md`):** Use for requirements discovery, user stories, domain terms, and scenario matrices.
-- **Project Manager (`agents/pm-agent/AGENT.md`):** Use for phased task plans, milestone tracking, and blocker resolution.
-- **DevOps Specialist (`agents/devops-agent/AGENT.md`):** Use for CI/CD pipelines (`.github/workflows/`), Docker containerization, environment hygiene (`.env.example`), and release readiness.
+- **Business Analyst (`agents/ba-agent/AGENT.md`):** Use for requirements discovery, user stories, domain terms, and scenario matrices (`/ba`).
+- **Architect & ADR Specialist (`agents/architect-agent/AGENT.md`):** Use for system boundaries, dependency direction, SOLID principles, and durable ADRs (`/architect`).
+- **Data Modeler (`agents/data-agent/AGENT.md`):** Use for database schemas, ESR indexing, migrations, rollback runbooks, and data access isolation (`/data`).
+- **Project Manager (`agents/pm-agent/AGENT.md`):** Use for phased task plans, milestone tracking, and blocker resolution (`/pm`).
+- **UX & Design System Specialist (`agents/ux-agent/AGENT.md`):** Use for accessible UI components, design tokens, interaction feedback, and custom hooks (`/ux`).
+- **Security & Threat Specialist (`agents/threat-agent/AGENT.md`):** Use for STRIDE threat modeling, trust boundaries, secrets hygiene, and adversarial security gates (`/threat`).
+- **DevOps Specialist (`agents/devops-agent/AGENT.md`):** Use for CI/CD pipelines (`.github/workflows/`), Docker containerization, environment hygiene (`.env.example`), and release readiness (`/devops`).
 
 ## Context Maintenance
 After making changes to factory rules, skills, workflows, or templates:

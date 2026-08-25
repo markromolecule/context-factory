@@ -1,7 +1,7 @@
 ---
 name: git-commit
-description: Create focused, reviewable Conventional Commits without modifying unrelated user work.
-scope: Git commits, commit messages, and change-set preparation.
+description: Create focused, reviewable Conventional Commits and ship repository changes without modifying unrelated user work.
+scope: Git commits, commit messages, git push, repository shipping, and change-set preparation.
 alwaysApply: false
 ---
 
@@ -58,4 +58,3 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) specific
    - Commit only when the user or workflow explicitly authorizes it.
    - Inspect `git status` and `git diff` before staging; never stage secrets, `.env` files, or unintended files.
    - Never use `--no-verify` to bypass pre-commit hooks or force push to shared branches without explicit approval.
-
