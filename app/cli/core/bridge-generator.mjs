@@ -1,14 +1,136 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { cp, lstat, mkdir, readFile, readlink, symlink, unlink, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { root } from "../../../scripts/context-core.mjs";
 
 /**
- * Generates bridge files for connecting context-factory to a host / consumer repository.
+ * Creates a symbolic link with relative target and fallback handling.
+ */
+export async function createRelativeSymlink({
+  linkPath,
+  targetPath,
+  type = "dir",
+  dryRun = false,
+  force = false,
+}) {
+  const linkDir = dirname(linkPath);
+  const relTarget = relative(linkDir, targetPath).replaceAll("\\", "/");
+
+  let existingStat = null;
+  try {
+    existingStat = await lstat(linkPath);
+  } catch {
+    existingStat = null;
+  }
+
+  if (existingStat) {
+    if (existingStat.isSymbolicLink()) {
+      const currentTarget = (await readlink(linkPath).catch(() => null))?.replaceAll("\\", "/");
+      if (currentTarget === relTarget && !force) {
+        return { path: linkPath, target: relTarget, status: "skipped (up to date)", isSymlink: true };
+      }
+      if (!dryRun) {
+        await unlink(linkPath);
+      }
+    } else if (!force) {
+      return { path: linkPath, target: relTarget, status: "skipped (exists, not symlink)", isSymlink: false };
+    } else if (!dryRun) {
+      try {
+        await unlink(linkPath);
+      } catch {
+        // May be a directory
+      }
+    }
+  }
+
+  if (dryRun) {
+    return {
+      path: linkPath,
+      target: relTarget,
+      status: existingStat ? "would update" : "would create",
+      isSymlink: true,
+    };
+  }
+
+  await mkdir(linkDir, { recursive: true });
+
+  const symlinkType = process.platform === "win32"
+    ? (type === "dir" ? "junction" : "file")
+    : (type === "dir" ? "dir" : "file");
+
+  try {
+    await symlink(relTarget, linkPath, symlinkType);
+    return {
+      path: linkPath,
+      target: relTarget,
+      status: existingStat ? "updated" : "created",
+      isSymlink: true,
+    };
+  } catch (err) {
+    // Windows non-admin fallback: attempt directory copy if symlink failed
+    if (process.platform === "win32" && err.code === "EPERM") {
+      try {
+        await cp(targetPath, linkPath, { recursive: type === "dir" });
+        return {
+          path: linkPath,
+          target: relTarget,
+          status: "created (copied fallback)",
+          isSymlink: false,
+        };
+      } catch (cpErr) {
+        return {
+          path: linkPath,
+          target: relTarget,
+          status: `failed (${err.message})`,
+          error: err,
+          isSymlink: false,
+        };
+      }
+    }
+    return {
+      path: linkPath,
+      target: relTarget,
+      status: `failed (${err.message})`,
+      error: err,
+      isSymlink: false,
+    };
+  }
+}
+
+/**
+ * Normalizes requested IDE profiles from flags.
+ */
+export function normalizeIdeProfiles(input = ["all"]) {
+  const rawList = Array.isArray(input) ? input : (typeof input === "string" ? input.split(",") : ["all"]);
+  const cleaned = rawList.map((s) => s.trim().toLowerCase()).filter(Boolean);
+
+  if (cleaned.length === 0 || cleaned.includes("all") || cleaned.includes("*")) {
+    return ["antigravity", "gemini", "cursor", "windsurf", "claude", "copilot", "codex"];
+  }
+
+  const result = new Set();
+  for (const item of cleaned) {
+    if (item === "antigravity" || item === "agy") {
+      result.add("antigravity");
+      result.add("gemini");
+    } else if (item === "gemini") {
+      result.add("gemini");
+      result.add("antigravity");
+    } else if (["cursor", "windsurf", "claude", "copilot", "codex"].includes(item)) {
+      result.add(item);
+    }
+  }
+
+  return Array.from(result);
+}
+
+/**
+ * Generates bridge files and .agents symlinks for connecting context-factory to a host / consumer repository.
  */
 export async function generateBridge({
   target = process.cwd(),
   factoryPath = null,
-  agentProfiles = ["all"],
+  ide = ["all"],
+  agentProfiles = null,
   method = "submodule",
   dryRun = false,
   force = false,
@@ -16,14 +138,20 @@ export async function generateBridge({
 } = {}) {
   const targetDir = isAbsolute(target) ? target : resolve(process.cwd(), target);
 
-  // Compute relative path from targetDir to context-factory root if not explicitly provided
+  // Compute absolute and relative paths to context-factory
+  let absFactoryPath;
   let relFactoryPath = factoryPath;
-  if (!relFactoryPath) {
+
+  if (relFactoryPath) {
+    absFactoryPath = isAbsolute(relFactoryPath) ? relFactoryPath : resolve(targetDir, relFactoryPath);
+  } else {
     if (targetDir === root) {
       relFactoryPath = ".";
+      absFactoryPath = root;
     } else {
       const computed = relative(targetDir, root).replaceAll("\\", "/");
       relFactoryPath = computed || ".";
+      absFactoryPath = root;
     }
   }
 
@@ -32,10 +160,14 @@ export async function generateBridge({
   const scriptPrefix = normalizedFactoryPath === "." ? "node scripts/context.mjs" : `node ${normalizedFactoryPath}/scripts/context.mjs`;
   const cliPrefix = normalizedFactoryPath === "." ? "node app/cli/bin/context-cli.mjs" : `node ${normalizedFactoryPath}/app/cli/bin/context-cli.mjs`;
 
+  const activeIdes = normalizeIdeProfiles(agentProfiles || ide);
+  const isAll = (agentProfiles || ide).includes("all") || (agentProfiles || ide).includes("*");
+
   const filesToGenerate = [];
 
-  // 1. AGENTS.md (Universal Orchestrator Contract)
-  const agentsMdContent = `# Host Project AI Agent Instructions & Context Factory Bridge
+  if (targetDir !== root) {
+    // 1. AGENTS.md (Universal Orchestrator Contract) - Always generated
+    const agentsMdContent = `# Host Project AI Agent Instructions & Context Factory Bridge
 
 This repository uses **Context Factory** (located at \`${normalizedFactoryPath}\`) for development standards, rules, workflows, subagents, and skills.
 
@@ -61,10 +193,11 @@ This repository uses **Context Factory** (located at \`${normalizedFactoryPath}\
 | \`/resolve\` | Resolve matching context rules & skills | \`${scriptPrefix} resolve "<prompt>"\` |
 | \`/doctor\` | Verify context and lock health | \`${scriptPrefix} doctor\` |
 `;
-  filesToGenerate.push({ path: join(targetDir, "AGENTS.md"), content: agentsMdContent, id: "AGENTS.md" });
+  filesToGenerate.push({ path: join(targetDir, "AGENTS.md"), content: agentsMdContent, id: "AGENTS.md", category: "contract" });
 
   // 2. GEMINI.md (Antigravity & Gemini Entry Point)
-  const geminiMdContent = `# Gemini & Antigravity Host Entry Point Contract
+  if (isAll || activeIdes.includes("gemini") || activeIdes.includes("antigravity")) {
+    const geminiMdContent = `# Gemini & Antigravity Host Entry Point Contract
 
 This repository is bridged to **Context Factory** at \`${normalizedFactoryPath}\`.
 
@@ -75,10 +208,12 @@ This repository is bridged to **Context Factory** at \`${normalizedFactoryPath}\
 - Write task plans to host \`./docs/tasks/\` and architecture decisions to host \`./docs/decisions/\`.
 - Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
-  filesToGenerate.push({ path: join(targetDir, "GEMINI.md"), content: geminiMdContent, id: "GEMINI.md" });
+    filesToGenerate.push({ path: join(targetDir, "GEMINI.md"), content: geminiMdContent, id: "GEMINI.md", category: "contract" });
+  }
 
   // 3. CLAUDE.md (Claude Code Entry Point)
-  const claudeMdContent = `# Claude Code Host Project Instructions
+  if (isAll || activeIdes.includes("claude")) {
+    const claudeMdContent = `# Claude Code Host Project Instructions
 
 This project uses **Context Factory** at \`${normalizedFactoryPath}\` for engineering workflows and standards.
 
@@ -88,10 +223,12 @@ This project uses **Context Factory** at \`${normalizedFactoryPath}\` for engine
 - Write task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\` in this repository.
 - Verify work using \`${scriptPrefix} doctor\`.
 `;
-  filesToGenerate.push({ path: join(targetDir, "CLAUDE.md"), content: claudeMdContent, id: "CLAUDE.md" });
+    filesToGenerate.push({ path: join(targetDir, "CLAUDE.md"), content: claudeMdContent, id: "CLAUDE.md", category: "contract" });
+  }
 
   // 4. CODEX.md (Codex Entry Point)
-  const codexMdContent = `# Codex Host Project Instructions
+  if (isAll || activeIdes.includes("codex")) {
+    const codexMdContent = `# Codex Host Project Instructions
 
 Context Factory integration: \`${normalizedFactoryPath}\`.
 Authoritative contract: \`${normalizedFactoryPath}/orchestrator/SHARED.md\`.
@@ -100,106 +237,131 @@ Authoritative contract: \`${normalizedFactoryPath}/orchestrator/SHARED.md\`.
 - Resolve context: \`${scriptPrefix} resolve "<prompt>"\`
 - Run health check: \`${scriptPrefix} doctor\`
 `;
-  filesToGenerate.push({ path: join(targetDir, "CODEX.md"), content: codexMdContent, id: "CODEX.md" });
+    filesToGenerate.push({ path: join(targetDir, "CODEX.md"), content: codexMdContent, id: "CODEX.md", category: "contract" });
+  }
 
   // 5. .cursorrules (Cursor Rules)
-  const cursorRulesContent = `# Cursor Rules - Context Factory Bridge
+  if (isAll || activeIdes.includes("cursor")) {
+    const cursorRulesContent = `# Cursor Rules - Context Factory Bridge
 
 - Refer to \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for shared orchestration directives.
 - Use \`${scriptPrefix} resolve "<prompt>"\` to determine relevant rules and skills.
 - Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
 `;
-  filesToGenerate.push({ path: join(targetDir, ".cursorrules"), content: cursorRulesContent, id: ".cursorrules" });
+    filesToGenerate.push({ path: join(targetDir, ".cursorrules"), content: cursorRulesContent, id: ".cursorrules", category: "contract" });
+  }
 
   // 6. .windsurfrules (Windsurf Rules)
-  const windsurfRulesContent = `# Windsurf Rules - Context Factory Bridge
+  if (isAll || activeIdes.includes("windsurf")) {
+    const windsurfRulesContent = `# Windsurf Rules - Context Factory Bridge
 
 - Refer to \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for shared orchestration directives.
 - Use \`${scriptPrefix} resolve "<prompt>"\` to determine relevant rules and skills.
 - Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
 `;
-  filesToGenerate.push({ path: join(targetDir, ".windsurfrules"), content: windsurfRulesContent, id: ".windsurfrules" });
+    filesToGenerate.push({ path: join(targetDir, ".windsurfrules"), content: windsurfRulesContent, id: ".windsurfrules", category: "contract" });
+  }
 
   // 7. .github/copilot-instructions.md (Copilot instructions)
-  const copilotContent = `# GitHub Copilot Instructions - Context Factory Bridge
+  if (isAll || activeIdes.includes("copilot")) {
+    const copilotContent = `# GitHub Copilot Instructions - Context Factory Bridge
 
 This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
 - Read \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for architecture contracts.
 - Resolve context: \`${scriptPrefix} resolve "<prompt>"\`.
 - Write task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
 `;
-  filesToGenerate.push({ path: join(targetDir, ".github", "copilot-instructions.md"), content: copilotContent, id: ".github/copilot-instructions.md" });
+    filesToGenerate.push({ path: join(targetDir, ".github", "copilot-instructions.md"), content: copilotContent, id: ".github/copilot-instructions.md", category: "contract" });
+  }
 
-  // 8. docs/tasks/README.md
-  const docsTasksReadme = `# Tasks Directory
-
-This directory stores host-specific task plans, milestones, and phased execution breakdowns.
-
-- Phased plans are generated by the \`plan\` skill and stored in \`./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/\`.
-- Templates are loaded from \`${normalizedFactoryPath}/docs/templates/Task.md\` and \`Phase.md\`.
-`;
-  filesToGenerate.push({ path: join(targetDir, "docs", "tasks", "README.md"), content: docsTasksReadme, id: "docs/tasks/README.md" });
-
-  // 9. docs/decisions/README.md
-  const docsDecisionsReadme = `# Architecture Decisions (ADRs)
-
-This directory stores host-specific Architecture Decision Records (ADRs).
-
-- ADRs follow the template in \`${normalizedFactoryPath}/docs/templates/Decision.md\`.
-`;
-  filesToGenerate.push({ path: join(targetDir, "docs", "decisions", "README.md"), content: docsDecisionsReadme, id: "docs/decisions/README.md" });
-
-  // 10. rules/README.md (Optional local rules extension)
-  const rulesReadme = `# Host Project Rules
-
-Place host-specific rules and overrides in this directory.
-Universal rules are provided by Context Factory at \`${normalizedFactoryPath}/rules/\`.
-`;
-  filesToGenerate.push({ path: join(targetDir, "rules", "README.md"), content: rulesReadme, id: "rules/README.md" });
-
-  // 11. .context-bridge.json (Bridge Metadata)
-  const bridgeConfig = {
-    schemaVersion: 1,
-    bridgeVersion: "1.0.0",
-    factoryPath: normalizedFactoryPath,
-    integrationMethod: method,
-    createdAt: new Date().toISOString(),
-    scoping: {
-      tasks: "./docs/tasks",
-      decisions: "./docs/decisions",
-      rules: "./rules",
-    },
-    commands: {
-      resolve: `${scriptPrefix} resolve`,
-      bundle: `${scriptPrefix} bundle`,
-      doctor: `${scriptPrefix} doctor`,
-      cli: `${cliPrefix}`,
-    },
-  };
+  // 8. Common Scaffolding: docs/tasks/README.md, docs/decisions/README.md, rules/README.md
   filesToGenerate.push({
-    path: join(targetDir, ".context-bridge.json"),
-    content: `${JSON.stringify(bridgeConfig, null, 2)}\n`,
-    id: ".context-bridge.json",
+    path: join(targetDir, "docs", "tasks", "README.md"),
+    content: `# Tasks Directory\n\nThis directory stores host-specific task plans, milestones, and phased execution breakdowns.\n\n- Phased plans are generated by the \`plan\` skill and stored in \`./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/\`.\n- Templates are loaded from \`${normalizedFactoryPath}/docs/templates/Task.md\` and \`Phase.md\`.\n`,
+    id: "docs/tasks/README.md",
+    category: "scaffold",
   });
 
-  // Filter by requested agent profiles if not 'all'
-  const finalFiles = agentProfiles.includes("all")
-    ? filesToGenerate
-    : filesToGenerate.filter((f) => {
-        if ([".context-bridge.json", "docs/tasks/README.md", "docs/decisions/README.md", "rules/README.md"].includes(f.id)) return true;
-        if (agentProfiles.includes("agents") && f.id === "AGENTS.md") return true;
-        if (agentProfiles.includes("gemini") && f.id === "GEMINI.md") return true;
-        if (agentProfiles.includes("claude") && f.id === "CLAUDE.md") return true;
-        if (agentProfiles.includes("codex") && f.id === "CODEX.md") return true;
-        if (agentProfiles.includes("cursor") && f.id === ".cursorrules") return true;
-        if (agentProfiles.includes("windsurf") && f.id === ".windsurfrules") return true;
-        if (agentProfiles.includes("copilot") && f.id === ".github/copilot-instructions.md") return true;
-        return false;
+  filesToGenerate.push({
+    path: join(targetDir, "docs", "decisions", "README.md"),
+    content: `# Architecture Decisions (ADRs)\n\nThis directory stores host-specific Architecture Decision Records (ADRs).\n\n- ADRs follow the template in \`${normalizedFactoryPath}/docs/templates/Decision.md\`.\n`,
+    id: "docs/decisions/README.md",
+    category: "scaffold",
+  });
+
+    filesToGenerate.push({
+      path: join(targetDir, "rules", "README.md"),
+      content: `# Host Project Rules\n\nPlace host-specific rules and overrides in this directory.\nUniversal rules are provided by Context Factory at \`${normalizedFactoryPath}/rules/\`.\n`,
+      id: "rules/README.md",
+      category: "scaffold",
+    });
+  }
+
+  // 9. Antigravity & Agentic IDE Symlinks (.agents/)
+  const symlinksToCreate = [];
+  if (isAll || activeIdes.includes("antigravity") || activeIdes.includes("gemini")) {
+    const dotAgentsDir = join(targetDir, ".agents");
+
+    const symlinkDefs = [
+      { id: ".agents/skills", name: "skills", type: "dir" },
+      { id: ".agents/rules", name: "rules", type: "dir" },
+      { id: ".agents/agents", name: "agents", type: "dir" },
+      { id: ".agents/workflows", name: "workflows", type: "dir" },
+      { id: ".agents/AGENTS.md", name: "AGENTS.md", type: "file" },
+      { id: ".agents/GEMINI.md", name: "GEMINI.md", type: "file" },
+    ];
+
+    for (const def of symlinkDefs) {
+      const linkPath = join(dotAgentsDir, def.name);
+      const sourcePath = join(absFactoryPath, def.name);
+      symlinksToCreate.push({
+        id: def.id,
+        linkPath,
+        sourcePath,
+        type: def.type,
       });
+    }
+  }
 
-  const writeResults = [];
+  // 10. .context-bridge.json (Bridge Metadata for Host Repositories)
+  if (targetDir !== root) {
+    const bridgeConfig = {
+      schemaVersion: 1,
+      bridgeVersion: "1.1.0",
+      factoryPath: normalizedFactoryPath,
+      integrationMethod: method,
+      ides: activeIdes,
+      createdAt: new Date().toISOString(),
+      scoping: {
+        tasks: "./docs/tasks",
+        decisions: "./docs/decisions",
+        rules: "./rules",
+        agents: "./.agents",
+      },
+      symlinks: symlinksToCreate.map((s) => ({
+        id: s.id,
+        target: relative(join(targetDir, ".agents"), s.sourcePath).replaceAll("\\", "/"),
+        type: s.type,
+      })),
+      commands: {
+        resolve: `${scriptPrefix} resolve`,
+        bundle: `${scriptPrefix} bundle`,
+        doctor: `${scriptPrefix} doctor`,
+        cli: `${cliPrefix}`,
+      },
+    };
 
-  for (const item of finalFiles) {
+    filesToGenerate.push({
+      path: join(targetDir, ".context-bridge.json"),
+      content: `${JSON.stringify(bridgeConfig, null, 2)}\n`,
+      id: ".context-bridge.json",
+      category: "config",
+    });
+  }
+
+  // Write contract and scaffold files
+  const fileResults = [];
+  for (const item of filesToGenerate) {
     let exists = false;
     try {
       await readFile(item.path);
@@ -209,7 +371,7 @@ Universal rules are provided by Context Factory at \`${normalizedFactoryPath}/ru
     }
 
     if (exists && !force) {
-      writeResults.push({ path: item.path, id: item.id, status: "skipped (exists)" });
+      fileResults.push({ path: item.path, id: item.id, status: "skipped (exists)", category: item.category, isSymlink: false });
       continue;
     }
 
@@ -218,10 +380,36 @@ Universal rules are provided by Context Factory at \`${normalizedFactoryPath}/ru
       await writeFile(item.path, item.content, "utf8");
     }
 
-    writeResults.push({ path: item.path, id: item.id, status: dryRun ? "would create" : (exists ? "overwritten" : "created") });
+    fileResults.push({
+      path: item.path,
+      id: item.id,
+      status: dryRun ? "would create" : (exists ? "overwritten" : "created"),
+      category: item.category,
+      isSymlink: false,
+    });
   }
 
-  // 12. Check package.json in host repo
+  // Create symlinks
+  const symlinkResults = [];
+  for (const sym of symlinksToCreate) {
+    const symRes = await createRelativeSymlink({
+      linkPath: sym.linkPath,
+      targetPath: sym.sourcePath,
+      type: sym.type,
+      dryRun,
+      force,
+    });
+    symlinkResults.push({
+      id: sym.id,
+      path: symRes.path,
+      target: symRes.target,
+      status: symRes.status,
+      category: "symlink",
+      isSymlink: symRes.isSymlink,
+    });
+  }
+
+  // 11. Check package.json in host repo
   let packageJsonUpdated = false;
   const hostPkgPath = join(targetDir, "package.json");
   try {
@@ -262,8 +450,102 @@ Universal rules are provided by Context Factory at \`${normalizedFactoryPath}/ru
     targetDir,
     factoryPath: normalizedFactoryPath,
     method,
+    ides: activeIdes,
     dryRun,
-    files: writeResults,
+    files: [...fileResults, ...symlinkResults],
+    symlinks: symlinkResults,
     packageJsonUpdated,
   };
+}
+
+/**
+ * Diagnostic utility to audit symlink health in Context Factory or a bridged host repository.
+ */
+export async function verifySymlinkHealth(targetDir = process.cwd()) {
+  const dotAgentsDir = join(targetDir, ".agents");
+  let hasDotAgents = false;
+  try {
+    const s = await lstat(dotAgentsDir);
+    hasDotAgents = s.isDirectory();
+  } catch {
+    hasDotAgents = false;
+  }
+
+  const expectedLinks = [
+    { name: "skills", type: "dir" },
+    { name: "rules", type: "dir" },
+    { name: "agents", type: "dir" },
+    { name: "workflows", type: "dir" },
+    { name: "AGENTS.md", type: "file" },
+    { name: "GEMINI.md", type: "file" },
+  ];
+
+  const linkStatuses = [];
+  let brokenCount = 0;
+  let missingCount = 0;
+  let healthyCount = 0;
+
+  for (const item of expectedLinks) {
+    const linkPath = join(dotAgentsDir, item.name);
+    try {
+      const stat = await lstat(linkPath);
+      if (stat.isSymbolicLink()) {
+        const rawTarget = await readlink(linkPath);
+        const resolvedPath = resolve(dotAgentsDir, rawTarget);
+        try {
+          await lstat(resolvedPath);
+          healthyCount++;
+          linkStatuses.push({ name: item.name, path: linkPath, target: rawTarget, status: "healthy", isSymlink: true });
+        } catch {
+          brokenCount++;
+          linkStatuses.push({ name: item.name, path: linkPath, target: rawTarget, status: "broken (target not found)", isSymlink: true });
+        }
+      } else {
+        linkStatuses.push({ name: item.name, path: linkPath, status: "regular file/dir", isSymlink: false });
+      }
+    } catch {
+      missingCount++;
+      linkStatuses.push({ name: item.name, path: linkPath, status: "missing", isSymlink: false });
+    }
+  }
+
+  const passed = hasDotAgents && brokenCount === 0 && missingCount === 0;
+  return {
+    passed,
+    hasDotAgents,
+    brokenCount,
+    missingCount,
+    healthyCount,
+    links: linkStatuses,
+  };
+}
+
+/**
+ * Re-creates or repairs missing and broken symlinks in target directory.
+ */
+export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}) {
+  let factoryPath = flags.factoryPath || null;
+  let ide = flags.ide || ["all"];
+  let method = flags.method || "submodule";
+
+  try {
+    const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
+    if (bridgeJson.factoryPath) factoryPath = bridgeJson.factoryPath;
+    if (bridgeJson.ides) ide = bridgeJson.ides;
+    if (bridgeJson.integrationMethod) method = bridgeJson.integrationMethod;
+  } catch {
+    // If inside context-factory itself
+    if (targetDir === root) {
+      factoryPath = ".";
+    }
+  }
+
+  return generateBridge({
+    target: targetDir,
+    factoryPath,
+    ide,
+    method,
+    force: true,
+    addNpmScripts: true,
+  });
 }

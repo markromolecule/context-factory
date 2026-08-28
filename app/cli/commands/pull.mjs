@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { isAbsolute, join, resolve } from "node:path";
 import { root } from "../../../scripts/context-core.mjs";
 import { badges, colors } from "../core/formatter.mjs";
+import { repairBridgeSymlinks } from "../core/bridge-generator.mjs";
 import { handleDoctorCommand } from "./doctor.mjs";
 
 /**
@@ -319,6 +320,18 @@ export async function handlePullCommand(args = [], flags = {}) {
       console.log(`  ${badges.done("UPDATED")} ${colors.bold(colors.green("Successfully pulled latest changes from GitHub:"))}`);
       if (pullResult.stdout) console.log(`  ${colors.dim(pullResult.stdout)}`);
       console.log("");
+    }
+  }
+
+  // Post-pull symlink repair for host repos
+  if (isHostRepo) {
+    try {
+      await repairBridgeSymlinks(targetDir);
+      if (!isJson) {
+        console.log(`  ${badges.done("SYNCED")} Auto-healed .agents/ symlinks in host repository.`);
+      }
+    } catch {
+      // Ignored if non-fatal
     }
   }
 

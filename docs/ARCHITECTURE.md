@@ -78,3 +78,7 @@ flowchart LR
 - [[docs/decisions/0011-progressive-contract-driven-loop-engineering|Progressive contract-driven loop engineering]]
 - [[docs/decisions/0012-skill-taxonomy-and-slash-ergonomics-optimization|Skill taxonomy and slash ergonomics optimization]]
 - [[docs/decisions/0013-streamline-procedural-skills-inventory|Streamline procedural skills inventory and eliminate rule duplications]]
+- [[docs/decisions/0014-context-specification-skill-with-embedded-grilling|Context specification authoring skill with embedded grilling]]
+- [[docs/decisions/0015-execute-skill-strict-phase-stops-and-modular-refactoring|Execute skill strict phase stops, code review optimization workflow, and modular refactoring]]
+- [[docs/decisions/0016-declarative-lifecycle-specialist-agents|Declarative lifecycle specialist agents and harness resolution architecture]]
+- [[docs/decisions/0017-ide-bridging-and-symlink-synchronization-architecture|IDE bridging and symlink synchronization architecture]]

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { readdir } from "node:fs/promises";
-import { extname } from "node:path";
+import { lstat, readdir, readlink } from "node:fs/promises";
+import { extname, resolve } from "node:path";
 import {
   createLock,
   filesUnder,
@@ -414,6 +414,25 @@ for (const path of ["app.json", "appearance.json", "core-plugins.json", "graph.j
     await readJson(`.obsidian/${path}`);
   } catch {
     error(`Invalid Obsidian JSON: .obsidian/${path}`);
+  }
+}
+
+const expectedDotAgents = ["skills", "rules", "agents", "workflows", "AGENTS.md", "GEMINI.md"];
+for (const name of expectedDotAgents) {
+  const linkPath = `.agents/${name}`;
+  try {
+    const stat = await lstat(linkPath);
+    if (stat.isSymbolicLink()) {
+      const rawTarget = await readlink(linkPath);
+      const resolved = resolve(".agents", rawTarget);
+      try {
+        await lstat(resolved);
+      } catch {
+        error(`Dangling symlink in .agents/: ${name} -> ${rawTarget}`);
+      }
+    }
+  } catch {
+    error(`Missing required .agents/ link: ${linkPath}`);
   }
 }
 

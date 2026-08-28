@@ -1,6 +1,6 @@
 {
   "name": "context-factory",
-  "version": "3.9.0",
+  "version": "3.10.0",
   "description": "Source of truth for agent behavior, engineering rules, reusable skills, development workflows, and cross-repo bridging",
   "type": "module",
   "main": "app/cli/index.mjs",
@@ -9,6 +9,7 @@
   },
   "scripts": {
     "cli": "node app/cli/bin/context-cli.mjs",
+    "init": "node app/cli/bin/context-cli.mjs init",
     "bridge": "node app/cli/bin/context-cli.mjs bridge",
     "pull": "node app/cli/bin/context-cli.mjs pull",
     "update": "node app/cli/bin/context-cli.mjs pull",
@@ -25,7 +26,13 @@
     "resolve": "node app/cli/bin/context-cli.mjs resolve",
     "run": "node app/cli/bin/context-cli.mjs run",
     "status": "node app/cli/bin/context-cli.mjs status",
-    "export": "node app/cli/bin/context-cli.mjs export"
+    "export": "node app/cli/bin/context-cli.mjs export",
+    "context:resolve": "node scripts/context.mjs resolve",
+    "context:bundle": "node scripts/context.mjs bundle",
+    "context:doctor": "node scripts/context.mjs doctor",
+    "context:update": "git submodule update --remote --merge . && npm run context:doctor",
+    "context:bridge": "node app/cli/bin/context-cli.mjs bridge --target .",
+    "context:cli": "node app/cli/bin/context-cli.mjs"
   },
   "keywords": [
     "context-factory",

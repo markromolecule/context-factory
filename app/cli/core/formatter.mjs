@@ -54,6 +54,7 @@ export const badges = {
   sync: (text = "SYNC") => colors.bgMagenta(colors.white(` ${text} `)),
   lock: (text = "LOCK") => colors.bgBlue(colors.white(` ${text} `)),
   bridge: (text = "BRIDGE") => colors.bgCyan(colors.black(` ${text} `)),
+  init: (text = "INIT") => colors.bgCyan(colors.black(` ${text} `)),
   dryRun: (text = "DRY RUN") => colors.bgYellow(colors.black(` ${text} `)),
 };
 

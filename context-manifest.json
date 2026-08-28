@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "3.9.0",
+  "contextVersion": "3.10.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -149,7 +149,8 @@
     "docs/decisions/0013-streamline-procedural-skills-inventory.md",
     "docs/decisions/0014-context-specification-skill-with-embedded-grilling.md",
     "docs/decisions/0015-execute-skill-strict-phase-stops-and-modular-refactoring.md",
-    "docs/decisions/0016-declarative-lifecycle-specialist-agents.md"
+    "docs/decisions/0016-declarative-lifecycle-specialist-agents.md",
+    "docs/decisions/0017-ide-bridging-and-symlink-synchronization-architecture.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
@@ -174,6 +175,7 @@
     "evals/cases/defect-resolution.json",
     "evals/cases/direct-question.json",
     "evals/cases/frontend-styling.json",
+    "evals/cases/ide-bridging.json",
     "evals/cases/knowledge-grounding.json",
     "evals/cases/preplanning-new-system.json",
     "evals/cases/security-change.json",

@@ -1,197 +1,126 @@
 ---
 title: Cross-Workspace Integration Guide
 type: guide
-tags: [guide, integration, submodule, workspace, multi-repo]
+tags: [guide, integration, submodule, workspace, multi-repo, cli, antigravity, symlinks]
 ---
 
 # Cross-Workspace Integration Guide
 
-This guide covers how to integrate and use **Context Factory** across multiple projects and repositories. It explains how to set it up as a Git submodule or via alternative methods, how to configure host projects so agents consume the factory properly, how to scope generated documentation to the host repository, and how to maintain and update the factory across workspaces.
+This guide covers how to integrate and use **Context Factory** across multiple projects and repositories. It explains how to bridge host projects so AI agents (especially **Antigravity**) natively discover skills, rules, and workflows via `.agents/` symlinks, how to use `context-cli init` and `context-cli bridge`, how to scope generated documentation to the host repository, and how to maintain health synchronization across workspaces.
 
 ---
 
-## Integration Methods Comparison
+## 1. Quick Start: Scaffolding a Host Project
+
+You can bridge Context Factory into any new or existing project with a single command:
+
+```sh
+# Option A: Interactive guided wizard (prompted for directory, method, and IDEs)
+context-cli init
+
+# Option B: Direct bridge targeting Antigravity using Git Submodule
+context-cli bridge --target ./my-app --ide antigravity --method submodule
+
+# Option C: Direct bridge for all IDEs in a shared local workspace
+context-cli bridge --target ./my-app --ide all --method linked
+```
+
+### What `context-cli bridge` Generates:
+1. **`.agents/` Directory & Symlinks (for Antigravity):**
+   - `.agents/skills` $\rightarrow$ `<factoryPath>/skills`
+   - `.agents/rules` $\rightarrow$ `<factoryPath>/rules`
+   - `.agents/agents` $\rightarrow$ `<factoryPath>/agents`
+   - `.agents/workflows` $\rightarrow$ `<factoryPath>/workflows`
+   - `.agents/AGENTS.md` $\rightarrow$ `<factoryPath>/AGENTS.md`
+   - `.agents/GEMINI.md` $\rightarrow$ `<factoryPath>/GEMINI.md`
+2. **IDE Entry Point Contracts:** `AGENTS.md`, `GEMINI.md`, `CLAUDE.md`, `CODEX.md`, `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md`.
+3. **Scaffolding Directories:** `docs/tasks/README.md`, `docs/decisions/README.md`, `rules/README.md`.
+4. **Bridge Configuration:** `.context-bridge.json`.
+5. **Host `package.json` Scripts:** Helper scripts for context resolution, doctor diagnostics, updates, and task planning.
+
+---
+
+## 2. Integration Methods Comparison
 
 | Method | Best For | Pros | Cons |
 | :--- | :--- | :--- | :--- |
-| **1. Git Submodule** *(Recommended)* | Shared team repos & multi-repo setups | Strict version pinning, clean commit history, easy bidirectional updates | Requires `submodule update` on clone |
-| **2. Git Subtree** | Repositories needing zero submodule friction | Single-command clone, no external submodule dependencies | Heavier host repository git history |
-| **3. Symlink / Shared Path** | Local workstation / single developer multi-project setup | Instant real-time updates across all local repos with zero syncing | Local-only; doesn't commit factory to remote git |
-| **4. Template / Fork** | Brand new projects starting from scratch | Fully standalone and independent | Difficult to pull upstream changes later |
+| **1. Git Submodule (`--method submodule`)** *(Recommended for teams)* | Shared team repos & CI/CD | Strict version pinning, clean commit history, easy remote updates | Requires `git submodule update --init` on clone |
+| **2. Shared Local Link (`--method linked`)** *(Recommended for local dev)* | Local workstation multi-project setup (e.g. `htdocs/` or `~/projects/`) | Instant real-time live updates across all local repos without commits | Works on local machine paths |
+| **3. Git Subtree** | Repositories needing zero submodule friction | Single-command clone, no external submodule dependencies | Heavier host repository git history |
 
 ---
 
-## Method 1: Git Submodule (Recommended)
+## 3. Host Project Architecture & Scoping
 
-### 1. Add Context Factory as a Submodule
-From the root of your consumer / host repository, run:
-
-```sh
-# Add the submodule into .context-factory (recommended hidden directory)
-git submodule add https://github.com/markromolecule/context-factory.git <folder>
-git commit -m "chore: add context-factory submodule"
-	- create .gitignore # To ignore the tasks folder & context
-```
-
-> [!TIP]
-> Placing the submodule inside `.context-factory` or `.agents/context-factory` keeps your host repository root clean while keeping the factory accessible to scripts and agent configurations.
-
----
-
-### 2. Configure the Host Bridge (`AGENTS.md` / `CLAUDE.md` / `.cursorrules`)
-
-AI agents (Antigravity, Cursor, Claude Code, Copilot) need an entry point in the host repo that instructs them to use the factory.
-
-Create or update `AGENTS.md` at the **root of your host repository**:
-
-```markdown
-# Host Project AI Agent Instructions
-
-This repository uses **Context Factory** (located at `.context-factory/`) for development rules, workflows, and skills.
-
-## Agent Load Order & Execution Contract
-1. **Contract**: Read the shared orchestration contract in `.context-factory/orchestrator/SHARED.md`.
-2. **Context Resolution**: For multi-step tasks, resolve matching rules and skills:
-   `node .context-factory/scripts/context.mjs resolve "<task description>"`
-3. **Universal Standards**: Follow rules in `.context-factory/rules/` and skills in `.context-factory/skills/`.
-4. **Host Specifics**: Combine universal rules with project-specific rules in `./rules/` or `./.agents/rules/`.
-
-## Generated Documentation Scoping Contract
-- **Task Plans**: All implementation plans and phase breakdowns generated via the `implementation-plan` skill MUST be written to `./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/` in **this host repository**, NEVER inside `.context-factory/`.
-- **Decisions (ADRs)**: All architecture decisions generated via `architecture-decision` MUST be saved in `./docs/decisions/` in **this host repository**.
-- **Templates**: Always load templates from `.context-factory/docs/templates/Task.md`, `Phase.md`, and `Decision.md`.
-```
-
----
-
-### 3. Add Host `package.json` Scripts
-
-Add convenience scripts to your host repository's `package.json`:
-
-```json
-{
-  "scripts": {
-    "context:resolve": "node .context-factory/scripts/context.mjs resolve",
-    "context:bundle": "node .context-factory/scripts/context.mjs bundle",
-    "context:doctor": "node .context-factory/scripts/context.mjs doctor",
-    "context:update": "git submodule update --remote --merge .context-factory && npm run context:doctor"
-  }
-}
-```
-
-Now developers and agents in the host repo can simply run:
-```sh
-npm run context:resolve "implement auth service"
-```
-
----
-
-### 4. Developer & Team Onboarding
-
-When other team members or CI environments clone your host repository, they should initialize the submodule:
-
-```sh
-# Option A: Clone with submodules
-git clone --recurse-submodules <host-repo-url>
-
-# Option B: Initialize in an existing clone
-git submodule update --init --recursive
-```
-
----
-
-## Solving the "Spin-Up" & Document Scoping Problem
-
-When skills like `implementation-plan` or `architecture-decision` run inside a nested submodule setup, follow these rules to ensure generated artifacts land in the parent workspace:
+When skills like `plan` or `adr` run in a bridged setup, generated artifacts always land in the **host repository**:
 
 ```
 HOST_REPO_ROOT/
-├── .context-factory/           <-- Submodule (Framework / Engine / Templates)
-│   ├── docs/templates/         <-- SOURCE: Task.md, Phase.md, Decision.md
-│   ├── rules/                  <-- SOURCE: Universal engineering rules
-│   ├── skills/                 <-- SOURCE: Skill procedures
-│   └── scripts/                <-- SOURCE: Context resolution tools
+├── .agents/                    <-- Real folder with relative symlinks to Context Factory
+│   ├── skills                  --> .context-factory/skills (or ../context-factory/skills)
+│   ├── rules                   --> .context-factory/rules (or ../context-factory/rules)
+│   ├── agents                  --> .context-factory/agents
+│   ├── workflows               --> .context-factory/workflows
+│   ├── AGENTS.md               --> .context-factory/AGENTS.md
+│   └── GEMINI.md               --> .context-factory/GEMINI.md
+├── .context-factory/           <-- Submodule (Framework / Rules / Engine / Templates)
+├── .context-bridge.json        <-- Bridge configuration metadata
 ├── docs/                       <-- TARGET: Host repo artifacts
-│   ├── decisions/              <-- OUTPUT: Accepted ADRs for THIS project
-│   └── tasks/                  <-- OUTPUT: Phased implementation plans
+│   ├── context/                <-- Context specifications for this project
+│   ├── decisions/              <-- Accepted ADRs for THIS project
+│   └── tasks/                  <-- Phased implementation plans
+├── rules/                      <-- Project-specific local rules and overrides
 ├── src/                        <-- Host source code
-└── AGENTS.md                   <-- Bridge configuration
+└── AGENTS.md                   <-- Universal orchestrator entry point
 ```
 
 ### Key Working Rules:
 1. **Always open the Host Repository Root in your IDE**: Never open `.context-factory/` directly unless you are developing the context factory itself.
-2. **Templates are read from the submodule**: `.context-factory/docs/templates/Task.md`.
-3. **Artifacts are written to the host root**: `./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/` and `./docs/decisions/`.
+2. **Antigravity automatically discovers skills & rules**: Native scanning of `.agents/skills/` and `.agents/rules/` indexes all capabilities immediately.
+3. **Artifacts are written to the host root**: `./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/`, `./docs/context/`, and `./docs/decisions/`.
 
 ---
 
-## Method 2: Git Subtree (Submodule Alternative)
+## 4. Diagnostics & Self-Healing Maintenance
 
-If your team prefers not to manage Git submodules, you can embed Context Factory directly into the repository using `git subtree`.
+### Checking Health (`doctor`)
+Run `doctor` inside any bridged project to verify manifest synchronization, lock integrity, and symlink validity:
 
-### Adding as a Subtree:
 ```sh
-git subtree add --prefix .context-factory <context-factory-git-url> main --squash
+# Run doctor diagnostic
+npm run context:doctor
+# Or via CLI:
+context-cli doctor
+
+# Automatically repair any broken or missing symlinks:
+context-cli doctor --repair
 ```
 
-### Pulling Updates:
+### Pulling Updates (`pull`)
+In a host project with a Git submodule, pull latest upstream updates and auto-heal symlinks:
+
 ```sh
-git subtree pull --prefix .context-factory <context-factory-git-url> main --squash
+# Run pull via npm script or CLI:
+npm run context:update
+# Or:
+context-cli pull
 ```
 
-### Benefits:
-- Clones cleanly with standard `git clone` without requiring `--recurse-submodules`.
-- Entire context engine is part of the host repo tree.
+`context-cli pull` automatically:
+1. Updates the submodule to the latest remote commit.
+2. Re-verifies and auto-heals `.agents/` symlinks.
+3. Executes `context-cli doctor` diagnostics.
 
 ---
 
-## Method 3: Local Shared Symlink (Local Development)
+## 5. Team Onboarding
 
-If you have multiple local repositories on your machine and want them all to immediately reflect edits to Context Factory without Git commits:
+When other team members or CI runners clone a bridged repository:
 
 ```sh
-# Inside host project root
-ln -s /path/to/local/context-factory .context-factory
-```
+# Clone with submodules
+git clone --recurse-submodules <host-repo-url>
 
-> [!NOTE]
-> Symlinks are local-only and not committed to remote git repositories. Use this for rapid local prototyping across multiple workspaces.
-
----
-
-## Syncing & Maintenance Workflow
-
-### Updating Context Factory in Host Repositories
-
-#### 1. Fetch the Latest Factory Version
-```sh
-# Pull latest changes from context-factory remote
-git submodule update --remote --merge .context-factory
-```
-
-#### 2. Run Diagnostics
-Verify that the updated submodule is internally consistent and that its lockfile matches:
-```sh
-node .context-factory/scripts/context.mjs doctor
-```
-
-#### 3. Commit the Updated Submodule Pointer in Host Repo
-```sh
-git add .context-factory
-git commit -m "chore(context): update context-factory submodule"
-```
-
-### Pushing Fixes from a Host Submodule back to Context Factory
-If you improve a rule or skill while working inside a host repo:
-```sh
-cd .context-factory
-git checkout main
-git add .
-git commit -m "feat(rules): refine mutation hook constraints"
-git push origin main
-
-# Return to host repo and commit the new pointer
-cd ..
-git add .context-factory
-git commit -m "chore(context): bump context-factory to include mutation hook updates"
+# Verify health
+npm run context:doctor
 ```

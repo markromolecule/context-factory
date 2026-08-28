@@ -22,11 +22,13 @@ graph LR
 ## Session Procedure
 
 ### 1. Identify Target & Initialize Specification
+
 - Determine the domain or feature name (e.g. `auth/social-login`, `billing/stripe-checkout`, `fixes/session-timeout`).
 - Check if an existing context document exists in `docs/context/`. If not, initialize a new specification file (e.g., `docs/context/features/<domain>/<feature>.md` or `docs/context/fixes/<date>-<feature>.md`) using [[docs/templates/Context|Context Template]] (`docs/templates/Context.md`).
 - Set frontmatter `status: draft`.
 
 ### 2. Embedded Grilling & Discovery
+
 - Apply the `grill` interview discipline directly:
   - Interrogate the core problem, user personas, desired business value, happy-path journeys, edge cases, and non-goals.
   - Ask **exactly one unresolved question at a time**, explaining why it matters and providing recommended options with clear trade-offs.
@@ -34,7 +36,9 @@ graph LR
   - Formulate concrete happy-path, boundary, failure, abuse, concurrency, and lifecycle scenarios.
 
 ### 3. Structure & Document Context Sections
+
 Record all clarified decisions directly into the context specification according to the template sections:
+
 - **1. Overview & Objective:** Problem statement, user/business value, and measurable success criteria.
 - **2. Requirements & User Stories:**
   - User stories in standard format (*"As a [role], I want to [action], so that [benefit]"*).
@@ -50,7 +54,9 @@ Record all clarified decisions directly into the context specification according
 - **6. References & External Context:** Links to relevant ADRs ([[docs/decisions/README|Decisions]]), Figma, PRDs, or prior tasks.
 
 ### 4. Quality Audit & Readiness Gate
+
 Do not mark the context specification as `ready` until:
+
 - Measurable success criteria and outcomes are explicit;
 - Every actor and permission boundary is identified;
 - Primary journeys and edge cases have defined failure/recovery behaviors;
@@ -60,6 +66,7 @@ Do not mark the context specification as `ready` until:
 - The user confirms the shared understanding.
 
 ### 5. Synchronization & Handoff to `/plan`
+
 - Once audited and confirmed, update the frontmatter to `status: ready`.
 - Hand off the stable context specification path directly to `plan` (`skills/plan/SKILL.md`) to decompose the requirements into a phased task plan under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`.
 - Stop without writing production code.

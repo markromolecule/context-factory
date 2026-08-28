@@ -1,4 +1,4 @@
-export { generateBridge } from "./core/bridge-generator.mjs";
+export { generateBridge, verifySymlinkHealth, repairBridgeSymlinks, createRelativeSymlink } from "./core/bridge-generator.mjs";
 export { compileBundle } from "./core/bundler.mjs";
 export { computeDiff } from "./core/differ.mjs";
 export { colors, badges, table, box, banner } from "./core/formatter.mjs";
@@ -11,6 +11,7 @@ export { handleDiffCommand } from "./commands/diff.mjs";
 export { handleDoctorCommand } from "./commands/doctor.mjs";
 export { handleEvalCommand } from "./commands/eval.mjs";
 export { handleExportCommand } from "./commands/export.mjs";
+export { handleInitCommand } from "./commands/init.mjs";
 export { handleLintCommand } from "./commands/lint.mjs";
 export { handleLockCommand } from "./commands/lock.mjs";
 export { handlePullCommand } from "./commands/pull.mjs";

@@ -8,15 +8,22 @@ import {
   root,
 } from "../../../scripts/context-core.mjs";
 import { writeFile } from "node:fs/promises";
+import { repairBridgeSymlinks } from "./bridge-generator.mjs";
 
 /**
  * Discovers factory files and syncs context-manifest.json and context-lock.json.
  */
 export async function syncFactoryInventory({ writeLock = true } = {}) {
+  // Verify and maintain factory .agents symlinks
+  try {
+    await repairBridgeSymlinks(root);
+  } catch {
+    // Non-fatal
+  }
   const currentManifest = await readJson("context-manifest.json");
 
   const actualAgents = (await filesUnder("agents")).filter((p) => extname(p) === ".md").sort();
-  const actualRules = (await filesUnder("rules")).filter((p) => extname(p) === ".md").sort();
+  const actualRules = (await filesUnder("rules")).filter((p) => extname(p) === ".md" && p !== "rules/README.md").sort();
   const actualSkills = (await filesUnder("skills")).filter((p) => p.endsWith("/SKILL.md")).sort();
   const actualSkillResources = (await filesUnder("skills")).filter((p) => !p.endsWith("/SKILL.md")).sort();
   const actualWorkflows = (await filesUnder("workflows")).filter((p) => extname(p) === ".md").sort();

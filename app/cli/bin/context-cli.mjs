@@ -7,6 +7,7 @@ import { handleDiffCommand } from "../commands/diff.mjs";
 import { handleDoctorCommand } from "../commands/doctor.mjs";
 import { handleEvalCommand } from "../commands/eval.mjs";
 import { handleExportCommand } from "../commands/export.mjs";
+import { handleInitCommand } from "../commands/init.mjs";
 import { handleLintCommand } from "../commands/lint.mjs";
 import { handleLockCommand } from "../commands/lock.mjs";
 import { handlePullCommand } from "../commands/pull.mjs";
@@ -25,12 +26,15 @@ export function showHelp() {
 ${colors.bold("USAGE:")}
   ${colors.cyan("context-cli")} <command> [options]
 
+${colors.bold("PROJECT BRIDGING & SETUP:")}
+  ${colors.bold(colors.green("init"))}         Interactive setup to bridge Context Factory into a project
+  ${colors.bold(colors.green("bridge"))}       Bridge context-factory into host/consumer repository (--ide, --method)
+  ${colors.bold(colors.green("pull"))}         Pull latest updates & auto-heal symlinks (submodule or git repo)
+
 ${colors.bold("CORE MAINTENANCE COMMANDS:")}
-  ${colors.bold(colors.green("bridge"))}       Bridge context-factory into host/consumer repository
-  ${colors.bold(colors.green("pull"))}         Pull latest updates (supports host submodule & direct repo)
   ${colors.bold(colors.green("build"))}        Compile all rules, skills, and workflows to bundle
   ${colors.bold(colors.green("lint"))}         Validate manifest, frontmatter, schemas, and links
-  ${colors.bold(colors.green("doctor"))}       Run full diagnostic health check (lint, lock, evals)
+  ${colors.bold(colors.green("doctor"))}       Run full diagnostic health check (--repair to auto-fix)
   ${colors.bold(colors.green("diff"))}         Detect drift and differences against context-lock.json
   ${colors.bold(colors.green("lock"))}         Generate or verify context-lock.json checksums
   ${colors.bold(colors.green("sync"))}         Auto-discover files, update manifest and lockfile
@@ -92,6 +96,11 @@ export async function main(argv = process.argv.slice(2)) {
   }
 
   switch (command) {
+    case "init":
+    case "setup":
+    case "new-project":
+      return handleInitCommand(args, flags);
+
     case "bridge":
     case "connect":
     case "init-bridge":
