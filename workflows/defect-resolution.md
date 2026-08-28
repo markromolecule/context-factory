@@ -2,6 +2,16 @@
 name: defect-resolution
 description: Resolve a defect by reproducing it, establishing root cause, adding regression evidence, and applying the smallest safe fix.
 scope: Bugs, regressions, reliability failures, performance defects, and incorrect generated output.
+primaryAgent: pm-agent
+participatingAgents: [architect-agent, threat-agent]
+rules:
+  - rules/global/evidence-and-claims.md
+  - rules/global/code-quality.md
+  - rules/typescript/common/error-handling.md
+skills:
+  - explore
+  - execute
+  - verify
 ---
 
 # Defect Resolution

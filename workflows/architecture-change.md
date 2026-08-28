@@ -2,6 +2,25 @@
 name: architecture-change
 description: Change durable system boundaries, dependency direction, shared patterns, or public contracts with explicit evidence, decisions, migration, and conformance checks.
 scope: Cross-module architecture, shared abstractions, public contracts, persistence strategies, deployment topology, and system-wide patterns.
+primaryAgent: architect-agent
+participatingAgents: [pm-agent, threat-agent, devops-agent]
+rules:
+  - rules/global/evidence-and-claims.md
+  - rules/global/architecture-conformance.md
+  - rules/global/code-quality.md
+  - rules/global/1-3-1-rule.md
+  - rules/solid/single-responsibility.md
+  - rules/solid/open-closed.md
+  - rules/solid/liskov-substitution.md
+  - rules/solid/interface-segregation.md
+  - rules/solid/dependency-inversion.md
+skills:
+  - adr
+  - explore
+  - plan
+  - execute
+  - refactor
+  - verify
 ---
 
 # Architecture Change

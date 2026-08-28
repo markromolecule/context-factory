@@ -2,6 +2,17 @@
 name: dependency-upgrade
 description: Upgrade runtimes, frameworks, libraries, and tooling through bounded compatibility analysis and verified migration steps.
 scope: Dependency additions/upgrades/removals, lockfiles, runtime versions, framework migrations, and generated configuration changes.
+primaryAgent: devops-agent
+participatingAgents: [architect-agent, threat-agent]
+rules:
+  - rules/global/code-quality.md
+  - rules/global/security-guardrails.md
+  - rules/typescript/common/type-safety.md
+skills:
+  - explore
+  - plan
+  - execute
+  - verify
 ---
 
 # Dependency Upgrade

@@ -2,6 +2,15 @@
 name: release-readiness
 description: Decide whether a change set is ready to release using evidence across behavior, quality, operations, security, accessibility, and recovery.
 scope: Pre-release reviews, deployment candidates, milestone completion, and production handoffs.
+primaryAgent: devops-agent
+participatingAgents: [pm-agent, threat-agent]
+rules:
+  - rules/global/evidence-and-claims.md
+  - rules/global/security-guardrails.md
+  - rules/global/code-quality.md
+skills:
+  - verify
+  - explore
 ---
 
 # Release Readiness

@@ -3,8 +3,9 @@ import { badges, colors, table } from "../core/formatter.mjs";
 
 export async function handleSyncCommand(args = [], flags = {}) {
   const isJson = Boolean(flags.json);
+  const skipMocs = Boolean(flags.noMoc || flags.skipMoc);
 
-  const result = await syncFactoryInventory({ writeLock: true });
+  const result = await syncFactoryInventory({ writeLock: true, updateMocs: !skipMocs });
 
   if (isJson) {
     console.log(JSON.stringify(result, null, 2));
@@ -13,6 +14,7 @@ export async function handleSyncCommand(args = [], flags = {}) {
 
   console.log(`\n${badges.sync()} ${colors.bold(colors.green("Context Factory Synchronized Successfully"))}\n`);
   console.log(`  ${colors.bold("Manifest:")} ${colors.cyan("context-manifest.json")} updated.`);
+  console.log(`  ${colors.bold("MOCs:")}     ${colors.cyan(String(result.mocsUpdatedCount))} Obsidian Maps of Content regenerated (Rules, Skills, Workflows, Agents, Decisions, Wiki).`);
   console.log(`  ${colors.bold("Lockfile:")} ${colors.cyan("context-lock.json")} generated (${colors.dim(result.lock.digest)}).\n`);
 
   const headers = ["Category", "Count"];
@@ -35,3 +37,4 @@ export async function handleSyncCommand(args = [], flags = {}) {
   console.log("");
   return 0;
 }
+

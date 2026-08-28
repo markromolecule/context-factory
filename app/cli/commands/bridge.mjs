@@ -5,6 +5,7 @@ export async function handleBridgeCommand(args = [], flags = {}) {
   const target = flags.target || args[0] || process.cwd();
   const factoryPath = flags.factoryPath || flags.factory || null;
   const method = flags.method || "submodule";
+  const pm = flags.pm || flags.packageManager || null;
   const dryRun = Boolean(flags.dryRun);
   const force = Boolean(flags.force || flags.repair);
   const addNpmScripts = flags.npm !== false;
@@ -20,6 +21,7 @@ export async function handleBridgeCommand(args = [], flags = {}) {
     console.log(`  ${colors.bold("Target Directory:")}   ${colors.cyan(target)}`);
     console.log(`  ${colors.bold("Factory Path:")}       ${colors.cyan(factoryPath || "(auto-detected)")}`);
     console.log(`  ${colors.bold("Integration Mode:")}   ${colors.magenta(method)}`);
+    console.log(`  ${colors.bold("Package Manager:")}    ${colors.magenta(pm || "auto-detect (pnpm/npm/yarn/bun)")}`);
     console.log(`  ${colors.bold("Target IDEs:")}        ${colors.magenta(ide.join(", "))}`);
     if (flags.repair) console.log(`  ${colors.bold("Action Mode:")}        ${colors.yellow("Repair / Force Re-link")}`);
     if (dryRun) console.log(`  ${colors.bold("Execution Mode:")}     ${badges.dryRun()}`);
@@ -31,6 +33,7 @@ export async function handleBridgeCommand(args = [], flags = {}) {
     factoryPath,
     ide,
     method,
+    packageManager: pm,
     dryRun,
     force,
     addNpmScripts,

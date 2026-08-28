@@ -31,11 +31,13 @@ This skill consumes an approved plan; it does not invent a replacement plan or e
 
 > [!IMPORTANT]
 > **Mandatory Developer Checkpoint:**
+>
 > - The agent **MUST STOP IMMEDIATELY** upon completing the active phase tasks and logging verification evidence.
 > - The agent **MUST NOT** proceed to the next phase autonomously or run multiple phases in a single turn.
 > - The agent must output a structured checkpoint summary and wait for the developer to manually inspect the changes before continuing.
 
-### Checkpoint Output Format:
+### Checkpoint Output Format
+
 ```markdown
 ### Phase Completed: Phase NN — [Phase Title]
 - [x] Task N.1: [Summary of change]

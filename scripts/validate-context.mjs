@@ -82,6 +82,24 @@ for (const path of manifest.skillResources) {
 
 
 
+const knownAgentNames = new Set([
+  "user",
+  "ba-agent",
+  "pm-agent",
+  "architect-agent",
+  "data-agent",
+  "ux-agent",
+  "threat-agent",
+  "devops-agent",
+]);
+
+for (const path of manifest.agents ?? []) {
+  if (path.endsWith("/AGENT.md")) {
+    const meta = frontmatter(await readText(path));
+    if (meta?.name) knownAgentNames.add(meta.name);
+  }
+}
+
 const requiredWorkflowSections = [
   "## Triggers",
   "## Required inputs",
@@ -91,18 +109,66 @@ const requiredWorkflowSections = [
   "## Stop and escalation conditions",
   "## Artifacts and completion",
 ];
+const allowedWorkflowKeys = new Set([
+  "name",
+  "description",
+  "scope",
+  "primaryAgent",
+  "participatingAgents",
+  "rules",
+  "skills",
+]);
+
 for (const path of manifest.workflows) {
   const source = await readText(path);
   const meta = frontmatter(source);
   if (!meta) error(`Workflow has no YAML frontmatter: ${path}`);
   else {
-    const keys = Object.keys(meta).sort();
-    if (keys.join(",") !== "description,name,scope") {
-      error(`Workflow frontmatter must contain only name, description, and scope: ${path}`);
+    for (const key of Object.keys(meta)) {
+      if (!allowedWorkflowKeys.has(key)) {
+        error(`Workflow frontmatter contains unrecognized key '${key}': ${path}`);
+      }
     }
     if (!meta.name || !meta.description || !meta.scope) error(`Workflow metadata is incomplete: ${path}`);
     if (meta.name !== path.split("/").at(-1).replace(/\.md$/, "")) {
       error(`Workflow name does not match its filename: ${path}`);
+    }
+    if (meta.primaryAgent && !knownAgentNames.has(meta.primaryAgent)) {
+      error(`Workflow primaryAgent references unknown agent in ${path}: ${meta.primaryAgent}`);
+    }
+    if (meta.participatingAgents) {
+      if (!Array.isArray(meta.participatingAgents)) {
+        error(`Workflow participatingAgents must be an array: ${path}`);
+      } else {
+        for (const agent of meta.participatingAgents) {
+          if (!knownAgentNames.has(agent)) {
+            error(`Workflow participatingAgents references unknown agent in ${path}: ${agent}`);
+          }
+        }
+      }
+    }
+    if (meta.rules) {
+      if (!Array.isArray(meta.rules)) {
+        error(`Workflow rules must be an array: ${path}`);
+      } else {
+        for (const rulePath of meta.rules) {
+          if (!manifest.rules.includes(rulePath)) {
+            error(`Workflow references unknown rule in ${path}: ${rulePath}`);
+          }
+        }
+      }
+    }
+    if (meta.skills) {
+      if (!Array.isArray(meta.skills)) {
+        error(`Workflow skills must be an array: ${path}`);
+      } else {
+        for (const skillName of meta.skills) {
+          const skillPath = skillName.endsWith(".md") ? skillName : `skills/${skillName}/SKILL.md`;
+          if (!manifest.skills.includes(skillPath)) {
+            error(`Workflow references unknown skill in ${path}: ${skillName}`);
+          }
+        }
+      }
     }
   }
   for (const section of requiredWorkflowSections) {
@@ -135,23 +201,6 @@ const protectedTriggers = new Set([
 ]);
 
 const registeredAliases = new Map();
-const knownAgentNames = new Set([
-  "user",
-  "ba-agent",
-  "pm-agent",
-  "architect-agent",
-  "data-agent",
-  "ux-agent",
-  "threat-agent",
-  "devops-agent",
-]);
-
-for (const path of manifest.agents ?? []) {
-  if (path.endsWith("/AGENT.md")) {
-    const meta = frontmatter(await readText(path));
-    if (meta?.name) knownAgentNames.add(meta.name);
-  }
-}
 
 for (const path of manifest.agents ?? []) {
   if (path.endsWith("/AGENT.md")) {

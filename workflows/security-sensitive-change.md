@@ -2,6 +2,18 @@
 name: security-sensitive-change
 description: Deliver changes across trust boundaries with explicit threat modeling, security gates, adversarial verification, and safe release controls.
 scope: Authentication, authorization, secrets, payments, personal data, webhooks, files, redirects, outbound URLs, privileged operations, and security findings.
+primaryAgent: threat-agent
+participatingAgents: [architect-agent, devops-agent]
+rules:
+  - rules/global/security-guardrails.md
+  - rules/global/evidence-and-claims.md
+  - rules/typescript/common/runtime-validation.md
+skills:
+  - security
+  - explore
+  - plan
+  - execute
+  - verify
 ---
 
 # Security-Sensitive Change

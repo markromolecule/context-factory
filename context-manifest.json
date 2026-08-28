@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "3.10.0",
+  "contextVersion": "3.11.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -150,7 +150,8 @@
     "docs/decisions/0014-context-specification-skill-with-embedded-grilling.md",
     "docs/decisions/0015-execute-skill-strict-phase-stops-and-modular-refactoring.md",
     "docs/decisions/0016-declarative-lifecycle-specialist-agents.md",
-    "docs/decisions/0017-ide-bridging-and-symlink-synchronization-architecture.md"
+    "docs/decisions/0017-ide-bridging-and-symlink-synchronization-architecture.md",
+    "docs/decisions/0018-synchronization-and-package-manager-modernization.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
@@ -181,6 +182,7 @@
     "evals/cases/security-change.json",
     "evals/cases/slash-commands.json",
     "evals/cases/solid-principles.json",
+    "evals/cases/sync-modernization.json",
     "evals/cases/unsupported-completion.json"
   ],
   "datasets": [

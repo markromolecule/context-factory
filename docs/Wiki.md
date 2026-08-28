@@ -42,9 +42,8 @@ Use the [[skills/grounding/SKILL|grounding]] skill. Filter by metadata and task 
 ## Index
 
 - [[knowledge/README|Knowledge index]]
-- [[knowledge/principles/solid-srp|Single Responsibility Principle (`factory.principles.solid.srp`)]]
-- [[knowledge/principles/solid-ocp|Open/Closed Principle (`factory.principles.solid.ocp`)]]
-- [[knowledge/principles/solid-lsp|Liskov Substitution Principle (`factory.principles.solid.lsp`)]]
-- [[knowledge/principles/solid-isp|Interface Segregation Principle (`factory.principles.solid.isp`)]]
 - [[knowledge/principles/solid-dip|Dependency Inversion Principle (`factory.principles.solid.dip`)]]
-
+- [[knowledge/principles/solid-isp|Interface Segregation Principle (`factory.principles.solid.isp`)]]
+- [[knowledge/principles/solid-lsp|Liskov Substitution Principle (`factory.principles.solid.lsp`)]]
+- [[knowledge/principles/solid-ocp|Open/Closed Principle (`factory.principles.solid.ocp`)]]
+- [[knowledge/principles/solid-srp|Single Responsibility Principle (`factory.principles.solid.srp`)]]

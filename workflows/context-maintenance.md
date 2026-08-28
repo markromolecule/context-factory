@@ -2,6 +2,14 @@
 name: context-maintenance
 description: Evolve Context Factory rules, skills, workflows, orchestration, and architecture without duplication, drift, or invalid inventory.
 scope: Any change under context-factory that affects canonical agent behavior or knowledge structure.
+primaryAgent: architect-agent
+participatingAgents: [pm-agent]
+rules:
+  - rules/global/evidence-and-claims.md
+  - rules/global/architecture-conformance.md
+skills:
+  - verify
+  - execute
 ---
 
 # Context Maintenance

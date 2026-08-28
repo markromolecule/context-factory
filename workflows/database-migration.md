@@ -2,6 +2,18 @@
 name: database-migration
 description: Evolve schemas and production data through compatible, reviewed, observable, and recoverable migration phases.
 scope: Schema changes, migrations, backfills, generated database types, destructive data operations, and consumer cutovers.
+primaryAgent: data-agent
+participatingAgents: [architect-agent, devops-agent]
+rules:
+  - rules/typescript/database/schema-db.md
+  - rules/typescript/database/data-access-via-db.md
+  - rules/typescript/database/query-optimization-and-pagination.md
+  - rules/typescript/database/testing-data-access-layer.md
+  - rules/global/security-guardrails.md
+skills:
+  - plan
+  - execute
+  - verify
 ---
 
 # Database Migration

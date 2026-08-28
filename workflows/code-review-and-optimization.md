@@ -2,6 +2,17 @@
 name: code-review-and-optimization
 description: Audit, suggest improvements for, and optimize code generated from implementation plans to ensure high performance, type safety, modularity, and clean architecture.
 scope: Post-implementation review, code optimization guardrails, performance auditing, and modular refactoring assessments.
+primaryAgent: architect-agent
+participatingAgents: [ux-agent, data-agent]
+rules:
+  - rules/global/code-quality.md
+  - rules/global/evidence-and-claims.md
+  - rules/typescript/database/query-optimization-and-pagination.md
+  - rules/solid/single-responsibility.md
+skills:
+  - verify
+  - refactor
+  - explore
 ---
 
 # Code Review and Optimization

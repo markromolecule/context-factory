@@ -3,6 +3,7 @@ import { stdin as input, stdout as output } from "node:process";
 import { existsSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
 import { badges, colors } from "../core/formatter.mjs";
+import { detectPackageManager } from "../core/bridge-generator.mjs";
 import { handleBridgeCommand } from "./bridge.mjs";
 
 /**
@@ -12,6 +13,7 @@ export async function handleInitCommand(args = [], flags = {}) {
   let target = flags.target || args[0] || null;
   let method = flags.method || null;
   let ide = flags.ide || flags.agents || null;
+  let pm = flags.pm || flags.packageManager || null;
   const dryRun = Boolean(flags.dryRun);
   const force = Boolean(flags.force);
 
@@ -65,6 +67,24 @@ export async function handleInitCommand(args = [], flags = {}) {
           ide = "all";
         }
       }
+
+      // 4. Package manager prompt
+      if (!pm) {
+        const detected = detectPackageManager(resolve(process.cwd(), target || "."));
+        console.log(`\n  ${colors.bold("Select Package Manager:")}`);
+        console.log(`    ${colors.cyan("1)")} Auto-detect (${detected})`);
+        console.log(`    ${colors.cyan("2)")} pnpm`);
+        console.log(`    ${colors.cyan("3)")} npm`);
+        console.log(`    ${colors.cyan("4)")} yarn`);
+        console.log(`    ${colors.cyan("5)")} bun`);
+        const answer = await rl.question(`  ${colors.bold("Choice")} ${colors.dim("[1-5, default: 1]")}: `);
+        const choice = answer.trim();
+        if (choice === "2") pm = "pnpm";
+        else if (choice === "3") pm = "npm";
+        else if (choice === "4") pm = "yarn";
+        else if (choice === "5") pm = "bun";
+        else pm = detected;
+      }
     } finally {
       rl.close();
     }
@@ -74,6 +94,7 @@ export async function handleInitCommand(args = [], flags = {}) {
   target = target || process.cwd();
   method = method || (existsSync(resolve(target, ".git")) ? "submodule" : "linked");
   ide = ide || "all";
+  pm = pm || detectPackageManager(resolve(process.cwd(), target));
 
   // Delegate directly to bridge command with resolved options
   return handleBridgeCommand(args, {
@@ -81,6 +102,7 @@ export async function handleInitCommand(args = [], flags = {}) {
     target,
     method,
     ide,
+    pm,
     dryRun,
     force,
   });

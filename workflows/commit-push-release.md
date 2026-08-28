@@ -2,6 +2,14 @@
 name: commit-push-release
 description: Safely stage, craft conventional commits, push to remote repository, tag releases, and execute release verification.
 scope: Version control lifecycle, change-set commit staging, remote synchronization, SemVer release tagging, and deployment triggers.
+primaryAgent: devops-agent
+participatingAgents: [pm-agent]
+rules:
+  - rules/global/git-commit.md
+  - rules/global/evidence-and-claims.md
+skills:
+  - verify
+  - execute
 ---
 
 # Commit, Push & Release

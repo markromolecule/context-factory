@@ -10,23 +10,23 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 
 ## Delivery
 
-- [[workflows/architecture-change|Architecture change]] — evolve durable boundaries and shared patterns safely
-- [[workflows/feature-delivery|Feature delivery]] — deliver scoped behavior from evidence through handoff
-- [[workflows/new-project-delivery|New project progressive delivery]] — scaffold greenfield systems through progressive vertical slices, grilling, 4-layer testing, and loop-engineering
-- [[workflows/defect-resolution|Defect resolution]] — reproduce, diagnose, regress, and safely fix defects
-- [[workflows/code-review-and-optimization|Code review and optimization]] — audit, optimize, and refactor plan-affected code for performance, type safety, and modularity
-- [[workflows/release-readiness|Release readiness]] — make an evidence-backed ready/not-ready decision
-- [[workflows/commit-push-release|Commit, push and release]] — safely stage, craft conventional commits, push to remote, tag releases, and trigger CI/CD pipelines
+- [[workflows/architecture-change|Architecture Change]] — Change durable system boundaries, dependency direction, shared patterns, or public contracts with explicit evidence, decisions, migration, and conformance checks.
+- [[workflows/code-review-and-optimization|Code Review and Optimization]] — Audit, suggest improvements for, and optimize code generated from implementation plans to ensure high performance, type safety, modularity, and clean architecture.
+- [[workflows/commit-push-release|Commit, Push & Release]] — Safely stage, craft conventional commits, push to remote repository, tag releases, and execute release verification.
+- [[workflows/defect-resolution|Defect Resolution]] — Resolve a defect by reproducing it, establishing root cause, adding regression evidence, and applying the smallest safe fix.
+- [[workflows/feature-delivery|Feature Delivery]] — Deliver a product capability from scoped outcome through implementation, verification, documentation, and handoff.
+- [[workflows/new-project-delivery|New Project Progressive Delivery]] — Deliver a greenfield system or major multi-module domain capability using progressive vertical-slice execution, pre-planning grilling discovery, 4-layer backend testing, client hook validation, and dual-loop engineering.
+- [[workflows/release-readiness|Release Readiness]] — Decide whether a change set is ready to release using evidence across behavior, quality, operations, security, accessibility, and recovery.
 
 ## Risk-specific
 
-- [[workflows/security-sensitive-change|Security-sensitive change]] — threat-model and gate sensitive boundaries
-- [[workflows/database-migration|Database migration]] — evolve schemas/data compatibly and recoverably
-- [[workflows/dependency-upgrade|Dependency upgrade]] — migrate dependencies through bounded compatibility checks
+- [[workflows/database-migration|Database Migration]] — Evolve schemas and production data through compatible, reviewed, observable, and recoverable migration phases.
+- [[workflows/dependency-upgrade|Dependency Upgrade]] — Upgrade runtimes, frameworks, libraries, and tooling through bounded compatibility analysis and verified migration steps.
+- [[workflows/security-sensitive-change|Security-Sensitive Change]] — Deliver changes across trust boundaries with explicit threat modeling, security gates, adversarial verification, and safe release controls.
 
 ## Factory
 
-- [[workflows/context-maintenance|Context maintenance]] — evolve canonical agent behavior without drift
+- [[workflows/context-maintenance|Context Maintenance]] — Evolve Context Factory rules, skills, workflows, orchestration, and architecture without duplication, drift, or invalid inventory.
 
 ## Session Slash Commands & Prefix Triggers
 

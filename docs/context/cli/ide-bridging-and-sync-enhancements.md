@@ -51,7 +51,7 @@ feature: "ide-bridging-and-sync-enhancements"
 
 - [ ] Add `.agents/` directory scaffolding and symlink generation to `app/cli/core/bridge-generator.mjs`.
 - [ ] Support `--ide` flag in `context-cli bridge` (values: `antigravity`, `cursor`, `windsurf`, `claude`, `copilot`, `all`; default: `all`).
-- [ ] Add cross-platform symlink utility with fallback strategy (relative symlinks on Unix/macOS, junctions/copies on Windows where symlinks are restricted).
+- [ ]xw Add cross-platform symlink utility with fallback strategy (relative symlinks on Unix/macOS, junctions/copies on Windows where symlinks are restricted).
 - [ ] Add symlink integrity check to `app/cli/commands/doctor.mjs` and `scripts/validate-context.mjs`.
 - [ ] Add `context-cli init` as an intuitive alias / guided setup command for new projects.
 - [ ] Ensure `context-cli pull` in host repository re-verifies and repairs symlinks if submodule path or structure changed.

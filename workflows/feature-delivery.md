@@ -2,6 +2,20 @@
 name: feature-delivery
 description: Deliver a product capability from scoped outcome through implementation, verification, documentation, and handoff.
 scope: New features and material behavior changes that do not require a more specific workflow.
+primaryAgent: pm-agent
+participatingAgents: [ba-agent, architect-agent, ux-agent, devops-agent]
+rules:
+  - rules/global/code-quality.md
+  - rules/global/evidence-and-claims.md
+  - rules/global/architecture-conformance.md
+  - rules/solid/single-responsibility.md
+skills:
+  - context
+  - grill
+  - explore
+  - plan
+  - execute
+  - verify
 ---
 
 # Feature Delivery

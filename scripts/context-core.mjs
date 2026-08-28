@@ -215,8 +215,9 @@ const ROUTING_HINTS = [
   { test: PREPLANNING_TEST, workflow: "feature-delivery" },
 ];
 
-export async function resolveContext(request) {
+export async function resolveContext(request, options = {}) {
   const manifest = await readJson("context-manifest.json");
+  const hostDir = options.hostDir || options.target || null;
   const requestTerms = terms(request);
   const hasAction = requestTerms.some((term) => ACTION_TERMS.has(term)) || /^\/[a-z0-9_-]+|^\[[a-z0-9_-]+\]/i.test(request.trim());
   const ruleEntries = await entries(manifest.rules);
@@ -323,9 +324,12 @@ export async function resolveContext(request) {
   }
 
   if (selectedWorkflow) {
-    const linkedRulePaths = new Set(
-      [...selectedWorkflowSource.matchAll(/`(rules\/[^`]+)`/g)].map((match) => match[1]),
-    );
+    const selectedWorkflowMeta = frontmatter(selectedWorkflowSource) ?? {};
+    const declaredRules = Array.isArray(selectedWorkflowMeta.rules) ? selectedWorkflowMeta.rules : [];
+    const linkedRulePaths = new Set([
+      ...declaredRules,
+      ...[...selectedWorkflowSource.matchAll(/`(rules\/[^`]+)`/g)].map((match) => match[1]),
+    ]);
     const selectedRulePaths = new Set(selectedRules.map((item) => item.path));
     for (const rulePath of linkedRulePaths) {
       if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath)) {
@@ -334,9 +338,11 @@ export async function resolveContext(request) {
       }
     }
 
-    const linkedSkillNames = new Set(
-      [...selectedWorkflowSource.matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]),
-    );
+    const declaredSkills = Array.isArray(selectedWorkflowMeta.skills) ? selectedWorkflowMeta.skills : [];
+    const linkedSkillNames = new Set([
+      ...declaredSkills,
+      ...[...selectedWorkflowSource.matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]),
+    ]);
     const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));
     for (const entry of skillEntries) {
       if ((entry.meta.name === "grill" || entry.meta.name === "grill-with-docs" || entry.meta.name === "context") && !PREPLANNING_TEST.test(request)) continue;
@@ -347,6 +353,36 @@ export async function resolveContext(request) {
       }
     }
     selectedSkills = selectedSkills.sort((a, b) => a.path.localeCompare(b.path));
+  }
+
+  // 5. Host project local rules discovery (if running in bridged workspace)
+  const effectiveHost = hostDir ? resolve(process.cwd(), hostDir) : (process.cwd() !== root ? process.cwd() : null);
+  if (effectiveHost) {
+    try {
+      const hostRulesDir = join(effectiveHost, "rules");
+      const hostRuleFiles = (await filesUnder(hostRulesDir).catch(() => []))
+        .filter((p) => extname(p) === ".md" && !p.endsWith("README.md"));
+
+      for (const relPath of hostRuleFiles) {
+        try {
+          const fullPath = join(effectiveHost, relPath);
+          const source = await readFile(fullPath, "utf8");
+          const meta = frontmatter(source) ?? {};
+          const relevance = scoreEntry(requestTerms, relPath, meta);
+          if (relevance.score >= 4 || meta.alwaysApply === true) {
+            selectedRules.push({
+              path: relPath,
+              reason: meta.alwaysApply ? "host rule: alwaysApply" : `host rule matched: ${relevance.matches.join(", ")}`,
+              isHostRule: true,
+            });
+          }
+        } catch {
+          // Non-fatal
+        }
+      }
+    } catch {
+      // Non-fatal
+    }
   }
 
   const basePaths = [

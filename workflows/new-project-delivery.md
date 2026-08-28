@@ -2,6 +2,21 @@
 name: new-project-delivery
 description: Deliver a greenfield system or major multi-module domain capability using progressive vertical-slice execution, pre-planning grilling discovery, 4-layer backend testing, client hook validation, and dual-loop engineering.
 scope: Greenfield applications, new subsystem scaffolding, and major modular feature development.
+primaryAgent: ba-agent
+participatingAgents: [pm-agent, architect-agent, ux-agent, devops-agent]
+rules:
+  - rules/global/code-quality.md
+  - rules/global/evidence-and-claims.md
+  - rules/global/architecture-conformance.md
+  - rules/global/1-3-1-rule.md
+  - rules/solid/single-responsibility.md
+skills:
+  - grill
+  - context
+  - explore
+  - plan
+  - execute
+  - verify
 ---
 
 # New Project Progressive Delivery

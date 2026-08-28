@@ -1,6 +1,19 @@
+import { existsSync } from "node:fs";
 import { cp, lstat, mkdir, readFile, readlink, symlink, unlink, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { root } from "../../../scripts/context-core.mjs";
+
+/**
+ * Detects the package manager used in the target directory by checking lockfiles.
+ * Returns 'pnpm', 'yarn', 'bun', or 'npm'.
+ */
+export function detectPackageManager(targetDir = process.cwd()) {
+  if (existsSync(join(targetDir, "pnpm-lock.yaml"))) return "pnpm";
+  if (existsSync(join(targetDir, "yarn.lock"))) return "yarn";
+  if (existsSync(join(targetDir, "bun.lockb")) || existsSync(join(targetDir, "bun.lock"))) return "bun";
+  if (existsSync(join(targetDir, "package-lock.json"))) return "npm";
+  return "npm";
+}
 
 /**
  * Creates a symbolic link with relative target and fallback handling.
@@ -132,11 +145,15 @@ export async function generateBridge({
   ide = ["all"],
   agentProfiles = null,
   method = "submodule",
+  packageManager = null,
+  pm = null,
   dryRun = false,
   force = false,
   addNpmScripts = true,
 } = {}) {
   const targetDir = isAbsolute(target) ? target : resolve(process.cwd(), target);
+  const activePm = (packageManager || pm || detectPackageManager(targetDir)).toLowerCase();
+  const pmRun = activePm === "yarn" ? "yarn" : (activePm === "bun" ? "bun run" : `${activePm} run`);
 
   // Compute absolute and relative paths to context-factory
   let absFactoryPath;
@@ -327,9 +344,10 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
   if (targetDir !== root) {
     const bridgeConfig = {
       schemaVersion: 1,
-      bridgeVersion: "1.1.0",
+      bridgeVersion: "1.2.0",
       factoryPath: normalizedFactoryPath,
       integrationMethod: method,
+      packageManager: activePm,
       ides: activeIdes,
       createdAt: new Date().toISOString(),
       scoping: {
@@ -422,7 +440,7 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
       "context:bundle": `${scriptPrefix} bundle`,
       "context:doctor": `${scriptPrefix} doctor`,
       "context:update": method === "submodule"
-        ? `git submodule update --remote --merge ${normalizedFactoryPath} && npm run context:doctor`
+        ? `git submodule update --remote --merge ${normalizedFactoryPath} && ${pmRun} context:doctor`
         : `${scriptPrefix} doctor`,
       "context:bridge": `${cliPrefix} bridge --target .`,
       "context:cli": `${cliPrefix}`,

@@ -1,0 +1,27 @@
+{
+  "name": "package manager modernization and workflow frontmatter resolution",
+  "request": "/plan delivery of user notification microservice with pnpm",
+  "expected": {
+    "workflow": "workflows/feature-delivery.md",
+    "skills": [
+      "skills/plan/SKILL.md",
+      "skills/explore/SKILL.md",
+      "skills/verify/SKILL.md"
+    ],
+    "rules": [
+      "rules/global/architecture-conformance.md",
+      "rules/global/code-quality.md",
+      "rules/global/evidence-and-claims.md"
+    ]
+  },
+  "contractAssertions": [
+    {
+      "path": "workflows/feature-delivery.md",
+      "includes": [
+        "primaryAgent: pm-agent",
+        "skills:",
+        "rules:"
+      ]
+    }
+  ]
+}

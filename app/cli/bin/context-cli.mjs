@@ -7,6 +7,7 @@ import { handleDiffCommand } from "../commands/diff.mjs";
 import { handleDoctorCommand } from "../commands/doctor.mjs";
 import { handleEvalCommand } from "../commands/eval.mjs";
 import { handleExportCommand } from "../commands/export.mjs";
+import { handleHookCommand } from "../commands/hook.mjs";
 import { handleInitCommand } from "../commands/init.mjs";
 import { handleLintCommand } from "../commands/lint.mjs";
 import { handleLockCommand } from "../commands/lock.mjs";
@@ -28,8 +29,9 @@ ${colors.bold("USAGE:")}
 
 ${colors.bold("PROJECT BRIDGING & SETUP:")}
   ${colors.bold(colors.green("init"))}         Interactive setup to bridge Context Factory into a project
-  ${colors.bold(colors.green("bridge"))}       Bridge context-factory into host/consumer repository (--ide, --method)
+  ${colors.bold(colors.green("bridge"))}       Bridge context-factory into host/consumer repository (--ide, --method, --pm)
   ${colors.bold(colors.green("pull"))}         Pull latest updates & auto-heal symlinks (submodule or git repo)
+  ${colors.bold(colors.green("hook"))}         Install or manage zero-drift git pre-commit hook (hook install)
 
 ${colors.bold("CORE MAINTENANCE COMMANDS:")}
   ${colors.bold(colors.green("build"))}        Compile all rules, skills, and workflows to bundle
@@ -131,6 +133,11 @@ export async function main(argv = process.argv.slice(2)) {
     case "export":
     case "dist":
       return handleExportCommand(args, flags);
+
+    case "hook":
+    case "hooks":
+    case "pre-commit":
+      return handleHookCommand(args, flags);
 
     case "lint":
     case "check":
