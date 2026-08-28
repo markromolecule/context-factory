@@ -30,12 +30,16 @@ When an interface becomes a "fat interface" or "header dump" containing dozens o
 In TypeScript's structural type system and React component architectures, ISP applies to both backend service boundaries and frontend component contracts:
 
 ### 1. Role-Specific Backend Interfaces
+
 Instead of one massive `UserService` interface with 20 methods:
+
 - Split into focused role interfaces: `UserReader`, `UserWriter`, `UserAuthenticator`, `UserNotifier`.
 - Services implement only what is required, or compose multiple small interfaces when needed (`interface UserService extends UserReader, UserWriter`).
 
 ### 2. Lean React Component Props
+
 Instead of passing an entire 30-field `UserRecord` object into an avatar component:
+
 - Define a minimal, segregated prop contract: `interface AvatarProps { src?: string; name: string; size?: "sm" | "md" | "lg"; }`.
 - Prevents unnecessary re-renders, tightly coupled mocking in tests, and unintended exposure of sensitive fields.
 

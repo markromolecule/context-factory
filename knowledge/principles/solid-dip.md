@@ -18,6 +18,7 @@ tags: [solid, dip, dependency-inversion, architecture, principles]
 # Dependency Inversion Principle (DIP)
 
 The **Dependency Inversion Principle** establishes the primary structural rule for software dependency direction:
+
 1. **High-level modules should not depend on low-level modules. Both should depend on abstractions.**
 2. **Abstractions should not depend on details. Details should depend on abstractions.**
 
@@ -38,6 +39,7 @@ graph TD
 ```
 
 ### Clarifying Key Distinctions
+
 - **Dependency Inversion Principle (DIP):** The high-level architectural rule governing dependency direction (high-level policy owns the contract).
 - **Dependency Injection (DI):** A behavioral technique for supplying an external dependency (via constructor arguments, factory functions, or React context) rather than instantiating it internally (`new SpecificDatabaseClient()`).
 - **Inversion of Control (IoC):** A framework architectural pattern where external framework lifecycle controls execution flow.
@@ -46,11 +48,13 @@ graph TD
 
 1. **High-Level Domain Ownership:** Core business services (`OrderService`, `PaymentService`) must import and depend on domain interfaces or ports, never on concrete ORM clients (e.g., Prisma, Kysely), SDK instances, or third-party APIs directly.
 2. **Constructor Parameter Injection:** Concrete implementations must be passed into classes or factory functions via constructor parameters or parameter objects:
+
    ```typescript
    export class OrderService {
      constructor(private readonly orderRepo: OrderRepository, private readonly notifier: NotificationPort) {}
    }
    ```
+
 3. **Frontend Context as Inversion Mechanism:** In React, avoid hardcoding singleton API clients inside UI components; inject dependencies via React Context providers, custom hooks, or props to facilitate isolated storybook rendering and unit testing.
 
 ## Cross-References

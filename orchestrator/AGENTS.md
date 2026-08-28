@@ -25,6 +25,7 @@ Read `orchestrator/SHARED.md` before changing this factory or using it to guide 
 - MUST: Run `node scripts/context.mjs lock` and `node scripts/context.mjs doctor` after modifying context rules, skills, workflows, or templates.
 
 ## Trigger & Skill Dispatch Matrix
+
 When any user request mentions or matches these concepts, immediately activate and follow the corresponding skill:
 
 | Trigger Keywords / Concepts | Active Skill | Mandatory Template / Action |
@@ -41,6 +42,7 @@ When any user request mentions or matches these concepts, immediately activate a
 | `explore codebase`, `repo discovery`, `map dependencies` | [`skills/explore/SKILL.md`](skills/explore/SKILL.md) | Inspect and document existing architecture and patterns. |
 
 ## Session Slash Commands & Prefix Triggers
+
 When the user's prompt begins with a slash command or bracket prefix, prioritize the matching workflow and subagent:
 
 | Command / Prefix | Target Workflow / Skill | Active Skill / Subagent | Key Mandatory Action |
@@ -68,7 +70,9 @@ When the user's prompt begins with a slash command or bracket prefix, prioritize
 | `/sync`, `/maintain`, `[MAINTENANCE]` | [`workflows/context-maintenance.md`](../workflows/context-maintenance.md) | Context Maintenance | Run `node scripts/harness-cli.mjs lock` and `doctor`. |
 
 ## Workflow Routing
+
 For multi-stage engineering lifecycles, load the appropriate workflow from `workflows/`:
+
 - **New Project & Greenfield Delivery:** `workflows/new-project-delivery.md`
 - **New Feature Delivery:** `workflows/feature-delivery.md`
 - **Code Review & Optimization:** `workflows/code-review-and-optimization.md`
@@ -82,7 +86,9 @@ For multi-stage engineering lifecycles, load the appropriate workflow from `work
 - **Release Readiness:** `workflows/release-readiness.md`
 
 ## Coding Lifecycle Subagents
+
 When addressing lifecycle-specific phases, adopt or delegate to the corresponding subagent from `agents/`:
+
 - **Business Analyst (`agents/ba-agent/AGENT.md`):** Use for requirements discovery, user stories, domain terms, and scenario matrices (`/ba`).
 - **Architect & ADR Specialist (`agents/architect-agent/AGENT.md`):** Use for system boundaries, dependency direction, SOLID principles, and durable ADRs (`/architect`).
 - **Data Modeler (`agents/data-agent/AGENT.md`):** Use for database schemas, ESR indexing, migrations, rollback runbooks, and data access isolation (`/data`).
@@ -92,6 +98,8 @@ When addressing lifecycle-specific phases, adopt or delegate to the correspondin
 - **DevOps Specialist (`agents/devops-agent/AGENT.md`):** Use for CI/CD pipelines (`.github/workflows/`), Docker containerization, environment hygiene (`.env.example`), and release readiness (`/devops`).
 
 ## Context Maintenance
+
 After making changes to factory rules, skills, workflows, or templates:
+
 1. Run `node scripts/context.mjs lock`
 2. Run `node scripts/context.mjs doctor`

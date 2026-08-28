@@ -20,8 +20,9 @@ Subtypes and interface implementors must be **substitutable for their base types
 ## Backend & Domain Patterns
 
 ### Bad: Throwing `NotSupportedError` & Breaking Invariants
+
 ```typescript
-// ❌ Violates LSP: ReadOnlyRepository claims to be a Repository, but throws at runtime on write
+// Violates LSP: ReadOnlyRepository claims to be a Repository, but throws at runtime on write
 export interface Repository<T> {
   findById(id: string): Promise<T | null>;
   save(entity: T): Promise<void>;
@@ -32,18 +33,19 @@ export class ReadOnlyAuditLogRepository implements Repository<AuditLog> {
   async findById(id: string) { return db.auditLogs.findUnique({ where: { id } }); }
   
   async save(entity: AuditLog): Promise<void> {
-    throw new Error("ReadOnlyAuditLogRepository does not support save()"); // ❌ Crashes callers expecting Repository<T>
+    throw new Error("ReadOnlyAuditLogRepository does not support save()"); // Crashes callers expecting Repository<T>
   }
   
   async delete(id: string): Promise<void> {
-    throw new Error("ReadOnlyAuditLogRepository does not support delete()"); // ❌ Crashes callers
+    throw new Error("ReadOnlyAuditLogRepository does not support delete()"); // Crashes callers
   }
 }
 ```
 
 ### Good: Proper Interface Hierarchy & True Substitutability
+
 ```typescript
-// ✅ Properly segregated interfaces allow true substitutability
+// Properly segregated interfaces allow true substitutability
 export interface ReadRepository<T> {
   findById(id: string): Promise<T | null>;
 }
@@ -68,8 +70,9 @@ export class AuditLogViewer {
 ## Test Doubles & Fakes Invariance
 
 ### Bad: Fake with Divergent Behavior
+
 ```typescript
-// ❌ Violates LSP: Fake returns undefined instead of throwing EntityNotFoundError or returning Result.err()
+// Violates LSP: Fake returns undefined instead of throwing EntityNotFoundError or returning Result.err()
 export class FakeUserRepository implements UserRepository {
   private users = new Map<string, User>();
 
@@ -80,8 +83,9 @@ export class FakeUserRepository implements UserRepository {
 ```
 
 ### Good: Behaviorally Equivalent In-Memory Fake
+
 ```typescript
-// ✅ Matches production repository error and return invariants 1:1
+// Matches production repository error and return invariants 1:1
 export class InMemoryUserRepository implements UserRepository {
   private users = new Map<string, User>();
 

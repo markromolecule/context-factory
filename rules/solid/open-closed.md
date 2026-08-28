@@ -20,8 +20,9 @@ Software entities (classes, modules, functions, components) must be **open for e
 ## Backend & Domain Patterns
 
 ### Bad: Hardcoded Type-Switching Ladder
+
 ```typescript
-// ❌ Violates OCP: Adding a new discount type requires modifying existing calculate() logic
+// Violates OCP: Adding a new discount type requires modifying existing calculate() logic
 export class PricingCalculator {
   calculate(order: Order, discountType: "HOLIDAY" | "VIP" | "STAFF"): number {
     let discount = 0;
@@ -38,8 +39,9 @@ export class PricingCalculator {
 ```
 
 ### Good: Strategy Pattern / Registry Extension
+
 ```typescript
-// ✅ Contract: Open interface for discount extension
+// Contract: Open interface for discount extension
 export interface DiscountStrategy {
   readonly code: string;
   calculateDiscount(order: Order): number;
@@ -55,7 +57,7 @@ export class VIPDiscount implements DiscountStrategy {
   calculateDiscount(order: Order): number { return order.total * 0.25; }
 }
 
-// ✅ Calculator: Closed for modification; extends via registry
+// Calculator: Closed for modification; extends via registry
 export class PricingCalculator {
   private strategies = new Map<string, DiscountStrategy>();
 
@@ -75,8 +77,9 @@ export class PricingCalculator {
 ## Frontend & React Patterns
 
 ### Bad: Prop Explosion Anti-Pattern
+
 ```tsx
-// ❌ Violates OCP: Adding new layout configurations requires modifying Card internals with new flags
+// Violates OCP: Adding new layout configurations requires modifying Card internals with new flags
 export function Card({ title, content, isHeaderRed, showFooterActions, hasCustomSidebar, isCompact }: CardProps) {
   return (
     <div className={`card ${isCompact ? "p-2" : "p-6"}`}>
@@ -90,6 +93,7 @@ export function Card({ title, content, isHeaderRed, showFooterActions, hasCustom
 ```
 
 ### Good: Component Composition via Slots and Compound Components
+
 ```tsx
 // ✅ Closed for modification; infinitely extensible via standard React composition
 export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {

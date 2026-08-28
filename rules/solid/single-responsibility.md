@@ -21,8 +21,9 @@ Every module, class, service, function, and UI component must have **one, and on
 ## Backend & Domain Patterns
 
 ### Bad: Mixed Responsibilities in Controller/Service
+
 ```typescript
-// ❌ Violates SRP: Handles HTTP transport, password hashing, SQL query, and email dispatch in one class
+// Violates SRP: Handles HTTP transport, password hashing, SQL query, and email dispatch in one class
 export class UserController {
   async register(req: Request, res: Response) {
     const { email, password } = req.body;
@@ -35,8 +36,9 @@ export class UserController {
 ```
 
 ### Good: Cohesive, Segregated Boundaries
+
 ```typescript
-// ✅ Controller: Solely handles HTTP parsing and status mapping
+// Controller: Solely handles HTTP parsing and status mapping
 export class UserController {
   constructor(private readonly registrationService: RegistrationService) {}
 
@@ -47,7 +49,7 @@ export class UserController {
   }
 }
 
-// ✅ Service: Solely handles registration business policy and orchestration
+// Service: Solely handles registration business policy and orchestration
 export class RegistrationService {
   constructor(
     private readonly userRepo: UserRepository,
@@ -70,8 +72,9 @@ export class RegistrationService {
 ## Frontend & React Patterns
 
 ### Bad: Monolithic React Component
+
 ```tsx
-// ❌ Violates SRP: Combines data fetching, error state, business logic, form validation, and complex DOM tree
+// Violates SRP: Combines data fetching, error state, business logic, form validation, and complex DOM tree
 export function OrderDashboard() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -93,15 +96,16 @@ export function OrderDashboard() {
 ```
 
 ### Good: Custom Hook + Focused Presentational Components
+
 ```tsx
-// ✅ Custom Hook: Isolates asynchronous fetching, state, and revenue calculation
+// Custom Hook: Isolates asynchronous fetching, state, and revenue calculation
 export function useOrderDashboard() {
   const { data: orders = [], isLoading, error } = useQuery({ queryKey: ["orders"], queryFn: fetchOrders });
   const totalRevenue = useMemo(() => calculateTotalRevenue(orders), [orders]);
   return { orders, totalRevenue, isLoading, error };
 }
 
-// ✅ Presentational Component: Isolates layout and composition
+// Presentational Component: Isolates layout and composition
 export function OrderDashboard() {
   const { orders, totalRevenue, isLoading, error } = useOrderDashboard();
 

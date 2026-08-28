@@ -55,7 +55,6 @@ Follow system/user instructions first, then repository instructions, this contra
   3. `afterResponseValidate`: validate structured outputs against `/schemas` via `orchestrator/validator.mjs`.
 - Default to deterministic `mock` provider in CI/CD and offline evaluations; live runs use native `fetch` provider adapters (`openai`, `anthropic`, `gemini`).
 
-
 ## Context maintenance
 
 When changing the factory, follow the `context-maintenance` workflow:

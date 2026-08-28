@@ -20,8 +20,9 @@ Clients must **never be forced to depend on methods, properties, or type definit
 ## Backend & Domain Patterns
 
 ### Bad: Fat Monolithic Interface
+
 ```typescript
-// ❌ Violates ISP: Forces every client and implementor to depend on unrelated authentication, billing, and profile methods
+// Violates ISP: Forces every client and implementor to depend on unrelated authentication, billing, and profile methods
 export interface UserService {
   getProfile(id: string): Promise<UserProfile>;
   updateProfile(id: string, data: UpdateProfileDTO): Promise<void>;
@@ -34,8 +35,9 @@ export interface UserService {
 ```
 
 ### Good: Granular, Role-Specific Interfaces
+
 ```typescript
-// ✅ Focused Role Interfaces
+// Focused Role Interfaces
 export interface UserProfileReader {
   getProfile(userId: string): Promise<UserProfile>;
 }
@@ -64,6 +66,7 @@ export class ProfileController {
 ## Frontend & React Patterns
 
 ### Bad: Passing Entire Domain Entity to Leaf Component
+
 ```tsx
 // ❌ Violates ISP: UserBadge only displays an image and name, but demands entire UserAccount (including billing & permissions)
 export function UserBadge({ user }: { user: UserAccount }) {
@@ -77,6 +80,7 @@ export function UserBadge({ user }: { user: UserAccount }) {
 ```
 
 ### Good: Segregated, Minimal Props Contract
+
 ```tsx
 // ✅ Segregated Props: Allows reuse across User, Guest, Author, or Commenter without mock overhead
 export interface UserBadgeProps {

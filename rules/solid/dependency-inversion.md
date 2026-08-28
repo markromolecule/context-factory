@@ -20,8 +20,9 @@ High-level business policies and domain services **must not depend on low-level 
 ## Backend & Hexagonal Architecture Patterns
 
 ### Bad: Direct Low-Level Instantiation & Coupling
+
 ```typescript
-// ❌ Violates DIP: High-level CheckoutService directly imports and instantiates concrete Prisma and Stripe clients
+// Violates DIP: High-level CheckoutService directly imports and instantiates concrete Prisma and Stripe clients
 import { PrismaClient } from "@prisma/client";
 import Stripe from "stripe";
 
@@ -38,8 +39,9 @@ export class CheckoutService {
 ```
 
 ### Good: Ports & Adapters (Dependency Inversion)
+
 ```typescript
-// ✅ Domain Abstractions (Ports) owned by the business layer
+// Domain Abstractions (Ports) owned by the business layer
 export interface OrderRepositoryPort {
   findById(id: string): Promise<Order | null>;
   save(order: Order): Promise<void>;
@@ -49,7 +51,7 @@ export interface PaymentGatewayPort {
   charge(amount: Money, token: string): Promise<PaymentResult>;
 }
 
-// ✅ High-Level Domain Service depends ONLY on abstractions
+// High-Level Domain Service depends ONLY on abstractions
 export class CheckoutService {
   constructor(
     private readonly orderRepo: OrderRepositoryPort,
@@ -69,7 +71,7 @@ export class CheckoutService {
   }
 }
 
-// ✅ Low-level infrastructure adapters implement the domain ports (Inverted Dependency)
+// Low-level infrastructure adapters implement the domain ports (Inverted Dependency)
 export class PrismaOrderRepository implements OrderRepositoryPort {
   constructor(private readonly prisma: PrismaClient) {}
   async findById(id: string) { /* ... */ }
@@ -80,8 +82,9 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
 ## Frontend & React Patterns
 
 ### Bad: Hardcoded Singleton API Imports
+
 ```tsx
-// ❌ Violates DIP: Component is coupled to a global axios singleton; cannot be easily tested in isolation
+// Violates DIP: Component is coupled to a global axios singleton; cannot be easily tested in isolation
 import { apiClient } from "@/lib/api-client";
 
 export function NotificationsList() {
@@ -94,8 +97,9 @@ export function NotificationsList() {
 ```
 
 ### Good: Inversion via Service Provider / Hook Abstraction
+
 ```tsx
-// ✅ UI Component depends on an abstract hook/context contract
+// UI Component depends on an abstract hook/context contract
 export interface NotificationService {
   fetchNotifications(): Promise<NotificationItem[]>;
 }
