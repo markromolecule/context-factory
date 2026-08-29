@@ -198,6 +198,7 @@ const protectedTriggers = new Set([
   "/exec", "/execute", "/execution", "[EXEC]", "[EXECUTE]", "[EXECUTION]",
   "/tsc", "/typescript", "[TSC]", "/zod", "[ZOD]", "/explore", "[EXPLORE]",
   "/grounding", "/wiki", "[WIKI]", "/verify", "[VERIFY]", "[QA]",
+  "/triage", "[TRIAGE]",
 ]);
 
 const registeredAliases = new Map();

@@ -1,0 +1,33 @@
+name: Discovery & Triage
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Execute discovery in dry-run mode'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  discovery-triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run discovery triage scan
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            node scripts/triage.mjs --dry-run
+          else
+            node scripts/triage.mjs
+          fi
+      - name: Verify context health after triage
+        run: node scripts/context.mjs doctor

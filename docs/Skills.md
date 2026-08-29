@@ -6,7 +6,7 @@ tags: [skills, workflows, tools]
 
 # Skills
 
-The Context Factory defines 10 focused procedural skills for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
+The Context Factory defines 11 focused procedural skills for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
 
 - [[skills/adr/SKILL|adr]] — Analyze and record a durable architecture choice using repository evidence, existing decisions, explicit tradeoffs, migration impact, and verification criteria (/adr, [ADR]).
 - [[skills/context/SKILL|context]] — Author, discover, and structure a comprehensive, grilled context specification under docs/context/ using docs/templates/Context.md before implementation planning. Integrates the grill discovery process to resolve goals, actors, edge cases, and technical constraints one question at a time (/context, [CONTEXT], [CONTEXT_SPEC]).
@@ -17,6 +17,7 @@ The Context Factory defines 10 focused procedural skills for interactive develop
 - [[skills/plan/SKILL|plan]] — Create an evidence-backed, phased implementation plan without changing production code. Use when a user asks for a plan, design proposal, implementation breakdown, migration plan, or task artifact that another developer or agent will execute later (/plan, [PLAN]).
 - [[skills/refactor/SKILL|refactor]] — Refactor and modularize lengthy, multi-responsibility code into maintainable, single-responsibility files that sync cleanly while preserving public contracts and behavioral equivalence (/refactor, [REFACTOR]).
 - [[skills/security/SKILL|security]] — Threat-model and review application changes for trust-boundary, authorization, injection, secrets, data exposure, abuse, and dependency risks (/sec, /security, [SEC]).
+- [[skills/triage/SKILL|triage]] — Scan recent repository activity, CI failures, issues, and anomalies using explore and grounding procedures to produce structured findings in docs/tasks/INBOX.md (/triage, [TRIAGE]).
 - [[skills/verify/SKILL|verify]] — Audit implementation and completion claims against acceptance criteria, source changes, fresh command output, unresolved findings, and skipped checks (/verify, [VERIFY], [QA]).
 
 Skills trigger through their YAML descriptions and slash command shortcuts. All declarative engineering standards (TypeScript type safety, runtime validation, database query optimization, backend module architecture, and UI styling) are defined in and loaded from `rules/`.

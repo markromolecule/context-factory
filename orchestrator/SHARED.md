@@ -54,6 +54,7 @@ Follow system/user instructions first, then repository instructions, this contra
   2. `onPromptPrepare`: assemble context bundle, system prompt, and schemas.
   3. `afterResponseValidate`: validate structured outputs against `/schemas` via `orchestrator/validator.mjs`.
 - Default to deterministic `mock` provider in CI/CD and offline evaluations; live runs use native `fetch` provider adapters (`openai`, `anthropic`, `gemini`).
+- Worktree isolation is mandatory whenever more than one agent from `agents/` is dispatched concurrently (managed via `scripts/worktree.mjs`).
 
 ## Context maintenance
 

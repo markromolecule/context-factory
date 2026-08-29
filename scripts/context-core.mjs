@@ -172,7 +172,7 @@ const ACTION_TERMS = new Set([
   "design", "dip", "discovery", "execute", "execution", "explore", "fix", "grill", "grounding", "hotfix",
   "implement", "isp", "lsp", "migrate", "ocp", "plan", "push", "redesign", "refactor", "release",
   "remove", "resolve", "review", "sec", "security", "ship", "solid", "srp", "sync", "test",
-  "threat", "upgrade", "ux", "verify", "wiki",
+  "threat", "triage", "upgrade", "ux", "verify", "wiki",
 ]);
 
 const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan)|context spec(?:ification)?|author context|create context)\b|^\/(?:grill|discovery|context)\b|^\[(?:GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i;
@@ -199,7 +199,7 @@ const ROUTING_HINTS = [
   { test: /^\/(?:release|ready|deploy)\b|^\[(?:RELEASE|DEPLOY)\]/i, workflow: "release-readiness" },
   { test: /^\/(?:sync|lock|maintain)\b|^\[(?:SYNC|LOCK|MAINTENANCE)\]/i, workflow: "context-maintenance" },
   { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "new-project-delivery" },
-  { test: /^\/(?:plan|feature|grill|discovery|context)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i, workflow: "feature-delivery" },
+  { test: /^\/(?:plan|feature|grill|discovery|context|triage)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC|TRIAGE)\]/i, workflow: "feature-delivery" },
 
   // 3. Keyword & Concept matchers
   { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },

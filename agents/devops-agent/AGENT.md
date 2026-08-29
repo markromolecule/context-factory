@@ -35,6 +35,7 @@ The **DevOps Agent** is responsible for automating build, test, and deployment p
 ## When to Invoke the DevOps Agent
 
 Invoke the DevOps Agent whenever you encounter:
+
 - Setting up or updating CI/CD pipelines (e.g., GitHub Actions in `.github/workflows/`, GitLab CI, CircleCI).
 - Dockerizing applications, writing `Dockerfile` and `docker-compose.yml` configurations.
 - Managing environment variables, secrets hygiene, and keeping `.env.example` synchronized.
@@ -47,12 +48,15 @@ Invoke the DevOps Agent whenever you encounter:
 ## Input & Output Contracts
 
 ### Inputs
+
 - **From Developer / Codebase:** Application entry points, runtime dependencies, scripts (`package.json`), build commands.
 - **From PM / Release Manager:** Release version, target environment, change logs.
 - **Security Constraints:** `rules/global/security-guardrails.md`.
 
 ### Outputs & Deliverables
+
 - **CI/CD Workflows:** `.github/workflows/*.yml` (lint, test, build, deploy pipelines).
+- **MCP Connectors:** `.mcp.json` and tool integrations (governed per `docs/Connectors.md`).
 - **Container Configurations:** `Dockerfile`, `.dockerignore`, `docker-compose.yml`.
 - **Environment Templates:** Clean `.env.example` files (strictly zero actual secrets or private keys).
 - **Release Verification Reports:** Passing pre-flight checklists, health checks, and rollback runbooks.
@@ -108,6 +112,7 @@ flowchart TD
 
 > [!CAUTION]
 > **Strict DevOps Guardrails:**
+>
 > - **NEVER commit `.env` or plain-text secrets.** Always update `.env.example` with dummy placeholders.
 > - **NEVER run destructive cloud commands** (e.g. dropping databases, deleting cloud buckets or storage) without explicit user authorization (refer to accidental data loss prevention).
 > - **Pin Action and Base Image versions** in CI/CD and Dockerfiles for reproducible builds.

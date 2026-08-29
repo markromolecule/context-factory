@@ -88,6 +88,7 @@
     "skills/plan/SKILL.md",
     "skills/refactor/SKILL.md",
     "skills/security/SKILL.md",
+    "skills/triage/SKILL.md",
     "skills/verify/SKILL.md"
   ],
   "skillResources": [
@@ -151,7 +152,8 @@
     "docs/decisions/0015-execute-skill-strict-phase-stops-and-modular-refactoring.md",
     "docs/decisions/0016-declarative-lifecycle-specialist-agents.md",
     "docs/decisions/0017-ide-bridging-and-symlink-synchronization-architecture.md",
-    "docs/decisions/0018-synchronization-and-package-manager-modernization.md"
+    "docs/decisions/0018-synchronization-and-package-manager-modernization.md",
+    "docs/decisions/0019-loop-engineering-primitives.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
@@ -161,10 +163,13 @@
     "scripts/context.mjs",
     "scripts/harness-cli.mjs",
     "scripts/task-workflow.mjs",
-    "scripts/validate-context.mjs"
+    "scripts/triage.mjs",
+    "scripts/validate-context.mjs",
+    "scripts/worktree.mjs"
   ],
   "automation": [
-    ".github/workflows/context-factory.yml"
+    ".github/workflows/context-factory.yml",
+    ".github/workflows/discovery.yml"
   ],
   "evaluations": [
     "evals/cases/agent-architect.json",
@@ -197,10 +202,12 @@
     "docs/Agents.md",
     "docs/Rules.md",
     "docs/Skills.md",
+    "docs/Connectors.md",
     "docs/Wiki.md",
     "docs/Workflows.md",
     "docs/context/README.md",
     "docs/tasks/README.md",
+    "docs/tasks/INBOX.md",
     "docs/decisions/README.md",
     "agents/README.md",
     "docs/guide/README.md",
