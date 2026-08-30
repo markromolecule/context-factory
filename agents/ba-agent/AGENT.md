@@ -6,7 +6,7 @@ description: Clarifies business requirements, conducts discovery interviews, for
 lifecycleStage: Discovery & Requirements
 aliases: ["/ba", "[BA]", "[DISCOVERY]"]
 defaultWorkflow: feature-delivery
-skills: [context, grill, grounding]
+skills: [context, grill, grounding, docs]
 workflows: [feature-delivery]
 rules:
   - rules/global/1-3-1-rule.md

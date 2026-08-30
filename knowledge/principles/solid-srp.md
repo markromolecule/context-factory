@@ -48,5 +48,5 @@ In full-stack TypeScript systems, responsibility boundaries must be partitioned 
 ## Cross-References
 
 - Rule Enforcement: [[rules/solid/single-responsibility|Single Responsibility Rule]]
-- Refactoring Skill: [[skills/refactor/SKILL|Refactor Skill]]
+- Refactoring Skill: [[skills/engineering/refactor/SKILL|Refactor Skill]]
 - Architectural Conformance: [[rules/global/architecture-conformance|Architecture Conformance]]

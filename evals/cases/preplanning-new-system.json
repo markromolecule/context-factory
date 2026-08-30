@@ -7,9 +7,9 @@
       "rules/global/evidence-and-claims.md"
     ],
     "skills": [
-      "skills/explore/SKILL.md",
-      "skills/grill/SKILL.md",
-      "skills/plan/SKILL.md"
+      "skills/engineering/explore/SKILL.md",
+      "skills/productivity/grill/SKILL.md",
+      "skills/productivity/plan/SKILL.md"
     ]
   },
   "contractAssertions": [
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "path": "skills/grill/SKILL.md",
+      "path": "skills/productivity/grill/SKILL.md",
       "includes": [
         "Ask exactly one unresolved question at a time",
         "Record each resolved answer immediately",

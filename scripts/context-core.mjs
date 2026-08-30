@@ -169,9 +169,9 @@ async function entries(paths) {
 
 const ACTION_TERMS = new Set([
   "add", "adr", "architect", "build", "change", "commit", "create", "data", "deliver", "deploy",
-  "design", "dip", "discovery", "execute", "execution", "explore", "fix", "grill", "grounding", "hotfix",
-  "implement", "isp", "lsp", "migrate", "ocp", "plan", "push", "redesign", "refactor", "release",
-  "remove", "resolve", "review", "sec", "security", "ship", "solid", "srp", "sync", "test",
+  "design", "dip", "discovery", "doc", "docs", "documentation", "execute", "execution", "explore", "fix", "grill", "grounding", "hotfix",
+  "implement", "isp", "lsp", "migrate", "mitigation", "ocp", "plan", "push", "redesign", "refactor", "release",
+  "remove", "report", "resolve", "review", "sec", "security", "ship", "solid", "srp", "summary", "sync", "test",
   "threat", "triage", "upgrade", "ux", "verify", "wiki",
 ]);
 
@@ -199,7 +199,7 @@ const ROUTING_HINTS = [
   { test: /^\/(?:release|ready|deploy)\b|^\[(?:RELEASE|DEPLOY)\]/i, workflow: "release-readiness" },
   { test: /^\/(?:sync|lock|maintain)\b|^\[(?:SYNC|LOCK|MAINTENANCE)\]/i, workflow: "context-maintenance" },
   { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "new-project-delivery" },
-  { test: /^\/(?:plan|feature|grill|discovery|context|triage)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC|TRIAGE)\]/i, workflow: "feature-delivery" },
+  { test: /^\/(?:plan|feature|grill|discovery|context|triage|doc|docs|documentation|report)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC|TRIAGE|DOC|DOCS|DOCUMENTATION|REPORT)\]/i, workflow: "feature-delivery" },
 
   // 3. Keyword & Concept matchers
   { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },
@@ -212,6 +212,7 @@ const ROUTING_HINTS = [
   { test: /\b(frontend|interface|dialog|form|responsive|accessibility|ux|redesign)\b/i, workflow: "feature-delivery" },
   { test: /\b(release|readiness|production handoff)\b/i, workflow: "release-readiness" },
   { test: /\b(context factory|rule|skill|workflow|manifest).*\b(add|change|update|maintain|sync)\b/i, workflow: "context-maintenance" },
+  { test: /\b(report|summary|mitigation|post-mortem)\b/i, workflow: "feature-delivery" },
   { test: PREPLANNING_TEST, workflow: "feature-delivery" },
 ];
 
@@ -291,10 +292,10 @@ export async function resolveContext(request, options = {}) {
   if (selectedAgent && Array.isArray(selectedAgent.meta.skills)) {
     const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));
     for (const skillName of selectedAgent.meta.skills) {
-      const skillPath = `skills/${skillName}/SKILL.md`;
-      if (!selectedSkillPaths.has(skillPath) && manifest.skills.includes(skillPath)) {
-        selectedSkills.push({ path: skillPath, reason: `declared by agent ${selectedAgent.meta.name}` });
-        selectedSkillPaths.add(skillPath);
+      const matchingPath = manifest.skills.find((p) => p === skillName || p.endsWith(`/${skillName}/SKILL.md`) || p === `skills/${skillName}/SKILL.md`);
+      if (matchingPath && !selectedSkillPaths.has(matchingPath)) {
+        selectedSkills.push({ path: matchingPath, reason: `declared by agent ${selectedAgent.meta.name}` });
+        selectedSkillPaths.add(matchingPath);
       }
     }
     selectedSkills.sort((a, b) => a.path.localeCompare(b.path));

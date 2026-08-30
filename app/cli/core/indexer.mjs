@@ -98,12 +98,15 @@ export async function generateSkillsMoc(actualSkills) {
 
   skillItems.sort((a, b) => a.name.localeCompare(b.name));
 
-  const listRows = skillItems.map((item) => {
-    const linkPath = item.path.replace(/\.md$/, "");
-    return `- [[${linkPath}|${item.name}]] — ${item.description}`;
-  });
+  const engineeringSkills = skillItems.filter((item) => item.path.startsWith("skills/engineering/"));
+  const productivitySkills = skillItems.filter((item) => item.path.startsWith("skills/productivity/"));
+  const otherSkills = skillItems.filter((item) => !item.path.startsWith("skills/engineering/") && !item.path.startsWith("skills/productivity/"));
 
-  return `---
+  const engRows = engineeringSkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
+  const prodRows = productivitySkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
+  const otherRows = otherSkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
+
+  let content = `---
 title: Skills
 type: moc
 tags: [skills, workflows, tools]
@@ -111,14 +114,25 @@ tags: [skills, workflows, tools]
 
 # Skills
 
-The Context Factory defines ${skillItems.length} focused procedural skills for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
+The Context Factory defines ${skillItems.length} focused procedural skills across two primary categories for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
 
-${listRows.join("\n")}
+## Engineering & Coding
+*Group Index:* [[skills/engineering/README|Engineering Skills Overview]]
 
-Skills trigger through their YAML descriptions and slash command shortcuts. All declarative engineering standards (TypeScript type safety, runtime validation, database query optimization, backend module architecture, and UI styling) are defined in and loaded from \`rules/\`.
+${engRows.join("\n")}
 
-For a new system, product, or feature capability, the skill sequence is \`context\` / \`grill\` → \`explore\` → \`plan\` → approval → \`execute\` → \`refactor\` (optional). Repository discovery may run inside context authoring and grilling to answer evidence-discoverable questions.
-`;
+## Productivity & Discovery
+*Group Index:* [[skills/productivity/README|Productivity Skills Overview]]
+
+${prodRows.join("\n")}`;
+
+  if (otherRows.length > 0) {
+    content += `\n\n## Other Skills\n\n${otherRows.join("\n")}`;
+  }
+
+  content += `\n\nSkills trigger through their YAML descriptions and slash command shortcuts. All declarative engineering standards (TypeScript type safety, runtime validation, database query optimization, backend module architecture, and UI styling) are defined in and loaded from \`rules/\`.\n\nFor a new system, product, or feature capability, the skill sequence is \`context\` / \`grill\` → \`explore\` → \`plan\` → approval → \`execute\` → \`refactor\` (optional). Repository discovery may run inside context authoring and grilling to answer evidence-discoverable questions.\n`;
+
+  return content;
 }
 
 /**
@@ -196,9 +210,9 @@ Use leading slash commands or bracket prefix tags for instant, deterministic wor
 - Prefer defect resolution when observed behavior is wrong; do not implement before establishing evidence.
 - Add a risk-specific workflow only when that risk is central to the change.
 - Use release readiness to review and report; it does not authorize deployment.
-- Begin new-system and materially ambiguous capability work with [[skills/grill/SKILL|grill]], then synthesize the confirmed discovery record with [[skills/plan/SKILL|plan]] before coding.
+- Begin new-system and materially ambiguous capability work with [[skills/productivity/grill/SKILL|grill]], then synthesize the confirmed discovery record with [[skills/productivity/plan/SKILL|plan]] before coding.
 - Use [[rules/global/1-3-1-rule|1-3-1]] inside a workflow only for a material unresolved decision.
-- Use [[skills/plan/SKILL|plan]] for plan-only output and [[skills/execute/SKILL|execute]] when executing an existing task artifact.`);
+- Use [[skills/productivity/plan/SKILL|plan]] for plan-only output and [[skills/engineering/execute/SKILL|execute]] when executing an existing task artifact.`);
 
   return `${sections.join("\n\n")}\n`;
 }
@@ -337,7 +351,7 @@ Canonical knowledge follows \`schemas/knowledge.schema.json\` and starts from [[
 
 ## Retrieval
 
-Use the [[skills/grounding/SKILL|grounding]] skill. Filter by metadata and task terms, prefer the highest applicable authority, follow relevant links one hop, and retain hashes plus selection reasons in the context bundle.
+Use the [[skills/productivity/grounding/SKILL|grounding]] skill. Filter by metadata and task terms, prefer the highest applicable authority, follow relevant links one hop, and retain hashes plus selection reasons in the context bundle.
 
 ## Maintenance
 
@@ -367,7 +381,7 @@ export async function syncFactoryInventory({ writeLock = true, updateMocs = true
   const actualAgents = (await filesUnder("agents")).filter((p) => extname(p) === ".md").sort();
   const actualRules = (await filesUnder("rules")).filter((p) => extname(p) === ".md" && p !== "rules/README.md").sort();
   const actualSkills = (await filesUnder("skills")).filter((p) => p.endsWith("/SKILL.md")).sort();
-  const actualSkillResources = (await filesUnder("skills")).filter((p) => !p.endsWith("/SKILL.md")).sort();
+  const actualSkillResources = (await filesUnder("skills")).filter((p) => !p.endsWith("/SKILL.md") && !p.endsWith("README.md")).sort();
   const actualWorkflows = (await filesUnder("workflows")).filter((p) => extname(p) === ".md").sort();
   const actualKnowledge = (await filesUnder("knowledge")).filter((p) => extname(p) === ".md").sort();
   const actualSchemas = (await filesUnder("schemas")).filter((p) => extname(p) === ".json").sort();

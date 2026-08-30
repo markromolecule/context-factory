@@ -60,8 +60,9 @@ for (const path of manifest.skills) {
 }
 
 for (const path of manifest.skillResources) {
-  const skillFolder = path.split("/").slice(0, 2).join("/");
-  if (!manifest.skills.includes(`${skillFolder}/SKILL.md`)) {
+  if (path.endsWith("README.md")) continue;
+  const matchingSkill = manifest.skills.find((s) => path.startsWith(s.replace(/\/SKILL\.md$/, "/")));
+  if (!matchingSkill) {
     error(`Skill resource has no inventoried parent skill: ${path}`);
   }
   if (path.endsWith("/agents/openai.yaml")) {
@@ -69,6 +70,7 @@ for (const path of manifest.skillResources) {
     const displayName = source.match(/^\s*display_name:\s*"([^"]+)"$/m)?.[1];
     const shortDescription = source.match(/^\s*short_description:\s*"([^"]+)"$/m)?.[1];
     const defaultPrompt = source.match(/^\s*default_prompt:\s*"([^"]+)"$/m)?.[1];
+    const skillFolder = matchingSkill ? matchingSkill.replace(/\/SKILL\.md$/, "") : path.split("/").slice(0, -2).join("/");
     const skillName = skillFolder.split("/").at(-1);
     if (!displayName) error(`Skill interface display_name is missing or unquoted: ${path}`);
     if (!shortDescription || shortDescription.length < 25 || shortDescription.length > 64) {
@@ -76,6 +78,25 @@ for (const path of manifest.skillResources) {
     }
     if (!defaultPrompt?.includes(`$${skillName}`)) {
       error(`Skill interface default_prompt must mention $${skillName}: ${path}`);
+    }
+  }
+}
+
+// Enforce skill group README invariant
+const skillGroupDirs = ["skills/engineering", "skills/productivity"];
+for (const groupDir of skillGroupDirs) {
+  const groupReadmePath = `${groupDir}/README.md`;
+  if (!await exists(groupReadmePath)) {
+    error(`Missing skill group README: ${groupReadmePath}`);
+  } else {
+    const readmeContent = await readText(groupReadmePath);
+    const groupSkills = manifest.skills.filter((s) => s.startsWith(`${groupDir}/`));
+    for (const skillPath of groupSkills) {
+      const skillName = skillPath.split("/").at(-2);
+      const expectedLink = `[[${skillPath.slice(0, -3)}`;
+      if (!readmeContent.includes(expectedLink) && !readmeContent.includes(`|${skillName}`)) {
+        error(`Skill group ${groupReadmePath} does not link member skill: ${skillPath}`);
+      }
     }
   }
 }
@@ -163,8 +184,8 @@ for (const path of manifest.workflows) {
         error(`Workflow skills must be an array: ${path}`);
       } else {
         for (const skillName of meta.skills) {
-          const skillPath = skillName.endsWith(".md") ? skillName : `skills/${skillName}/SKILL.md`;
-          if (!manifest.skills.includes(skillPath)) {
+          const matchingSkill = manifest.skills.find((s) => s === skillName || s.endsWith(`/${skillName}/SKILL.md`) || s === `skills/${skillName}/SKILL.md`);
+          if (!matchingSkill) {
             error(`Workflow references unknown skill in ${path}: ${skillName}`);
           }
         }
@@ -199,6 +220,7 @@ const protectedTriggers = new Set([
   "/tsc", "/typescript", "[TSC]", "/zod", "[ZOD]", "/explore", "[EXPLORE]",
   "/grounding", "/wiki", "[WIKI]", "/verify", "[VERIFY]", "[QA]",
   "/triage", "[TRIAGE]",
+  "/doc", "/docs", "/documentation", "[DOC]", "[DOCS]", "[DOCUMENTATION]",
 ]);
 
 const registeredAliases = new Map();
@@ -247,8 +269,8 @@ for (const path of manifest.agents ?? []) {
       error(`Agent skills must be a non-empty array: ${path}`);
     } else {
       for (const skillName of meta.skills) {
-        const skillPath = skillName.endsWith(".md") ? skillName : `skills/${skillName}/SKILL.md`;
-        if (!manifest.skills.includes(skillPath)) {
+        const matchingSkill = manifest.skills.find((s) => s === skillName || s.endsWith(`/${skillName}/SKILL.md`) || s === `skills/${skillName}/SKILL.md`);
+        if (!matchingSkill) {
           error(`Agent references unknown skill in ${path}: ${skillName}`);
         }
       }
@@ -314,7 +336,7 @@ for (const path of manifest.agents ?? []) {
 const actualAgents = (await filesUnder("agents")).filter((path) => extname(path) === ".md");
 const actualRules = (await filesUnder("rules")).filter((path) => extname(path) === ".md");
 const actualSkills = (await filesUnder("skills")).filter((path) => path.endsWith("/SKILL.md"));
-const actualSkillResources = (await filesUnder("skills")).filter((path) => !path.endsWith("/SKILL.md"));
+const actualSkillResources = (await filesUnder("skills")).filter((path) => !path.endsWith("/SKILL.md") && !path.endsWith("README.md"));
 
 const actualWorkflows = (await filesUnder("workflows")).filter((path) => extname(path) === ".md");
 const actualKnowledge = (await filesUnder("knowledge")).filter((path) => extname(path) === ".md");

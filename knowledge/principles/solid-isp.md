@@ -53,4 +53,4 @@ Instead of passing an entire 30-field `UserRecord` object into an avatar compone
 
 - Rule Enforcement: [[rules/solid/interface-segregation|Interface Segregation Rule]]
 - UI Organization: [[rules/typescript/ui/code-organization|UI Code Organization]]
-- Refactoring Skill: [[skills/refactor/SKILL|Refactor Skill]]
+- Refactoring Skill: [[skills/engineering/refactor/SKILL|Refactor Skill]]

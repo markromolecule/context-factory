@@ -48,5 +48,5 @@ Rather than heavy classical OOP inheritance hierarchies, modern TypeScript and R
 ## Cross-References
 
 - Rule Enforcement: [[rules/solid/open-closed|Open/Closed Rule]]
-- Strategy & Planning: [[skills/plan/SKILL|Plan Skill]]
+- Strategy & Planning: [[skills/productivity/plan/SKILL|Plan Skill]]
 - Architectural Conformance: [[rules/global/architecture-conformance|Architecture Conformance]]

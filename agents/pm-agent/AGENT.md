@@ -6,7 +6,7 @@ description: Converts approved business requirements into phased implementation 
 lifecycleStage: Planning & Phase Orchestration
 aliases: ["/pm", "[PM]"]
 defaultWorkflow: feature-delivery
-skills: [plan, execute, adr, verify, refactor]
+skills: [plan, execute, adr, verify, refactor, docs]
 workflows: [feature-delivery, architecture-change, defect-resolution, code-review-and-optimization]
 rules:
   - rules/global/1-3-1-rule.md

@@ -53,6 +53,6 @@ Use leading slash commands or bracket prefix tags for instant, deterministic wor
 - Prefer defect resolution when observed behavior is wrong; do not implement before establishing evidence.
 - Add a risk-specific workflow only when that risk is central to the change.
 - Use release readiness to review and report; it does not authorize deployment.
-- Begin new-system and materially ambiguous capability work with [[skills/grill/SKILL|grill]], then synthesize the confirmed discovery record with [[skills/plan/SKILL|plan]] before coding.
+- Begin new-system and materially ambiguous capability work with [[skills/productivity/grill/SKILL|grill]], then synthesize the confirmed discovery record with [[skills/productivity/plan/SKILL|plan]] before coding.
 - Use [[rules/global/1-3-1-rule|1-3-1]] inside a workflow only for a material unresolved decision.
-- Use [[skills/plan/SKILL|plan]] for plan-only output and [[skills/execute/SKILL|execute]] when executing an existing task artifact.
+- Use [[skills/productivity/plan/SKILL|plan]] for plan-only output and [[skills/engineering/execute/SKILL|execute]] when executing an existing task artifact.

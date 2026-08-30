@@ -7,7 +7,7 @@ tags: [tasks, triage, inbox, loop-engineering]
 
 # Triage Inbox
 
-The **Triage Inbox** is the live state spine for automated discovery and incoming anomalies. Automated discovery workflows ([[skills/triage/SKILL|triage]]) append unreviewed findings here. The **PM Agent** (`agents/pm-agent`) reviews this ledger, promotes actionable findings to formal task folders under `docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/`, or marks them as `dismissed`.
+The **Triage Inbox** is the live state spine for automated discovery and incoming anomalies. Automated discovery workflows ([[skills/productivity/triage/SKILL|triage]]) append unreviewed findings here. The **PM Agent** (`agents/pm-agent`) reviews this ledger, promotes actionable findings to formal task folders under `docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/`, or marks them as `dismissed`.
 
 ## Status Lifecycle
 

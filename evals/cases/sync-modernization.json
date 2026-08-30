@@ -4,9 +4,9 @@
   "expected": {
     "workflow": "workflows/feature-delivery.md",
     "skills": [
-      "skills/plan/SKILL.md",
-      "skills/explore/SKILL.md",
-      "skills/verify/SKILL.md"
+      "skills/productivity/plan/SKILL.md",
+      "skills/engineering/explore/SKILL.md",
+      "skills/engineering/verify/SKILL.md"
     ],
     "rules": [
       "rules/global/architecture-conformance.md",

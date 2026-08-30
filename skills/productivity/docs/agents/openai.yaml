@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Documentation & Reporting"
+  short_description: "Synthesize evidence-backed system reports and mitigation logs"
+  default_prompt: "Use $docs to inspect recent context and plans, clarify requirements via grill, and generate structured documentation reports with tables and conclusions."

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "3.11.0",
+  "contextVersion": "3.12.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -79,25 +79,27 @@
     "rules/typescript/ui/interaction-feedback.md"
   ],
   "skills": [
-    "skills/adr/SKILL.md",
-    "skills/context/SKILL.md",
-    "skills/execute/SKILL.md",
-    "skills/explore/SKILL.md",
-    "skills/grill/SKILL.md",
-    "skills/grounding/SKILL.md",
-    "skills/plan/SKILL.md",
-    "skills/refactor/SKILL.md",
-    "skills/security/SKILL.md",
-    "skills/triage/SKILL.md",
-    "skills/verify/SKILL.md"
+    "skills/engineering/execute/SKILL.md",
+    "skills/engineering/explore/SKILL.md",
+    "skills/engineering/refactor/SKILL.md",
+    "skills/engineering/security/SKILL.md",
+    "skills/engineering/verify/SKILL.md",
+    "skills/productivity/adr/SKILL.md",
+    "skills/productivity/context/SKILL.md",
+    "skills/productivity/docs/SKILL.md",
+    "skills/productivity/grill/SKILL.md",
+    "skills/productivity/grounding/SKILL.md",
+    "skills/productivity/plan/SKILL.md",
+    "skills/productivity/triage/SKILL.md"
   ],
   "skillResources": [
-    "skills/context/agents/openai.yaml",
-    "skills/execute/agents/openai.yaml",
-    "skills/grill/agents/openai.yaml",
-    "skills/grill/references/glossary-format.md",
-    "skills/plan/agents/openai.yaml",
-    "skills/refactor/agents/openai.yaml"
+    "skills/engineering/execute/agents/openai.yaml",
+    "skills/engineering/refactor/agents/openai.yaml",
+    "skills/productivity/context/agents/openai.yaml",
+    "skills/productivity/docs/agents/openai.yaml",
+    "skills/productivity/grill/agents/openai.yaml",
+    "skills/productivity/grill/references/glossary-format.md",
+    "skills/productivity/plan/agents/openai.yaml"
   ],
   "workflows": [
     "workflows/architecture-change.md",
@@ -132,6 +134,7 @@
     "docs/templates/Decision.md",
     "docs/templates/Knowledge.md",
     "docs/templates/Phase.md",
+    "docs/templates/Report.md",
     "docs/templates/Task.md"
   ],
   "decisions": [
@@ -153,7 +156,8 @@
     "docs/decisions/0016-declarative-lifecycle-specialist-agents.md",
     "docs/decisions/0017-ide-bridging-and-symlink-synchronization-architecture.md",
     "docs/decisions/0018-synchronization-and-package-manager-modernization.md",
-    "docs/decisions/0019-loop-engineering-primitives.md"
+    "docs/decisions/0019-loop-engineering-primitives.md",
+    "docs/decisions/0020-categorical-skill-grouping-and-group-indexes.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
@@ -180,6 +184,7 @@
     "evals/cases/commit-push-release.json",
     "evals/cases/defect-resolution.json",
     "evals/cases/direct-question.json",
+    "evals/cases/docs-reporting.json",
     "evals/cases/frontend-styling.json",
     "evals/cases/ide-bridging.json",
     "evals/cases/knowledge-grounding.json",
@@ -202,6 +207,9 @@
     "docs/Agents.md",
     "docs/Rules.md",
     "docs/Skills.md",
+    "skills/README.md",
+    "skills/engineering/README.md",
+    "skills/productivity/README.md",
     "docs/Connectors.md",
     "docs/Wiki.md",
     "docs/Workflows.md",

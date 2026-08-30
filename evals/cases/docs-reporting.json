@@ -1,0 +1,31 @@
+{
+  "name": "docs slash command resolves docs skill and feature delivery workflow",
+  "request": "/docs I want a summary of mitigation we did in refer to the performance of database queries",
+  "expected": {
+    "workflow": "workflows/feature-delivery.md",
+    "rules": [
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": [
+      "skills/productivity/docs/SKILL.md"
+    ]
+  },
+  "contractAssertions": [
+    {
+      "path": "skills/productivity/docs/SKILL.md",
+      "includes": [
+        "Strict Historical & Evidence Traversal",
+        "Embedded Grill Discovery",
+        "Results & Metric Impact Matrix"
+      ]
+    },
+    {
+      "path": "docs/templates/Report.md",
+      "includes": [
+        "## 2. Summary of Mitigations & Actions",
+        "## 3. Results & Metric Impact Matrix",
+        "## 5. Conclusion & Operational Recommendations"
+      ]
+    }
+  ]
+}

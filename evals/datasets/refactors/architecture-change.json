@@ -11,8 +11,8 @@
       "rules/global/evidence-and-claims.md"
     ],
     "skills": [
-      "skills/adr/SKILL.md",
-      "skills/explore/SKILL.md"
+      "skills/productivity/adr/SKILL.md",
+      "skills/engineering/explore/SKILL.md"
     ]
   },
   "goldenOutput": {
