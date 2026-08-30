@@ -7,7 +7,7 @@ lifecycleStage: Planning & Phase Orchestration
 aliases: ["/pm", "[PM]"]
 defaultWorkflow: feature-delivery
 skills: [plan, execute, adr, verify, refactor, docs]
-workflows: [feature-delivery, architecture-change, defect-resolution, code-review-and-optimization]
+workflows: [feature-delivery, architecture-change, defect-resolution, code-review-and-optimization, docs]
 rules:
   - rules/global/1-3-1-rule.md
   - rules/global/architecture-conformance.md

@@ -109,6 +109,7 @@
     "workflows/database-migration.md",
     "workflows/defect-resolution.md",
     "workflows/dependency-upgrade.md",
+    "workflows/docs.md",
     "workflows/feature-delivery.md",
     "workflows/new-project-delivery.md",
     "workflows/release-readiness.md",

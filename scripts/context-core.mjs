@@ -199,7 +199,8 @@ const ROUTING_HINTS = [
   { test: /^\/(?:release|ready|deploy)\b|^\[(?:RELEASE|DEPLOY)\]/i, workflow: "release-readiness" },
   { test: /^\/(?:sync|lock|maintain)\b|^\[(?:SYNC|LOCK|MAINTENANCE)\]/i, workflow: "context-maintenance" },
   { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "new-project-delivery" },
-  { test: /^\/(?:plan|feature|grill|discovery|context|triage|doc|docs|documentation|report)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC|TRIAGE|DOC|DOCS|DOCUMENTATION|REPORT)\]/i, workflow: "feature-delivery" },
+  { test: /^\/(?:doc|docs|documentation|report)\b|^\[(?:DOC|DOCS|DOCUMENTATION|REPORT)\]/i, workflow: "docs" },
+  { test: /^\/(?:plan|feature|grill|discovery|context|triage)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC|TRIAGE)\]/i, workflow: "feature-delivery" },
 
   // 3. Keyword & Concept matchers
   { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },
@@ -212,7 +213,7 @@ const ROUTING_HINTS = [
   { test: /\b(frontend|interface|dialog|form|responsive|accessibility|ux|redesign)\b/i, workflow: "feature-delivery" },
   { test: /\b(release|readiness|production handoff)\b/i, workflow: "release-readiness" },
   { test: /\b(context factory|rule|skill|workflow|manifest).*\b(add|change|update|maintain|sync)\b/i, workflow: "context-maintenance" },
-  { test: /\b(report|summary|mitigation|post-mortem)\b/i, workflow: "feature-delivery" },
+  { test: /\b(report|summary|mitigation|post-mortem)\b/i, workflow: "docs" },
   { test: PREPLANNING_TEST, workflow: "feature-delivery" },
 ];
 
