@@ -176,29 +176,36 @@ export async function handlePullCommand(args = [], flags = {}) {
   let bridgeConfig = null;
   let integrationMethod = "submodule";
 
+  // 1. Check local .gitmodules first (if host repo embeds context-factory as a git submodule)
   try {
-    const bridgePath = join(targetDir, ".context-bridge.json");
-    bridgeConfig = JSON.parse(await readFile(bridgePath, "utf8"));
-    if (bridgeConfig.factoryPath && bridgeConfig.factoryPath !== ".") {
+    const gitModules = await readFile(join(targetDir, ".gitmodules"), "utf8");
+    if (gitModules.includes("context-factory")) {
       isHostRepo = true;
-      factorySubmodulePath = bridgeConfig.factoryPath;
-      integrationMethod = bridgeConfig.integrationMethod || "submodule";
+      integrationMethod = "submodule";
+      const match = gitModules.match(/path\s*=\s*(.+)/);
+      if (match) {
+        const p = match[1].trim();
+        if (existsSync(join(targetDir, p))) {
+          factorySubmodulePath = p;
+        }
+      }
     }
   } catch {
-    // No .context-bridge.json
+    // No .gitmodules
   }
 
-  if (!isHostRepo) {
+  // 2. Check .context-bridge.json if not resolved from .gitmodules
+  if (!factorySubmodulePath) {
     try {
-      const gitModules = await readFile(join(targetDir, ".gitmodules"), "utf8");
-      if (gitModules.includes("context-factory")) {
+      const bridgePath = join(targetDir, ".context-bridge.json");
+      bridgeConfig = JSON.parse(await readFile(bridgePath, "utf8"));
+      if (bridgeConfig.factoryPath && bridgeConfig.factoryPath !== ".") {
         isHostRepo = true;
-        integrationMethod = "submodule";
-        const match = gitModules.match(/path\s*=\s*(.+)/);
-        if (match) factorySubmodulePath = match[1].trim();
+        factorySubmodulePath = bridgeConfig.factoryPath;
+        integrationMethod = bridgeConfig.integrationMethod || "submodule";
       }
     } catch {
-      // No .gitmodules
+      // No .context-bridge.json
     }
   }
 

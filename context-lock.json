@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.12.0",
-  "digest": "sha256:0d1e5c9f56252c91f5cbcad26bf7582b9c351f88e5b7f9593f3bf42413c0b3a3",
+  "digest": "sha256:40b005f9d5d899a95a12c39ecc74603850d11b6e183f80268941813ec936f3e3",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -42,7 +42,7 @@
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
     "docs/Home.md": "sha256:c9baa5fd8898c860bff91b2db14bdb170016e05f77985640d8dbf4d88f402325",
     "docs/Rules.md": "sha256:ca79c0770cf2dff25429a2bad5eb67b2c02e8a13a3e910ad92faaaf5d89c64aa",
-    "docs/Skills.md": "sha256:39e90498a64114b38fd5f7c0bacd1bbce53145e8175a4a01ff2fd26bccc70f30",
+    "docs/Skills.md": "sha256:ee11711f884d67db088ef81fa8aa9237ad7f3bdb8949c3f5e45e24917485f207",
     "docs/Wiki.md": "sha256:ba049a0c9b74ff94354049544f7da43e1c55e472ab06b0521f5ca052a2e04f22",
     "docs/Workflows.md": "sha256:96a537da69e0df480a155c72eb6bcd2690c1214bc094d09a8181843a69d79b5b",
     "docs/context/README.md": "sha256:42040121d824f8a00412ffc034bb9d3a6e787d01636ff62d60a971652da98e52",
