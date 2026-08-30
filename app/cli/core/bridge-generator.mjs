@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { cp, lstat, mkdir, readFile, readlink, symlink, unlink, writeFile } from "node:fs/promises";
+import { cp, lstat, mkdir, readFile, readlink, rm, symlink, unlink, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { root } from "../../../scripts/context-core.mjs";
 
@@ -42,15 +42,15 @@ export async function createRelativeSymlink({
         return { path: linkPath, target: relTarget, status: "skipped (up to date)", isSymlink: true };
       }
       if (!dryRun) {
-        await unlink(linkPath);
+        await rm(linkPath, { recursive: true, force: true });
       }
     } else if (!force) {
       return { path: linkPath, target: relTarget, status: "skipped (exists, not symlink)", isSymlink: false };
     } else if (!dryRun) {
       try {
-        await unlink(linkPath);
+        await rm(linkPath, { recursive: true, force: true });
       } catch {
-        // May be a directory
+        // Fallback
       }
     }
   }
@@ -527,7 +527,7 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
     }
   }
 
-  const passed = hasDotAgents && brokenCount === 0 && missingCount === 0;
+  const passed = hasDotAgents && brokenCount === 0 && missingCount === 0 && healthyCount === expectedLinks.length;
   return {
     passed,
     hasDotAgents,
