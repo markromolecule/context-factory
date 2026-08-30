@@ -9,6 +9,7 @@ import {
   markdownFiles,
   readJson,
   readText,
+  root,
 } from "./context-core.mjs";
 
 const errors = [];
@@ -490,13 +491,23 @@ for (const path of ["app.json", "appearance.json", "core-plugins.json", "graph.j
 }
 
 const expectedDotAgents = ["skills", "rules", "agents", "workflows", "AGENTS.md", "GEMINI.md"];
+try {
+  const dotAgentsStat = await lstat(resolve(root, ".agents"));
+  if (!dotAgentsStat.isDirectory()) throw new Error("not dir");
+} catch {
+  try {
+    const { generateBridge } = await import("../app/cli/core/bridge-generator.mjs");
+    await generateBridge({ target: root, factoryPath: ".", force: true });
+  } catch {}
+}
+
 for (const name of expectedDotAgents) {
-  const linkPath = `.agents/${name}`;
+  const linkPath = resolve(root, `.agents/${name}`);
   try {
     const stat = await lstat(linkPath);
     if (stat.isSymbolicLink()) {
       const rawTarget = await readlink(linkPath);
-      const resolved = resolve(".agents", rawTarget);
+      const resolved = resolve(resolve(root, ".agents"), rawTarget);
       try {
         await lstat(resolved);
       } catch {
@@ -504,7 +515,7 @@ for (const name of expectedDotAgents) {
       }
     }
   } catch {
-    error(`Missing required .agents/ link: ${linkPath}`);
+    error(`Missing required .agents/ link: .agents/${name}`);
   }
 }
 
