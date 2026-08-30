@@ -319,8 +319,31 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
   if (isAll || activeIdes.includes("antigravity") || activeIdes.includes("gemini")) {
     const dotAgentsDir = join(targetDir, ".agents");
 
+    // Discover factory skills for per-skill symlink creation
+    let factorySkills = [];
+    try {
+      const manifestPath = join(absFactoryPath, "context-manifest.json");
+      const m = JSON.parse(await readFile(manifestPath, "utf8"));
+      factorySkills = m.skills || [];
+    } catch {}
+
+    // Skills directory entries for skills.json
+    const skillsRelDir = targetDir === absFactoryPath ? "skills" : join(normalizedFactoryPath, "skills").replaceAll("\\", "/");
+    const skillsJsonConfig = {
+      entries: [
+        { path: `${skillsRelDir}/engineering` },
+        { path: `${skillsRelDir}/productivity` },
+      ],
+    };
+
+    filesToGenerate.push({
+      path: join(dotAgentsDir, "skills.json"),
+      content: `${JSON.stringify(skillsJsonConfig, null, 2)}\n`,
+      id: ".agents/skills.json",
+      category: "config",
+    });
+
     const symlinkDefs = [
-      { id: ".agents/skills", name: "skills", type: "dir" },
       { id: ".agents/rules", name: "rules", type: "dir" },
       { id: ".agents/agents", name: "agents", type: "dir" },
       { id: ".agents/workflows", name: "workflows", type: "dir" },
@@ -336,6 +359,32 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
         linkPath,
         sourcePath,
         type: def.type,
+      });
+    }
+
+    // Clean up old single .agents/skills symlink if present
+    const dotAgentsSkillsDir = join(dotAgentsDir, "skills");
+    try {
+      const s = await lstat(dotAgentsSkillsDir);
+      if (s.isSymbolicLink()) {
+        if (!dryRun) {
+          await rm(dotAgentsSkillsDir, { force: true });
+        }
+      }
+    } catch {}
+
+    // Create individual symlinks for each skill under .agents/skills/
+    for (const skillPath of factorySkills) {
+      const parts = skillPath.split("/");
+      const skillName = parts[parts.length - 2];
+      const relSkillDir = parts.slice(0, -1).join("/");
+      const linkPath = join(dotAgentsSkillsDir, skillName);
+      const sourcePath = join(absFactoryPath, relSkillDir);
+      symlinksToCreate.push({
+        id: `.agents/skills/${skillName}`,
+        linkPath,
+        sourcePath,
+        type: "dir",
       });
     }
   }
@@ -358,7 +407,7 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
       },
       symlinks: symlinksToCreate.map((s) => ({
         id: s.id,
-        target: relative(join(targetDir, ".agents"), s.sourcePath).replaceAll("\\", "/"),
+        target: relative(dirname(s.linkPath), s.sourcePath).replaceAll("\\", "/"),
         type: s.type,
       })),
       commands: {
@@ -489,14 +538,36 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
     hasDotAgents = false;
   }
 
+  // Load manifest skills to verify per-skill links
+  let factorySkills = [];
+  try {
+    let factoryPath = targetDir;
+    if (existsSync(join(targetDir, ".context-bridge.json"))) {
+      const bridge = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
+      if (bridge.factoryPath) factoryPath = resolve(targetDir, bridge.factoryPath);
+    } else if (existsSync(join(targetDir, "context-factory", "context-manifest.json"))) {
+      factoryPath = join(targetDir, "context-factory");
+    }
+    const manifestPath = join(factoryPath, "context-manifest.json");
+    const m = JSON.parse(await readFile(manifestPath, "utf8"));
+    factorySkills = m.skills || [];
+  } catch {}
+
   const expectedLinks = [
-    { name: "skills", type: "dir" },
     { name: "rules", type: "dir" },
     { name: "agents", type: "dir" },
     { name: "workflows", type: "dir" },
     { name: "AGENTS.md", type: "file" },
     { name: "GEMINI.md", type: "file" },
   ];
+
+  for (const skillPath of factorySkills) {
+    const parts = skillPath.split("/");
+    const skillName = parts[parts.length - 2];
+    if (skillName) {
+      expectedLinks.push({ name: `skills/${skillName}`, type: "dir" });
+    }
+  }
 
   const linkStatuses = [];
   let brokenCount = 0;
@@ -509,7 +580,7 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
       const stat = await lstat(linkPath);
       if (stat.isSymbolicLink()) {
         const rawTarget = await readlink(linkPath);
-        const resolvedPath = resolve(dotAgentsDir, rawTarget);
+        const resolvedPath = resolve(dirname(linkPath), rawTarget);
         try {
           await lstat(resolvedPath);
           healthyCount++;
@@ -527,13 +598,31 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
     }
   }
 
-  const passed = hasDotAgents && brokenCount === 0 && missingCount === 0 && healthyCount === expectedLinks.length;
+  // Check .agents/skills.json
+  const skillsJsonPath = join(dotAgentsDir, "skills.json");
+  try {
+    const skillsJson = JSON.parse(await readFile(skillsJsonPath, "utf8"));
+    if (Array.isArray(skillsJson.entries) && skillsJson.entries.length > 0) {
+      healthyCount++;
+      linkStatuses.push({ name: "skills.json", path: skillsJsonPath, status: "healthy", isSymlink: false });
+    } else {
+      brokenCount++;
+      linkStatuses.push({ name: "skills.json", path: skillsJsonPath, status: "invalid schema", isSymlink: false });
+    }
+  } catch {
+    missingCount++;
+    linkStatuses.push({ name: "skills.json", path: skillsJsonPath, status: "missing", isSymlink: false });
+  }
+
+  const totalCount = expectedLinks.length + 1;
+  const passed = hasDotAgents && brokenCount === 0 && missingCount === 0 && healthyCount === totalCount;
   return {
     passed,
     hasDotAgents,
     brokenCount,
     missingCount,
     healthyCount,
+    totalCount,
     links: linkStatuses,
   };
 }

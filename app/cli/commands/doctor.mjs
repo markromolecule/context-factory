@@ -144,7 +144,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
       ".agents Symlink Integrity",
       symlinkPassed ? badges.pass() : badges.fail(),
       symlinkPassed
-        ? `${symlinkHealth.healthyCount}/6 symlinks verified healthy`
+        ? `${symlinkHealth.healthyCount}/${symlinkHealth.totalCount || 6} symlink & agent configs verified healthy`
         : `${symlinkHealth.brokenCount} broken, ${symlinkHealth.missingCount} missing. Run \`context-cli doctor --repair\``,
     ],
     [

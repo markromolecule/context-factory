@@ -490,7 +490,7 @@ for (const path of ["app.json", "appearance.json", "core-plugins.json", "graph.j
   }
 }
 
-const expectedDotAgents = ["skills", "rules", "agents", "workflows", "AGENTS.md", "GEMINI.md"];
+const expectedDotAgents = ["rules", "agents", "workflows", "AGENTS.md", "GEMINI.md"];
 try {
   const dotAgentsStat = await lstat(resolve(root, ".agents"));
   if (!dotAgentsStat.isDirectory()) throw new Error("not dir");
@@ -517,6 +517,48 @@ for (const name of expectedDotAgents) {
   } catch {
     error(`Missing required .agents/ link: .agents/${name}`);
   }
+}
+
+// Validate .agents/skills.json
+try {
+  const skillsJson = await readJson(".agents/skills.json");
+  if (!Array.isArray(skillsJson.entries) || skillsJson.entries.length === 0) {
+    error("Invalid .agents/skills.json: entries array required");
+  }
+} catch {
+  error("Missing required .agents/skills.json configuration");
+}
+
+// Validate .agents/skills/ per-skill symlinks
+try {
+  const skillsDirStat = await lstat(resolve(root, ".agents/skills"));
+  if (!skillsDirStat.isDirectory()) {
+    error(".agents/skills must be a directory containing per-skill symlinks");
+  } else {
+    for (const skillPath of manifest.skills) {
+      const parts = skillPath.split("/");
+      const skillName = parts[parts.length - 2];
+      const linkPath = resolve(root, `.agents/skills/${skillName}`);
+      try {
+        const stat = await lstat(linkPath);
+        if (stat.isSymbolicLink()) {
+          const rawTarget = await readlink(linkPath);
+          const resolved = resolve(resolve(root, ".agents/skills"), rawTarget);
+          try {
+            await lstat(resolved);
+          } catch {
+            error(`Dangling skill symlink in .agents/skills/: ${skillName} -> ${rawTarget}`);
+          }
+        } else {
+          error(`.agents/skills/${skillName} must be a symbolic link`);
+        }
+      } catch {
+        error(`Missing required skill symlink in .agents/skills/: ${skillName}`);
+      }
+    }
+  }
+} catch {
+  error("Missing required .agents/skills directory");
 }
 
 try {
