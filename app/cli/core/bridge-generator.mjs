@@ -542,25 +542,54 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
  * Re-creates or repairs missing and broken symlinks in target directory.
  */
 export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}) {
-  let factoryPath = flags.factoryPath || null;
+  let factoryPath = flags.factoryPath || flags.factory || null;
   let ide = flags.ide || ["all"];
   let method = flags.method || "submodule";
 
+  // 1. Check local .gitmodules first (if host repo embeds context-factory as a git submodule)
   try {
-    const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
-    if (bridgeJson.factoryPath) factoryPath = bridgeJson.factoryPath;
-    if (bridgeJson.ides) ide = bridgeJson.ides;
-    if (bridgeJson.integrationMethod) method = bridgeJson.integrationMethod;
-  } catch {
-    // If inside context-factory itself
-    if (targetDir === root) {
-      factoryPath = ".";
+    const gitModules = await readFile(join(targetDir, ".gitmodules"), "utf8");
+    if (gitModules.includes("context-factory")) {
+      const match = gitModules.match(/path\s*=\s*(.+)/);
+      if (match) {
+        const p = match[1].trim();
+        if (existsSync(join(targetDir, p))) {
+          factoryPath = p;
+          method = "submodule";
+        }
+      }
+    }
+  } catch {}
+
+  // 2. Check local directories if submodule is embedded
+  if (!factoryPath) {
+    if (existsSync(join(targetDir, "context-factory", "context-manifest.json"))) {
+      factoryPath = "context-factory";
+      method = "submodule";
+    } else if (existsSync(join(targetDir, ".context-factory", "context-manifest.json"))) {
+      factoryPath = ".context-factory";
+      method = "submodule";
+    }
+  }
+
+  // 3. Fallback to existing .context-bridge.json
+  if (!factoryPath) {
+    try {
+      const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
+      if (bridgeJson.factoryPath) factoryPath = bridgeJson.factoryPath;
+      if (bridgeJson.ides) ide = bridgeJson.ides;
+      if (bridgeJson.integrationMethod) method = bridgeJson.integrationMethod;
+    } catch {
+      // If inside context-factory itself
+      if (targetDir === root) {
+        factoryPath = ".";
+      }
     }
   }
 
   return generateBridge({
     target: targetDir,
-    factoryPath,
+    factoryPath: factoryPath || ".",
     ide,
     method,
     force: true,

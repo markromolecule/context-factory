@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
-import { isAbsolute, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, resolve } from "node:path";
 import { runAllEvaluations } from "../../../evals/run-evals.mjs";
 import { createLock, readJson, root } from "../../../scripts/context-core.mjs";
 import { repairBridgeSymlinks, verifySymlinkHealth } from "../core/bridge-generator.mjs";
@@ -13,41 +13,79 @@ export async function handleDoctorCommand(args = [], flags = {}) {
   const targetDir = flags.target ? (isAbsolute(flags.target) ? flags.target : resolve(process.cwd(), flags.target)) : process.cwd();
   const startTime = Date.now();
 
-  const isHostRepo = targetDir !== root && existsSync(join(targetDir, ".context-bridge.json"));
+  // Detect host repo vs factory submodule
+  let hostDir = targetDir;
+  let factoryDir = root;
+  let isHostRepo = false;
+
+  if (targetDir !== root && existsSync(join(targetDir, ".context-bridge.json"))) {
+    isHostRepo = true;
+    hostDir = targetDir;
+    try {
+      const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
+      if (bridgeJson.factoryPath) factoryDir = resolve(targetDir, bridgeJson.factoryPath);
+    } catch {}
+  } else if (targetDir !== root && existsSync(join(targetDir, ".gitmodules"))) {
+    isHostRepo = true;
+    hostDir = targetDir;
+  } else if (existsSync(join(dirname(targetDir), ".context-bridge.json")) || existsSync(join(dirname(targetDir), ".gitmodules"))) {
+    // targetDir is a submodule inside host repo (e.g. sentinel/context-factory)
+    isHostRepo = true;
+    hostDir = dirname(targetDir);
+    factoryDir = targetDir;
+  }
+
+  // Ensure factoryDir is valid
+  if (!existsSync(join(factoryDir, "context-manifest.json"))) {
+    if (existsSync(join(targetDir, "context-factory", "context-manifest.json"))) {
+      factoryDir = join(targetDir, "context-factory");
+    } else if (existsSync(join(targetDir, ".context-factory", "context-manifest.json"))) {
+      factoryDir = join(targetDir, ".context-factory");
+    } else {
+      factoryDir = root;
+    }
+  }
+
+  const symlinkTarget = isHostRepo ? hostDir : (existsSync(join(targetDir, ".agents")) ? targetDir : root);
 
   // If repair requested upfront, repair bridge symlinks before running checks
   let repairResult = null;
   if (repair) {
-    repairResult = await repairBridgeSymlinks(targetDir, flags);
+    repairResult = await repairBridgeSymlinks(symlinkTarget, flags);
   }
 
-  // 1. Validator / Linter (run against root if in factory or target if specified)
+  // 1. Validator / Linter (run against factoryDir)
   const lintRes = spawnSync(process.execPath, ["scripts/validate-context.mjs"], {
-    cwd: root,
+    cwd: factoryDir,
     encoding: "utf8",
   });
   const lintPassed = lintRes.status === 0;
 
   // 2. Lock check
-  const manifest = await readJson("context-manifest.json");
+  let manifest;
+  try {
+    manifest = JSON.parse(await readFile(join(factoryDir, "context-manifest.json"), "utf8"));
+  } catch {
+    manifest = await readJson("context-manifest.json");
+  }
   const expectedLock = await createLock(manifest);
   let actualLock = null;
   try {
-    actualLock = JSON.parse(await readFile(join(root, "context-lock.json"), "utf8"));
+    actualLock = JSON.parse(await readFile(join(factoryDir, "context-lock.json"), "utf8"));
   } catch {
     actualLock = null;
   }
   const lockPassed = actualLock && JSON.stringify(actualLock) === JSON.stringify(expectedLock);
 
   // 3. Symlink Health Check
-  const symlinkHealth = await verifySymlinkHealth(targetDir);
+  let symlinkHealth = await verifySymlinkHealth(symlinkTarget);
   let symlinkPassed = symlinkHealth.passed;
 
-  // If symlinks failed and repair wasn't run yet, but auto-repair is enabled
+  // If symlinks failed and repair was requested, recheck
   if (!symlinkPassed && repair) {
-    repairResult = await repairBridgeSymlinks(targetDir, flags);
-    const recheck = await verifySymlinkHealth(targetDir);
-    symlinkPassed = recheck.passed;
+    repairResult = await repairBridgeSymlinks(symlinkTarget, flags);
+    symlinkHealth = await verifySymlinkHealth(symlinkTarget);
+    symlinkPassed = symlinkHealth.passed;
   }
 
   // 4. Evaluations

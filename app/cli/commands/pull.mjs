@@ -345,7 +345,7 @@ export async function handlePullCommand(args = [], flags = {}) {
   // Post-pull doctor diagnostics
   let doctorPassed = true;
   if (runDoctorAfter) {
-    const doctorTarget = isHostRepo ? resolve(targetDir, subPath || ".context-factory") : repoCwd;
+    const doctorTarget = isHostRepo ? targetDir : repoCwd;
     if (!isJson) {
       console.log(`\n${colors.bold("--- Verifying Context Factory Health After Pull ---")}`);
     }
