@@ -220,6 +220,46 @@ const ROUTING_HINTS = [
 export async function resolveContext(request, options = {}) {
   const manifest = await readJson("context-manifest.json");
   const hostDir = options.hostDir || options.target || null;
+  const effectiveHost = hostDir ? resolve(process.cwd(), hostDir) : (process.cwd() !== root ? process.cwd() : null);
+
+  // Stack determination:
+  // 1. Explicit options.stacks (array) or options.stack (string)
+  // 2. Read from .context-bridge.json in effectiveHost or cwd if exists
+  // 3. Fallback: ["typescript"] for backwards compatibility
+  let declaredStacks = null;
+  if (Array.isArray(options.stacks) && options.stacks.length > 0) {
+    declaredStacks = options.stacks.map((s) => s.toLowerCase());
+  } else if (typeof options.stack === "string" && options.stack.trim()) {
+    declaredStacks = [options.stack.trim().toLowerCase()];
+  } else {
+    const checkDirs = [effectiveHost, process.cwd()].filter(Boolean);
+    for (const dir of checkDirs) {
+      try {
+        const bridgePath = join(dir, ".context-bridge.json");
+        const bridgeContent = await readJson(bridgePath);
+        if (Array.isArray(bridgeContent.stacks) && bridgeContent.stacks.length > 0) {
+          declaredStacks = bridgeContent.stacks.map((s) => s.toLowerCase());
+          break;
+        }
+      } catch {
+        // Continue
+      }
+    }
+  }
+
+  if (!declaredStacks || declaredStacks.length === 0) {
+    declaredStacks = ["typescript"];
+  }
+
+  const isRuleAllowed = (rulePath) => {
+    if (rulePath.startsWith("rules/global/") || rulePath.startsWith("rules/solid/")) {
+      return true;
+    }
+    const parts = rulePath.split("/");
+    const stack = parts[1];
+    return declaredStacks.includes(stack);
+  };
+
   const requestTerms = terms(request);
   const hasAction = requestTerms.some((term) => ACTION_TERMS.has(term)) || /^\/[a-z0-9_-]+|^\[[a-z0-9_-]+\]/i.test(request.trim());
   const ruleEntries = await entries(manifest.rules);
@@ -246,8 +286,9 @@ export async function resolveContext(request, options = {}) {
     if (selectedAgent) break;
   }
 
-  // 2. Rule selection (scored + alwaysApply + agent declared rules)
-  const selectedRules = ruleEntries
+  // 2. Rule selection (scored + alwaysApply + agent declared rules, filtered by stack)
+  const candidateRuleEntries = ruleEntries.filter((entry) => isRuleAllowed(entry.path));
+  const selectedRules = candidateRuleEntries
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
     .filter((entry) => (
       entry.relevance.score >= 4
@@ -263,7 +304,7 @@ export async function resolveContext(request, options = {}) {
   if (selectedAgent && Array.isArray(selectedAgent.meta.rules)) {
     const selectedRulePaths = new Set(selectedRules.map((item) => item.path));
     for (const rulePath of selectedAgent.meta.rules) {
-      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath)) {
+      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath) && isRuleAllowed(rulePath)) {
         selectedRules.push({ path: rulePath, reason: `declared by agent ${selectedAgent.meta.name}` });
         selectedRulePaths.add(rulePath);
       }
@@ -334,7 +375,7 @@ export async function resolveContext(request, options = {}) {
     ]);
     const selectedRulePaths = new Set(selectedRules.map((item) => item.path));
     for (const rulePath of linkedRulePaths) {
-      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath)) {
+      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath) && isRuleAllowed(rulePath)) {
         selectedRules.push({ path: rulePath, reason: `required by ${selectedWorkflow.path}` });
         selectedRulePaths.add(rulePath);
       }
@@ -358,7 +399,6 @@ export async function resolveContext(request, options = {}) {
   }
 
   // 5. Host project local rules discovery (if running in bridged workspace)
-  const effectiveHost = hostDir ? resolve(process.cwd(), hostDir) : (process.cwd() !== root ? process.cwd() : null);
   if (effectiveHost) {
     try {
       const hostRulesDir = join(effectiveHost, "rules");
@@ -402,6 +442,7 @@ export async function resolveContext(request, options = {}) {
   return {
     schemaVersion: 1,
     contextVersion: manifest.contextVersion,
+    stacks: declaredStacks,
     request,
     requestTerms,
     agent: selectedAgent ? {

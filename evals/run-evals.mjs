@@ -11,7 +11,7 @@ export async function runUnitEvaluations() {
   for (const path of manifest.evaluations ?? []) {
     const caseStart = Date.now();
     const testCase = await readJson(path);
-    const selection = await resolveContext(testCase.request);
+    const selection = await resolveContext(testCase.request, testCase.options ?? {});
     const errors = compareSelection(selection, testCase.expected);
 
     for (const assertion of testCase.contractAssertions ?? []) {

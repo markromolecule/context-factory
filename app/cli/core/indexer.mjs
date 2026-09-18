@@ -33,6 +33,14 @@ export async function generateRulesMoc(actualRules) {
     typescriptDatabase: { title: "### Database", items: [] },
     typescriptHooks: { title: "### Hooks", items: [] },
     typescriptUi: { title: "### UI", items: [] },
+    laravelCommon: { title: "## Laravel\n\n### Common", items: [] },
+    laravelAntiPatterns: { title: "### Anti-Patterns", items: [] },
+    laravelFoundation: { title: "### Foundation", items: [] },
+    laravelHttp: { title: "### HTTP", items: [] },
+    laravelDatabase: { title: "### Database", items: [] },
+    laravelApplication: { title: "### Application", items: [] },
+    laravelSecurity: { title: "### Security", items: [] },
+    laravelPresentation: { title: "### Presentation", items: [] },
   };
 
   const customGroups = new Map();
@@ -49,6 +57,14 @@ export async function generateRulesMoc(actualRules) {
     else if (p.startsWith("rules/typescript/database/")) groups.typescriptDatabase.items.push(row);
     else if (p.startsWith("rules/typescript/hooks/")) groups.typescriptHooks.items.push(row);
     else if (p.startsWith("rules/typescript/ui/")) groups.typescriptUi.items.push(row);
+    else if (p.startsWith("rules/laravel/common/")) groups.laravelCommon.items.push(row);
+    else if (p.startsWith("rules/laravel/anti-patterns/")) groups.laravelAntiPatterns.items.push(row);
+    else if (p.startsWith("rules/laravel/foundation/")) groups.laravelFoundation.items.push(row);
+    else if (p.startsWith("rules/laravel/http/")) groups.laravelHttp.items.push(row);
+    else if (p.startsWith("rules/laravel/database/")) groups.laravelDatabase.items.push(row);
+    else if (p.startsWith("rules/laravel/application/")) groups.laravelApplication.items.push(row);
+    else if (p.startsWith("rules/laravel/security/")) groups.laravelSecurity.items.push(row);
+    else if (p.startsWith("rules/laravel/presentation/")) groups.laravelPresentation.items.push(row);
     else {
       const parts = p.split("/");
       const cat = parts[1] || "other";

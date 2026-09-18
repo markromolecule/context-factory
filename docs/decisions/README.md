@@ -28,3 +28,5 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0018-synchronization-and-package-manager-modernization|Context Factory Synchronization and Package Manager Modernization]]
 - [[docs/decisions/0019-loop-engineering-primitives|Loop Engineering Primitives Integration]]
 - [[docs/decisions/0020-categorical-skill-grouping-and-group-indexes|Categorical Skill Grouping and Group Index Invariants]]
+- [[docs/decisions/0021-explicit-language-stack-selection|Explicit Language Stack Selection for Context Rules]]
+- [[docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards|Pragmatic Laravel Rule Taxonomy, Anti-Overengineering Architecture, and Dynamic Multi-Language Alignment]]

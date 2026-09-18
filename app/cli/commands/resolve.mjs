@@ -7,7 +7,11 @@ export async function handleResolveCommand(args = [], flags = {}) {
     throw new Error("Usage: context-cli resolve \"<task description or request prompt>\"");
   }
 
-  const selection = await resolveContext(request);
+  const resolveOptions = {};
+  if (flags.stack) resolveOptions.stack = flags.stack;
+  if (flags.stacks) resolveOptions.stacks = Array.isArray(flags.stacks) ? flags.stacks : String(flags.stacks).split(",");
+
+  const selection = await resolveContext(request, resolveOptions);
 
   if (flags.json) {
     console.log(JSON.stringify(selection, null, 2));

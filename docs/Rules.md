@@ -63,3 +63,53 @@ tags: [rules, engineering]
 - [[rules/typescript/ui/forms-and-validation|Forms and Validation]]
 - [[rules/typescript/ui/frontend|Frontend Styling and Craftsmanship]]
 - [[rules/typescript/ui/interaction-feedback|Interaction Feedback]]
+
+## Laravel
+
+### Common
+
+- [[rules/laravel/common/anti-patterns|Laravel Anti-Patterns & Bad Habits Guide]]
+- [[rules/laravel/common/artisan-commands|Laravel Artisan Console Commands]]
+- [[rules/laravel/common/naming-conventions|Laravel Naming Conventions]]
+- [[rules/laravel/common/project-structure|Modular Laravel Project Structure & Frontend Architecture]]
+
+### Anti-Patterns
+
+- [[rules/laravel/anti-patterns/config-caching|Direct env() Calls Outside Config Anti-Pattern]]
+- [[rules/laravel/anti-patterns/mass-assignment|Mass-Assignment Security Hole Anti-Pattern]]
+- [[rules/laravel/anti-patterns/monolithic-controllers|Monolithic Controllers Anti-Pattern]]
+- [[rules/laravel/anti-patterns/n-plus-one-queries|N+1 Database Queries Anti-Pattern]]
+- [[rules/laravel/anti-patterns/untyped-arrays|Untyped Arrays Anti-Pattern]]
+
+### Foundation
+
+- [[rules/laravel/foundation/container-and-injection|Service Container and Dependency Injection]]
+- [[rules/laravel/foundation/conventions|Laravel & Modern PHP Conventions]]
+- [[rules/laravel/foundation/error-handling|Error and Exception Handling]]
+
+### HTTP
+
+- [[rules/laravel/http/middleware|HTTP Middleware]]
+- [[rules/laravel/http/requests-and-validation|Requests and Validation]]
+- [[rules/laravel/http/routing-and-controllers|Routing and Controllers]]
+
+### Database
+
+- [[rules/laravel/database/eloquent-and-models|Eloquent ORM and Models]]
+- [[rules/laravel/database/migrations-and-seeders|Migrations, Seeders, and Model Factories]]
+- [[rules/laravel/database/query-optimization|Database Query Optimization and Performance]]
+
+### Application
+
+- [[rules/laravel/application/async-and-events|Asynchronous Workloads, Events, Caching, and Resilient HTTP]]
+- [[rules/laravel/application/business-logic-and-actions|Business Logic, Invokable Actions, and Anti-Overengineering]]
+- [[rules/laravel/application/transactions|Database Transactions and Concurrency Safety]]
+
+### Security
+
+- [[rules/laravel/security/authorization|Authorization, Policies, Gates, and Multi-Tenant Isolation]]
+- [[rules/laravel/security/defense-and-protection|Application Defense, Rate Limiting, Uploads, and Protection]]
+
+### Presentation
+
+- [[rules/laravel/presentation/blade-and-components|Blade Templates, Components, Layout Slots, and Assets]]

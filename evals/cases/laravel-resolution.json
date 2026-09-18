@@ -1,0 +1,19 @@
+{
+  "name": "laravel stack resolves laravel rules and excludes typescript rules",
+  "request": "/feature create user registration endpoint with Form Request validation and Eloquent models",
+  "options": {
+    "stacks": ["laravel"]
+  },
+  "expected": {
+    "workflow": "workflows/feature-delivery.md",
+    "rules": [
+      "rules/laravel/http/requests-and-validation.md",
+      "rules/laravel/http/routing-and-controllers.md",
+      "rules/laravel/database/eloquent-and-models.md"
+    ],
+    "excludedRules": [
+      "rules/typescript/common/runtime-validation.md",
+      "rules/typescript/backend/controllers-and-routes.md"
+    ]
+  }
+}

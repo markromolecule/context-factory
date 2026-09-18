@@ -12,23 +12,23 @@ The factory separates stable project knowledge from task-specific context so age
 
 ## Layers
 
-| Layer | Source | Responsibility |
-|---|---|---|
-| Inventory | `context-manifest.json` | Versioned list of canonical context files |
-| Entry points | `README.md`, `AGENTS.md` | Discovery and minimum startup instructions |
-| Orchestration | `orchestrator/SHARED.md` | Model-neutral load order, execution contract, and working rules |
-| Execution Runner | `orchestrator/runner.mjs` | Pluggable provider execution (`openai`, `anthropic`, `gemini`), 3-stage hooks, and mock replay |
-| Output Validator | `orchestrator/validator.mjs` | Pure ESM JSON Schema validator enforcing output contracts |
-| Adapters | `orchestrator/{AGENTS,CLAUDE,GEMINI}.md` | Thin model-specific presentation guidance |
-| Rules | `rules/{global,backend,frontend,typescript}/` | Scoped engineering constraints |
-| Skills | `skills/*/SKILL.md`, references, agents | Triggered procedures with progressively disclosed resources and synchronized interface metadata |
-| Workflows | `workflows/*.md` | Multi-stage lifecycle orchestration, quality gates, and stop conditions |
-| Knowledge | `knowledge/*.md`, `docs/` | Attributable LLM knowledge, Obsidian maps, tasks, and decisions |
-| Schemas | `schemas/*.json` | Output contracts (`run-result`, `evaluation-report`, `claim-evidence`) and knowledge schemas |
-| Templates and decisions | `docs/templates/`, `docs/decisions/` | Valid artifact shapes and durable architectural history |
-| Harness CLI | `scripts/harness-cli.mjs`, `scripts/context.mjs` | Unified CLI interface, context resolution, bundling, execution, locking, and diagnostics |
-| Automation | `.github/workflows/context-factory.yml` | Cross-platform health enforcement on pushes and pull requests |
-| Evaluation Suites | `evals/run-evals.mjs`, `evals/{cases,datasets}/` | Multi-tier unit resolution cases and golden workflow regression suites |
+| Layer                   | Source                                           | Responsibility                                                                                  |
+| ----------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| Inventory               | `context-manifest.json`                          | Versioned list of canonical context files                                                       |
+| Entry points            | `README.md`, `AGENTS.md`                         | Discovery and minimum startup instructions                                                      |
+| Orchestration           | `orchestrator/SHARED.md`                         | Model-neutral load order, execution contract, and working rules                                 |
+| Execution Runner        | `orchestrator/runner.mjs`                        | Pluggable provider execution (`openai`, `anthropic`, `gemini`), 3-stage hooks, and mock replay  |
+| Output Validator        | `orchestrator/validator.mjs`                     | Pure ESM JSON Schema validator enforcing output contracts                                       |
+| Adapters                | `orchestrator/{AGENTS,CLAUDE,GEMINI}.md`         | Thin model-specific presentation guidance                                                       |
+| Rules                   | `rules/{global,solid,typescript,laravel}/`       | Scoped engineering constraints selected by explicit project stack declarations                  |
+| Skills                  | `skills/*/SKILL.md`, references, agents          | Triggered procedures with progressively disclosed resources and synchronized interface metadata |
+| Workflows               | `workflows/*.md`                                 | Multi-stage lifecycle orchestration, quality gates, and stop conditions                         |
+| Knowledge               | `knowledge/*.md`, `docs/`                        | Attributable LLM knowledge, Obsidian maps, tasks, and decisions                                 |
+| Schemas                 | `schemas/*.json`                                 | Output contracts (`run-result`, `evaluation-report`, `claim-evidence`) and knowledge schemas    |
+| Templates and decisions | `docs/templates/`, `docs/decisions/`             | Valid artifact shapes and durable architectural history                                         |
+| Harness CLI             | `scripts/harness-cli.mjs`, `scripts/context.mjs` | Unified CLI interface, context resolution, bundling, execution, locking, and diagnostics        |
+| Automation              | `.github/workflows/context-factory.yml`          | Cross-platform health enforcement on pushes and pull requests                                   |
+| Evaluation Suites       | `evals/run-evals.mjs`, `evals/{cases,datasets}/` | Multi-tier unit resolution cases and golden workflow regression suites                          |
 
 ## Context flow
 
@@ -82,3 +82,4 @@ flowchart LR
 - [[docs/decisions/0015-execute-skill-strict-phase-stops-and-modular-refactoring|Execute skill strict phase stops, code review optimization workflow, and modular refactoring]]
 - [[docs/decisions/0016-declarative-lifecycle-specialist-agents|Declarative lifecycle specialist agents and harness resolution architecture]]
 - [[docs/decisions/0017-ide-bridging-and-symlink-synchronization-architecture|IDE bridging and symlink synchronization architecture]]
+- [[docs/decisions/0021-explicit-language-stack-selection|Explicit language stack selection for context rules]]

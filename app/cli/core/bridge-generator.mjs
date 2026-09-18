@@ -398,6 +398,7 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
       integrationMethod: method,
       packageManager: activePm,
       ides: activeIdes,
+      stacks: options.stacks || (options.stack ? [options.stack] : ["typescript"]),
       createdAt: new Date().toISOString(),
       scoping: {
         tasks: "./docs/tasks",
