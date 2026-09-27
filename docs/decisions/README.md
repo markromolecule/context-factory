@@ -30,3 +30,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0020-categorical-skill-grouping-and-group-indexes|Categorical Skill Grouping and Group Index Invariants]]
 - [[docs/decisions/0021-explicit-language-stack-selection|Explicit Language Stack Selection for Context Rules]]
 - [[docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards|Pragmatic Laravel Rule Taxonomy, Anti-Overengineering Architecture, and Dynamic Multi-Language Alignment]]
+- [[docs/decisions/0023-laravel-modular-domain-architecture-and-unified-conventions|Laravel Modular Domain Architecture, Route Co-location, and Unified Naming Conventions]]

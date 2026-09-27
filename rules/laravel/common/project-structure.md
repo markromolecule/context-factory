@@ -9,8 +9,10 @@ alwaysApply: true
 
 ## Boundaries
 
-- **Modular Domain Organization (Single Responsibility & Cohesion):** Organize scalable applications by **Module/Domain** (`app/Modules/<Module>/` or `app/Domains/<Domain>/`) rather than a flat, disconnected MVC hierarchy. Adhere to [[rules/solid/single-responsibility|Single Responsibility (SRP)]] at the architectural boundary: group all domain-specific primitives (Models, Actions, Controllers, Requests, Resources, Policies, Events) within their parent module so each module has a single cohesive domain responsibility.
-- **Shared vs Domain Isolation (Dependency Inversion & Open/Closed):** Cross-cutting infrastructure, global middleware, shared value objects, and base traits live in `app/Shared/`. Modules must not directly mutate internal private state of another module; communicate across modules via public Invokable Actions, interfaces, or Domain Events, adhering to [[rules/solid/dependency-inversion|Dependency Inversion (DIP)]] and [[rules/solid/open-closed|Open/Closed (OCP)]].
+- **Modular Domain Organization (Single Responsibility & Cohesion):** Organize scalable applications by **Native PSR-4 Modules** (`app/Modules/<Feature>/`) rather than a flat, disconnected MVC hierarchy. Adhere to [[rules/solid/single-responsibility|Single Responsibility (SRP)]] at the architectural boundary: group all domain-specific primitives (Models, Actions, Controllers, Requests, Resources, Policies, Events, and co-located Routes) within their parent module so each feature forms a cohesive, self-contained unit.
+- **Co-located Routing & Canonical Route Names:** Each module owns its endpoints in `app/Modules/<Feature>/routes.php` (or `routes/api.php` and `routes/web.php`). Route names MUST follow clean canonical dot notation (`orders.index`, `orders.show`); NEVER prefix route names with internal directory artifacts (no `modules.orders.show`).
+- **Centralized Database Migrations:** Database migrations remain centralized under `database/migrations/` using standard Laravel timestamp ordering (`YYYY_MM_DD_HHMMSS_create_..._table.php`). This strictly eliminates foreign-key ordering failures across dependent tables during `migrate:fresh`.
+- **Shared vs Domain Isolation (Dependency Inversion & Open/Closed):** Cross-cutting infrastructure, global middleware, shared value objects, service providers, and base traits live in `app/Shared/`. Modules must not directly mutate internal private state of another module; communicate across modules via public Invokable Actions, interfaces, or Domain Events, adhering to [[rules/solid/dependency-inversion|Dependency Inversion (DIP)]] and [[rules/solid/open-closed|Open/Closed (OCP)]].
 - **Component-First Blade Hierarchy:** Forbid legacy `@include` chains and `@extends`/`@section` inheritance for page layouts and UI controls. Use slot-based Blade layout components (`<x-layouts.app>`) and atomic component directories (`<x-ui.*>`, `<x-forms.*>`, `<x-layout.*>`).
 - **No Presentation Logic Leakage:** Blade templates MUST NOT execute database queries (e.g. `User::all()`, `Order::count()`) or service locator calls (`app(...)`). All data must be prepared in the Controller/Action and passed into the view.
 - **No Legacy Kernel Architecture:** In Laravel 11+, configure middleware, exceptions, and routing entirely in `bootstrap/app.php` and `routes/console.php`. Never reintroduce legacy `app/Http/Kernel.php` or `app/Console/Kernel.php`.
@@ -20,13 +22,13 @@ alwaysApply: true
 
 ### 1. Modular Backend Architecture (`app/Modules/`)
 
-Each domain module encapsulates its own end-to-end responsibilities:
+Each domain module encapsulates its own end-to-end responsibilities, co-locating models, controllers, actions, and routes:
 
 ```
 app/
 ├── Modules/
 │   ├── Orders/                          # Orders Domain Module
-│   │   ├── Actions/                     # Invokable actions (ProcessOrderCheckout.php, CancelOrderAction.php)
+│   │   ├── Actions/                     # Invokable actions (ProcessOrderCheckout.php, CancelOrder.php)
 │   │   ├── Controllers/                 # Module controllers (OrderController.php, DownloadInvoiceController.php)
 │   │   ├── Enums/                       # Module backed enums (OrderStatus.php)
 │   │   ├── Events/                      # State change events (OrderShipped.php)
@@ -35,23 +37,29 @@ app/
 │   │   ├── Policies/                    # Authorization logic (OrderPolicy.php)
 │   │   ├── Requests/                    # Form Requests (StoreOrderRequest.php, UpdateOrderRequest.php)
 │   │   ├── Resources/                   # API Resources (OrderResource.php, OrderItemResource.php)
-│   │   └── Rules/                       # Custom validation rules (ValidPromoCode.php)
+│   │   ├── Rules/                       # Custom validation rules (ValidPromoCode.php)
+│   │   └── routes.php                   # Co-located module endpoints (web & api routes)
 │   ├── Users/                           # Users & Authentication Module
-│   │   ├── Actions/                     # RegisterUserAction.php, UpdatePasswordAction.php
+│   │   ├── Actions/                     # RegisterUser.php, ResetPassword.php
 │   │   ├── Controllers/                 # UserController.php, ProfileController.php
 │   │   ├── Models/                      # User.php, UserProfile.php
 │   │   ├── Policies/                    # UserPolicy.php
-│   │   └── Requests/                    # UpdateProfileRequest.php
+│   │   ├── Requests/                    # UpdateProfileRequest.php
+│   │   └── routes.php                   # Co-located user/auth routes
 │   └── Billing/                         # Billing & Payments Module
-│       ├── Actions/                     # ChargeCustomerAction.php
+│       ├── Actions/                     # ChargeCustomer.php
 │       ├── Controllers/                 # WebhookController.php
 │       ├── Models/                      # Invoice.php, Subscription.php
-│       └── Services/                    # StripeGatewayService.php
-└── Shared/                              # Cross-cutting foundational code
+│       ├── Services/                    # StripeGatewayService.php
+│       └── routes.php                   # Co-located billing routes
+└── Shared/                              # Cross-cutting foundational infrastructure
     ├── Enums/                           # Global enums (Environment.php, Currency.php)
     ├── Exceptions/                      # Base domain exceptions (DomainException.php)
     ├── Middleware/                      # Global pipeline guards (EnforceSecurityHeaders.php)
+    ├── Providers/                       # ModuleServiceProvider.php (route & module discovery)
     └── Traits/                          # Shared model traits (HasUlids.php, Auditable.php)
+database/
+└── migrations/                          # Centralized migrations preserving deterministic timestamp order
 ```
 
 ### 2. Frontend & Blade Architecture (`resources/`)
@@ -223,9 +231,54 @@ return Application::configure(basePath: dirname(__DIR__))
     })->create();
 ```
 
+### 6. Lean Module Route Auto-Discovery (`app/Shared/Providers/ModuleServiceProvider.php`)
+
+Co-located module routes are discovered and registered dynamically via a lightweight Service Provider registered in `bootstrap/providers.php`:
+
+```php
+declare(strict_types=1);
+
+namespace App\Shared\Providers;
+
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+
+final class ModuleServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        $this->registerModuleRoutes();
+    }
+
+    private function registerModuleRoutes(): void
+    {
+        $modulesDir = app_path('Modules');
+        if (!is_dir($modulesDir)) {
+            return;
+        }
+
+        foreach (scandir($modulesDir) as $module) {
+            if ($module === '.' || $module === '..') {
+                continue;
+            }
+
+            $routeFile = "{$modulesDir}/{$module}/routes.php";
+            if (file_exists($routeFile)) {
+                Route::middleware('api')
+                    ->prefix('api/v1')
+                    ->group($routeFile);
+            }
+        }
+    }
+}
+```
+
 ## Verification
 
-- Inspect `app/Modules/` to confirm classes are encapsulated by domain module rather than flat global folders.
+- Inspect `app/Modules/` to confirm classes (Models, Controllers, Actions, Requests, Resources, Policies) and co-located `routes.php` are encapsulated by domain module rather than flat global folders.
+- Confirm route names follow clean dot notation (`orders.index`, `orders.show`); verify zero occurrences of `modules.` route name prefixes.
+- Run `php artisan route:list` to verify all co-located module routes load cleanly without prefix or middleware collisions.
+- Confirm database migrations remain centralized in `database/migrations/` and pass `php artisan migrate:fresh --seed` without foreign key constraint ordering failures.
 - Verify `resources/views/` adheres to the 3-tier structure: `layouts/`, design-system `components/`, and per-module `modules/<domain>/`.
 - Confirm Blade files never execute direct Eloquent queries (`Model::find()`) or service locator calls (`app(...)`).
 - Verify `grep -rn "env(" app/ routes/` produces zero results outside `config/`.

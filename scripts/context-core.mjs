@@ -248,7 +248,18 @@ export async function resolveContext(request, options = {}) {
   }
 
   if (!declaredStacks || declaredStacks.length === 0) {
-    declaredStacks = ["typescript"];
+    const inferred = [];
+    if (/\b(laravel|artisan|eloquent|blade|pint|pest)\b/i.test(request)) {
+      inferred.push("laravel");
+    }
+    if (/\b(typescript|nextjs|react|zod|tailwind)\b/i.test(request)) {
+      inferred.push("typescript");
+    }
+    if (inferred.length > 0) {
+      declaredStacks = inferred;
+    } else {
+      declaredStacks = ["typescript"];
+    }
   }
 
   const isRuleAllowed = (rulePath) => {

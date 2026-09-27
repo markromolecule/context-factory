@@ -22,14 +22,14 @@ alwaysApply: true
 
 - **Invokable Action Structure:**
   - Structure each action as a single-responsibility invokable class with an `execute()` or `__invoke()` method.
-  - Store action classes in `app/Actions/<Domain>/` (e.g. `app/Actions/Orders/ProcessOrderCheckout.php`).
+  - Store action classes in `app/Modules/<Domain>/Actions/` (e.g. `app/Modules/Orders/Actions/ProcessOrderCheckout.php`).
   - Declare strict parameter types and explicit return types on the action entry point:
 
     ```php
-    namespace App\Actions\Orders;
+    namespace App\Modules\Orders\Actions;
 
-    use App\Models\Order;
-    use App\Models\User;
+    use App\Modules\Orders\Models\Order;
+    use App\Modules\Users\Models\User;
     use Illuminate\Support\Facades\DB;
 
     final readonly class ProcessOrderCheckout

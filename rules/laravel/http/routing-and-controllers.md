@@ -20,10 +20,10 @@ alwaysApply: true
 - **Dependency Inversion Principle (DIP) via Injection:**
   - Adhere to [[rules/solid/dependency-inversion|Dependency Inversion (DIP)]] by injecting required Actions, Domain Services, or infrastructure interfaces into controller constructors or action methods (`public function store(StoreOrderRequest $request, ProcessOrderAction $action)`).
   - Controllers must never instantiate low-level services or external SDKs with `new` or resolve them dynamically via the `app()` service locator.
-- **RESTful Resource Controllers:**
-  - Structure controllers around the 7 standard RESTful resource methods (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`) or create single-action invokable controllers (`__invoke()`) for non-resourceful endpoints.
-  - Group routes logically in `routes/web.php` or `routes/api.php` using route groups with shared prefixes, middlewares, and route names.
-  - Name all routes using dot notation (`users.index`, `orders.store`) to facilitate URL generation and refactoring.
+- **RESTful Resource Controllers & Co-located Routes:**
+  - Structure controllers around the 7 standard RESTful resource methods (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`) or create single-action invokable controllers (`<Verb><Noun>Controller`, e.g. `StoreOrderController`, `DownloadInvoiceController`) with `__invoke()` for non-resourceful endpoints.
+  - Co-locate route declarations within their domain module in `app/Modules/<Feature>/routes.php` (or `routes/api.php` and `routes/web.php`), registered dynamically via `App\Shared\Providers\ModuleServiceProvider` with uniform prefixes (`/api/v1/...`) and middleware.
+  - Name all routes using standard dot notation (`users.index`, `orders.store`) without internal directory artifact prefixes (never `modules.orders.store`) to facilitate clean URL generation and refactoring.
 - **Pragmatic CRUD Handling:**
   - For standard CRUD operations touching a single model, keep the logic directly inside the controller using a Form Request and Eloquent:
 

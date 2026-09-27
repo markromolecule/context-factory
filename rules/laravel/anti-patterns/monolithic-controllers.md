@@ -76,7 +76,7 @@ use App\Modules\Orders\Data\CheckoutData;
 use App\Modules\Orders\Requests\StoreOrderRequest;
 use Illuminate\Http\RedirectResponse;
 
-final class OrderStoreController
+final class StoreOrderController
 {
     public function __invoke(
         StoreOrderRequest $request,
@@ -89,7 +89,7 @@ final class OrderStoreController
         );
 
         return redirect()
-            ->route('modules.orders.show', $order)
+            ->route('orders.show', $order)
             ->with('success', 'Order placed successfully.');
     }
 }
@@ -103,5 +103,5 @@ final class OrderStoreController
 ## Verification
 
 - Inspect controller classes to verify no action method exceeds 25 lines of code.
-- Check that zero `DB::transaction()` closures or `Mail::to()->send()` calls exist in `app/Http/Controllers/` or `app/Modules/*/Controllers/`.
-- Ensure non-resourceful endpoints use single-action Invokable Controllers (`__invoke`).
+- Check that zero `DB::transaction()` closures or `Mail::to()->send()` calls exist in `app/Modules/*/Controllers/`.
+- Ensure non-resourceful endpoints use single-action Invokable Controllers (`__invoke`) named `<Verb><Noun>Controller`.

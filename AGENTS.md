@@ -14,7 +14,7 @@ This repository uses **Context Factory** (located at `.`) for development standa
 
 - **Task Plans & Breakdowns:** All implementation plans, phase breakdowns, and task files MUST be written to `./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/` in **this host repository**, NEVER inside `.`.
 - **Architecture Decisions (ADRs):** All architectural decision records MUST be saved to `./docs/decisions/` in **this host repository**.
-- **Templates:** Always load templates from `./docs/templates/Task.md`, `Phase.md`, and `Decision.md`.
+- **Templates:** Always load templates from `./docs/templates/Task.md`, `Phase.md`, `Unit.md`, and `Decision.md`.
 
 ## Session Slash Commands & Quick Actions
 

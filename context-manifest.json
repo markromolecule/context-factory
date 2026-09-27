@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "3.12.1",
+  "contextVersion": "3.13.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -160,7 +160,8 @@
     "docs/templates/Knowledge.md",
     "docs/templates/Phase.md",
     "docs/templates/Report.md",
-    "docs/templates/Task.md"
+    "docs/templates/Task.md",
+    "docs/templates/Unit.md"
   ],
   "decisions": [
     "docs/decisions/0001-vertical-backend-modules.md",
@@ -184,7 +185,8 @@
     "docs/decisions/0019-loop-engineering-primitives.md",
     "docs/decisions/0020-categorical-skill-grouping-and-group-indexes.md",
     "docs/decisions/0021-explicit-language-stack-selection.md",
-    "docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards.md"
+    "docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards.md",
+    "docs/decisions/0023-laravel-modular-domain-architecture-and-unified-conventions.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
