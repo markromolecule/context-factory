@@ -196,6 +196,7 @@
     "scripts/context-core.mjs",
     "scripts/context.mjs",
     "scripts/harness-cli.mjs",
+    "scripts/plan-check.mjs",
     "scripts/task-workflow.mjs",
     "scripts/triage.mjs",
     "scripts/validate-context.mjs",
