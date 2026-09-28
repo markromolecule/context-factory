@@ -3,8 +3,8 @@ title: "Phase 4 — Factory Synchronization & Doctor"
 type: phase
 parent: "0002-task-worktree-aware-unit-scaffolding"
 phase: "04"
-phase_branch: "task/0002/phase-04"
-status: planned
+phase_branch: "task/0002/phase-04/integration"
+status: completed
 created: "2026-09-28"
 tags: [task, phase, sync, doctor, manifest, lockfile]
 ---
@@ -23,7 +23,7 @@ Register any new evaluation files in `context-manifest.json`, synchronize the lo
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 04.01** | Manifest Sync & Doctor Verification | `unit-01-manifest-lock-and-doctor-validation.md` | `task/0002/phase-04/unit-01-sync-and-doctor` | `.worktrees/0002/phase-04/unit-01-sync-and-doctor` | `none` | `none` | `planned` |
+| **Unit 04.01** | Manifest Sync & Doctor Verification | `unit-01-manifest-lock-and-doctor-validation.md` | `task/0002/phase-04/unit-01-sync-and-doctor` | `.worktrees/0002/phase-04/unit-01-sync-and-doctor` | `none` | `none` | `completed` |
 
 ## Impacted Files & Components
 
@@ -32,7 +32,7 @@ Register any new evaluation files in `context-manifest.json`, synchronize the lo
 
 ## Implementation Tasks
 
-- [ ] Unit 04.01 — Synchronize manifest, generate lock, and run doctor.
+- [x] Unit 04.01 — Synchronize manifest, generate lock, and run doctor.
 
 ## Verification & Testing
 
