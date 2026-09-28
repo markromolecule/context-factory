@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan Review"
+  short_description: "Audit task plans for cycles, overlaps, and test coverage"
+  default_prompt: "Use $plan-review to audit the referenced plan before execution starts."

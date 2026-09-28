@@ -3,7 +3,7 @@ title: "Author plan-review Skill"
 type: unit
 parent: "phase-02-plan-review-skill"
 unit: "02.01"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, skill, plan-review, productivity]
 depends_on: ["01.03"]
@@ -65,6 +65,7 @@ Phase 1 completed (`scripts/plan-check.mjs` available and tested).
   - `openai.yaml` short description length within 25-64 characters.
   - Group index link verified.
 - Commands: `node scripts/context.mjs lint`
+- Evidence: `node scripts/context.mjs lint` passed with 0 errors. `node scripts/context.mjs doctor` passed with 100% HEALTHY (13 skills, 19 symlinks, 22 evaluations).
 
 ## Rollback
 
@@ -72,7 +73,7 @@ Delete `skills/productivity/plan-review/` and revert `skills/productivity/README
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-02
-- [ ] Skill document and agent interface created with zero lint errors
-- [ ] Group README links member skill correctly
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-02
+- [x] Skill document and agent interface created with zero lint errors
+- [x] Group README links member skill correctly
+- [x] All listed verification passes
