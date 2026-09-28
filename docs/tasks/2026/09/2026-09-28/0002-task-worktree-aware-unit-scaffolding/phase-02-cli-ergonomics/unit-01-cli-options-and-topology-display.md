@@ -5,7 +5,7 @@ parent: "phase-02-cli-ergonomics"
 unit: "02.01"
 branch: "task/0002/phase-02/unit-01-cli-options"
 worktree: ".worktrees/0002/phase-02/unit-01-cli-options"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, cli, flags, formatting]
 depends_on: ["01.02"]
@@ -40,13 +40,13 @@ Copied in, not referenced — this is what lets the unit run without the master 
 
 ## Scope
 
-**In scope:** `app/cli/commands/task.mjs`, `scripts/harness-cli.mjs`.
-**Out of scope:** Core file scaffolding logic (already in `scripts/task-workflow.mjs`).
+**In scope:** `app/cli/commands/task.mjs`, `scripts/harness-cli.mjs`, `scripts/task-workflow.mjs`, `tests/task-scaffold.test.mjs`.
+**Out of scope:** Phase-3 integration evals.
 
 ## Steps
 
 1. In `app/cli/commands/task.mjs`:
-   - Extract `noUnits: Boolean(flags.noUnits)` and pass `includeUnits: !flags.noUnits` to `scaffoldTask()`.
+   - Extract `noUnits: Boolean(flags.noUnits || flags.units === false || flags["no-units"])` and pass `includeUnits: !noUnits` to `scaffoldTask()`.
    - Enhance console output upon task creation to show:
      - Task Directory
      - Base Branch
@@ -54,6 +54,10 @@ Copied in, not referenced — this is what lets the unit run without the master 
    - In JSON output mode (`--json`), include `units` array containing `{ id, path, branch, worktree }`.
 2. In `scripts/harness-cli.mjs`:
    - Update `usage()` text: `task:new <title> [--type <...>] [--no-units] [--dry-run]`.
+3. In `scripts/task-workflow.mjs`:
+   - Support `includeUnits: true/false` parameter in `scaffoldTask`.
+4. In `tests/task-scaffold.test.mjs`:
+   - Add unit tests for `includeUnits: false` and default unit inclusion.
 
 ## Verification
 
@@ -62,16 +66,22 @@ Copied in, not referenced — this is what lets the unit run without the master 
 - Cases:
   - Case 1: `node scripts/context.mjs task:new "sample" --dry-run --json` returns valid JSON with `units` list.
   - Case 2: `node scripts/context.mjs task:new "sample" --dry-run --no-units --json` returns JSON with empty `units` array.
-- Commands: `node --test evals/task-scaffold.test.mjs`
+- Commands: `node --test tests/task-scaffold.test.mjs`
+- Verification Evidence:
+  - Command: `node --test tests/task-scaffold.test.mjs` (PASS: 4/4 passed in 93ms)
+  - Command: `node scripts/harness-cli.mjs task:new "Sample Feature Task" --dry-run` (PASS: prints Base Branch and Worktree Topology table)
+  - Command: `node scripts/harness-cli.mjs task:new "Sample Feature Task" --dry-run --no-units` (PASS: suppresses Worktree Topology table)
+  - Command: `node scripts/harness-cli.mjs task:new "Sample Feature Task" --dry-run --json` (PASS: returns units array with 4 units)
+  - Pre-screening Review: PASS (0 scope leaks, 0 SOLID violations)
 
 ## Rollback
 
-Revert modifications to `app/cli/commands/task.mjs` and `scripts/harness-cli.mjs`.
+Revert modifications to `app/cli/commands/task.mjs`, `scripts/harness-cli.mjs`, and `scripts/task-workflow.mjs`.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-04
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-04
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes

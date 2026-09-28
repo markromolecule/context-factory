@@ -75,4 +75,37 @@ describe("Unit 01.01: scaffoldTask Nested Phase and Unit Structure", () => {
       );
     }
   });
+
+  it("Unit 02.01: supports includeUnits: false to suppress unit scaffolding and returns empty units", async () => {
+    const res = await scaffoldTask({
+      title: "Task Without Units",
+      type: "feature",
+      dryRun: true,
+      includeUnits: false,
+    });
+
+    assert.ok(res.baseBranch, "Must return baseBranch");
+    assert.deepEqual(res.units, [], "Units array must be empty when includeUnits: false");
+
+    const unitFiles = res.files.filter((f) => f.includes("/unit-"));
+    assert.equal(unitFiles.length, 0, "No unit files should be in files list");
+
+    const phaseFiles = res.files.filter((f) => f.endsWith("phase.md"));
+    assert.equal(phaseFiles.length, 4, "Phases must still be generated");
+  });
+
+  it("Unit 02.01: includes populated units array and baseBranch by default", async () => {
+    const res = await scaffoldTask({
+      title: "Task With Units",
+      type: "feature",
+      dryRun: true,
+    });
+
+    assert.ok(res.baseBranch);
+    assert.equal(res.units.length, 4, "Must return 4 starter units");
+    assert.equal(res.units[0].id, "01.01");
+    assert.ok(res.units[0].branch.includes("/phase-01/unit-01-"));
+    assert.ok(res.units[0].worktree.includes(".worktrees/"));
+  });
 });
+

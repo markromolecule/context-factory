@@ -7,26 +7,54 @@ export async function handleTaskCommand(args = [], flags = {}) {
   if (subCommand === "new" || subCommand === "create") {
     const type = flags.type || "feature";
     const dryRun = Boolean(flags.dryRun);
+    const noUnits = Boolean(flags.noUnits || flags.units === false || flags["no-units"]);
+    const includeUnits = !noUnits;
     const titleArgs = args.slice(1);
     const title = titleArgs.join(" ").trim();
 
     if (!title) {
-      throw new Error("Usage: context-cli task new \"<task title>\" [--type <feature|defect|refactor|migration>] [--dry-run]");
+      throw new Error("Usage: context-cli task new \"<task title>\" [--type <feature|defect|refactor|migration>] [--no-units] [--dry-run]");
     }
 
-    const result = await scaffoldTask({ title, type, dryRun });
+    const result = await scaffoldTask({ title, type, dryRun, includeUnits });
 
     if (flags.json) {
       console.log(JSON.stringify(result, null, 2));
       return 0;
     }
 
+    const baseBranch = result.baseBranch || `task/${result.taskId}-${result.taskSlug}`;
+
     if (dryRun) {
-      console.log(`\n${badges.dryRun()} Would scaffold task at: ${colors.cyan(result.taskDirectory)}\n`);
+      console.log(`\n${badges.dryRun()} Would scaffold task ${colors.bold(result.taskId)} (${colors.magenta(result.type)})\n`);
+      console.log(`  ${colors.bold("Directory:")}   ${colors.cyan(result.taskDirectory)}`);
+      console.log(`  ${colors.bold("Base Branch:")} ${colors.yellow(baseBranch)}`);
+      if (result.units && result.units.length > 0) {
+        console.log(`\n  ${colors.bold("Worktree Topology:")}`);
+        const headers = ["Unit", "Branch", "Worktree"];
+        const rows = result.units.map((u) => [
+          colors.bold(u.id),
+          colors.yellow(u.branch),
+          colors.cyan(u.worktree),
+        ]);
+        console.log(table(headers, rows));
+      }
+      console.log("");
     } else {
       console.log(`\n${badges.done()} Scaffolded task ${colors.bold(result.taskId)} (${colors.magenta(result.type)})\n`);
-      console.log(`  ${colors.bold("Directory:")} ${colors.cyan(result.taskDirectory)}`);
-      console.log(`  ${colors.bold("Files created:")}`);
+      console.log(`  ${colors.bold("Directory:")}   ${colors.cyan(result.taskDirectory)}`);
+      console.log(`  ${colors.bold("Base Branch:")} ${colors.yellow(baseBranch)}`);
+      if (result.units && result.units.length > 0) {
+        console.log(`\n  ${colors.bold("Worktree Topology:")}`);
+        const headers = ["Unit", "Branch", "Worktree"];
+        const rows = result.units.map((u) => [
+          colors.bold(u.id),
+          colors.yellow(u.branch),
+          colors.cyan(u.worktree),
+        ]);
+        console.log(table(headers, rows));
+      }
+      console.log(`\n  ${colors.bold("Files created:")}`);
       for (const f of result.files) {
         console.log(`    - ${colors.white(f)}`);
       }
