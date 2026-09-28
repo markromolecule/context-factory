@@ -80,10 +80,33 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     })
     .join("\n");
 
+  const topologyRows = phases
+    .map((p, idx) => {
+      const pNum = String(idx + 1).padStart(2, "0");
+      const unitSlug = `unit-01-${p.slug}`;
+      const branchName = `task/${taskId}/phase-${pNum}/${unitSlug}`;
+      const worktreeDir = `.worktrees/${taskId}/phase-${pNum}/${unitSlug}`;
+      const mergeTarget = `task/${taskId}/phase-${pNum}/integration`;
+      return `| phase-${pNum} | ${pNum}.01 | ${p.title} Starter | \`${branchName}\` | \`${worktreeDir}\` | \`${mergeTarget}\` | planned |`;
+    })
+    .join("\n");
+
+  const ledgerRows = [
+    ...phases.map((p, idx) => {
+      const pNum = String(idx + 1).padStart(2, "0");
+      return `| Phase ${pNum} Integration | \`task/${taskId}/phase-${pNum}/integration\` | \`task/${taskId}-${taskSlug}\` | pending | [ ] | \`npm test\` |`;
+    }),
+    `| Task Base Finalization | \`task/${taskId}-${taskSlug}\` | \`master\` | pending | [ ] | \`node scripts/context.mjs doctor\` |`,
+  ].join("\n");
+
   const renderedTask = taskTemplate
     .replaceAll("{{title}}", title)
     .replaceAll("{{date}}", dateStr)
-    .replace(/- \[ \] `phase-01-<feature>\.md`[\s\S]*?- \[ \] `phase-02-<feature>\.md`[^\n]*/, phaseListMarkdown);
+    .replaceAll("{{task_id}}", taskId)
+    .replaceAll("{{task_slug}}", taskSlug)
+    .replace(/- \[ \] `phase-01-<feature>\.md`[\s\S]*?- \[ \] `phase-02-<feature>\.md`[^\n]*/, phaseListMarkdown)
+    .replace(/\| phase-01 \| 01\.01 \|[\s\S]*?\| planned \|/, topologyRows)
+    .replace(/\| Phase 01 Integration \|[\s\S]*?\| `node scripts\/context\.mjs doctor` \|/, ledgerRows);
 
   const filesToWrite = [
     {
@@ -97,10 +120,23 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     const pNum = String(i + 1).padStart(2, "0");
     const phaseDirName = `phase-${pNum}-${p.slug}`;
     const phasePath = `${taskRelativeDir}/${phaseDirName}/phase.md`;
+    const unitSlug = `unit-01-${p.slug}`;
+    const unitBranch = `task/${taskId}/phase-${pNum}/${unitSlug}`;
+    const unitWorktree = `.worktrees/${taskId}/phase-${pNum}/${unitSlug}`;
+    const unitTitle = `${p.title} Starter`;
+    const unitFilename = `${unitSlug}.md`;
+
     const renderedPhase = phaseTemplate
       .replaceAll("{{title}}", p.title)
+      .replaceAll("{{task_id}}", taskId)
       .replaceAll("{{parent_task}}", taskFolderName)
       .replaceAll("{{phase_number}}", pNum)
+      .replaceAll("{{phase_slug}}", p.slug)
+      .replaceAll("{{phase_branch}}", `task/${taskFolderName}/phase-${pNum}`)
+      .replaceAll("{{unit_title}}", unitTitle)
+      .replaceAll("{{unit_filename}}", unitFilename)
+      .replaceAll("{{branch}}", unitBranch)
+      .replaceAll("{{worktree}}", unitWorktree)
       .replaceAll("{{date}}", dateStr);
 
     filesToWrite.push({
@@ -108,12 +144,17 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
       content: renderedPhase,
     });
 
-    const unitFilename = `unit-01-${p.slug}.md`;
     const unitPath = `${taskRelativeDir}/${phaseDirName}/${unitFilename}`;
     const renderedUnit = unitTemplate
-      .replaceAll("{{title}}", `${p.title} Starter`)
+      .replaceAll("{{title}}", unitTitle)
+      .replaceAll("{{task_id}}", taskId)
       .replaceAll("{{parent_phase}}", phaseDirName)
       .replaceAll("{{unit_id}}", `${pNum}.01`)
+      .replaceAll("{{slug}}", p.slug)
+      .replaceAll("{{branch}}", unitBranch)
+      .replaceAll("{{worktree}}", unitWorktree)
+      .replaceAll("{{depends_on}}", "none")
+      .replaceAll("{{parallelizable_with}}", "none")
       .replaceAll("{{date}}", dateStr);
 
     filesToWrite.push({
@@ -135,9 +176,11 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     taskId,
     taskFolderName,
     taskDirectory: taskRelativeDir,
+    taskSlug,
     type: normalizedType,
     date: dateStr,
     files: filesToWrite.map((f) => f.path),
+    renderedFiles: filesToWrite,
     dryRun,
   };
 }
