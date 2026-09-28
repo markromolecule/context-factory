@@ -26,6 +26,7 @@ node scripts/context.mjs plan:check <task-dir>
 ```
 
 Verify:
+
 - **Acyclic Dependency Graph:** Topological sort succeeds with zero cycles in `depends_on` relationships.
 - **Disjoint Parallel Scopes:** All units that share a phase and are marked as parallelizable (or have no directed dependency between them) have completely disjoint declared `**In scope:**` file boundaries.
 - **Artifact Existence:** Every phase directory contains a valid `phase.md` and atomic `unit-*.md` files.
@@ -48,11 +49,12 @@ Inspect the master plan artifact (`README.md`):
 Inspect every individual unit file (`phase-*/unit-*.md`):
 
 1. **Context Packet Sufficiency:** The unit must copy in relevant types, schemas, and current-state evidence rather than relying on session memory or naked links like "see master plan". A fresh agent session must be able to execute the unit cold.
-2. **Strict Scope Fence:**
+2. **Worktree & Branch Allocation:** Verify that the unit explicitly declares its dedicated `branch` and `worktree` path in frontmatter and status block. Confirm that no two units share the same worktree directory and that the hierarchy matches `task/<id>/<phase-slug>/<unit-slug>`.
+3. **Strict Scope Fence:**
    - `**In scope:**` lists exact file paths and functions.
    - `**Out of scope:**` explicitly fences adjacent systems and avoids scope creep.
-3. **Actionable Steps:** Step-by-step instructions are concrete and testable, not vague directives like "handle errors properly" or "write clean code".
-4. **Explicit Rollback:** Reversible rollback strategy documented for every unit.
+4. **Actionable Steps:** Step-by-step instructions are concrete and testable, not vague directives like "handle errors properly" or "write clean code".
+5. **Explicit Rollback:** Reversible rollback strategy documented for every unit.
 
 ### Gate 4: Test Justification & Type Audit
 

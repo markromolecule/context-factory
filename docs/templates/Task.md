@@ -4,6 +4,8 @@ type: task
 status: planned
 created: "{{date}}"
 tags: [task]
+target_branch: main
+base_branch: "task/{{task_id}}-{{task_slug}}"
 ---
 
 # {{title}}
@@ -41,6 +43,12 @@ Link the canonical glossary; do not duplicate implementation details here.
 
 ## Constraints and decisions
 
+## Worktree & Branch Topology
+
+| Phase | Unit ID | Unit Title | Branch Name | Worktree Directory | Merge Target | Status |
+|---|---|---|---|---|---|---|
+| phase-01 | 01.01 | [Unit Title] | `task/{{task_id}}/phase-01/[slug]` | `.worktrees/{{task_id}}/phase-01/[slug]` | `task/{{task_id}}/phase-01` | planned |
+
 ## Phases
 
 - [ ] `phase-01-<feature>.md` — Phase 1: concrete outcome
@@ -51,5 +59,12 @@ Link the canonical glossary; do not duplicate implementation details here.
 Record the command or inspection, outcome, and the acceptance criterion it supports. Do not mark a result verified from an unrun check.
 
 ## Deviations
+
+## Finalization & Merge Ledger
+
+| Stage | Source Branch | Target Branch | Merge Commit SHA | Worktree Cleaned | Verification Command |
+|---|---|---|---|---|---|
+| Phase 01 Integration | `task/{{task_id}}/phase-01` | `task/{{task_id}}-{{task_slug}}` | pending | [ ] | `npm test` |
+| Task Base Finalization | `task/{{task_id}}-{{task_slug}}` | `main` | pending | [ ] | `node scripts/context.mjs doctor` |
 
 ## Result

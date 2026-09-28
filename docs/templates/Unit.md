@@ -3,6 +3,8 @@ title: "{{title}}"
 type: unit
 parent: "{{parent_phase}}"
 unit: "{{unit_id}}"
+branch: "task/{{task_id}}/{{parent_phase}}/{{unit_id}}-{{slug}}"
+worktree: ".worktrees/{{task_id}}/{{parent_phase}}/{{unit_id}}-{{slug}}"
 status: planned
 created: "{{date}}"
 tags: [task, unit]
@@ -13,6 +15,7 @@ parallelizable_with: []
 # Unit {{unit_id}}: {{title}}
 
 > Phase: {{parent_phase}} · Depends on: {{depends_on}} · Parallelizable with: {{parallelizable_with}}
+> Worktree: {{worktree}} · Branch: {{branch}}
 
 ## Objective
 
@@ -28,7 +31,8 @@ Copied in, not referenced — this is what lets the unit run without the master 
 
 ## Preconditions
 
-What must already exist or be true, including outputs of dependency units.
+- Dedicated git worktree and branch provisioned at declared path.
+- What must already exist or be true, including outputs of dependency units.
 
 ## Scope
 
@@ -52,4 +56,7 @@ How to revert this unit alone.
 ## Definition of done
 
 - [ ] Maps to acceptance criteria: <ids>
+- [ ] Executed inside dedicated worktree without touching main workspace
+- [ ] Changes committed cleanly to unit branch
+- [ ] Zero scope leaks confirmed via `/review`
 - [ ] All listed verification passes

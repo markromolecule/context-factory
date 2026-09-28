@@ -95,18 +95,32 @@ On `/execute continue` (or the next invocation):
 
 1. Merge each approved unit branch into the phase integration branch, one at a time. If a merge conflicts, stop immediately and report which units collided — treat that as a plan defect (their scopes weren't actually disjoint after all), not something to resolve silently.
 2. Once all of the batch's units are merged, run the narrowest checks that only make sense with units combined (build, typecheck, integration suite) — units that each pass alone can still interact once merged.
-3. Remove the merged units' worktrees (`git worktree remove`) and update the phase's unit index.
-4. Recompute the ready batch — units newly unblocked now that their dependencies are merged — and return to **Set Up Worktrees**. If the phase has no units left, move to Phase Completion.
+3. Remove the merged units' worktrees cleanly:
+   - Execute `git worktree remove --force ".worktrees/<id>/<phase-slug>/<unit-slug>"` to prevent orphaned untracked debris.
+   - Run `git worktree prune`.
+   - Remove empty parent directory shells: `rmdir ".worktrees/<id>/<phase-slug>" 2>/dev/null || true`.
+4. Update the phase's unit index and mark units as merged.
+5. Recompute the ready batch — units newly unblocked now that their dependencies are merged — and return to **Set Up Worktrees**. If the phase has no units left, move to Phase Completion.
 
 ## Phase Completion
 
 When every unit in a phase is merged into its phase integration branch:
 
 1. Run the phase's own verification checks, beyond what any single unit covered.
-2. Merge the phase integration branch into the task base branch; remove the phase's worktrees.
-3. Mark the phase artifact's frontmatter `status: completed`.
-4. Stop with the same checkpoint discipline as the batch stop above — report phase-level verification evidence and wait for developer approval before starting the next phase.
+2. Merge the phase integration branch into the task base branch (`git merge task/<id>/<phase-slug>`).
+3. Clean up the phase integration branch and any remaining phase worktree artifacts. Remove `.worktrees/<id>/<phase-slug>` if empty.
+4. Mark the phase artifact's frontmatter `status: completed` and record the merge commit SHA.
+5. Stop with the same checkpoint discipline as the batch stop above — report phase-level verification evidence and wait for developer approval before starting the next phase.
 
 ## Completion
 
-When the final phase of a task is complete, run the plan's overall verification checks, confirm every acceptance criterion in the master plan is satisfied by a merged unit and its recorded test, merge the task base branch through the repo's normal review process, update status to `completed`, and report the final outcome, verification evidence, and release readiness.
+When the final phase of a task is complete:
+
+1. Run the plan's overall verification checks and confirm every acceptance criterion in the master plan is satisfied by a merged unit and its recorded test.
+2. Merge the task base branch into the target base branch (`master`/`main`) through the repository's normal review/merge process.
+3. Ensure `.worktrees/<id>` is completely pruned and removed cleanly, with zero orphaned directories or untracked files left behind.
+4. Update the master plan (`README.md`):
+   - Update frontmatter `status: completed`.
+   - Fill in the `## Finalization & Merge Ledger` with exact merge commit SHAs, worktree cleanup confirmation, and verification commands.
+   - Summarize the verified outcome and release readiness in `## Result`.
+5. Report the final outcome, verification evidence, merge commit SHAs, and release readiness.

@@ -129,8 +129,36 @@ graph TD
   - Unit 5.1: Integrate `test` & `review` into `execute` Workflow
   - Unit 5.2: Manifest Sync, Symlinks, Lockfile & Doctor Verification
 
+## Worktree & Branch Topology
+
+| Phase | Unit ID | Unit Title | Branch Name | Worktree Directory | Merge Target | Status |
+|---|---|---|---|---|---|---|
+| phase-01 | 01.01 | DAG Cycle Detector | `task/0001/phase-01/unit-01-dag-cycle-detector` | `.worktrees/0001/phase-01/unit-01-dag-cycle-detector` | `task/0001/phase-01` | merged (`768794d`) |
+| phase-01 | 01.02 | Scope Overlap Checker | `task/0001/phase-01/unit-01-scope-overlap-checker` | `.worktrees/0001/phase-01/unit-02-scope-overlap-checker` | `task/0001/phase-01` | merged (`80d2378`) |
+| phase-01 | 01.03 | CLI Harness & Eval Tests | `task/0001/phase-01/unit-03-cli-and-eval-tests` | `.worktrees/0001/phase-01/unit-03-cli-and-eval-tests` | `task/0001/phase-01` | merged (`13f8968`) |
+| phase-02 | 02.01 | Plan Review Skill & Agent | `task/0001/phase-02/unit-01-plan-review-skill` | `.worktrees/0001/phase-02/unit-01-plan-review-skill` | `task/0001-unit-lifecycle...` | merged (`93c228d`) |
+| phase-03 | 03.01 | Test Skill & Agent | `task/0001/phase-03/unit-01-test-skill` | `.worktrees/0001/phase-03/unit-01-test-skill` | `task/0001-unit-lifecycle...` | merged (`b8eff17`) |
+| phase-04 | 04.01 | Review Skill & Agent | `task/0001/phase-04/unit-01-review-skill` | `.worktrees/0001/phase-04/unit-01-review-skill` | `task/0001-unit-lifecycle...` | merged (`727b9f5`) |
+| phase-05 | 05.01 | Execute Skill Integration | `task/0001/phase-05/unit-01-execute-integration` | `.worktrees/0001/phase-05/unit-01-execute-integration` | `task/0001-unit-lifecycle...` | merged (`bc39d3e`) |
+| phase-05 | 05.02 | Manifest Sync & Doctor | `task/0001/phase-05/unit-02-manifest-sync` | `.worktrees/0001/phase-05/unit-02-manifest-sync-and-doctor` | `task/0001-unit-lifecycle...` | merged (`65596f0`) |
+
 ## Verification
 
 - `node scripts/context.mjs plan:check <task-dir>`: Automated validation of plan DAGs and file scopes.
 - `node scripts/context.mjs doctor`: 100% PASS across syntax lint, lockfile integrity, symlinks, and evaluations.
 - `npm test`: Full 22+ case test suite passing cleanly.
+
+## Finalization & Merge Ledger
+
+| Stage | Source Branch | Target Branch | Merge Commit SHA | Worktree Cleaned | Verification Command | Status |
+|---|---|---|---|---|---|---|
+| Phase 01 Integration | `task/0001/phase-01` | `task/0001-unit-lifecycle...` | `3a172f2` | Verified | `node --test evals/plan-check.test.mjs` | Completed |
+| Phase 02 Integration | `task/0001/phase-02` | `task/0001-unit-lifecycle...` | `93c228d` | Verified | `node scripts/context.mjs lint` | Completed |
+| Phase 03 Integration | `task/0001/phase-03` | `task/0001-unit-lifecycle...` | `b8eff17` | Verified | `node scripts/context.mjs lint` | Completed |
+| Phase 04 Integration | `task/0001/phase-04` | `task/0001-unit-lifecycle...` | `727b9f5` | Verified | `node scripts/context.mjs lint` | Completed |
+| Phase 05 Integration | `task/0001/phase-05` | `task/0001-unit-lifecycle...` | `65596f0` | Verified | `node scripts/context.mjs doctor` | Completed |
+| Task Finalization | `task/0001-unit-lifecycle...` | `master` | `9e593bc` | Verified | `node scripts/context.mjs doctor` (HEALTHY) | Completed |
+
+## Result
+
+Task 0001 successfully implemented the unit lifecycle primitives (`plan-review`, `test`, and `review` skills), deterministic graph and scope validation CLI (`scripts/plan-check.mjs` via `plan:check`), and integrated them into the `execute` workflow. All phases and units were executed in dedicated worktrees and branches, validated through automated evaluation suites (22/22 pass), and finalized into `master` at commit `9e593bc`.
