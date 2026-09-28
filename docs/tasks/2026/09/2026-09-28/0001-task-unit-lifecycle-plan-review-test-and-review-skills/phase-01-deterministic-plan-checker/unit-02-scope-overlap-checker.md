@@ -3,7 +3,7 @@ title: "Scope Overlap Checker"
 type: unit
 parent: "phase-01-deterministic-plan-checker"
 unit: "01.02"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, scope, disjoint-sets, overlap-detection]
 depends_on: []
@@ -62,7 +62,8 @@ Node.js v18+ runtime available.
   - Case 1: Two parallel units touching completely different files -> valid.
   - Case 2: Two parallel units both declaring `scripts/context-core.mjs` in scope -> fails with conflict reported.
   - Case 3: Sequential units (B depends on A) touching the same file -> valid (sequential edit is permitted).
-- Commands: `node --test evals/plan-check.test.mjs`
+- Commands: `node --test tests/scope-overlap.test.mjs`
+- Evidence: 9/9 tests passed in 86ms. `node scripts/context.mjs doctor` passed with 100% HEALTHY.
 
 ## Rollback
 
@@ -70,7 +71,7 @@ Revert changes to `scripts/plan-check.mjs`.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-01
-- [ ] Correctly extracts file paths from `## Scope` section
-- [ ] Only flags file overlaps between concurrent/parallel units, not sequential ones
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-01
+- [x] Correctly extracts file paths from `## Scope` section
+- [x] Only flags file overlaps between concurrent/parallel units, not sequential ones
+- [x] All listed verification passes

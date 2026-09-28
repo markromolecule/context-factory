@@ -73,7 +73,170 @@ export function detectCycles(graph) {
 }
 
 /**
- * Recursively locates all unit-*.md files in a task directory and parses frontmatter
+ * Extracts declared file scopes from unit markdown content.
+ * Parses the `## Scope` section and extracts file paths under `**In scope:**`.
+ * @param {string} unitContent
+ * @returns {string[]} Normalized list of file paths
+ */
+export function extractDeclaredScopes(unitContent) {
+  if (typeof unitContent !== "string") return [];
+
+  const scopeHeaderMatch = unitContent.match(/^##\s+Scope\b/im);
+  if (!scopeHeaderMatch) return [];
+
+  const afterHeader = unitContent.slice(scopeHeaderMatch.index + scopeHeaderMatch[0].length);
+  const nextHeaderMatch = afterHeader.match(/^##\s+/m);
+  const scopeBlock = nextHeaderMatch ? afterHeader.slice(0, nextHeaderMatch.index) : afterHeader;
+
+  const inScopeMatch = scopeBlock.match(
+    /(?:^|\n)\s*[-*]*\s*\*\*In scope:\*\*\s*([\s\S]*?)(?=(?:\n\s*[-*]*\s*\*\*Out of scope:\*\*|\n\s*##|$))/i
+  );
+  if (!inScopeMatch) return [];
+
+  const inScopeText = inScopeMatch[1].trim();
+  const filePaths = new Set();
+
+  // 1. Look for backticked paths
+  const backtickRegex = /`([^`]+)`/g;
+  let match;
+  let hadBackticks = false;
+
+  while ((match = backtickRegex.exec(inScopeText)) !== null) {
+    hadBackticks = true;
+    const token = match[1].trim();
+    if (isLikelyFilePath(token)) {
+      filePaths.add(normalizePath(token));
+    }
+  }
+
+  // 2. If no backticks or to catch comma-separated plain text paths
+  if (!hadBackticks || filePaths.size === 0) {
+    const rawTokens = inScopeText
+      .split(/[\n,]+/)
+      .map((t) => t.replace(/^\s*[-*]\s*/, "").replace(/\(.*?\)/g, "").trim())
+      .filter(Boolean);
+
+    for (const token of rawTokens) {
+      const cleanToken = token.replace(/[`'"]/g, "").trim();
+      if (isLikelyFilePath(cleanToken)) {
+        filePaths.add(normalizePath(cleanToken));
+      }
+    }
+  }
+
+  return Array.from(filePaths);
+}
+
+function isLikelyFilePath(token) {
+  if (!token || typeof token !== "string") return false;
+  // Ignore CLI flags like --help
+  if (token.startsWith("-")) return false;
+  // Ignore single identifier without dots or slashes (e.g. function names or keywords)
+  if (!token.includes("/") && !token.includes(".")) {
+    // Unless known special filenames
+    return /^(Dockerfile|Makefile|LICENSE|Procfile|Gemfile)$/i.test(token);
+  }
+  // If it has a slash, e.g. path/to/file or .agents/skills/
+  if (token.includes("/")) return true;
+  // If it has a file extension (e.g. foo.js, config.json)
+  return /\.[a-zA-Z0-9_-]+$/.test(token);
+}
+
+function normalizePath(p) {
+  let normalized = p.trim().replace(/^(\.\/)+/, "");
+  // strip trailing punctuation
+  normalized = normalized.replace(/[,;:]+$/, "");
+  return normalized;
+}
+
+/**
+ * Checks if target is reachable from start in adjList (directed path exists)
+ * @param {Map<string, string[]>} adjList
+ * @param {string} start
+ * @param {string} target
+ * @returns {boolean}
+ */
+export function isReachable(adjList, start, target) {
+  if (start === target) return true;
+  const visited = new Set();
+  const queue = [start];
+  while (queue.length > 0) {
+    const curr = queue.shift();
+    if (curr === target) return true;
+    const neighbors = adjList.get(curr) || [];
+    for (const neighbor of neighbors) {
+      if (!visited.has(neighbor)) {
+        visited.add(neighbor);
+        queue.push(neighbor);
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Identifies pairs of units within the same phase that have no directed dependency between them
+ * @param {Array<{id: string, phase?: string, meta?: any}>} units
+ * @param {{nodes: Set<string>, adjList: Map<string, string[]>}} graph
+ * @returns {Array<{unitA: any, unitB: any}>}
+ */
+export function findParallelUnitPairs(units, graph) {
+  const g = graph || buildDependencyGraph(units);
+  const pairs = [];
+
+  for (let i = 0; i < units.length; i++) {
+    for (let j = i + 1; j < units.length; j++) {
+      const uA = units[i];
+      const uB = units[j];
+
+      const phaseA = uA.phase || uA.meta?.parent || uA.meta?.phase;
+      const phaseB = uB.phase || uB.meta?.parent || uB.meta?.phase;
+
+      // Units in different explicitly declared phases are sequential across phase boundaries
+      const samePhase = (!phaseA && !phaseB) || (phaseA === phaseB);
+      if (!samePhase) continue;
+
+      const aToB = isReachable(g.adjList, uA.id, uB.id);
+      const bToA = isReachable(g.adjList, uB.id, uA.id);
+
+      if (!aToB && !bToA) {
+        pairs.push({ unitA: uA, unitB: uB });
+      }
+    }
+  }
+
+  return pairs;
+}
+
+/**
+ * Checks that parallel units have disjoint file scopes
+ * @param {Array<{unitA: {id: string, scope?: string[]}, unitB: {id: string, scope?: string[]}}>} parallelPairs
+ * @returns {{valid: boolean, conflicts: Array<{unitA: string, unitB: string, overlappingFiles: string[]}>}}
+ */
+export function checkDisjointScopes(parallelPairs) {
+  const conflicts = [];
+
+  for (const { unitA, unitB } of parallelPairs) {
+    const scopeA = new Set(unitA.scope || []);
+    const overlapping = (unitB.scope || []).filter((file) => scopeA.has(file));
+
+    if (overlapping.length > 0) {
+      conflicts.push({
+        unitA: unitA.id,
+        unitB: unitB.id,
+        overlappingFiles: overlapping,
+      });
+    }
+  }
+
+  return {
+    valid: conflicts.length === 0,
+    conflicts,
+  };
+}
+
+/**
+ * Recursively locates all unit-*.md files in a task directory and parses frontmatter & scope
  * @param {string} taskDirPath
  */
 export async function parseUnitArtifacts(taskDirPath) {
@@ -91,13 +254,16 @@ export async function parseUnitArtifacts(taskDirPath) {
           const meta = frontmatter(content) || {};
           const id = meta.unit || sub.name.replace(/\.md$/, "");
           const dependsOn = Array.isArray(meta.depends_on) ? meta.depends_on : [];
+          const scope = extractDeclaredScopes(content);
           units.push({
             id: String(id),
             title: meta.title || id,
             path: unitFilePath,
             content,
             meta,
+            phase: meta.parent || meta.phase || entry.name,
             dependsOn: dependsOn.map(String),
+            scope,
           });
         }
       }
@@ -106,13 +272,16 @@ export async function parseUnitArtifacts(taskDirPath) {
       const meta = frontmatter(content) || {};
       const id = meta.unit || entry.name.replace(/\.md$/, "");
       const dependsOn = Array.isArray(meta.depends_on) ? meta.depends_on : [];
+      const scope = extractDeclaredScopes(content);
       units.push({
         id: String(id),
         title: meta.title || id,
         path: fullPath,
         content,
         meta,
+        phase: meta.parent || meta.phase || null,
         dependsOn: dependsOn.map(String),
+        scope,
       });
     }
   }
@@ -133,4 +302,26 @@ export async function checkPlanGraph(taskDirPath) {
     graph,
     ...cycleResult,
   };
+}
+
+/**
+ * Top-level scope verification for a task directory or unit array
+ * @param {string | any[]} taskDirPathOrUnits
+ */
+export async function checkPlanScopes(taskDirPathOrUnits) {
+  let units;
+  if (typeof taskDirPathOrUnits === "string") {
+    units = await parseUnitArtifacts(taskDirPathOrUnits);
+  } else if (Array.isArray(taskDirPathOrUnits)) {
+    units = taskDirPathOrUnits.map((u) => {
+      const scope = u.scope || (u.content ? extractDeclaredScopes(u.content) : []);
+      return { ...u, scope };
+    });
+  } else {
+    throw new Error("checkPlanScopes expects a directory path string or array of unit objects");
+  }
+
+  const graph = buildDependencyGraph(units);
+  const parallelPairs = findParallelUnitPairs(units, graph);
+  return checkDisjointScopes(parallelPairs);
 }
