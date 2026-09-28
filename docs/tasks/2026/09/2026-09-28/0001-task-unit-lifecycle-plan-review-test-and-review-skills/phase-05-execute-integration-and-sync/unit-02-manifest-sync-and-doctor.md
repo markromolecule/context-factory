@@ -3,7 +3,7 @@ title: "Manifest Sync & Doctor Verification"
 type: unit
 parent: "phase-05-execute-integration-and-sync"
 unit: "05.02"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, manifest, lock, doctor, sync, orchestrators]
 depends_on: ["02.01", "05.01"]
@@ -69,8 +69,8 @@ Revert additions to `context-manifest.json`, `context-lock.json`, and orchestrat
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-06
-- [ ] Manifest and lockfile completely synchronized
-- [ ] Symlinks verified healthy
-- [ ] `node scripts/context.mjs doctor` exits with 0
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-06
+- [x] Manifest and lockfile completely synchronized
+- [x] Symlinks verified healthy
+- [x] `node scripts/context.mjs doctor` exits with 0
+- [x] All listed verification passes
