@@ -113,6 +113,7 @@
     "skills/productivity/docs/SKILL.md",
     "skills/productivity/grill/SKILL.md",
     "skills/productivity/grounding/SKILL.md",
+    "skills/productivity/plan-review/SKILL.md",
     "skills/productivity/plan/SKILL.md",
     "skills/productivity/triage/SKILL.md"
   ],
@@ -123,6 +124,7 @@
     "skills/productivity/docs/agents/openai.yaml",
     "skills/productivity/grill/agents/openai.yaml",
     "skills/productivity/grill/references/glossary-format.md",
+    "skills/productivity/plan-review/agents/openai.yaml",
     "skills/productivity/plan/agents/openai.yaml"
   ],
   "workflows": [
