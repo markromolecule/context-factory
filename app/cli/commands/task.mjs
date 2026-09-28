@@ -79,7 +79,7 @@ export async function handleTaskCommand(args = [], flags = {}) {
 
     const headers = ["Status", "Task Title", "Created", "Path"];
     const rows = tasks.map((t) => [
-      t.status.toUpperCase() === "DONE" ? badges.pass("DONE") : badges.info("ACTIVE"),
+      ["DONE", "COMPLETED", "VERIFIED"].includes(t.status.toUpperCase()) ? badges.pass("DONE") : badges.info("ACTIVE"),
       colors.bold(t.title),
       colors.dim(t.created),
       colors.cyan(t.path),
