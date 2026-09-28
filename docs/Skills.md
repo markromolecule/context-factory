@@ -6,7 +6,7 @@ tags: [skills, workflows, tools]
 
 # Skills
 
-The Context Factory defines 14 focused procedural skills across two primary categories for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
+The Context Factory defines 15 focused procedural skills across two primary categories for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
 
 ## Engineering & Coding
 *Group Index:* [[skills/engineering/README|Engineering Skills Overview]]
@@ -14,6 +14,7 @@ The Context Factory defines 14 focused procedural skills across two primary cate
 - [[skills/engineering/execute/SKILL|execute]] — Execute an existing task or implementation plan artifact unit by unit, each in its own git worktree and branch, verify the resulting code, record evidence, and stop at batch and phase boundaries for developer inspection before anything merges. Use for /execute, /exec, [EXEC].
 - [[skills/engineering/explore/SKILL|explore]] — Build a verified map of an unfamiliar repository's entry points, architecture, contracts and their consumers, tests, conventions, and risks before planning material work (/explore, [EXPLORE]).
 - [[skills/engineering/refactor/SKILL|refactor]] — Refactor and modularize lengthy, multi-responsibility code into maintainable, single-responsibility files that sync cleanly while preserving public contracts and behavioral equivalence (/refactor, [REFACTOR]).
+- [[skills/engineering/review/SKILL|review]] — Independent diff review of a unit worktree against its unit file to check for out-of-scope file edits, missing tests, SOLID violations, and unmet definitions of done before developer checkpoints (/review, [REVIEW]).
 - [[skills/engineering/security/SKILL|security]] — Threat-model and review application changes for trust-boundary, authorization, injection, secrets, data exposure, abuse, and dependency risks (/sec, /security, [SEC]).
 - [[skills/engineering/test/SKILL|test]] — Turn a unit's Verification section into real tests, written test-first (failing assertions first, then implementation), specializing in architecture, contract, and migration tests (/test, [TEST]).
 - [[skills/engineering/verify/SKILL|verify]] — Audit implementation and completion claims against acceptance criteria, source changes, fresh command output, unresolved findings, and skipped checks (/verify, [VERIFY], [QA]).

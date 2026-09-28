@@ -3,7 +3,7 @@ title: "Phase 4 — Unit Diff Review Skill"
 type: phase
 parent: "0001-task-unit-lifecycle-plan-review-test-and-review-skills"
 phase: "04"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, phase, skill, review, diff, scope-fence]
 ---
@@ -29,7 +29,7 @@ graph LR
 
 | Unit ID | Title | File | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 04.01** | Author `review` Skill | `unit-01-review-skill.md` | `none` | `Phase 1, Phase 2, Phase 3` | `planned` |
+| **Unit 04.01** | Author `review` Skill | `unit-01-review-skill.md` | `none` | `Phase 1, Phase 2, Phase 3` | `verified` |
 
 ## Impacted Files & Components
 
