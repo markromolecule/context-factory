@@ -6,13 +6,13 @@ unit: "01.02"
 status: verified
 created: "2026-09-28"
 tags: [task, unit, scope, disjoint-sets, overlap-detection]
-depends_on: []
-parallelizable_with: ["01.01"]
+depends_on: ["01.01"]
+parallelizable_with: []
 ---
 
 # Unit 01.02: Scope Overlap Checker
 
-> Phase: phase-01-deterministic-plan-checker · Depends on: none · Parallelizable with: 01.01
+> Phase: phase-01-deterministic-plan-checker · Depends on: 01.01 · Parallelizable with: none
 
 ## Objective
 

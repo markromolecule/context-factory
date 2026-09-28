@@ -7,12 +7,12 @@ status: verified
 created: "2026-09-28"
 tags: [task, unit, dag, cycle-detection, topological-sort]
 depends_on: []
-parallelizable_with: ["01.02"]
+parallelizable_with: []
 ---
 
 # Unit 01.01: DAG Cycle Detector
 
-> Phase: phase-01-deterministic-plan-checker · Depends on: none · Parallelizable with: 01.02
+> Phase: phase-01-deterministic-plan-checker · Depends on: none · Parallelizable with: none
 > Worktree: .worktrees/0001/phase-01/unit-01-dag-cycle-detector · Branch: task/0001/phase-01/unit-01-dag-cycle-detector
 
 ## Objective
