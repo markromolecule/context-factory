@@ -190,12 +190,14 @@
     "docs/decisions/0024-unit-execution-review-and-testing-skills.md"
   ],
   "tools": [
+    "evals/plan-check.test.mjs",
     "evals/run-evals.mjs",
     "orchestrator/runner.mjs",
     "orchestrator/validator.mjs",
     "scripts/context-core.mjs",
     "scripts/context.mjs",
     "scripts/harness-cli.mjs",
+    "scripts/plan-check.mjs",
     "scripts/task-workflow.mjs",
     "scripts/triage.mjs",
     "scripts/validate-context.mjs",

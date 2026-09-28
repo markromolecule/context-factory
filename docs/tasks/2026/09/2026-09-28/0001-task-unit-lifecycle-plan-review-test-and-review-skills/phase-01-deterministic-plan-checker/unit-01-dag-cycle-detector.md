@@ -3,7 +3,7 @@ title: "DAG Cycle Detector"
 type: unit
 parent: "phase-01-deterministic-plan-checker"
 unit: "01.01"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, dag, cycle-detection, topological-sort]
 depends_on: []
@@ -13,6 +13,7 @@ parallelizable_with: ["01.02"]
 # Unit 01.01: DAG Cycle Detector
 
 > Phase: phase-01-deterministic-plan-checker · Depends on: none · Parallelizable with: 01.02
+> Worktree: .worktrees/0001/phase-01/unit-01-dag-cycle-detector · Branch: task/0001/phase-01/unit-01-dag-cycle-detector
 
 ## Objective
 
@@ -56,7 +57,10 @@ Node.js v18+ runtime available.
   - Case 2: Diamond dependency graph (A -> B, A -> C, B -> D, C -> D) -> valid.
   - Case 3: Circular dependency (A -> B -> A) -> returns `{ valid: false, cycles: [...] }`.
   - Case 4: Disconnected subgraphs -> valid.
-- Commands: `node --test evals/plan-check.test.mjs`
+- Commands: `node --test evals/dag-cycle.test.mjs`
+- Verification Evidence:
+  - Command: `node --test evals/dag-cycle.test.mjs` (PASS: 4/4 passed, 85ms)
+  - Files modified/created: `scripts/plan-check.mjs`, `evals/dag-cycle.test.mjs`
 
 ## Rollback
 
@@ -64,7 +68,7 @@ Delete `scripts/plan-check.mjs` or revert changes to it.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-01
-- [ ] Topological sort correctly orders acyclic graphs
-- [ ] Cycles are deterministically detected and reported with exact node IDs
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-01
+- [x] Topological sort correctly orders acyclic graphs
+- [x] Cycles are deterministically detected and reported with exact node IDs
+- [x] All listed verification passes
