@@ -190,6 +190,7 @@
     "docs/decisions/0024-unit-execution-review-and-testing-skills.md"
   ],
   "tools": [
+    "evals/plan-check.test.mjs",
     "evals/run-evals.mjs",
     "orchestrator/runner.mjs",
     "orchestrator/validator.mjs",

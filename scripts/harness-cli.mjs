@@ -12,6 +12,7 @@ import { handleLockCommand } from "../app/cli/commands/lock.mjs";
 import { handleResolveCommand } from "../app/cli/commands/resolve.mjs";
 import { handleTaskCommand } from "../app/cli/commands/task.mjs";
 import { parseArgs } from "../app/cli/core/options.mjs";
+import { runPlanCheckCli } from "./plan-check.mjs";
 
 export function usage() {
   console.log(`Context Factory Harness CLI
@@ -24,6 +25,7 @@ Usage:
   node scripts/harness-cli.mjs run <request> [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>]
   node scripts/harness-cli.mjs task:new <title> [--type <feature|defect|refactor|migration>] [--dry-run]
   node scripts/harness-cli.mjs task:list [--json]
+  node scripts/harness-cli.mjs plan:check <task-dir> [--json]
   node scripts/harness-cli.mjs validate <file-path> --schema <schema-name>
   node scripts/harness-cli.mjs eval [--unit] [--datasets] [--json] [--quiet] [--provider <name>]
   node scripts/harness-cli.mjs lock [--check]
@@ -129,6 +131,16 @@ export async function handleCli(argv = process.argv.slice(2)) {
 
   if (command === "task:list") {
     return handleTaskCommand(["list", ...parsedArgs], flags);
+  }
+
+  if (command === "plan:check") {
+    const targetDir = parsedArgs[0];
+    if (!targetDir) {
+      console.error("Error: plan:check requires a task directory path");
+      return 1;
+    }
+    const taskPath = isAbsolute(targetDir) ? targetDir : resolve(process.cwd(), targetDir);
+    return runPlanCheckCli(taskPath, flags);
   }
 
   if (command === "run") {

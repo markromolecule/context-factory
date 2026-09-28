@@ -325,3 +325,90 @@ export async function checkPlanScopes(taskDirPathOrUnits) {
   const parallelPairs = findParallelUnitPairs(units, graph);
   return checkDisjointScopes(parallelPairs);
 }
+
+/**
+ * CLI runner for plan:check command
+ * @param {string} taskDirPath Path to task directory
+ * @param {Record<string, any>} flags CLI options (e.g. { json: boolean })
+ * @returns {Promise<number>} Exit code (0 on success, 1 on failure)
+ */
+export async function runPlanCheckCli(taskDirPath, flags = {}) {
+  try {
+    const units = await parseUnitArtifacts(taskDirPath);
+    if (!units || units.length === 0) {
+      if (flags.json) {
+        console.log(JSON.stringify({ valid: false, error: `No unit-*.md artifacts found in ${taskDirPath}` }, null, 2));
+      } else {
+        console.error(`\nFAIL: No unit-*.md artifacts found in ${taskDirPath}\n`);
+      }
+      return 1;
+    }
+
+    const graph = buildDependencyGraph(units);
+    const cycleResult = detectCycles(graph);
+    const parallelPairs = findParallelUnitPairs(units, graph);
+    const scopeResult = checkDisjointScopes(parallelPairs);
+
+    const isValid = cycleResult.valid && scopeResult.valid;
+
+    if (flags.json) {
+      console.log(
+        JSON.stringify(
+          {
+            valid: isValid,
+            taskDirectory: taskDirPath,
+            unitCount: units.length,
+            topologicalOrder: cycleResult.sortedOrder,
+            cycles: cycleResult.cycles,
+            conflicts: scopeResult.conflicts,
+          },
+          null,
+          2
+        )
+      );
+      return isValid ? 0 : 1;
+    }
+
+    console.log(`\n╔════════════════════════════════════════════════════════════════╗`);
+    console.log(`  CONTEXT FACTORY PLAN CHECKER`);
+    console.log(`╚════════════════════════════════════════════════════════════════╝\n`);
+    console.log(`Task Directory: ${taskDirPath}`);
+    console.log(`Units Found:    ${units.length}`);
+
+    if (cycleResult.valid) {
+      console.log(`\nTopological Order: ${cycleResult.sortedOrder.join(" -> ")}`);
+    } else {
+      console.error(`\n  FAIL  Dependency cycle(s) detected:`);
+      for (const cycle of cycleResult.cycles) {
+        console.error(`    - Cycle: ${cycle.join(" -> ")}`);
+      }
+    }
+
+    if (scopeResult.valid) {
+      console.log(`Parallel Scopes:   All concurrent units declare disjoint file scopes.`);
+    } else {
+      console.error(`\n  FAIL  Scope overlap detected between parallel units:`);
+      for (const conflict of scopeResult.conflicts) {
+        console.error(`    - Unit ${conflict.unitA} and Unit ${conflict.unitB} both declare:`);
+        for (const file of conflict.overlappingFiles) {
+          console.error(`        * ${file}`);
+        }
+      }
+    }
+
+    if (isValid) {
+      console.log(`\n   PASS  Plan graph is acyclic and parallel scopes are disjoint.\n`);
+      return 0;
+    } else {
+      console.error(`\n   FAIL  Plan check failed.\n`);
+      return 1;
+    }
+  } catch (error) {
+    if (flags.json) {
+      console.log(JSON.stringify({ valid: false, error: error.message }, null, 2));
+    } else {
+      console.error(`\nError checking plan: ${error.message}\n`);
+    }
+    return 1;
+  }
+}
