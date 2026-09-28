@@ -3,8 +3,8 @@ title: "Phase 2 — CLI Ergonomics & Options"
 type: phase
 parent: "0002-task-worktree-aware-unit-scaffolding"
 phase: "02"
-phase_branch: "task/0002/phase-02"
-status: planned
+phase_branch: "task/0002/phase-02/integration"
+status: completed
 created: "2026-09-28"
 tags: [task, phase, cli, ergonomics, options]
 ---
@@ -23,7 +23,7 @@ Expose CLI options in `app/cli/commands/task.mjs` and `scripts/harness-cli.mjs` 
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 02.01** | CLI Options & Topology Display | `unit-01-cli-options-and-topology-display.md` | `task/0002/phase-02/unit-01-cli-options` | `.worktrees/0002/phase-02/unit-01-cli-options` | `none` | `none` | `planned` |
+| **Unit 02.01** | CLI Options & Topology Display | `unit-01-cli-options-and-topology-display.md` | `task/0002/phase-02/unit-01-cli-options` | `.worktrees/0002/phase-02/unit-01-cli-options` | `none` | `none` | `completed` |
 
 ## Impacted Files & Components
 
@@ -32,7 +32,7 @@ Expose CLI options in `app/cli/commands/task.mjs` and `scripts/harness-cli.mjs` 
 
 ## Implementation Tasks
 
-- [ ] Unit 02.01 — Update CLI routing and terminal formatting.
+- [x] Unit 02.01 — Update CLI routing and terminal formatting.
 
 ## Verification & Testing
 

@@ -23,7 +23,7 @@ Usage:
   node scripts/harness-cli.mjs bundle <request> [--out <path>]
   node scripts/harness-cli.mjs explain <run-id-or-bundle-path>
   node scripts/harness-cli.mjs run <request> [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>]
-  node scripts/harness-cli.mjs task:new <title> [--type <feature|defect|refactor|migration>] [--dry-run]
+  node scripts/harness-cli.mjs task:new <title> [--type <feature|defect|refactor|migration>] [--no-units] [--dry-run]
   node scripts/harness-cli.mjs task:list [--json]
   node scripts/harness-cli.mjs plan:check <task-dir> [--json]
   node scripts/harness-cli.mjs validate <file-path> --schema <schema-name>

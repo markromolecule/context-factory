@@ -3,8 +3,8 @@ title: "Phase 1 — Scaffolding Engine Upgrades"
 type: phase
 parent: "0002-task-worktree-aware-unit-scaffolding"
 phase: "01"
-phase_branch: "task/0002/phase-01"
-status: planned
+phase_branch: "task/0002/phase-01/integration"
+status: completed
 created: "2026-09-28"
 tags: [task, phase, scaffolding, engine, templates]
 ---
@@ -24,8 +24,8 @@ Upgrade the core task generator in `scripts/task-workflow.mjs` to create nested 
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 01.01** | Nested Structure Scaffolder | `unit-01-nested-phase-and-unit-structure.md` | `task/0002/phase-01/unit-01-nested-structure` | `.worktrees/0002/phase-01/unit-01-nested-structure` | `none` | `none` | `planned` |
-| **Unit 01.02** | Path & Topology Interpolator | `unit-02-branch-and-worktree-interpolator.md` | `task/0002/phase-01/unit-02-path-interpolator` | `.worktrees/0002/phase-01/unit-02-path-interpolator` | `01.01` | `none` | `planned` |
+| **Unit 01.01** | Nested Structure Scaffolder | `unit-01-nested-phase-and-unit-structure.md` | `task/0002/phase-01/unit-01-nested-structure` | `.worktrees/0002/phase-01/unit-01-nested-structure` | `none` | `none` | `completed` |
+| **Unit 01.02** | Path & Topology Interpolator | `unit-02-branch-and-worktree-interpolator.md` | `task/0002/phase-01/unit-02-path-interpolator` | `.worktrees/0002/phase-01/unit-02-path-interpolator` | `01.01` | `none` | `completed` |
 
 ## Impacted Files & Components
 
@@ -33,8 +33,8 @@ Upgrade the core task generator in `scripts/task-workflow.mjs` to create nested 
 
 ## Implementation Tasks
 
-- [ ] Unit 01.01 — Implement directory creation for phases (`phase-NN-<slug>/`) and scaffold unit files.
-- [ ] Unit 01.02 — Implement template interpolation for `branch`, `worktree`, and topology tables.
+- [x] Unit 01.01 — Implement directory creation for phases (`phase-NN-<slug>/`) and scaffold unit files.
+- [x] Unit 01.02 — Implement template interpolation for `branch`, `worktree`, and topology tables.
 
 ## Verification & Testing
 
