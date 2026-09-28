@@ -5,7 +5,7 @@ parent: "phase-01-scaffolding-engine"
 unit: "01.01"
 branch: "task/0002/phase-01/unit-01-nested-structure"
 worktree: ".worktrees/0002/phase-01/unit-01-nested-structure"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, scaffolding, folders, units]
 depends_on: []
@@ -60,7 +60,11 @@ Copied in, not referenced — this is what lets the unit run without the master 
 - Cases:
   - Case 1: `scaffoldTask({ title: "auth service", type: "feature", dryRun: true })` returns file list containing nested `phase.md` and `unit-01-*.md` paths.
   - Case 2: Custom phases array generates corresponding phase directories and unit files.
-- Commands: `node --test evals/task-scaffold.test.mjs`
+- Commands: `node --test tests/task-scaffold.test.mjs`
+- Verification Evidence:
+  - Command: `node --test tests/task-scaffold.test.mjs` (PASS: 1/1 passed, 85ms)
+  - Pre-screening Review: PASS (0 scope leaks, 0 SOLID violations)
+  - Files modified/created: `scripts/task-workflow.mjs`, `tests/task-scaffold.test.mjs`
 
 ## Rollback
 
@@ -68,8 +72,8 @@ Revert changes to `scripts/task-workflow.mjs`.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-01
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-01
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes

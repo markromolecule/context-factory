@@ -70,12 +70,13 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
 
   const taskTemplate = await readText("docs/templates/Task.md");
   const phaseTemplate = await readText("docs/templates/Phase.md");
+  const unitTemplate = await readText("docs/templates/Unit.md");
 
   const phases = customPhases ?? DEFAULT_PHASES[normalizedType];
   const phaseListMarkdown = phases
     .map((p, idx) => {
       const pNum = String(idx + 1).padStart(2, "0");
-      return `- [ ] \`phase-${pNum}-${p.slug}.md\` — ${p.title}`;
+      return `- [ ] \`phase-${pNum}-${p.slug}/phase.md\` — ${p.title}`;
     })
     .join("\n");
 
@@ -94,7 +95,8 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
   for (let i = 0; i < phases.length; i++) {
     const p = phases[i];
     const pNum = String(i + 1).padStart(2, "0");
-    const phaseFilename = `phase-${pNum}-${p.slug}.md`;
+    const phaseDirName = `phase-${pNum}-${p.slug}`;
+    const phasePath = `${taskRelativeDir}/${phaseDirName}/phase.md`;
     const renderedPhase = phaseTemplate
       .replaceAll("{{title}}", p.title)
       .replaceAll("{{parent_task}}", taskFolderName)
@@ -102,15 +104,30 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
       .replaceAll("{{date}}", dateStr);
 
     filesToWrite.push({
-      path: `${taskRelativeDir}/${phaseFilename}`,
+      path: phasePath,
       content: renderedPhase,
+    });
+
+    const unitFilename = `unit-01-${p.slug}.md`;
+    const unitPath = `${taskRelativeDir}/${phaseDirName}/${unitFilename}`;
+    const renderedUnit = unitTemplate
+      .replaceAll("{{title}}", `${p.title} Starter`)
+      .replaceAll("{{parent_phase}}", phaseDirName)
+      .replaceAll("{{unit_id}}", `${pNum}.01`)
+      .replaceAll("{{date}}", dateStr);
+
+    filesToWrite.push({
+      path: unitPath,
+      content: renderedUnit,
     });
   }
 
   if (!dryRun) {
-    await mkdir(taskAbsoluteDir, { recursive: true });
     for (const file of filesToWrite) {
-      await writeFile(join(root, file.path), file.content, "utf8");
+      const fullPath = join(root, file.path);
+      const parentDir = resolve(fullPath, "..");
+      await mkdir(parentDir, { recursive: true });
+      await writeFile(fullPath, file.content, "utf8");
     }
   }
 
