@@ -23,7 +23,7 @@ Summarize the specific goal and desired outcome of this phase.
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit {{phase_number}}.01** | [Unit Title] | `unit-01-[slug].md` | `task/{{parent_task}}/phase-{{phase_number}}/[slug]` | `.worktrees/{{parent_task}}/phase-{{phase_number}}/[slug]` | `none` | `none` | `planned` |
+| **Unit {{phase_number}}.01** | {{unit_title}} | `{{unit_filename}}` | `{{branch}}` | `{{worktree}}` | `none` | `none` | `planned` |
 
 ## Impacted Files & Components
 

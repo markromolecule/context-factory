@@ -3,8 +3,8 @@ title: "{{title}}"
 type: unit
 parent: "{{parent_phase}}"
 unit: "{{unit_id}}"
-branch: "task/{{task_id}}/{{parent_phase}}/{{unit_id}}-{{slug}}"
-worktree: ".worktrees/{{task_id}}/{{parent_phase}}/{{unit_id}}-{{slug}}"
+branch: "{{branch}}"
+worktree: "{{worktree}}"
 status: planned
 created: "{{date}}"
 tags: [task, unit]
