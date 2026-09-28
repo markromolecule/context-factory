@@ -106,6 +106,7 @@
     "skills/engineering/execute/SKILL.md",
     "skills/engineering/explore/SKILL.md",
     "skills/engineering/refactor/SKILL.md",
+    "skills/engineering/review/SKILL.md",
     "skills/engineering/security/SKILL.md",
     "skills/engineering/test/SKILL.md",
     "skills/engineering/verify/SKILL.md",
@@ -121,6 +122,7 @@
   "skillResources": [
     "skills/engineering/execute/agents/openai.yaml",
     "skills/engineering/refactor/agents/openai.yaml",
+    "skills/engineering/review/agents/openai.yaml",
     "skills/engineering/test/agents/openai.yaml",
     "skills/productivity/context/agents/openai.yaml",
     "skills/productivity/docs/agents/openai.yaml",
