@@ -3,7 +3,7 @@ title: "Phase 1 — Deterministic Plan Checker"
 type: phase
 parent: "0001-task-unit-lifecycle-plan-review-test-and-review-skills"
 phase: "01"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, phase, plan-check, dag, cycle, scope]
 ---
@@ -27,15 +27,15 @@ graph LR
     U01[Unit 01: DAG Cycle Detector]
     U02[Unit 02: Scope Overlap Checker]
     U03[Unit 03: CLI Harness & Eval Tests]
-    U01 --> U03
+    U01 --> U02
     U02 --> U03
 ```
 
 | Unit ID | Title | File | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 01.01** | DAG Cycle Detector | `unit-01-dag-cycle-detector.md` | `none` | `Unit 01.02` | `planned` |
-| **Unit 01.02** | Scope Overlap Checker | `unit-02-scope-overlap-checker.md` | `none` | `Unit 01.01` | `planned` |
-| **Unit 01.03** | CLI Harness & Eval Tests | `unit-03-cli-and-eval-tests.md` | `Unit 01.01, Unit 01.02` | `none` | `planned` |
+| **Unit 01.01** | DAG Cycle Detector | `unit-01-dag-cycle-detector.md` | `none` | `none` | `verified` |
+| **Unit 01.02** | Scope Overlap Checker | `unit-02-scope-overlap-checker.md` | `Unit 01.01` | `none` | `verified` |
+| **Unit 01.03** | CLI Harness & Eval Tests | `unit-03-cli-and-eval-tests.md` | `Unit 01.02` | `none` | `verified` |
 
 ## Impacted Files & Components
 

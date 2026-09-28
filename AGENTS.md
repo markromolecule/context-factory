@@ -21,5 +21,8 @@ This repository uses **Context Factory** (located at `.`) for development standa
 | Command | Action | Execution |
 | :--- | :--- | :--- |
 | `/plan`, `[PLAN]` | Scaffold phased plan in `./docs/tasks/` | `node scripts/context.mjs task:new "<title>"` |
+| `/plan-review`, `[PLAN_REVIEW]` | Audit plan graph and scope fences | `node scripts/context.mjs plan:check "<task-dir>"` |
+| `/test`, `[TEST]` | Test-first execution of verification | Active skill: `skills/engineering/test/SKILL.md` |
+| `/review`, `[REVIEW]` | Intra-worktree diff and scope review | Active skill: `skills/engineering/review/SKILL.md` |
 | `/resolve` | Resolve matching context rules & skills | `node scripts/context.mjs resolve "<prompt>"` |
 | `/doctor` | Verify context and lock health | `node scripts/context.mjs doctor` |

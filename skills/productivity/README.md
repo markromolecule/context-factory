@@ -20,6 +20,7 @@ The **Productivity** group contains procedural skills for pre-planning discovery
 | [[skills/productivity/grill/SKILL|grill]] | `/grill`, `[GRILL]`, `[DISCOVERY]` | Stress-test a new product idea or ambiguous feature 1 question at a time before coding | `agents/openai.yaml`, `references/glossary-format.md` |
 | [[skills/productivity/grounding/SKILL|grounding]] | `/grounding`, `/wiki`, `[WIKI]` | Access and query attributable LLM Wiki knowledge under `knowledge/` with authority & provenance | — |
 | [[skills/productivity/plan/SKILL|plan]] | `/plan`, `[PLAN]`, `[FEATURE]` | Create phased implementation plans under `docs/tasks/` without changing production code | `agents/openai.yaml` |
+| [[skills/productivity/plan-review/SKILL|plan-review]] | `/plan-review`, `[PLAN_REVIEW]` | Audit an implementation plan in a fresh session before execution | `agents/openai.yaml` |
 | [[skills/productivity/triage/SKILL|triage]] | `/triage`, `[TRIAGE]` | Scan repository activity, CI failures, and anomalies, logging findings to `docs/tasks/INBOX.md` | — |
 
 ---

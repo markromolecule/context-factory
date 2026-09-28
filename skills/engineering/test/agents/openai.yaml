@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test-Driven Implementation"
+  short_description: "Author tests test-first for unit verification sections"
+  default_prompt: "Use $test to write failing tests first for the active unit before implementing."

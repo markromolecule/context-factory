@@ -3,7 +3,7 @@ title: "Author review Skill"
 type: unit
 parent: "phase-04-review-skill"
 unit: "04.01"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, skill, review, diff, scope-fence, solid]
 depends_on: []
@@ -64,6 +64,7 @@ None (independent skill authoring).
   - `openai.yaml` length within 25-64 chars.
   - Engineering group index link valid.
 - Commands: `node scripts/context.mjs lint`
+- Evidence: `node scripts/context.mjs lint` passed with 0 errors. `node scripts/context.mjs doctor` passed with 100% HEALTHY (15 skills, 21 symlinks, 22 evaluations).
 
 ## Rollback
 
@@ -71,7 +72,7 @@ Delete `skills/engineering/review/` and revert `skills/engineering/README.md`.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-04
-- [ ] Skill document contains concrete audit steps for scope fence, missing tests, SOLID, and DoD
-- [ ] Agent interface YAML valid with zero lint errors
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-04
+- [x] Skill document contains concrete audit steps for scope fence, missing tests, SOLID, and DoD
+- [x] Agent interface YAML valid with zero lint errors
+- [x] All listed verification passes

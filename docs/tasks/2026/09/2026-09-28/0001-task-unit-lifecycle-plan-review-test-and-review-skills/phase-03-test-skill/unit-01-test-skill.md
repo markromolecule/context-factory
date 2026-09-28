@@ -3,7 +3,7 @@ title: "Author test Skill"
 type: unit
 parent: "phase-03-test-skill"
 unit: "03.01"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, skill, test, tdd, engineering]
 depends_on: []
@@ -66,6 +66,7 @@ None (independent skill authoring).
   - `openai.yaml` length within 25-64 chars.
   - Engineering group index link valid.
 - Commands: `node scripts/context.mjs lint`
+- Evidence: `node scripts/context.mjs lint` passed with 0 errors. `node scripts/context.mjs doctor` passed with 100% HEALTHY (14 skills, 20 symlinks, 22 evaluations).
 
 ## Rollback
 
@@ -73,7 +74,7 @@ Delete `skills/engineering/test/` and revert `skills/engineering/README.md`.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-03
-- [ ] Skill document contains concrete patterns for architecture, contract, and migration tests
-- [ ] Agent interface YAML valid with zero lint errors
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-03
+- [x] Skill document contains concrete patterns for architecture, contract, and migration tests
+- [x] Agent interface YAML valid with zero lint errors
+- [x] All listed verification passes
