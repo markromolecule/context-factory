@@ -3,8 +3,8 @@ title: "Phase 3 — Integration Tests"
 type: phase
 parent: "0002-task-worktree-aware-unit-scaffolding"
 phase: "03"
-phase_branch: "task/0002/phase-03"
-status: planned
+phase_branch: "task/0002/phase-03/integration"
+status: completed
 created: "2026-09-28"
 tags: [task, phase, tests, evals, integration]
 ---
@@ -23,7 +23,7 @@ Author end-to-end integration evaluations in `evals/task-scaffold.test.mjs` veri
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 03.01** | Scaffold & Plan-Check Integration Evals | `unit-01-scaffold-and-plan-check-evals.md` | `task/0002/phase-03/unit-01-scaffold-evals` | `.worktrees/0002/phase-03/unit-01-scaffold-evals` | `none` | `none` | `planned` |
+| **Unit 03.01** | Scaffold & Plan-Check Integration Evals | `unit-01-scaffold-and-plan-check-evals.md` | `task/0002/phase-03/unit-01-scaffold-evals` | `.worktrees/0002/phase-03/unit-01-scaffold-evals` | `none` | `none` | `completed` |
 
 ## Impacted Files & Components
 
@@ -31,7 +31,7 @@ Author end-to-end integration evaluations in `evals/task-scaffold.test.mjs` veri
 
 ## Implementation Tasks
 
-- [ ] Unit 03.01 — Write and run automated evaluation test cases.
+- [x] Unit 03.01 — Write and run automated evaluation test cases.
 
 ## Verification & Testing
 

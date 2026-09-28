@@ -198,6 +198,7 @@
   "tools": [
     "evals/plan-check.test.mjs",
     "evals/run-evals.mjs",
+    "evals/task-scaffold.test.mjs",
     "orchestrator/runner.mjs",
     "orchestrator/validator.mjs",
     "scripts/context-core.mjs",
