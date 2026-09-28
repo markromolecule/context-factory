@@ -5,7 +5,7 @@ parent: "phase-03-integration-tests"
 unit: "03.01"
 branch: "task/0002/phase-03/unit-01-scaffold-evals"
 worktree: ".worktrees/0002/phase-03/unit-01-scaffold-evals"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, evals, plan-check, integration-tests]
 depends_on: ["02.01"]
@@ -39,8 +39,8 @@ Copied in, not referenced — this is what lets the unit run without the master 
 
 ## Scope
 
-**In scope:** `evals/task-scaffold.test.mjs`.
-**Out of scope:** Core CLI implementation or factory manifest modifications.
+**In scope:** `evals/task-scaffold.test.mjs`, `context-manifest.json`, `context-lock.json`.
+**Out of scope:** Core CLI implementation.
 
 ## Steps
 
@@ -59,6 +59,12 @@ Copied in, not referenced — this is what lets the unit run without the master 
 - Cases:
   - All 4 test cases pass cleanly.
 - Commands: `node --test evals/task-scaffold.test.mjs`
+- Verification Evidence:
+  - Command: `node --test evals/task-scaffold.test.mjs` (PASS: 3/3 passed in 367ms)
+  - Case 1 & 2: verified nested phase and starter units with resolved branch and worktree metadata.
+  - Case 3: verified newly scaffolded task passes `plan:check` with 0 cycles and 4 units found out-of-the-box.
+  - Case 4: verified CLI flags `--dry-run`, `--no-units`, and `--json`.
+  - Pre-screening Review: PASS (0 scope leaks, 0 SOLID violations)
 
 ## Rollback
 
@@ -66,8 +72,8 @@ Delete `evals/task-scaffold.test.mjs`.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-03
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-03
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes

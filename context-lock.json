@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.13.1",
-  "digest": "sha256:d3b8bb16bc777caabdb66d0f9a03dd53d6f58c301b6cf93de12c0d9f27fadca4",
+  "digest": "sha256:c8148eabb2d17bd330b407bd9f8872707326e98a9df182338f0841f339504513",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:5426f779e008ffdbceddce1c8348121bc254692f45b378c3c15d6b116db967df",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:9b9fbfa4fd0d8fab6a0b56a3a22702d3d42e3ebce0e296a0bc6660b3f8f5d807",
+    "context-manifest.json": "sha256:0bcbd9002b6e7750555e6b444f2763b22684b0b41bf443bfb2bc4ffe2c631a36",
     "docs/ARCHITECTURE.md": "sha256:a894f5118bb646009a278de5396949ef906a51a0bfa7840cdbe55b245e5dad31",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
@@ -109,6 +109,7 @@
     "evals/datasets/refactors/architecture-change.json": "sha256:a09dfaf98ea783e66b090ae9e7f77fb9e5e0ea12753a9e1db90c1e3e7bedece8",
     "evals/plan-check.test.mjs": "sha256:bd0b1aba3b549b502f2f2f50cf24d53404edcb4acabfbb1c094043fb62539a23",
     "evals/run-evals.mjs": "sha256:cd03e5728cc977534c57e80bb87da717b2df9a5d05a7f2bc347e6fc8ecd45ecf",
+    "evals/task-scaffold.test.mjs": "sha256:be3b0039017c1540dc4c61eae7796fe225d8c48a5cfcf87514760dd60e0e26fa",
     "knowledge/README.md": "sha256:76396078e7be74da4823e32e69a012c09306c1c1de4d1d91e33737fdc437bfac",
     "knowledge/principles/solid-dip.md": "sha256:bee94e6fad38ddaa42c18b947d09b64cfda07382c4b43dfc65b6a5a68f13121d",
     "knowledge/principles/solid-isp.md": "sha256:a98d552187337a3201d5fea71eff7709486bd2e8c0f434ed24a037c0155e949c",
