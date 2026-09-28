@@ -5,7 +5,7 @@ parent: "phase-04-sync-and-doctor"
 unit: "04.01"
 branch: "task/0002/phase-04/unit-01-sync-and-doctor"
 worktree: ".worktrees/0002/phase-04/unit-01-sync-and-doctor"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, unit, sync, doctor, lock, manifest]
 depends_on: ["03.01"]
@@ -59,6 +59,13 @@ Copied in, not referenced — this is what lets the unit run without the master 
 - Test type(s):
   - Architecture & Health tests: Doctor diagnostic check.
 - Commands: `node scripts/context.mjs doctor && npm test`
+- Verification Evidence:
+  - Command: `npm run sync` (PASS: manifest updated, 6 MOCs regenerated, lockfile generated)
+  - Command: `npm test` (PASS: 22/22 evals passed in 87ms)
+  - Command: `node --test tests/task-scaffold.test.mjs` (PASS: 4/4 passed in 87ms)
+  - Command: `node --test evals/task-scaffold.test.mjs` (PASS: 3/3 passed in 306ms)
+  - Command: `node scripts/context.mjs doctor` (PASS: 100% HEALTHY across all 4 diagnostic checks)
+  - Pre-screening Review: PASS (0 scope leaks, 0 SOLID violations)
 
 ## Rollback
 
@@ -66,8 +73,8 @@ Revert modifications to manifest and lockfile.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-05
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-05
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
