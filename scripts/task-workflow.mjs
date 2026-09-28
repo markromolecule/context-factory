@@ -53,7 +53,7 @@ export async function findNextTaskId(year, month, dayStr) {
   return String(maxId + 1).padStart(4, "0");
 }
 
-export async function scaffoldTask({ title, type = "feature", customPhases = null, dryRun = false }) {
+export async function scaffoldTask({ title, type = "feature", customPhases = null, dryRun = false, includeUnits = true }) {
   if (!title) throw new Error("Task title is required");
   const normalizedType = DEFAULT_PHASES[type] ? type : "feature";
   const now = new Date();
@@ -115,6 +115,8 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     },
   ];
 
+  const units = [];
+
   for (let i = 0; i < phases.length; i++) {
     const p = phases[i];
     const pNum = String(i + 1).padStart(2, "0");
@@ -144,23 +146,33 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
       content: renderedPhase,
     });
 
-    const unitPath = `${taskRelativeDir}/${phaseDirName}/${unitFilename}`;
-    const renderedUnit = unitTemplate
-      .replaceAll("{{title}}", unitTitle)
-      .replaceAll("{{task_id}}", taskId)
-      .replaceAll("{{parent_phase}}", phaseDirName)
-      .replaceAll("{{unit_id}}", `${pNum}.01`)
-      .replaceAll("{{slug}}", p.slug)
-      .replaceAll("{{branch}}", unitBranch)
-      .replaceAll("{{worktree}}", unitWorktree)
-      .replaceAll("{{depends_on}}", "none")
-      .replaceAll("{{parallelizable_with}}", "none")
-      .replaceAll("{{date}}", dateStr);
+    if (includeUnits) {
+      const unitPath = `${taskRelativeDir}/${phaseDirName}/${unitFilename}`;
+      const renderedUnit = unitTemplate
+        .replaceAll("{{title}}", unitTitle)
+        .replaceAll("{{task_id}}", taskId)
+        .replaceAll("{{parent_phase}}", phaseDirName)
+        .replaceAll("{{unit_id}}", `${pNum}.01`)
+        .replaceAll("{{slug}}", p.slug)
+        .replaceAll("{{branch}}", unitBranch)
+        .replaceAll("{{worktree}}", unitWorktree)
+        .replaceAll("{{depends_on}}", "none")
+        .replaceAll("{{parallelizable_with}}", "none")
+        .replaceAll("{{date}}", dateStr);
 
-    filesToWrite.push({
-      path: unitPath,
-      content: renderedUnit,
-    });
+      filesToWrite.push({
+        path: unitPath,
+        content: renderedUnit,
+      });
+
+      units.push({
+        id: `${pNum}.01`,
+        path: unitPath,
+        branch: unitBranch,
+        worktree: unitWorktree,
+        title: unitTitle,
+      });
+    }
   }
 
   if (!dryRun) {
@@ -172,13 +184,17 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     }
   }
 
+  const baseBranch = `task/${taskId}-${taskSlug}`;
+
   return {
     taskId,
     taskFolderName,
     taskDirectory: taskRelativeDir,
     taskSlug,
+    baseBranch,
     type: normalizedType,
     date: dateStr,
+    units,
     files: filesToWrite.map((f) => f.path),
     renderedFiles: filesToWrite,
     dryRun,

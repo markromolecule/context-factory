@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.13.1",
-  "digest": "sha256:d148afb75a5e5e314f851a12579d58597060cc3a2427920986a049212e44f01e",
+  "digest": "sha256:d3b8bb16bc777caabdb66d0f9a03dd53d6f58c301b6cf93de12c0d9f27fadca4",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -188,9 +188,9 @@
     "schemas/run-result.schema.json": "sha256:ebb07bfa9f71ff63d3e64f3b302d43a82ea99648a7026f8cb780fb32e4fa2f6a",
     "scripts/context-core.mjs": "sha256:cf8603f43fe9618e5fd34b783a5244894c186e812b1a8e52dc16979b34fe3706",
     "scripts/context.mjs": "sha256:3ab8c1e11c3528a9227cfe11e10632894ced6ab8b2a3cbfcad5caa757342b0f2",
-    "scripts/harness-cli.mjs": "sha256:2ae52ecbdd6f8ac0a70dcf28f87b03f53e782368949755cdc2bd90490daf3a57",
+    "scripts/harness-cli.mjs": "sha256:f9066dfdc9623bba876dc1a577e5d59d221d71becccc0d7cfc5e49478fb6bd6a",
     "scripts/plan-check.mjs": "sha256:db7b4746202a04969f9caa3da844b3adbeadb6b3ea8feb8bf79291e1ca1b768d",
-    "scripts/task-workflow.mjs": "sha256:990a585d717ad19999391dc8e1a762e9f15ac664a2815f173c8de0ce222cb80f",
+    "scripts/task-workflow.mjs": "sha256:0e18b0eb850cbc72339d6b43ae2fbac3766e4d25376fd9216a1198ea787434ad",
     "scripts/triage.mjs": "sha256:a03ef4870822061f9509fed284274d631a39a164a3d3e672dc072b07eafe0706",
     "scripts/validate-context.mjs": "sha256:ea7bf5a62f5b75a989708a5370ee6a79fb46770650fb362149de7ffdbcda7619",
     "scripts/worktree.mjs": "sha256:8ce2a608a8bb6840ce318ff9f3bd4958c5e3fad9da9bd1b5e05444f203500d4a",
