@@ -3,7 +3,7 @@ title: "Phase 5 — Execute Integration & Factory Synchronization"
 type: phase
 parent: "0001-task-unit-lifecycle-plan-review-test-and-review-skills"
 phase: "05"
-status: planned
+status: verified
 created: "2026-09-28"
 tags: [task, phase, execute, sync, doctor, manifest]
 ---
@@ -29,8 +29,8 @@ graph LR
 
 | Unit ID | Title | File | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 05.01** | Execute Workflow Integration | `unit-01-execute-workflow-integration.md` | `Phase 3, Phase 4` | `none` | `planned` |
-| **Unit 05.02** | Manifest Sync & Doctor Verification | `unit-02-manifest-sync-and-doctor.md` | `Unit 05.01, Phase 2` | `none` | `planned` |
+| **Unit 05.01** | Execute Workflow Integration | `unit-01-execute-workflow-integration.md` | `Phase 3, Phase 4` | `none` | `completed` |
+| **Unit 05.02** | Manifest Sync & Doctor Verification | `unit-02-manifest-sync-and-doctor.md` | `Unit 05.01, Phase 2` | `none` | `completed` |
 
 ## Impacted Files & Components
 

@@ -1,7 +1,7 @@
 ---
 title: "Unit Lifecycle Primitives: Plan Review, Test-Driven Execution, and Diff Review"
 type: task
-status: planned
+status: completed
 created: "2026-09-28"
 tags: [task, skills, unit, execute, plan-review, test, review]
 ---
@@ -55,12 +55,12 @@ Introduce three foundational unit lifecycle skills and a deterministic graph/sco
 
 | ID | Source goal/scenario/decision | Criterion | Implementation | Verification | Status |
 |---|---|---|---|---|---|
-| AC-01 | D-02, SC-01, SC-02 | `scripts/plan-check.mjs` deterministically detects cycles in `depends_on` graphs and file overlap between parallel units, exposed via `node scripts/context.mjs plan:check <task-dir>`. | `scripts/plan-check.mjs`, `scripts/harness-cli.mjs` | Automated unit tests in `evals/` passing cycle and overlap test cases. | Planned |
-| AC-02 | SC-01, SC-02 | `skills/productivity/plan-review/SKILL.md` audits task plans cold-start, validating deterministic checks, context packet sufficiency, and AC-to-test mapping. | `skills/productivity/plan-review/SKILL.md`, `agents/openai.yaml` | Contract inspection and skill lint passes cleanly. | Planned |
-| AC-03 | D-03, SC-03 | `skills/engineering/test/SKILL.md` enforces test-first authoring with explicit patterns for architecture tests, contract tests, and migration forward/rollback tests. | `skills/engineering/test/SKILL.md`, `agents/openai.yaml` | Contract inspection and skill lint passes cleanly. | Planned |
-| AC-04 | D-01, SC-04 | `skills/engineering/review/SKILL.md` conducts independent diff reviews checking scope fences, missing tests, SOLID principles, and Definition of Done. | `skills/engineering/review/SKILL.md`, `agents/openai.yaml` | Contract inspection and skill lint passes cleanly. | Planned |
-| AC-05 | SC-03, SC-04 | `skills/engineering/execute/SKILL.md` delegates test creation to `test` and diff pre-screening to `review` before batch checkpoints. | `skills/engineering/execute/SKILL.md` | Skill workflow inspection and evaluation suite pass. | Planned |
-| AC-06 | Factory health | All new skills, scripts, and orchestrators registered in `context-manifest.json` and verified with `node scripts/context.mjs doctor`. | Manifest, lockfile, symlinks | `node scripts/context.mjs doctor` exits 0 (HEALTHY). | Planned |
+| AC-01 | D-02, SC-01, SC-02 | `scripts/plan-check.mjs` deterministically detects cycles in `depends_on` graphs and file overlap between parallel units, exposed via `node scripts/context.mjs plan:check <task-dir>`. | `scripts/plan-check.mjs`, `scripts/harness-cli.mjs` | Automated unit tests in `evals/` passing cycle and overlap test cases. | Completed |
+| AC-02 | SC-01, SC-02 | `skills/productivity/plan-review/SKILL.md` audits task plans cold-start, validating deterministic checks, context packet sufficiency, and AC-to-test mapping. | `skills/productivity/plan-review/SKILL.md`, `agents/openai.yaml` | Contract inspection and skill lint passes cleanly. | Completed |
+| AC-03 | D-03, SC-03 | `skills/engineering/test/SKILL.md` enforces test-first authoring with explicit patterns for architecture tests, contract tests, and migration forward/rollback tests. | `skills/engineering/test/SKILL.md`, `agents/openai.yaml` | Contract inspection and skill lint passes cleanly. | Completed |
+| AC-04 | D-01, SC-04 | `skills/engineering/review/SKILL.md` conducts independent diff reviews checking scope fences, missing tests, SOLID principles, and Definition of Done. | `skills/engineering/review/SKILL.md`, `agents/openai.yaml` | Contract inspection and skill lint passes cleanly. | Completed |
+| AC-05 | SC-03, SC-04 | `skills/engineering/execute/SKILL.md` delegates test creation to `test` and diff pre-screening to `review` before batch checkpoints. | `skills/engineering/execute/SKILL.md` | Skill workflow inspection and evaluation suite pass. | Completed |
+| AC-06 | Factory health | All new skills, scripts, and orchestrators registered in `context-manifest.json` and verified with `node scripts/context.mjs doctor`. | Manifest, lockfile, symlinks | `node scripts/context.mjs doctor` exits 0 (HEALTHY). | Completed |
 
 ## Scope
 
