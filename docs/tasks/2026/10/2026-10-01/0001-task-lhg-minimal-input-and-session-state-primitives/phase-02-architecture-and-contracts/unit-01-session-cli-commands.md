@@ -5,7 +5,7 @@ parent: "phase-02-architecture-and-contracts"
 unit: "02.01"
 branch: "task/0001/phase-02/unit-01-session-cli-commands"
 worktree: ".worktrees/0001/phase-02/unit-01-session-cli-commands"
-status: planned
+status: verified
 created: "2026-10-01"
 tags: [task, unit, cli, session]
 depends_on: ["01.02"]
@@ -53,7 +53,16 @@ Expose the session state engine via `app/cli/commands/session.mjs` and wire subc
 ## Verification
 
 - **Test Type:** Integration test — executes CLI commands against mock session directory and validates stdout output codes.
-- **Command:** `node scripts/context.mjs session:status`
+- **Commands & Evidence:**
+  - Red verification: Observed unrecognized command failure prior to routing implementation (exit code 1).
+  - Green verification: Tested full CLI command lifecycle:
+    - `node scripts/harness-cli.mjs session:save --name cli-test-session` -> `SAVED Session checkpoint saved`
+    - `node scripts/harness-cli.mjs session:status` -> Formatted active sessions table
+    - `node scripts/harness-cli.mjs session:resume cli-test-session` -> Cold-start prompt displayed
+    - `node scripts/harness-cli.mjs session:clear cli-test-session` -> `CLEARED Removed session checkpoint`
+  - Diff Review Pre-Screening: Gate 1 (0 scope leaks), Gate 2 (all CLI commands passing), Gate 3 (SOLID SRP confirmed), Gate 4 (DoD verified).
+- **Files Modified:** `app/cli/commands/session.mjs`, `scripts/harness-cli.mjs`, `context-lock.json`.
+- **Commit:** `7649113` on `task/0001/phase-02/unit-01-session-cli-commands`.
 
 ## Rollback
 
@@ -61,8 +70,8 @@ Expose the session state engine via `app/cli/commands/session.mjs` and wire subc
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-03
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-03
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`7649113`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
