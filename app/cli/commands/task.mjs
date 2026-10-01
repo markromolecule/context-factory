@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { listTasks, scaffoldTask } from "../../../scripts/task-workflow.mjs";
 import { badges, colors, table } from "../core/formatter.mjs";
 
@@ -16,7 +17,8 @@ export async function handleTaskCommand(args = [], flags = {}) {
       throw new Error("Usage: context-cli task new \"<task title>\" [--type <feature|defect|refactor|migration>] [--no-units] [--dry-run]");
     }
 
-    const result = await scaffoldTask({ title, type, dryRun, includeUnits });
+    const targetDir = flags.target ? resolve(process.cwd(), flags.target) : process.cwd();
+    const result = await scaffoldTask({ title, type, dryRun, includeUnits, targetDir });
 
     if (flags.json) {
       console.log(JSON.stringify(result, null, 2));
@@ -64,7 +66,8 @@ export async function handleTaskCommand(args = [], flags = {}) {
   }
 
   if (subCommand === "list" || !subCommand) {
-    const tasks = await listTasks();
+    const targetDir = flags.target ? resolve(process.cwd(), flags.target) : process.cwd();
+    const tasks = await listTasks(targetDir);
 
     if (flags.json) {
       console.log(JSON.stringify(tasks, null, 2));

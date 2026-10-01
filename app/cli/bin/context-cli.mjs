@@ -14,6 +14,7 @@ import { handleLockCommand } from "../commands/lock.mjs";
 import { handlePullCommand } from "../commands/pull.mjs";
 import { handleResolveCommand } from "../commands/resolve.mjs";
 import { handleRunCommand } from "../commands/run.mjs";
+import { handleSessionCommand } from "../commands/session.mjs";
 import { handleStatusCommand } from "../commands/status.mjs";
 import { handleSyncCommand } from "../commands/sync.mjs";
 import { handleTaskCommand } from "../commands/task.mjs";
@@ -51,6 +52,12 @@ ${colors.bold("AGENT EXECUTION & RESOLUTION:")}
   ${colors.bold(colors.green("task list"))}    List active task plans in docs/tasks/
   ${colors.bold(colors.green("validate"))}     Validate JSON file against registered schema
 
+${colors.bold("SESSION CHECKPOINT & RESUME (LHG):")}
+  ${colors.bold(colors.green("session save"))}     Save compact checkpoint to .context/sessions/ and .tmp/SESSION_RESUME.md
+  ${colors.bold(colors.green("session resume"))}   Load and output cold-start prompt for a saved session
+  ${colors.bold(colors.green("session status"))}   List all saved session checkpoints (alias: session list)
+  ${colors.bold(colors.green("session clear"))}    Delete saved session(s) (--all to clear all)
+
 ${colors.bold("COMMON OPTIONS:")}
   ${colors.yellow("--json")}          Output machine-readable JSON
   ${colors.yellow("--quiet")}         Suppress non-error output
@@ -73,6 +80,12 @@ ${colors.bold("EXAMPLES:")}
 
   ${colors.dim("# Resolve rules for a prompt")}
   ${colors.white('context-cli resolve "implement stripe webhook endpoint"')}
+
+  ${colors.dim("# Save session checkpoint before context saturation (>60%)")}
+  ${colors.white('context-cli session save --name task-0001-phase-1')}
+
+  ${colors.dim("# Resume latest session in fresh context window")}
+  ${colors.white("context-cli session resume")}
 
   ${colors.dim("# Run evaluation tests")}
   ${colors.white("context-cli eval --unit")}
@@ -154,6 +167,22 @@ export async function main(argv = process.argv.slice(2)) {
     case "run":
     case "exec":
       return handleRunCommand(args, flags);
+
+    case "session":
+    case "session:save":
+    case "session:resume":
+    case "session:status":
+    case "session:list":
+    case "session:clear":
+    case "save-session":
+    case "resume-session": {
+      let subCmd = args;
+      if (command === "session:save" || command === "save-session") subCmd = ["save", ...args];
+      else if (command === "session:resume" || command === "resume-session") subCmd = ["resume", ...args];
+      else if (command === "session:status" || command === "session:list") subCmd = ["status", ...args];
+      else if (command === "session:clear") subCmd = ["clear", ...args];
+      return handleSessionCommand(subCmd, flags);
+    }
 
     case "status":
     case "info":

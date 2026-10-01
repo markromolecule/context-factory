@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
 import { cp, lstat, mkdir, readFile, readlink, rm, symlink, unlink, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { root } from "../../../scripts/context-core.mjs";
@@ -26,7 +26,23 @@ export async function createRelativeSymlink({
   force = false,
 }) {
   const linkDir = dirname(linkPath);
-  const relTarget = relative(linkDir, targetPath).replaceAll("\\", "/");
+  let canonicalLinkDir = linkDir;
+  let canonicalTarget = targetPath;
+  try {
+    let d = linkDir;
+    while (!existsSync(d) && d !== dirname(d)) {
+      d = dirname(d);
+    }
+    if (existsSync(d)) {
+      canonicalLinkDir = join(realpathSync(d), relative(d, linkDir));
+    }
+  } catch {}
+  try {
+    if (existsSync(targetPath)) {
+      canonicalTarget = realpathSync(targetPath);
+    }
+  } catch {}
+  const relTarget = relative(canonicalLinkDir, canonicalTarget).replaceAll("\\", "/");
 
   let existingStat = null;
   try {
@@ -150,8 +166,24 @@ export async function generateBridge({
   dryRun = false,
   force = false,
   addNpmScripts = true,
+  stacks = null,
+  stack = null,
 } = {}) {
-  const targetDir = isAbsolute(target) ? target : resolve(process.cwd(), target);
+  let canonicalTarget = isAbsolute(target) ? target : resolve(process.cwd(), target);
+  try {
+    if (existsSync(canonicalTarget)) {
+      canonicalTarget = realpathSync(canonicalTarget);
+    }
+  } catch {}
+  const targetDir = canonicalTarget;
+
+  let canonicalRoot = root;
+  try {
+    if (existsSync(root)) {
+      canonicalRoot = realpathSync(root);
+    }
+  } catch {}
+
   const activePm = (packageManager || pm || detectPackageManager(targetDir)).toLowerCase();
   const pmRun = activePm === "yarn" ? "yarn" : (activePm === "bun" ? "bun run" : `${activePm} run`);
 
@@ -161,14 +193,18 @@ export async function generateBridge({
 
   if (relFactoryPath) {
     absFactoryPath = isAbsolute(relFactoryPath) ? relFactoryPath : resolve(targetDir, relFactoryPath);
+    if (!existsSync(absFactoryPath) && existsSync(canonicalRoot)) {
+      absFactoryPath = canonicalRoot;
+      relFactoryPath = relative(targetDir, canonicalRoot).replaceAll("\\", "/");
+    }
   } else {
-    if (targetDir === root) {
+    if (targetDir === canonicalRoot || targetDir === root) {
       relFactoryPath = ".";
-      absFactoryPath = root;
+      absFactoryPath = canonicalRoot;
     } else {
-      const computed = relative(targetDir, root).replaceAll("\\", "/");
+      const computed = relative(targetDir, canonicalRoot).replaceAll("\\", "/");
       relFactoryPath = computed || ".";
-      absFactoryPath = root;
+      absFactoryPath = canonicalRoot;
     }
   }
 
@@ -322,7 +358,9 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
     // Discover factory skills for per-skill symlink creation
     let factorySkills = [];
     try {
-      const manifestPath = join(absFactoryPath, "context-manifest.json");
+      const manifestPath = existsSync(join(absFactoryPath, "context-manifest.json"))
+        ? join(absFactoryPath, "context-manifest.json")
+        : join(root, "context-manifest.json");
       const m = JSON.parse(await readFile(manifestPath, "utf8"));
       factorySkills = m.skills || [];
     } catch {}
@@ -379,7 +417,9 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
       const skillName = parts[parts.length - 2];
       const relSkillDir = parts.slice(0, -1).join("/");
       const linkPath = join(dotAgentsSkillsDir, skillName);
-      const sourcePath = join(absFactoryPath, relSkillDir);
+      const sourcePath = existsSync(join(absFactoryPath, relSkillDir))
+        ? join(absFactoryPath, relSkillDir)
+        : join(root, relSkillDir);
       symlinksToCreate.push({
         id: `.agents/skills/${skillName}`,
         linkPath,
@@ -398,7 +438,7 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
       integrationMethod: method,
       packageManager: activePm,
       ides: activeIdes,
-      stacks: options.stacks || (options.stack ? [options.stack] : ["typescript"]),
+      stacks: stacks || (stack ? [stack] : ["typescript"]),
       createdAt: new Date().toISOString(),
       scoping: {
         tasks: "./docs/tasks",
@@ -530,7 +570,13 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
  * Diagnostic utility to audit symlink health in Context Factory or a bridged host repository.
  */
 export async function verifySymlinkHealth(targetDir = process.cwd()) {
-  const dotAgentsDir = join(targetDir, ".agents");
+  let canonicalTarget = targetDir;
+  try {
+    if (existsSync(targetDir)) {
+      canonicalTarget = realpathSync(targetDir);
+    }
+  } catch {}
+  const dotAgentsDir = join(canonicalTarget, ".agents");
   let hasDotAgents = false;
   try {
     const s = await lstat(dotAgentsDir);
@@ -549,7 +595,9 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
     } else if (existsSync(join(targetDir, "context-factory", "context-manifest.json"))) {
       factoryPath = join(targetDir, "context-factory");
     }
-    const manifestPath = join(factoryPath, "context-manifest.json");
+    const manifestPath = existsSync(join(factoryPath, "context-manifest.json"))
+      ? join(factoryPath, "context-manifest.json")
+      : join(root, "context-manifest.json");
     const m = JSON.parse(await readFile(manifestPath, "utf8"));
     factorySkills = m.skills || [];
   } catch {}
@@ -666,7 +714,12 @@ export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}
   if (!factoryPath) {
     try {
       const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
-      if (bridgeJson.factoryPath) factoryPath = bridgeJson.factoryPath;
+      if (bridgeJson.factoryPath) {
+        const candidate = resolve(targetDir, bridgeJson.factoryPath);
+        if (existsSync(candidate)) {
+          factoryPath = bridgeJson.factoryPath;
+        }
+      }
       if (bridgeJson.ides) ide = bridgeJson.ides;
       if (bridgeJson.integrationMethod) method = bridgeJson.integrationMethod;
     } catch {
@@ -679,7 +732,7 @@ export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}
 
   return generateBridge({
     target: targetDir,
-    factoryPath: factoryPath || ".",
+    factoryPath: factoryPath || (targetDir === root ? "." : relative(targetDir, root).replaceAll("\\", "/")),
     ide,
     method,
     force: true,

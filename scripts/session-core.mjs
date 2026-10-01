@@ -7,7 +7,20 @@ import { loadSchema, validateSchema } from "../orchestrator/validator.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-function runGit(command, cwd = root) {
+export function getSessionProjectRoot(cwd = process.cwd()) {
+  let curr = resolve(cwd);
+  while (curr !== dirname(curr)) {
+    if (existsSync(join(curr, ".context-bridge.json")) ||
+        existsSync(join(curr, "context-manifest.json")) ||
+        existsSync(join(curr, ".git"))) {
+      return curr;
+    }
+    curr = dirname(curr);
+  }
+  return cwd;
+}
+
+function runGit(command, cwd = process.cwd()) {
   try {
     return execSync(`git ${command}`, {
       cwd,
@@ -22,19 +35,20 @@ function runGit(command, cwd = root) {
 /**
  * Capture current git state (branch, commit, worktree, modified files, diff summary)
  */
-export function captureGitState(cwd = root) {
-  const branch = runGit("branch --show-current", cwd) || "HEAD";
-  const headCommit = runGit("rev-parse --short HEAD", cwd) || "unknown";
+export function captureGitState(cwd = process.cwd()) {
+  const projectRoot = getSessionProjectRoot(cwd);
+  const branch = runGit("branch --show-current", projectRoot) || "HEAD";
+  const headCommit = runGit("rev-parse --short HEAD", projectRoot) || "unknown";
 
   // Check if cwd is inside a worktree
   let worktree = null;
-  const relPath = relative(root, cwd).replaceAll("\\", "/");
+  const relPath = relative(projectRoot, cwd).replaceAll("\\", "/");
   if (relPath.startsWith(".worktrees/")) {
     worktree = relPath;
   }
 
   // Modified and staged files
-  const statusRaw = runGit("status --porcelain", cwd);
+  const statusRaw = runGit("status --porcelain", projectRoot);
   const modifiedFiles = [];
   const stagedFiles = [];
   if (statusRaw) {
@@ -49,7 +63,7 @@ export function captureGitState(cwd = root) {
     }
   }
 
-  const diffStat = runGit("diff --stat", cwd) || runGit("status -s", cwd) || "clean working tree";
+  const diffStat = runGit("diff --stat", projectRoot) || runGit("status -s", projectRoot) || "clean working tree";
 
   return {
     branch,
@@ -64,8 +78,14 @@ export function captureGitState(cwd = root) {
 /**
  * Auto-discover active task folder and active unit file
  */
-export async function resolveActiveTask(cwd = root) {
-  const tasksBase = join(root, "docs", "tasks");
+export async function resolveActiveTask(cwd = process.cwd()) {
+  const projectRoot = getSessionProjectRoot(cwd);
+  let tasksBase = join(projectRoot, "docs", "tasks");
+  if (!existsSync(tasksBase) && projectRoot !== root) {
+    if (existsSync(join(root, "docs", "tasks"))) {
+      tasksBase = join(root, "docs", "tasks");
+    }
+  }
   if (!existsSync(tasksBase)) {
     return { taskId: null, phase: null, unit: null, taskDir: null, unitFile: null };
   }
@@ -201,7 +221,8 @@ ${workingMemory.activeConstraints?.length > 0 ? workingMemory.activeConstraints.
  * Save session state to .context/sessions/<id>.json and .tmp/SESSION_RESUME.md
  */
 export async function saveSession(options = {}) {
-  const cwd = options.cwd || root;
+  const cwd = options.cwd || process.cwd();
+  const projectRoot = getSessionProjectRoot(cwd);
   const timestamp = new Date().toISOString();
   const dateSlug = timestamp.slice(0, 10).replace(/-/g, "");
   const timeSlug = timestamp.slice(11, 19).replace(/:/g, "");
@@ -260,7 +281,7 @@ export async function saveSession(options = {}) {
   }
 
   // Persist machine JSON
-  const sessionsDir = join(root, ".context", "sessions");
+  const sessionsDir = join(projectRoot, ".context", "sessions");
   await mkdir(sessionsDir, { recursive: true });
   const sessionPath = join(sessionsDir, `${sessionId}.json`);
   await writeFile(sessionPath, `${JSON.stringify(sessionPayload, null, 2)}\n`, "utf8");
@@ -270,7 +291,7 @@ export async function saveSession(options = {}) {
   await writeFile(latestPath, `${JSON.stringify(sessionPayload, null, 2)}\n`, "utf8");
 
   // Persist human/LLM-readable briefing to .tmp/SESSION_RESUME.md
-  const tmpDir = join(root, ".tmp");
+  const tmpDir = join(projectRoot, ".tmp");
   await mkdir(tmpDir, { recursive: true });
   const resumeBriefing = generateResumeBriefing(sessionPayload);
   const resumePath = join(tmpDir, "SESSION_RESUME.md");
@@ -291,10 +312,18 @@ export async function saveSession(options = {}) {
 /**
  * Load session state from .context/sessions/<id>.json
  */
-export async function loadSession(id = "latest") {
-  const sessionsDir = join(root, ".context", "sessions");
+export async function loadSession(id = "latest", options = {}) {
+  const cwd = options.cwd || process.cwd();
+  const projectRoot = getSessionProjectRoot(cwd);
   const filename = id.endsWith(".json") ? id : `${id}.json`;
-  const sessionPath = join(sessionsDir, filename);
+  let sessionPath = join(projectRoot, ".context", "sessions", filename);
+
+  if (!existsSync(sessionPath) && projectRoot !== root) {
+    const fallbackPath = join(root, ".context", "sessions", filename);
+    if (existsSync(fallbackPath)) {
+      sessionPath = fallbackPath;
+    }
+  }
 
   if (!existsSync(sessionPath)) {
     throw new Error(`Session file not found: ${sessionPath}`);
@@ -307,8 +336,15 @@ export async function loadSession(id = "latest") {
 /**
  * List all saved sessions
  */
-export async function listSessions() {
-  const sessionsDir = join(root, ".context", "sessions");
+export async function listSessions(options = {}) {
+  const cwd = options.cwd || process.cwd();
+  const projectRoot = getSessionProjectRoot(cwd);
+  let sessionsDir = join(projectRoot, ".context", "sessions");
+  if (!existsSync(sessionsDir) && projectRoot !== root) {
+    if (existsSync(join(root, ".context", "sessions"))) {
+      sessionsDir = join(root, ".context", "sessions");
+    }
+  }
   if (!existsSync(sessionsDir)) return [];
 
   const entries = await readdir(sessionsDir, { withFileTypes: true });
@@ -331,9 +367,11 @@ export async function listSessions() {
 /**
  * Clear session files
  */
-export async function clearSession(id = "latest") {
-  const sessionsDir = join(root, ".context", "sessions");
-  const tmpResumePath = join(root, ".tmp", "SESSION_RESUME.md");
+export async function clearSession(id = "latest", options = {}) {
+  const cwd = options.cwd || process.cwd();
+  const projectRoot = getSessionProjectRoot(cwd);
+  const sessionsDir = join(projectRoot, ".context", "sessions");
+  const tmpResumePath = join(projectRoot, ".tmp", "SESSION_RESUME.md");
 
   let removedCount = 0;
   if (id === "all") {

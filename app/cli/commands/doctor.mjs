@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, resolve } from "node:path";
 import { runAllEvaluations } from "../../../evals/run-evals.mjs";
@@ -10,22 +10,40 @@ import { badges, colors, table } from "../core/formatter.mjs";
 export async function handleDoctorCommand(args = [], flags = {}) {
   const isJson = Boolean(flags.json);
   const repair = Boolean(flags.repair || flags.fix || flags.r);
-  const targetDir = flags.target ? (isAbsolute(flags.target) ? flags.target : resolve(process.cwd(), flags.target)) : process.cwd();
+  let canonicalTarget = flags.target ? (isAbsolute(flags.target) ? flags.target : resolve(process.cwd(), flags.target)) : process.cwd();
+  try {
+    if (existsSync(canonicalTarget)) canonicalTarget = realpathSync(canonicalTarget);
+  } catch {}
+  const targetDir = canonicalTarget;
+
+  let canonicalRoot = root;
+  try {
+    if (existsSync(root)) canonicalRoot = realpathSync(root);
+  } catch {}
+
   const startTime = Date.now();
 
   // Detect host repo vs factory submodule
   let hostDir = targetDir;
-  let factoryDir = root;
+  let factoryDir = canonicalRoot;
   let isHostRepo = false;
 
-  if (targetDir !== root && existsSync(join(targetDir, ".context-bridge.json"))) {
+  if (targetDir !== canonicalRoot && existsSync(join(targetDir, ".context-bridge.json"))) {
     isHostRepo = true;
     hostDir = targetDir;
     try {
       const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
-      if (bridgeJson.factoryPath) factoryDir = resolve(targetDir, bridgeJson.factoryPath);
+      if (bridgeJson.factoryPath) {
+        const candidate = resolve(targetDir, bridgeJson.factoryPath);
+        if (existsSync(join(candidate, "context-manifest.json"))) {
+          factoryDir = candidate;
+        }
+      }
     } catch {}
-  } else if (targetDir !== root && existsSync(join(targetDir, ".gitmodules"))) {
+  } else if (targetDir !== canonicalRoot && existsSync(join(targetDir, ".gitmodules"))) {
+    isHostRepo = true;
+    hostDir = targetDir;
+  } else if (targetDir !== canonicalRoot && existsSync(join(targetDir, ".agents"))) {
     isHostRepo = true;
     hostDir = targetDir;
   } else if (existsSync(join(dirname(targetDir), ".context-bridge.json")) || existsSync(join(dirname(targetDir), ".gitmodules"))) {
@@ -42,7 +60,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
     } else if (existsSync(join(targetDir, ".context-factory", "context-manifest.json"))) {
       factoryDir = join(targetDir, ".context-factory");
     } else {
-      factoryDir = root;
+      factoryDir = canonicalRoot;
     }
   }
 

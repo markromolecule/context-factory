@@ -35,8 +35,8 @@ export function slugify(text) {
     .slice(0, 50);
 }
 
-export async function findNextTaskId(year, month, dayStr) {
-  const dayDir = join(root, "docs/tasks", year, month, dayStr);
+export async function findNextTaskId(year, month, dayStr, targetDir = process.cwd()) {
+  const dayDir = join(targetDir, "docs/tasks", year, month, dayStr);
   let maxId = 0;
   if (existsSync(dayDir)) {
     const entries = await readdir(dayDir, { withFileTypes: true });
@@ -53,7 +53,7 @@ export async function findNextTaskId(year, month, dayStr) {
   return String(maxId + 1).padStart(4, "0");
 }
 
-export async function scaffoldTask({ title, type = "feature", customPhases = null, dryRun = false, includeUnits = true }) {
+export async function scaffoldTask({ title, type = "feature", customPhases = null, dryRun = false, includeUnits = true, targetDir = process.cwd() }) {
   if (!title) throw new Error("Task title is required");
   const normalizedType = DEFAULT_PHASES[type] ? type : "feature";
   const now = new Date();
@@ -62,15 +62,28 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
   const day = String(now.getDate()).padStart(2, "0");
   const dateStr = `${year}-${month}-${day}`;
 
-  const taskId = await findNextTaskId(year, month, dateStr);
+  const taskId = await findNextTaskId(year, month, dateStr, targetDir);
   const taskSlug = slugify(title);
   const taskFolderName = `${taskId}-task-${taskSlug}`;
   const taskRelativeDir = join("docs/tasks", year, month, dateStr, taskFolderName).replaceAll("\\", "/");
-  const taskAbsoluteDir = join(root, taskRelativeDir);
+  const taskAbsoluteDir = join(targetDir, taskRelativeDir);
 
-  const taskTemplate = await readText("docs/templates/Task.md");
-  const phaseTemplate = await readText("docs/templates/Phase.md");
-  const unitTemplate = await readText("docs/templates/Unit.md");
+  let taskTemplate, phaseTemplate, unitTemplate;
+  try {
+    taskTemplate = await readFile(join(targetDir, "docs/templates/Task.md"), "utf8");
+  } catch {
+    taskTemplate = await readText("docs/templates/Task.md");
+  }
+  try {
+    phaseTemplate = await readFile(join(targetDir, "docs/templates/Phase.md"), "utf8");
+  } catch {
+    phaseTemplate = await readText("docs/templates/Phase.md");
+  }
+  try {
+    unitTemplate = await readFile(join(targetDir, "docs/templates/Unit.md"), "utf8");
+  } catch {
+    unitTemplate = await readText("docs/templates/Unit.md");
+  }
 
   const phases = customPhases ?? DEFAULT_PHASES[normalizedType];
   const phaseListMarkdown = phases
@@ -201,8 +214,13 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
   };
 }
 
-export async function listTasks() {
-  const tasksRoot = join(root, "docs/tasks");
+export async function listTasks(targetDir = process.cwd()) {
+  let tasksRoot = join(targetDir, "docs/tasks");
+  if (!existsSync(tasksRoot) && targetDir !== root) {
+    if (existsSync(join(root, "docs/tasks"))) {
+      tasksRoot = join(root, "docs/tasks");
+    }
+  }
   if (!existsSync(tasksRoot)) return [];
 
   const taskList = [];
@@ -216,7 +234,7 @@ export async function listTasks() {
         const content = await readFile(fullPath, "utf8");
         const meta = frontmatter(content);
         if (meta && meta.type === "task") {
-          const relativePath = fullPath.replace(root, "").replace(/^[/\\]/, "").replaceAll("\\", "/");
+          const relativePath = fullPath.replace(targetDir, "").replace(root, "").replace(/^[/\\]/, "").replaceAll("\\", "/");
           taskList.push({
             title: meta.title ?? "Untitled",
             status: meta.status ?? "unknown",
