@@ -5,7 +5,7 @@ parent: "phase-01-discovery-and-scenarios"
 unit: "01.02"
 branch: "task/0001/phase-01/unit-02-session-core-engine"
 worktree: ".worktrees/0001/phase-01/unit-02-session-core-engine"
-status: planned
+status: verified
 created: "2026-10-01"
 tags: [task, unit, engine, session]
 depends_on: ["01.01"]
@@ -52,7 +52,13 @@ Implement `scripts/session-core.mjs` providing zero-dependency pure ESM methods 
 ## Verification
 
 - **Test Type:** Unit test — tests saving, loading, listing, and clearing sessions, validating token length (<1.5k) of the generated markdown resume file.
-- **Command:** `node -e "import('./scripts/session-core.mjs').then(s => console.log('Session core loaded'))"`
+- **Commands & Evidence:**
+  - Red verification: Observed module not found error prior to implementation (`Cannot find module .../scripts/session-core.mjs`, exit code 1).
+  - Green verification: Full lifecycle test (saveSession, loadSession, listSessions, clearSession).
+  - Token estimate check: Resume briefing token estimate: **265 tokens** (well below the 1,500 token ceiling).
+  - Diff Review Pre-Screening: Gate 1 (0 scope leaks), Gate 2 (all lifecycle tests pass), Gate 3 (SOLID SRP confirmed), Gate 4 (DoD verified).
+- **Files Modified:** `scripts/session-core.mjs`, `context-manifest.json`, `context-lock.json`.
+- **Commit:** `05f683b` on `task/0001/phase-01/unit-02-session-core-engine`.
 
 ## Rollback
 
@@ -60,8 +66,8 @@ Implement `scripts/session-core.mjs` providing zero-dependency pure ESM methods 
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-02
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-02
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`05f683b`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
