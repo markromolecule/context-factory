@@ -4,7 +4,8 @@ type: phase
 parent: "0001-task-lhg-minimal-input-and-session-state-primitives"
 phase: "03"
 phase_branch: "task/0001/phase-03/integration"
-status: planned
+status: completed
+merge_commit: "0b4d6c4"
 created: "2026-10-01"
 tags: [task, phase, skills, rules, density, contract]
 ---
@@ -23,8 +24,8 @@ Author `skills/productivity/session/SKILL.md` to establish ergonomic slash comma
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 03.01** | Session Productivity Skill & Shared Contract | `unit-01-session-skill-and-contract.md` | `task/0001/phase-03/unit-01-session-skill-and-contract` | `.worktrees/0001/phase-03/unit-01-session-skill-and-contract` | `02.01` | `03.02` | `planned` |
-| **Unit 03.02** | LHG Minimal Input Rule Density Optimization | `unit-02-lhg-rule-density-optimization.md` | `task/0001/phase-03/unit-02-lhg-rule-density-optimization` | `.worktrees/0001/phase-03/unit-02-lhg-rule-density-optimization` | `02.02` | `03.01` | `planned` |
+| **Unit 03.01** | Session Productivity Skill & Shared Contract | `unit-01-session-skill-and-contract.md` | `task/0001/phase-03/unit-01-session-skill-and-contract` | `.worktrees/0001/phase-03/unit-01-session-skill-and-contract` | `02.01` | `03.02` | `merged` |
+| **Unit 03.02** | LHG Minimal Input Rule Density Optimization | `unit-02-lhg-rule-density-optimization.md` | `task/0001/phase-03/unit-02-lhg-rule-density-optimization` | `.worktrees/0001/phase-03/unit-02-lhg-rule-density-optimization` | `02.02` | `03.01` | `merged` |
 
 ## Impacted Files & Components
 
@@ -35,8 +36,8 @@ Author `skills/productivity/session/SKILL.md` to establish ergonomic slash comma
 
 ## Implementation Tasks
 
-- [ ] **Unit 03.01:** Author `skills/productivity/session/SKILL.md` and add session lifecycle guidance to `orchestrator/SHARED.md`.
-- [ ] **Unit 03.02:** Audit and refactor core rules to maximize information density and reduce token consumption by 30–50%.
+- [x] **Unit 03.01:** Author `skills/productivity/session/SKILL.md` and add session lifecycle guidance to `orchestrator/SHARED.md`.
+- [x] **Unit 03.02:** Audit and refactor core rules to maximize information density and reduce token consumption by 30–50%.
 
 ## Verification & Testing
 
