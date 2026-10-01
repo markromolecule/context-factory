@@ -104,7 +104,7 @@ Strengthen the Context Factory architecture through the **LHG (Loop - Harness - 
 
 ## Phases
 
-- [ ] `phase-01-discovery-and-scenarios/phase.md` — Phase 1: Core Schemas and Session Engine
+- [x] `phase-01-discovery-and-scenarios/phase.md` — Phase 1: Core Schemas and Session Engine
 - [ ] `phase-02-architecture-and-contracts/phase.md` — Phase 2: Harness CLI and Budget Fencing
 - [ ] `phase-03-implementation-and-tests/phase.md` — Phase 3: Skills, Contracts and Density Audit
 - [ ] `phase-04-verification-and-release/phase.md` — Phase 4: Verification, Quality Gates, and Release
@@ -115,7 +115,7 @@ Strengthen the Context Factory architecture through the **LHG (Loop - Harness - 
 
 | Stage | Source Branch | Target Branch | Merge Commit SHA | Worktree Cleaned | Verification Command |
 |---|---|---|---|---|---|
-| Phase 01 Integration | `task/0001/phase-01/integration` | `task/0001-lhg-minimal-input-and-session-state-primitives` | pending | [ ] | `node scripts/context.mjs doctor` |
+| Phase 01 Integration | `task/0001/phase-01/integration` | `task/0001-lhg-minimal-input-and-session-state-primitives` | `386bc4d` | [x] | `node scripts/context.mjs doctor` |
 | Phase 02 Integration | `task/0001/phase-02/integration` | `task/0001-lhg-minimal-input-and-session-state-primitives` | pending | [ ] | `node scripts/context.mjs doctor` |
 | Phase 03 Integration | `task/0001/phase-03/integration` | `task/0001-lhg-minimal-input-and-session-state-primitives` | pending | [ ] | `node scripts/context.mjs doctor` |
 | Phase 04 Integration | `task/0001/phase-04/integration` | `task/0001-lhg-minimal-input-and-session-state-primitives` | pending | [ ] | `node scripts/context.mjs doctor` |

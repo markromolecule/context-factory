@@ -4,7 +4,8 @@ type: phase
 parent: "0001-task-lhg-minimal-input-and-session-state-primitives"
 phase: "01"
 phase_branch: "task/0001/phase-01/integration"
-status: planned
+status: completed
+merge_commit: "386bc4d"
 created: "2026-10-01"
 tags: [task, phase, schema, session-engine]
 ---
@@ -24,8 +25,8 @@ Establish the canonical session state contract (`schemas/session-state.schema.js
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 01.01** | Session State Schema Definition | `unit-01-session-schema.md` | `task/0001/phase-01/unit-01-session-schema` | `.worktrees/0001/phase-01/unit-01-session-schema` | `none` | `none` | `planned` |
-| **Unit 01.02** | Pure ESM Session Serialization Engine | `unit-02-session-core-engine.md` | `task/0001/phase-01/unit-02-session-core-engine` | `.worktrees/0001/phase-01/unit-02-session-core-engine` | `01.01` | `none` | `planned` |
+| **Unit 01.01** | Session State Schema Definition | `unit-01-session-schema.md` | `task/0001/phase-01/unit-01-session-schema` | `.worktrees/0001/phase-01/unit-01-session-schema` | `none` | `none` | `merged` |
+| **Unit 01.02** | Pure ESM Session Serialization Engine | `unit-02-session-core-engine.md` | `task/0001/phase-01/unit-02-session-core-engine` | `.worktrees/0001/phase-01/unit-02-session-core-engine` | `01.01` | `none` | `merged` |
 
 ## Impacted Files & Components
 
@@ -34,8 +35,8 @@ Establish the canonical session state contract (`schemas/session-state.schema.js
 
 ## Implementation Tasks
 
-- [ ] **Unit 01.01:** Define JSON schema draft-2020-12 for session state with strict field validations.
-- [ ] **Unit 01.02:** Implement `scripts/session-core.mjs` with `saveSession`, `loadSession`, `listSessions`, `clearSession`, and `generateResumePrompt`.
+- [x] **Unit 01.01:** Define JSON schema draft-2020-12 for session state with strict field validations.
+- [x] **Unit 01.02:** Implement `scripts/session-core.mjs` with `saveSession`, `loadSession`, `listSessions`, `clearSession`, and `generateResumePrompt`.
 
 ## Verification & Testing
 
