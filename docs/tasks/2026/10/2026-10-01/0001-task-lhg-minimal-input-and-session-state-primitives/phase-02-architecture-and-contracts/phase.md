@@ -4,7 +4,8 @@ type: phase
 parent: "0001-task-lhg-minimal-input-and-session-state-primitives"
 phase: "02"
 phase_branch: "task/0001/phase-02/integration"
-status: planned
+status: completed
+merge_commit: "fb03fa6"
 created: "2026-10-01"
 tags: [task, phase, cli, budget, harness]
 ---
@@ -23,8 +24,8 @@ Expose the session commands to developers and automated scripts via `app/cli/com
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 02.01** | Session CLI Commands & Harness Integration | `unit-01-session-cli-commands.md` | `task/0001/phase-02/unit-01-session-cli-commands` | `.worktrees/0001/phase-02/unit-01-session-cli-commands` | `01.02` | `02.02` | `planned` |
-| **Unit 02.02** | Context Token Budget Fencing | `unit-02-context-budget-fencing.md` | `task/0001/phase-02/unit-02-context-budget-fencing` | `.worktrees/0001/phase-02/unit-02-context-budget-fencing` | `01.02` | `02.01` | `planned` |
+| **Unit 02.01** | Session CLI Commands & Harness Integration | `unit-01-session-cli-commands.md` | `task/0001/phase-02/unit-01-session-cli-commands` | `.worktrees/0001/phase-02/unit-01-session-cli-commands` | `01.02` | `02.02` | `merged` |
+| **Unit 02.02** | Context Token Budget Fencing | `unit-02-context-budget-fencing.md` | `task/0001/phase-02/unit-02-context-budget-fencing` | `.worktrees/0001/phase-02/unit-02-context-budget-fencing` | `01.02` | `02.01` | `merged` |
 
 ## Impacted Files & Components
 
@@ -34,8 +35,8 @@ Expose the session commands to developers and automated scripts via `app/cli/com
 
 ## Implementation Tasks
 
-- [ ] **Unit 02.01:** Implement `session.mjs` CLI handler with formatted console output, flags, and schema validation.
-- [ ] **Unit 02.02:** Add context token budget calculation and diagnostic warnings when resolved context exceeds threshold.
+- [x] **Unit 02.01:** Implement `session.mjs` CLI handler with formatted console output, flags, and schema validation.
+- [x] **Unit 02.02:** Add context token budget calculation and diagnostic warnings when resolved context exceeds threshold.
 
 ## Verification & Testing
 
