@@ -5,7 +5,8 @@ parent: "phase-03-implementation-and-tests"
 unit: "03.01"
 branch: "task/0001/phase-03/unit-01-session-skill-and-contract"
 worktree: ".worktrees/0001/phase-03/unit-01-session-skill-and-contract"
-status: planned
+status: verified
+commit: "4aa9150"
 created: "2026-10-01"
 tags: [task, unit, skill, contract, session]
 depends_on: ["02.01"]
@@ -51,7 +52,19 @@ Author `skills/productivity/session/SKILL.md` to define the user-facing slash co
 ## Verification
 
 - **Test Type:** Architecture test — verifies skill frontmatter, slash trigger mapping, and model-neutral contract wording.
-- **Command:** `node scripts/context.mjs lint`
+- **Command:** `node --test evals/session-contract.test.mjs`
+- **Output:**
+  ```text
+  ▶ Unit 03.01: Session Productivity Skill & Shared Contract
+    ✔ Skill file exists with valid frontmatter and aliases (2.808ms)
+    ✔ Skill documentation covers procedures and commands (0.521833ms)
+    ✔ orchestrator/SHARED.md mandates session checkpoints at ~60% saturation (0.461459ms)
+  ✔ Unit 03.01: Session Productivity Skill & Shared Contract (4.906041ms)
+  ℹ tests 3
+  ℹ suites 1
+  ℹ pass 3
+  ℹ fail 0
+  ```
 
 ## Rollback
 
@@ -59,8 +72,8 @@ Author `skills/productivity/session/SKILL.md` to define the user-facing slash co
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-05
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-05
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`4aa9150`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes

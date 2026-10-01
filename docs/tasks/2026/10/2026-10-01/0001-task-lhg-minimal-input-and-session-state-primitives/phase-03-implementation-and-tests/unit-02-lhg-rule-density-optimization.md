@@ -5,7 +5,8 @@ parent: "phase-03-implementation-and-tests"
 unit: "03.02"
 branch: "task/0001/phase-03/unit-02-lhg-rule-density-optimization"
 worktree: ".worktrees/0001/phase-03/unit-02-lhg-rule-density-optimization"
-status: planned
+status: verified
+commit: "24c64e1"
 created: "2026-10-01"
 tags: [task, unit, rules, density, lhg]
 depends_on: ["02.02"]
@@ -51,7 +52,21 @@ Audit and refactor core global rules (`rules/global/evidence-and-claims.md`, `ru
 ## Verification
 
 - **Test Type:** Architecture test — diff review confirming high-density structure and verification via evaluation suite.
-- **Command:** `node scripts/context.mjs eval --unit`
+- **Command:** `node --test evals/rule-density.test.mjs && node scripts/context.mjs eval --unit`
+- **Output:**
+  ```text
+  ▶ Unit 03.02: LHG Minimal Input Rule Density Optimization
+    ✔ rules/global/evidence-and-claims.md is optimized into high-density constraint tables (2.051042ms)
+    ✔ rules/global/architecture-conformance.md is optimized into high-density constraint tables (0.529666ms)
+  ✔ Unit 03.02: LHG Minimal Input Rule Density Optimization (3.230083ms)
+  ℹ tests 2
+  ℹ suites 1
+  ℹ pass 2
+  ℹ fail 0
+
+  --- Context Factory Evaluation Suite [unit] ---
+     SUITE PASSED  19/19 passed (99ms).
+  ```
 
 ## Rollback
 
@@ -59,8 +74,8 @@ Audit and refactor core global rules (`rules/global/evidence-and-claims.md`, `ru
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-06
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-06
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`24c64e1`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
