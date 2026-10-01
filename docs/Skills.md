@@ -6,7 +6,7 @@ tags: [skills, workflows, tools]
 
 # Skills
 
-The Context Factory defines 15 focused procedural skills across two primary categories for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
+The Context Factory defines 16 focused procedural skills across two primary categories for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
 
 ## Engineering & Coding
 *Group Index:* [[skills/engineering/README|Engineering Skills Overview]]
@@ -29,6 +29,7 @@ The Context Factory defines 15 focused procedural skills across two primary cate
 - [[skills/productivity/grounding/SKILL|grounding]] — Retrieve and reconcile canonical LLM Wiki knowledge by scope, authority, provenance, lifecycle state, recency, links, and task relevance (/grounding, /wiki, [WIKI]).
 - [[skills/productivity/plan/SKILL|plan]] — Create an evidence-backed, phased implementation plan without changing production code, broken into atomic task units that can each be handed to a separate session or agent to execute. Every unit carries its own standalone context and a justified test plan (unit, integration, architecture, contract, or migration tests, chosen to fit what actually changes). Use when a user asks for a plan, design proposal, implementation breakdown, migration plan, or task artifact that another developer or agent will execute later (/plan, [PLAN]).
 - [[skills/productivity/plan-review/SKILL|plan-review]] — Audit an implementation plan in a fresh session before execution to verify acyclic dependencies, disjoint parallel file scopes, cold-start executability, and acceptance criteria test mapping (/plan-review, [PLAN_REVIEW]).
+- [[skills/productivity/session/SKILL|session]] — Capture, persist, inspect, and resume active agent task execution state across clean session boundaries to prevent context saturation degradation (/session, /session-save, /session-resume, [SESSION]).
 - [[skills/productivity/triage/SKILL|triage]] — Scan recent repository activity, CI failures, issues, and anomalies using explore and grounding procedures to produce structured findings in docs/tasks/INBOX.md (/triage, [TRIAGE]).
 
 Skills trigger through their YAML descriptions and slash command shortcuts. All declarative engineering standards (TypeScript type safety, runtime validation, database query optimization, backend module architecture, and UI styling) are defined in and loaded from `rules/`.

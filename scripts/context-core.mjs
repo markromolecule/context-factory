@@ -201,6 +201,7 @@ const ROUTING_HINTS = [
   { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "new-project-delivery" },
   { test: /^\/(?:doc|docs|documentation|report)\b|^\[(?:DOC|DOCS|DOCUMENTATION|REPORT)\]/i, workflow: "docs" },
   { test: /^\/(?:plan|feature|grill|discovery|context|triage)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC|TRIAGE)\]/i, workflow: "feature-delivery" },
+  { test: /^\/(?:session|session-save|session-resume)\b|^\[SESSION\]/i, workflow: null },
 
   // 3. Keyword & Concept matchers
   { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },
@@ -358,22 +359,27 @@ export async function resolveContext(request, options = {}) {
   let selectedWorkflow = null;
   let selectedWorkflowSource = "";
   if (hasAction) {
-    const hintedName = ROUTING_HINTS.find((hint) => hint.test.test(request))?.workflow
-      ?? (selectedAgent?.meta.defaultWorkflow ? selectedAgent.meta.defaultWorkflow.replace(/\.md$/, "") : null);
-    const ranked = workflowEntries
-      .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
-      .sort((a, b) => b.relevance.score - a.relevance.score || a.path.localeCompare(b.path));
-    const hinted = workflowEntries.find((entry) => entry.meta.name === hintedName);
-    const winner = hinted ?? ranked[0];
-    if (winner && (hinted || winner.relevance.score >= 4)) {
-      const relevance = scoreEntry(requestTerms, winner.path, winner.meta);
-      selectedWorkflow = {
-        path: winner.path,
-        reason: hinted
-          ? `routing hint: ${hintedName}`
-          : `matched: ${relevance.matches.join(", ")}`,
-      };
-      selectedWorkflowSource = winner.source;
+    const matchedHint = ROUTING_HINTS.find((hint) => hint.test.test(request));
+    if (matchedHint && matchedHint.workflow === null) {
+      selectedWorkflow = null;
+    } else {
+      const hintedName = matchedHint?.workflow
+        ?? (selectedAgent?.meta.defaultWorkflow ? selectedAgent.meta.defaultWorkflow.replace(/\.md$/, "") : null);
+      const ranked = workflowEntries
+        .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
+        .sort((a, b) => b.relevance.score - a.relevance.score || a.path.localeCompare(b.path));
+      const hinted = workflowEntries.find((entry) => entry.meta.name === hintedName);
+      const winner = hinted ?? ranked[0];
+      if (winner && (hinted || winner.relevance.score >= 4)) {
+        const relevance = scoreEntry(requestTerms, winner.path, winner.meta);
+        selectedWorkflow = {
+          path: winner.path,
+          reason: hinted
+            ? `routing hint: ${hintedName}`
+            : `matched: ${relevance.matches.join(", ")}`,
+        };
+        selectedWorkflowSource = winner.source;
+      }
     }
   }
 
