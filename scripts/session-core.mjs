@@ -25,7 +25,7 @@ function runGit(command, cwd = root) {
 export function captureGitState(cwd = root) {
   const branch = runGit("branch --show-current", cwd) || "HEAD";
   const headCommit = runGit("rev-parse --short HEAD", cwd) || "unknown";
-  
+
   // Check if cwd is inside a worktree
   let worktree = null;
   const relPath = relative(root, cwd).replaceAll("\\", "/");
@@ -205,10 +205,17 @@ export async function saveSession(options = {}) {
   const timestamp = new Date().toISOString();
   const dateSlug = timestamp.slice(0, 10).replace(/-/g, "");
   const timeSlug = timestamp.slice(11, 19).replace(/:/g, "");
-  const sessionId = options.name || `session-${dateSlug}-${timeSlug}`;
+  const sessionId = options.name || options.sessionId || `session-${dateSlug}-${timeSlug}`;
 
   const gitState = options.gitState || captureGitState(cwd);
-  const taskPointer = options.taskPointer || await resolveActiveTask(cwd);
+  const detectedTask = await resolveActiveTask(cwd);
+  const taskPointer = options.taskPointer || {
+    taskId: options.taskId || detectedTask.taskId,
+    phase: options.phase || detectedTask.phase,
+    unit: options.unit || detectedTask.unit,
+    taskDir: options.taskDir || detectedTask.taskDir,
+    unitFile: options.unitFile || detectedTask.unitFile,
+  };
 
   const workingMemory = {
     verifiedFacts: Array.isArray(options.workingMemory?.verifiedFacts) ? options.workingMemory.verifiedFacts : (options.facts || []),
@@ -353,3 +360,17 @@ export async function clearSession(id = "latest") {
 
   return { cleared: true, removedCount };
 }
+
+// Aliases for programmatic and test consumption
+export const saveSessionState = saveSession;
+export const resumeSessionState = loadSession;
+export const inspectSessionStatus = async () => ({ sessions: await listSessions() });
+export const clearSessionState = async (options = "latest") => {
+  const targetId = typeof options === "object" && options !== null ? (options.sessionId || "latest") : options;
+  const res = await clearSession(targetId);
+  return { ...res, clearedId: targetId };
+};
+export function countTokens(text = "") {
+  return Math.ceil((text || "").length / 4);
+}
+
