@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.14.0",
-  "digest": "sha256:8f02981d0f821d00e3a8d9a985eead18fd29a66740662af5b97293a9c54a4ea9",
+  "digest": "sha256:8f5617ad7d4afcaf3ae5e196a5a853071749bd2761ba8d7f0f695d8939c188ea",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -125,9 +125,9 @@
     "orchestrator/runner.mjs": "sha256:9b9be96069b28c17dc169891130918f439321584f33dfd1b0731ed1d439a8c48",
     "orchestrator/validator.mjs": "sha256:53e8093a8b79795d3559d287d9663fb3bced9296bd67ac343d3630194b457ecf",
     "rules/global/1-3-1-rule.md": "sha256:ec6a208a4d7b73c1694f980c0b178fb94ce97b481f500dfe133ef3ffb7c46a0a",
-    "rules/global/architecture-conformance.md": "sha256:968c807c377e743fc273551aca6441617702dbfa9bdd48ac882916ab53d71c42",
+    "rules/global/architecture-conformance.md": "sha256:21dea041960d60667c4f304f8991b2fb8a6cb5b5f8b1ae8531db3b3845f95dc0",
     "rules/global/code-quality.md": "sha256:f472bf82976cb3e0ee3b74f60c818ccc639f529585a31ae04ce7aa1d03dd2380",
-    "rules/global/evidence-and-claims.md": "sha256:86f592c8fb4dab67025479e7d3c342aab491c3bdf8fce88ed52a0126abc42818",
+    "rules/global/evidence-and-claims.md": "sha256:a1ee5b905010acfd37a3d5d54719b5653a948b947ce9b17f9cbccd1f8f7e39b3",
     "rules/global/git-commit.md": "sha256:e4db8a71bad918321fa07c00416f0201ea9824503019ead48e73024404155072",
     "rules/global/naming-conventions.md": "sha256:e94297547826689b246f3e81162fa657f607e7a0d82526ccd1cd7ee5b48b65de",
     "rules/global/security-guardrails.md": "sha256:aae45add91f8a5fdc0fe9085e4a68e86d13dd7f13bc1a09ef0f9c7727350f74b",
