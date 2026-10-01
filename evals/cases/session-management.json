@@ -1,0 +1,30 @@
+{
+  "name": "session management slash command resolves session skill",
+  "request": "/session save active task checkpoint before context saturation",
+  "expected": {
+    "workflow": null,
+    "rules": [
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": [
+      "skills/productivity/session/SKILL.md"
+    ]
+  },
+  "contractAssertions": [
+    {
+      "path": "skills/productivity/session/SKILL.md",
+      "includes": [
+        "60% Saturation Rule",
+        "/session save",
+        "/session resume"
+      ]
+    },
+    {
+      "path": "orchestrator/SHARED.md",
+      "includes": [
+        "session checkpointing",
+        "~60% saturation"
+      ]
+    }
+  ]
+}

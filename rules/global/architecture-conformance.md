@@ -7,36 +7,28 @@ alwaysApply: true
 
 # Architecture Conformance
 
-## Source of architectural truth
+## Authority Hierarchy
 
-Inspect, in order:
+Evaluate in order:
+1. Project instructions & declared architecture profile.
+2. Accepted ADRs under `docs/decisions/`.
+3. Established dependency directions & public contracts.
+4. Applicable Context Factory rules.
 
-1. Project-specific instructions and architecture profile.
-2. Accepted decisions under `docs/decisions/`.
-3. Existing dependency direction and public contracts in source.
-4. Applicable factory rules.
+*Never introduce new layers, abstractions, or libraries from personal preference.*
 
-Do not introduce a new layer, abstraction, repository-wide pattern, library, or cross-boundary dependency solely from general preference.
+## Architecture Boundary Constraints
 
-## Boundary rules
+| Boundary | Constraint & Invariant |
+| :--- | :--- |
+| **SOLID Principles** | Enforce single-responsibility, open/closed extension, interface segregation, and dependency inversion (`rules/solid/`). |
+| **Layer Isolation** | Preserve transport, application, domain, persistence, and presentation separation. |
+| **Dependency Direction** | Point inward/per profile; circular dependencies are forbidden. |
+| **Public Contracts** | Cross-module communication uses public contracts; bypass of internal implementations is prohibited. |
+| **Single Policy** | Each business rule has one authoritative domain implementation. |
+| **Trust Gate** | Auth and tenant ownership checks reside strictly at trusted backend boundaries. |
+| **Pattern Parity** | Use existing patterns unless verified requirements prove them inadequate. |
 
-- Enforce SOLID architectural boundaries (`rules/solid/`): high-level policies depend on abstractions rather than details (`rules/solid/dependency-inversion.md`), interfaces are segregated to client use cases (`rules/solid/interface-segregation.md`), and modules maintain a single reason to change (`rules/solid/single-responsibility.md`).
-- Keep transport, application, domain, persistence, and presentation responsibilities in their declared boundaries.
-- Dependencies point inward or in the direction declared by the project profile; reject circular dependencies.
-- Cross-module access uses public contracts rather than internal implementation paths.
-- Business policy has one authoritative implementation.
-- Authorization and data-ownership checks remain at trusted server boundaries.
-- Prefer an existing suitable pattern. Introduce a new pattern only when current patterns cannot satisfy a verified requirement.
+## Material Architectural Changes
 
-## Architecture changes
-
-Use the `architecture-change` workflow when a change alters dependency direction, ownership, a public contract, persistence strategy, deployment topology, or a pattern used by multiple modules.
-
-Record an ADR that states the evidence, three viable approaches for a material unresolved choice, the selected approach, consequences, migration, and review trigger.
-
-## Verification
-
-- Compare changed imports and contracts with the project architecture profile.
-- Run available dependency, type, contract, and integration checks.
-- Trace public-contract changes to known consumers.
-- Report exceptions with an owner, reason, containment, and removal condition.
+Trigger `architecture-change` workflow and record an ADR in `docs/decisions/` whenever modifying system boundaries, layer dependency direction, public contracts, persistence strategies, or deployment topology.

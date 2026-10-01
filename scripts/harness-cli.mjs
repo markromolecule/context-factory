@@ -10,6 +10,7 @@ import { handleInitCommand } from "../app/cli/commands/init.mjs";
 import { handleLintCommand } from "../app/cli/commands/lint.mjs";
 import { handleLockCommand } from "../app/cli/commands/lock.mjs";
 import { handleResolveCommand } from "../app/cli/commands/resolve.mjs";
+import { handleSessionCommand } from "../app/cli/commands/session.mjs";
 import { handleTaskCommand } from "../app/cli/commands/task.mjs";
 import { parseArgs } from "../app/cli/core/options.mjs";
 import { runPlanCheckCli } from "./plan-check.mjs";
@@ -23,6 +24,10 @@ Usage:
   node scripts/harness-cli.mjs bundle <request> [--out <path>]
   node scripts/harness-cli.mjs explain <run-id-or-bundle-path>
   node scripts/harness-cli.mjs run <request> [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>]
+  node scripts/harness-cli.mjs session:save [--name <id>] [--prompt <text>]
+  node scripts/harness-cli.mjs session:resume [<id>]
+  node scripts/harness-cli.mjs session:status
+  node scripts/harness-cli.mjs session:clear [<id>|--all]
   node scripts/harness-cli.mjs task:new <title> [--type <feature|defect|refactor|migration>] [--no-units] [--dry-run]
   node scripts/harness-cli.mjs task:list [--json]
   node scripts/harness-cli.mjs plan:check <task-dir> [--json]
@@ -123,6 +128,22 @@ export async function handleCli(argv = process.argv.slice(2)) {
       sources: bundle.sources.map(({ path: sourcePath, hash }) => ({ path: sourcePath, hash })),
     });
     return 0;
+  }
+
+  if (command === "session:save") {
+    return handleSessionCommand(["save", ...parsedArgs], flags);
+  }
+
+  if (command === "session:resume") {
+    return handleSessionCommand(["resume", ...parsedArgs], flags);
+  }
+
+  if (command === "session:status" || command === "session:list") {
+    return handleSessionCommand(["status", ...parsedArgs], flags);
+  }
+
+  if (command === "session:clear") {
+    return handleSessionCommand(["clear", ...parsedArgs], flags);
   }
 
   if (command === "task:new") {

@@ -117,6 +117,7 @@
     "skills/productivity/grounding/SKILL.md",
     "skills/productivity/plan-review/SKILL.md",
     "skills/productivity/plan/SKILL.md",
+    "skills/productivity/session/SKILL.md",
     "skills/productivity/triage/SKILL.md"
   ],
   "skillResources": [
@@ -158,7 +159,8 @@
     "schemas/evaluation-report.schema.json",
     "schemas/knowledge.schema.json",
     "schemas/project-profile.schema.json",
-    "schemas/run-result.schema.json"
+    "schemas/run-result.schema.json",
+    "schemas/session-state.schema.json"
   ],
   "templates": [
     "docs/templates/Context.md",
@@ -198,7 +200,10 @@
   ],
   "tools": [
     "evals/plan-check.test.mjs",
+    "evals/rule-density.test.mjs",
     "evals/run-evals.mjs",
+    "evals/session-checkpoint.test.mjs",
+    "evals/session-contract.test.mjs",
     "evals/task-scaffold.test.mjs",
     "orchestrator/runner.mjs",
     "orchestrator/validator.mjs",
@@ -206,6 +211,7 @@
     "scripts/context.mjs",
     "scripts/harness-cli.mjs",
     "scripts/plan-check.mjs",
+    "scripts/session-core.mjs",
     "scripts/task-workflow.mjs",
     "scripts/triage.mjs",
     "scripts/validate-context.mjs",
@@ -231,6 +237,7 @@
     "evals/cases/laravel-resolution.json",
     "evals/cases/preplanning-new-system.json",
     "evals/cases/security-change.json",
+    "evals/cases/session-management.json",
     "evals/cases/slash-commands.json",
     "evals/cases/solid-principles.json",
     "evals/cases/sync-modernization.json",
