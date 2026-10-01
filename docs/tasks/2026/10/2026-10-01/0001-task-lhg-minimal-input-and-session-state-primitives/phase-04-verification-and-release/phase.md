@@ -4,7 +4,8 @@ type: phase
 parent: "0001-task-lhg-minimal-input-and-session-state-primitives"
 phase: "04"
 phase_branch: "task/0001/phase-04/integration"
-status: planned
+status: completed
+merge_commit: "4d50394"
 created: "2026-10-01"
 tags: [task, phase, verification, evals, doctor, release]
 ---
@@ -23,7 +24,7 @@ Build the end-to-end automated test suite in `evals/session-checkpoint.test.mjs`
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 04.01** | Automated E2E Suite, Evaluations, and Release | `unit-01-evaluations-and-release.md` | `task/0001/phase-04/unit-01-evaluations-and-release` | `.worktrees/0001/phase-04/unit-01-evaluations-and-release` | `03.01`, `03.02` | `none` | `planned` |
+| **Unit 04.01** | Automated E2E Suite, Evaluations, and Release | `unit-01-evaluations-and-release.md` | `task/0001/phase-04/unit-01-evaluations-and-release` | `.worktrees/0001/phase-04/unit-01-evaluations-and-release` | `03.01`, `03.02` | `none` | `merged` |
 
 ## Impacted Files & Components
 
@@ -36,9 +37,9 @@ Build the end-to-end automated test suite in `evals/session-checkpoint.test.mjs`
 
 ## Implementation Tasks
 
-- [ ] **Unit 04.01:** Author `evals/session-checkpoint.test.mjs` and `evals/cases/session-management.json`.
-- [ ] **Unit 04.01:** Update `docs/ARCHITECTURE.md`, `docs/Skills.md`, `context-manifest.json`, and regenerate `context-lock.json`.
-- [ ] **Unit 04.01:** Execute `node scripts/context.mjs doctor` to verify 100% passing checks.
+- [x] **Unit 04.01:** Author `evals/session-checkpoint.test.mjs` and `evals/cases/session-management.json`.
+- [x] **Unit 04.01:** Update `docs/ARCHITECTURE.md`, `docs/Skills.md`, `context-manifest.json`, and regenerate `context-lock.json`.
+- [x] **Unit 04.01:** Execute `node scripts/context.mjs doctor` to verify 100% passing checks.
 
 ## Verification & Testing
 
