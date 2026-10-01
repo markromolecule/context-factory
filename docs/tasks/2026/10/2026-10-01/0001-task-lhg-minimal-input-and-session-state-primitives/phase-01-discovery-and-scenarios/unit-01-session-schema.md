@@ -5,7 +5,7 @@ parent: "phase-01-discovery-and-scenarios"
 unit: "01.01"
 branch: "task/0001/phase-01/unit-01-session-schema"
 worktree: ".worktrees/0001/phase-01/unit-01-session-schema"
-status: planned
+status: verified
 created: "2026-10-01"
 tags: [task, unit, schema, session]
 depends_on: []
@@ -48,7 +48,14 @@ Author the canonical JSON schema `schemas/session-state.schema.json` to define t
 ## Verification
 
 - **Test Type:** Contract test — verifies that sample valid session state objects validate cleanly and invalid payloads fail with explicit path-level errors.
-- **Command:** `node -e "import('./orchestrator/validator.mjs').then(v => v.loadSchema('session-state').then(s => console.log('Schema valid:', !!s)))"`
+- **Commands & Evidence:**
+  - Red verification: `Expected Red Failure: ENOENT: no such file or directory, open '.../schemas/session-state.schema.json'` (exit code 1).
+  - Green verification: `node -e "import('./orchestrator/validator.mjs').then(v => v.loadSchema('session-state').then(s => console.log('Schema valid:', !!s)))"` -> `Schema valid: true` (exit code 0).
+  - Sample contract test: Validated complete session payload against schema -> `Sample session validation: PASS`.
+  - Negative contract test: Validated rejected invalid schema types -> `Negative contract test: PASS (caught 8 errors)`.
+  - Diff Review Pre-Screening: Gate 1 (0 scope leaks), Gate 2 (contract tests passing), Gate 3 (SOLID SRP confirmed), Gate 4 (DoD verified).
+- **Files Modified:** `schemas/session-state.schema.json`, `context-manifest.json`, `context-lock.json`.
+- **Commit:** `da0dd57` on `task/0001/phase-01/unit-01-session-schema`.
 
 ## Rollback
 
@@ -56,8 +63,8 @@ Author the canonical JSON schema `schemas/session-state.schema.json` to define t
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-01
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-01
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`da0dd57`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
