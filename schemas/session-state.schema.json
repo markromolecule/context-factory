@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-factory.local/schemas/session-state.schema.json",
+  "title": "Context Factory Session State Checkpoint",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "sessionId",
+    "timestamp",
+    "taskPointer",
+    "gitState",
+    "workingMemory",
+    "verificationState",
+    "coldStartPrompt"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "taskPointer": {
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "type": ["string", "null"]
+        },
+        "phase": {
+          "type": ["string", "null"]
+        },
+        "unit": {
+          "type": ["string", "null"]
+        },
+        "taskDir": {
+          "type": ["string", "null"]
+        },
+        "unitFile": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "gitState": {
+      "type": "object",
+      "required": [
+        "branch"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string"
+        },
+        "headCommit": {
+          "type": "string"
+        },
+        "worktree": {
+          "type": ["string", "null"]
+        },
+        "modifiedFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stagedFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "diffSummary": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "workingMemory": {
+      "type": "object",
+      "required": [
+        "verifiedFacts",
+        "decisions",
+        "blockers",
+        "activeConstraints"
+      ],
+      "properties": {
+        "verifiedFacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "activeConstraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "verificationState": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "latestCommand": {
+          "type": ["string", "null"]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "passing",
+            "failing",
+            "unverified",
+            "pending"
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "coldStartPrompt": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

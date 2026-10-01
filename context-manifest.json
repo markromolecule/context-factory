@@ -158,7 +158,8 @@
     "schemas/evaluation-report.schema.json",
     "schemas/knowledge.schema.json",
     "schemas/project-profile.schema.json",
-    "schemas/run-result.schema.json"
+    "schemas/run-result.schema.json",
+    "schemas/session-state.schema.json"
   ],
   "templates": [
     "docs/templates/Context.md",
