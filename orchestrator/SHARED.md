@@ -24,6 +24,7 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 - Follow workflow gates and stop conditions for multi-stage work; do not treat a workflow as permission for actions outside user scope.
 - Record durable architectural decisions under `docs/decisions/`.
 - Record multi-phase work under `docs/tasks/` using the task template.
+- Enforce session checkpointing (`session`, `node scripts/context.mjs session:save`) whenever context window load approaches ~60% saturation; snapshot machine state to `.context/sessions/` and resume in a fresh session via `.tmp/SESSION_RESUME.md` to prevent reasoning degradation.
 - For a new system, product, or materially ambiguous feature, use `grill` as the first pre-planning skill (or `context` to author and grill context specifications). Resolve and persist goals, scenarios, language, boundaries, and unknowns before `plan`; do not begin production coding until the plan is approved.
 
 ## Roles & Subagents
@@ -55,6 +56,7 @@ Follow system/user instructions first, then repository instructions, this contra
   3. `afterResponseValidate`: validate structured outputs against `/schemas` via `orchestrator/validator.mjs`.
 - Default to deterministic `mock` provider in CI/CD and offline evaluations; live runs use native `fetch` provider adapters (`openai`, `anthropic`, `gemini`).
 - Worktree isolation is mandatory whenever more than one agent from `agents/` is dispatched concurrently (managed via `scripts/worktree.mjs`).
+- Session state lifecycle is governed by `scripts/session-core.mjs`: snapshot machine state to `.context/sessions/<id>.json` and generate ultra-compact cold-start briefings to `.tmp/SESSION_RESUME.md` (<1,500 tokens) whenever context reaches ~60% saturation.
 
 ## Context maintenance
 
