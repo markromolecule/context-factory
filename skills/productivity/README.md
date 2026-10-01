@@ -21,6 +21,7 @@ The **Productivity** group contains procedural skills for pre-planning discovery
 | [[skills/productivity/grounding/SKILL|grounding]] | `/grounding`, `/wiki`, `[WIKI]` | Access and query attributable LLM Wiki knowledge under `knowledge/` with authority & provenance | — |
 | [[skills/productivity/plan/SKILL|plan]] | `/plan`, `[PLAN]`, `[FEATURE]` | Create phased implementation plans under `docs/tasks/` without changing production code | `agents/openai.yaml` |
 | [[skills/productivity/plan-review/SKILL|plan-review]] | `/plan-review`, `[PLAN_REVIEW]` | Audit an implementation plan in a fresh session before execution | `agents/openai.yaml` |
+| [[skills/productivity/session/SKILL|session]] | `/session`, `/session-save`, `/session-resume`, `[SESSION]` | Snapshot, inspect, and resume agent task execution state across clean session boundaries to prevent context saturation | — |
 | [[skills/productivity/triage/SKILL|triage]] | `/triage`, `[TRIAGE]` | Scan repository activity, CI failures, and anomalies, logging findings to `docs/tasks/INBOX.md` | — |
 
 ---

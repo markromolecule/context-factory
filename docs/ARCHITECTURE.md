@@ -26,6 +26,7 @@ The factory separates stable project knowledge from task-specific context so age
 | Knowledge               | `knowledge/*.md`, `docs/`                        | Attributable LLM knowledge, Obsidian maps, tasks, and decisions                                 |
 | Schemas                 | `schemas/*.json`                                 | Output contracts (`run-result`, `evaluation-report`, `claim-evidence`) and knowledge schemas    |
 | Templates and decisions | `docs/templates/`, `docs/decisions/`             | Valid artifact shapes and durable architectural history                                         |
+| Session State Engine    | `scripts/session-core.mjs`, `schemas/session-state.schema.json` | Dual-layer checkpointing (`.context/sessions/<id>.json` + `.tmp/SESSION_RESUME.md`) & budget fencing |
 | Harness CLI             | `scripts/harness-cli.mjs`, `scripts/context.mjs` | Unified CLI interface, context resolution, bundling, execution, locking, and diagnostics        |
 | Automation              | `.github/workflows/context-factory.yml`          | Cross-platform health enforcement on pushes and pull requests                                   |
 | Evaluation Suites       | `evals/run-evals.mjs`, `evals/{cases,datasets}/` | Multi-tier unit resolution cases and golden workflow regression suites                          |
@@ -47,6 +48,8 @@ flowchart LR
   K --> B["Immutable context bundle"]
   B --> RN["Execution Runner (3-stage hooks)"]
   RN --> V["Validator & Evals"]
+  W -.->|60% Saturation| SC["Session State Checkpoint (.tmp/SESSION_RESUME.md)"]
+  SC -.->|Clean Session| E
 ```
 
 ## Invariants
@@ -62,6 +65,7 @@ flowchart LR
 - Architecture follows project profiles and accepted decisions rather than model preference.
 - Canonical knowledge has stable identity, authority, provenance, ownership, lifecycle, and review metadata.
 - `context-lock.json` hashes the manifest and complete canonical inventory, excluding only the generated lock itself.
+- Session checkpointing triggers at ~60% context saturation; generates dual-layer machine state and ultra-compact (<1,500 token) cold-start briefings.
 
 ## Decisions
 
@@ -83,3 +87,4 @@ flowchart LR
 - [[docs/decisions/0016-declarative-lifecycle-specialist-agents|Declarative lifecycle specialist agents and harness resolution architecture]]
 - [[docs/decisions/0017-ide-bridging-and-symlink-synchronization-architecture|IDE bridging and symlink synchronization architecture]]
 - [[docs/decisions/0021-explicit-language-stack-selection|Explicit language stack selection for context rules]]
+- [[docs/decisions/0025-lhg-minimal-input-and-session-state-primitives|LHG minimal input and session state primitives]]
