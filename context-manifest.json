@@ -158,7 +158,8 @@
     "schemas/evaluation-report.schema.json",
     "schemas/knowledge.schema.json",
     "schemas/project-profile.schema.json",
-    "schemas/run-result.schema.json"
+    "schemas/run-result.schema.json",
+    "schemas/session-state.schema.json"
   ],
   "templates": [
     "docs/templates/Context.md",
@@ -206,6 +207,7 @@
     "scripts/context.mjs",
     "scripts/harness-cli.mjs",
     "scripts/plan-check.mjs",
+    "scripts/session-core.mjs",
     "scripts/task-workflow.mjs",
     "scripts/triage.mjs",
     "scripts/validate-context.mjs",
