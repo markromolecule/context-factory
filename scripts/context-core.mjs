@@ -450,6 +450,33 @@ export async function resolveContext(request, options = {}) {
     ...(selectedWorkflow ? [selectedWorkflow.path] : []),
   ])];
 
+  // Token budget estimation (~4 characters per token)
+  let totalChars = 0;
+  let ruleAndSkillChars = 0;
+  for (const p of selectedPaths) {
+    try {
+      const src = await readText(p);
+      totalChars += src.length;
+      if (p.startsWith("rules/") || p.startsWith("skills/")) {
+        ruleAndSkillChars += src.length;
+      }
+    } catch {
+      // Non-fatal
+    }
+  }
+  const estimatedTokens = Math.ceil(totalChars / 4);
+  const ruleAndSkillTokens = Math.ceil(ruleAndSkillChars / 4);
+  const maxRecommendedRuleTokens = 8000;
+  const budget = {
+    estimatedTokens,
+    ruleAndSkillTokens,
+    maxRecommendedRuleTokens,
+    densityStatus: ruleAndSkillTokens <= maxRecommendedRuleTokens ? "optimal" : "warning",
+    warning: ruleAndSkillTokens > maxRecommendedRuleTokens
+      ? `Resolved rules and skills (${ruleAndSkillTokens} tokens) exceed recommended ceiling (${maxRecommendedRuleTokens} tokens). Consider narrowing prompt.`
+      : null,
+  };
+
   return {
     schemaVersion: 1,
     contextVersion: manifest.contextVersion,
@@ -471,6 +498,7 @@ export async function resolveContext(request, options = {}) {
     skills: selectedSkills,
     taste: [],
     selectedPaths,
+    budget,
   };
 }
 
