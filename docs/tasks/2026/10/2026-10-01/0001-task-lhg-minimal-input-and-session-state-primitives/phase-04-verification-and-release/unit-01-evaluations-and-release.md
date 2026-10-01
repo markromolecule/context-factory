@@ -5,7 +5,8 @@ parent: "phase-04-verification-and-release"
 unit: "04.01"
 branch: "task/0001/phase-04/unit-01-evaluations-and-release"
 worktree: ".worktrees/0001/phase-04/unit-01-evaluations-and-release"
-status: planned
+status: verified
+commit: "c9eeb92"
 created: "2026-10-01"
 tags: [task, unit, evals, doctor, release]
 depends_on: ["03.01", "03.02"]
@@ -62,9 +63,29 @@ Create the end-to-end automated lifecycle test suite (`evals/session-checkpoint.
 
 - **Test Type:** Integration & E2E test — runs all test cases and doctor diagnostic.
 - **Commands:**
-  - `node evals/session-checkpoint.test.mjs`
-  - `node scripts/context.mjs eval --unit`
-  - `node scripts/context.mjs doctor`
+  - `node --test evals/session-checkpoint.test.mjs` (PASS: 6/6 passed)
+  - `node scripts/context.mjs eval --unit` (PASS: 20/20 passed)
+  - `node scripts/context.mjs doctor` (PASS: 100% HEALTHY)
+- **Output:**
+  ```text
+  ▶ Session Checkpoint & LHG Minimal Input E2E Suite
+    ✔ saveSessionState creates valid machine state and ultra-compact briefing (67.3ms)
+    ✔ resumeSessionState restores saved state accurately (0.3ms)
+    ✔ inspectSessionStatus returns active session entry (5.9ms)
+    ✔ clearSessionState removes machine state and cleans resume briefing (1.0ms)
+    ✔ resolveContext includes budget metrics and densityStatus (17.7ms)
+    ✔ executes session:save, session:status, session:resume, session:clear via CLI (343.3ms)
+  ✔ Session Checkpoint & LHG Minimal Input E2E Suite (437.2ms)
+  ℹ tests 6, suites 4, pass 6, fail 0
+
+  --- Context Factory Evaluation Suite [unit] ---
+     SUITE PASSED  20/20 passed (128ms).
+
+  ╔════════════════════════════════════════════════════════════════╗
+    CONTEXT FACTORY DOCTOR DIAGNOSTIC  v3.14.0
+  ╚════════════════════════════════════════════════════════════════╝
+     HEALTHY  Context Factory is completely synchronized, valid, and healthy.
+  ```
 
 ## Rollback
 
@@ -72,8 +93,8 @@ Create the end-to-end automated lifecycle test suite (`evals/session-checkpoint.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-07
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-07
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`c9eeb92`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
