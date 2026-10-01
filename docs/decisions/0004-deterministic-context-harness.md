@@ -3,6 +3,7 @@ title: Deterministic Context Harness
 type: decision
 status: accepted
 created: 2026-07-25
+updated: 2026-10-01
 tags: [adr, context, llm, reliability]
 ---
 

@@ -193,7 +193,8 @@
     "docs/decisions/0021-explicit-language-stack-selection.md",
     "docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards.md",
     "docs/decisions/0023-laravel-modular-domain-architecture-and-unified-conventions.md",
-    "docs/decisions/0024-unit-execution-review-and-testing-skills.md"
+    "docs/decisions/0024-unit-execution-review-and-testing-skills.md",
+    "docs/decisions/0025-lhg-minimal-input-and-session-state-primitives.md"
   ],
   "tools": [
     "evals/plan-check.test.mjs",

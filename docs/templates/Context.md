@@ -18,14 +18,17 @@ feature: "{{feature_name}}"
 ## 2. Requirements & User Stories
 
 ### User Stories / Scenarios
+
 - *As a [user role], I want to [perform action], so that [achieve benefit].*
 
 ### Functional Requirements
+
 - [ ] Requirement 1
 - [ ] Requirement 2
 - [ ] Requirement 3
 
 ### Edge Cases & Failure Modes
+
 - Edge case 1 and expected graceful failure or recovery.
 - Edge case 2 and fallback behavior.
 
