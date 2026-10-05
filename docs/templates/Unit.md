@@ -29,6 +29,13 @@ Copied in, not referenced — this is what lets the unit run without the master 
 - The acceptance criteria this unit serves
 - Any decisions from the plan's ledger that constrain this unit
 
+<language_rules>
+- Rule 1: Concrete checkable directive (e.g. "no implicit any", "FormRequest validation required")
+- Rule 2: Concrete checkable directive
+</language_rules>
+
+> **Precedence Invariant:** If a step in this unit contradicts an applicable language rule, the language rule strictly takes precedence.
+
 ## Preconditions
 
 - Dedicated git worktree and branch provisioned at declared path.
