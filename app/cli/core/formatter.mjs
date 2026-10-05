@@ -1,8 +1,10 @@
 /**
  * Zero-dependency terminal formatting utilities.
- * Supports ANSI colors, styles, boxes, badges, and tables with automatic
- * color suppression when NO_COLOR is set or when stdout is not a TTY.
+ * Supports ANSI colors, styles, boxes, badges, tables, and categorized cards
+ * with automatic color suppression when NO_COLOR is set or when stdout is not a TTY.
  */
+
+import { getTerminalCapabilities, renderMascotHeader } from "./mascot.mjs";
 
 const isColorSupported = (() => {
   if (process.env.NO_COLOR !== undefined || process.argv.includes("--no-color")) {
@@ -59,14 +61,7 @@ export const badges = {
 };
 
 export function banner(title = "CONTEXT FACTORY CLI", subtitle = "Deterministic context engineering & agent orchestration") {
-  const width = Math.max(title.length, subtitle.length) + 6;
-  const line = "─".repeat(width);
-  return [
-    colors.cyan(`┌${line}┐`),
-    colors.cyan(`│   `) + colors.bold(colors.white(title.padEnd(width - 3))) + colors.cyan(`│`),
-    colors.cyan(`│   `) + colors.dim(subtitle.padEnd(width - 3)) + colors.cyan(`│`),
-    colors.cyan(`└${line}┘`),
-  ].join("\n");
+  return renderMascotHeader(title, subtitle);
 }
 
 export function box(content, { title, borderColor = "cyan", padding = 1 } = {}) {
@@ -118,4 +113,35 @@ export function table(headers, rows, { align = [] } = {}) {
   const rowLines = rows.map((r) => formatRow(r));
 
   return [headerLine, colors.dim(divider), ...rowLines].join("\n");
+}
+
+/**
+ * Render a styled category command card with aligned commands and descriptions.
+ */
+export function commandCard(title, commands, { icon = "◆", badgeColor = "cyan" } = {}) {
+  const colorFn = colors[badgeColor] || colors.cyan;
+  const header = `${colorFn(icon)} ${colors.bold(title)}`;
+  
+  const formattedCmds = commands.map(([cmd, desc, detail = ""]) => {
+    const cmdStr = colors.bold(colors.green(cmd.padEnd(18)));
+    const descStr = colors.white(desc);
+    const detailStr = detail ? colors.dim(` ${detail}`) : "";
+    return `  ${cmdStr} ${descStr}${detailStr}`;
+  });
+
+  return [header, ...formattedCmds].join("\n");
+}
+
+/**
+ * Render a highlighted quick-start workflow card.
+ */
+export function quickStartCard(steps) {
+  const lines = steps.map(([step, cmd, desc]) => {
+    return `  ${colors.bold(colors.yellow(step))}  ${colors.bold(colors.white(cmd.padEnd(26)))} ${colors.dim(desc)}`;
+  });
+
+  return [
+    `${colors.bold(colors.magenta("🚀 QUICK START & RECOMMENDED WORKFLOWS"))}`,
+    ...lines,
+  ].join("\n");
 }
