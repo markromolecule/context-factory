@@ -4,7 +4,7 @@ type: phase
 parent: "0001-task-submodule-first-flow-and-multi-editor-bridging"
 phase: "04"
 phase_branch: "task/0001/phase-04/integration"
-status: planned
+status: completed
 created: "2026-10-05"
 tags: [task, phase, docs, sync, release, doctor]
 ---
@@ -23,7 +23,7 @@ Synchronize documentation across the repository (`app/cli/README.md`, `README.md
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 04.01** | Documentation, Factory Sync & Release Validation | `unit-01-docs-sync-and-health.md` | `task/0001/phase-04/unit-01-docs-sync-release` | `.worktrees/0001/phase-04/unit-01-docs-sync-release` | `03.02` | `none` | `planned` |
+| **Unit 04.01** | Documentation, Factory Sync & Release Validation | `unit-01-docs-sync-and-health.md` | `task/0001/phase-04/unit-01-docs-sync-release` | `.worktrees/0001/phase-04/unit-01-docs-sync-release` | `03.02` | `none` | `merged` |
 
 ## Impacted Files & Components
 
@@ -34,7 +34,7 @@ Synchronize documentation across the repository (`app/cli/README.md`, `README.md
 
 ## Implementation Tasks
 
-- [ ] Unit 04.01 — Update documentation, run `context-cli sync`, and confirm all doctor checks pass.
+- [x] Unit 04.01 — Update documentation, run `context-cli sync`, and confirm all doctor checks pass.
 
 ## Verification & Testing
 
