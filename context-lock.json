@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.14.0",
-  "digest": "sha256:a1aeff4f2ba826f94636a6967a9286c4e6c8f922b4dbf3157103ca0e2a58bf15",
+  "digest": "sha256:bb6837491840eb64adf63d4931eceb7b4dcc21c22c1cc0d0e78995cecb8f881e",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:5426f779e008ffdbceddce1c8348121bc254692f45b378c3c15d6b116db967df",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:41fbd9411002e1b8b01fe315ef233005188464c41c305b9e090dc634a51e7dce",
+    "context-manifest.json": "sha256:0cf8e16647d0c515a49df8bbae741bf7b8cffcaa24a8954b04fd7021a7314907",
     "docs/ARCHITECTURE.md": "sha256:02c83104623444a1d979b50f9a49f028f0e6ecdad62fb9064343ac5329343b1e",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
@@ -71,7 +71,8 @@
     "docs/decisions/0023-laravel-modular-domain-architecture-and-unified-conventions.md": "sha256:9dc155d7d4c6514bc85e4503c0e20854a58871e421e33a5980b96d79b0c88d2a",
     "docs/decisions/0024-unit-execution-review-and-testing-skills.md": "sha256:fa780c27040334bdbfef6a85c1791dc13e8830972e6ebf5b84ed6868e6d730ec",
     "docs/decisions/0025-lhg-minimal-input-and-session-state-primitives.md": "sha256:cf8f4279072203a3fd85243ca5d55cc40192ffb4b3287f38945688ed63d47a7f",
-    "docs/decisions/README.md": "sha256:5cb53bab9056d530d1bd6afc0bd262f3515a7dc2c4155fb871c43a80caecbd89",
+    "docs/decisions/0026-submodule-first-ide-onboarding-flow.md": "sha256:cebc846e172c1075b75169db79738c51ea31d393c6c26aa68f00e2a359804f7a",
+    "docs/decisions/README.md": "sha256:af911304a94a2740f0702d9598f44c73e9f0c575abdb7dbf18abba405094f7ae",
     "docs/guide/README.md": "sha256:d94360ea22bde81983ffc65f7c31f65d2b68940ec93fa767c7b8a54fc663188e",
     "docs/guide/cross-workspace-integration.md": "sha256:af9a6ad917c22a9ed1d2e7d33ff498bb1a688c3c0b196a62959206bb106dffbd",
     "docs/guide/rules-and-workflows.md": "sha256:ba73cb2f4fb2c557d97271be8991306bbc15315b328a969b8c0bf06673da2270",
