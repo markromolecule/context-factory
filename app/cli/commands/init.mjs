@@ -5,8 +5,10 @@ import { isAbsolute, resolve } from "node:path";
 import { badges, colors } from "../core/formatter.mjs";
 import {
   checkHostSubmoduleStatus,
+  detectInstalledIdes,
   detectPackageManager,
   detectSubmoduleContext,
+  parseIdeChoices,
 } from "../core/bridge-generator.mjs";
 import { handleBridgeCommand } from "./bridge.mjs";
 
@@ -86,24 +88,24 @@ export async function handleInitCommand(args = [], flags = {}) {
         }
       }
 
-      // 3. IDE profile prompt
+      // 3. IDE profile prompt with smart folder detection and multi-select
       if (!ide) {
-        console.log(`\n  ${colors.bold("Select Target IDEs:")}`);
-        console.log(`    ${colors.cyan("1)")} All IDEs ${colors.dim("(Antigravity, Cursor, Windsurf, Claude Code, Copilot)")}`);
-        console.log(`    ${colors.cyan("2)")} Antigravity & Gemini ${colors.dim("(.agents/ symlinks, AGENTS.md, GEMINI.md)")}`);
-        console.log(`    ${colors.cyan("3)")} Cursor ${colors.dim("(.cursorrules, AGENTS.md)")}`);
-        console.log(`    ${colors.cyan("4)")} Claude Code ${colors.dim("(CLAUDE.md, AGENTS.md)")}`);
-        const answer = await rl.question(`  ${colors.bold("Choice")} ${colors.dim("[1-4, default: 1]")}: `);
-        const choice = answer.trim();
-        if (choice === "2") {
-          ide = "antigravity";
-        } else if (choice === "3") {
-          ide = "cursor";
-        } else if (choice === "4") {
-          ide = "claude";
-        } else {
-          ide = "all";
+        const resolvedTarget = resolve(process.cwd(), target || defaultTarget);
+        const detectedIdes = detectInstalledIdes(resolvedTarget);
+
+        console.log(`\n  ${colors.bold("Select Target Code Editors:")}`);
+        if (detectedIdes.length > 0) {
+          console.log(`  ${badges.info("DETECTED")} ${colors.dim("Existing editor configurations found:")} ${colors.cyan(detectedIdes.join(", "))}`);
         }
+        console.log(`    ${colors.cyan("1)")} VS Code        ${colors.dim("(GitHub Copilot, .vscode config, AGENTS.md)")}`);
+        console.log(`    ${colors.cyan("2)")} Antigravity    ${colors.dim("(.agents/ live symlinks, AGENTS.md, GEMINI.md)")}`);
+        console.log(`    ${colors.cyan("3)")} Cursor         ${colors.dim("(.cursor/rules/context-factory.mdc, .cursorrules, AGENTS.md)")}`);
+        console.log(`    ${colors.cyan("4)")} Trae           ${colors.dim("(.trae/rules/project_rules.md, AGENTS.md)")}`);
+        console.log(`    ${colors.cyan("5)")} All IDEs       ${colors.dim("(Bridge for all team editors)")}`);
+
+        const defaultHint = detectedIdes.length > 0 ? detectedIdes.join(",") : "5";
+        const answer = await rl.question(`  ${colors.bold("Choice")} ${colors.dim(`[e.g. 1,4 or 5, default: ${defaultHint}]`)}: `);
+        ide = parseIdeChoices(answer, detectedIdes);
       }
 
       // 4. Package manager prompt

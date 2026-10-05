@@ -12,7 +12,7 @@ export async function handleBridgeCommand(args = [], flags = {}) {
 
   // Handle IDE profiles (--ide or --agents)
   const ideRaw = flags.ide || flags.i || flags.agents || "all";
-  const ide = typeof ideRaw === "string" ? ideRaw.split(",").map((s) => s.trim()) : ["all"];
+  const ide = Array.isArray(ideRaw) ? ideRaw : (typeof ideRaw === "string" ? ideRaw.split(",").map((s) => s.trim()) : ["all"]);
 
   const isJson = Boolean(flags.json);
 
@@ -73,11 +73,14 @@ export async function handleBridgeCommand(args = [], flags = {}) {
 
   console.log(`\n${colors.bold(colors.green("Bridge generation complete!"))}`);
   console.log(`\n${colors.bold("Next steps in your host repository:")}`);
-  console.log(`  1. Open the host repository root in your AI IDE (Antigravity, Cursor, Windsurf, or Claude Code).`);
-  console.log(`  2. Antigravity will automatically index skills & rules from ${colors.cyan(".agents/")}.`);
-  console.log(`  3. AI agents will read ${colors.cyan("AGENTS.md")} and route rules via Context Factory.`);
-  console.log(`  4. Run ${colors.bold(colors.yellow(`npm run context:resolve "<task description>"`))} to verify rule matching.`);
-  console.log(`  5. Scaffolds for ${colors.cyan("docs/tasks/")} and ${colors.cyan("docs/decisions/")} are ready for generated artifacts.\n`);
+  console.log(`  1. Open the host repository root in your preferred AI IDE (VS Code, Antigravity, Cursor, or Trae).`);
+  console.log(`  2. If using Antigravity, native skills & rules are indexed automatically from ${colors.cyan(".agents/")}.`);
+  console.log(`  3. If using Cursor, modern rules in ${colors.cyan(".cursor/rules/context-factory.mdc")} are active.`);
+  console.log(`  4. If using Trae, project rules in ${colors.cyan(".trae/rules/project_rules.md")} guide the AI agent.`);
+  console.log(`  5. If using VS Code, Copilot instructions and workspace settings are configured.`);
+  console.log(`  6. Run ${colors.bold(colors.yellow(`npm run context:resolve "<task description>"`))} to verify rule matching.`);
+  console.log(`  7. Scaffolds for ${colors.cyan("docs/tasks/")} and ${colors.cyan("docs/decisions/")} are ready for generated artifacts.\n`);
 
   return 0;
 }
+
