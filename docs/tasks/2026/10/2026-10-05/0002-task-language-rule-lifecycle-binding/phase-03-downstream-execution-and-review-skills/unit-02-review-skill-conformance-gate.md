@@ -5,7 +5,7 @@ parent: "0002/phase-03"
 unit: "03.02"
 branch: "task/0002/phase-03/review-skill-conformance-gate"
 worktree: ".worktrees/0002/phase-03/review-skill-conformance-gate"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, review, skills]
 depends_on: []
@@ -60,7 +60,9 @@ Update `skills/engineering/review/SKILL.md` to introduce Gate 4 ("Language Rules
 
 - Test type: Skill procedure inspection.
 - Case: Confirm that `skills/engineering/review/SKILL.md` defines Gate 4 for Language Rules Conformance Audit.
-- Command: `grep -n "Language Rules Conformance Audit" skills/engineering/review/SKILL.md`
+- Command: `grep -n "Language Rules Conformance Audit" skills/engineering/review/SKILL.md` (PASS: line 65)
+- Files modified: `skills/engineering/review/SKILL.md`
+- Pre-screening review: PASS (0 scope leaks, 0 SOLID violations)
 
 ## Rollback
 
@@ -68,8 +70,8 @@ Revert changes to `skills/engineering/review/SKILL.md` with `git checkout skills
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-08
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-08
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
