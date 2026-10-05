@@ -5,7 +5,7 @@ parent: "0003/phase-01"
 unit: "01.02"
 branch: "task/0003/phase-01/cli-formatter-modernization"
 worktree: ".worktrees/0003/phase-01/cli-formatter-modernization"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, cli, formatter, cards, ux]
 depends_on: ["01.01"]
@@ -65,9 +65,11 @@ Modernize `app/cli/core/formatter.mjs` with card and category layout helpers, an
 ## Verification
 
 - Test type: Contract & CLI output test.
-- Case 1: Run `node app/cli/bin/context-cli.mjs` and confirm the mascot, category cards, and quick-start block render properly.
-- Case 2: Run `node app/cli/bin/context-cli.mjs --no-color` and confirm zero ANSI escape codes or garbled characters.
-- Case 3: Run `node app/cli/bin/context-cli.mjs -h` and confirm consistent output.
+- Case 1: Run `node app/cli/bin/context-cli.mjs` and confirm the mascot, category cards, and quick-start block render properly (PASS: rendered side-by-side Octo-Agent banner, 4 category cards, and quick-start box).
+- Case 2: Run `node app/cli/bin/context-cli.mjs --no-color` and confirm zero ANSI escape codes or garbled characters (PASS: clean plain-text box and structured text cards).
+- Case 3: Run `node app/cli/bin/context-cli.mjs -h` and confirm consistent output (PASS).
+- Files modified: `app/cli/bin/context-cli.mjs`, `app/cli/core/formatter.mjs`
+- Pre-screening review: PASS (0 scope leaks, 0 SOLID violations)
 
 ## Rollback
 
@@ -75,8 +77,8 @@ Revert changes to `app/cli/core/formatter.mjs` and `app/cli/bin/context-cli.mjs`
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-01, AC-02, AC-03
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-01, AC-02, AC-03
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
