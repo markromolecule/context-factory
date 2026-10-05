@@ -23,7 +23,7 @@ Extend `context-cli doctor` and `verifySymlinkHealth` to audit the integrity of 
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 03.01** | Doctor Health Audit & Auto-Repair for All Editors | `unit-01-doctor-audit-and-repair.md` | `task/0001/phase-03/unit-01-doctor-audit-repair` | `.worktrees/0001/phase-03/unit-01-doctor-audit-repair` | `02.02` | `none` | `planned` |
+| **Unit 03.01** | Doctor Health Audit & Auto-Repair for All Editors | `unit-01-doctor-audit-and-repair.md` | `task/0001/phase-03/unit-01-doctor-audit-repair` | `.worktrees/0001/phase-03/unit-01-doctor-audit-repair` | `02.02` | `none` | `merged` |
 | **Unit 03.02** | Automated Integration Evaluations for Multi-Editor Bridging | `unit-02-integration-evals.md` | `task/0001/phase-03/unit-02-integration-evals` | `.worktrees/0001/phase-03/unit-02-integration-evals` | `03.01` | `none` | `planned` |
 
 ## Impacted Files & Components
@@ -34,7 +34,7 @@ Extend `context-cli doctor` and `verifySymlinkHealth` to audit the integrity of 
 
 ## Implementation Tasks
 
-- [ ] Unit 03.01 — Implement editor artifact health checks and `--repair` support in `doctor.mjs`.
+- [x] Unit 03.01 — Implement editor artifact health checks and `--repair` support in `doctor.mjs`.
 - [ ] Unit 03.02 — Author automated evaluation test suites covering multi-editor bridging and safe merging.
 
 ## Verification & Testing
