@@ -105,10 +105,12 @@
   "skills": [
     "skills/engineering/execute/SKILL.md",
     "skills/engineering/explore/SKILL.md",
+    "skills/engineering/perf/SKILL.md",
     "skills/engineering/refactor/SKILL.md",
     "skills/engineering/review/SKILL.md",
     "skills/engineering/security/SKILL.md",
     "skills/engineering/test/SKILL.md",
+    "skills/engineering/types/SKILL.md",
     "skills/engineering/verify/SKILL.md",
     "skills/productivity/adr/SKILL.md",
     "skills/productivity/context/SKILL.md",

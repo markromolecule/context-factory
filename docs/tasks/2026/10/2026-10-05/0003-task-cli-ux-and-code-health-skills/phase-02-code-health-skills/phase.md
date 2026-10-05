@@ -4,7 +4,7 @@ type: phase
 parent: "0003"
 phase: "02"
 phase_branch: "task/0003/phase-02-integration"
-status: planned
+status: completed
 created: "2026-10-05"
 tags: [task, phase, skills, perf, types, typescript, performance]
 ---
@@ -24,8 +24,8 @@ Author two dedicated first-class engineering skills under `skills/engineering/`:
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 02.01** | `perf` Performance Optimization Skill | `unit-01-perf-engineering-skill.md` | `task/0003/phase-02/perf-skill` | `.worktrees/0003/phase-02/perf-skill` | `none` | `Unit 02.02` | `planned` |
-| **Unit 02.02** | `types` Static Type Hardening Skill | `unit-02-types-engineering-skill.md` | `task/0003/phase-02/types-skill` | `.worktrees/0003/phase-02/types-skill` | `none` | `Unit 02.01` | `planned` |
+| **Unit 02.01** | `perf` Performance Optimization Skill | `unit-01-perf-engineering-skill.md` | `task/0003/phase-02/perf-skill` | `.worktrees/0003/phase-02/perf-skill` | `none` | `Unit 02.02` | `merged` |
+| **Unit 02.02** | `types` Static Type Hardening Skill | `unit-02-types-engineering-skill.md` | `task/0003/phase-02/types-skill` | `.worktrees/0003/phase-02/types-skill` | `none` | `Unit 02.01` | `merged` |
 
 ## Impacted Files & Components
 
@@ -34,8 +34,8 @@ Author two dedicated first-class engineering skills under `skills/engineering/`:
 
 ## Implementation Tasks
 
-- [ ] Unit 02.01 — Author `skills/engineering/perf/SKILL.md` with complete procedures, rules anchors, and test justifications.
-- [ ] Unit 02.02 — Author `skills/engineering/types/SKILL.md` with complete procedures, type guard patterns, and test justifications.
+- [x] Unit 02.01 — Author `skills/engineering/perf/SKILL.md` with complete procedures, rules anchors, and test justifications.
+- [x] Unit 02.02 — Author `skills/engineering/types/SKILL.md` with complete procedures, type guard patterns, and test justifications.
 
 ## Verification & Testing
 

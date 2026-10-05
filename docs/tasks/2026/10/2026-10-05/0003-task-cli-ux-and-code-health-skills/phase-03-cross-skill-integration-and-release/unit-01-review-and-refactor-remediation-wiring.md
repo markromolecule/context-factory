@@ -5,7 +5,7 @@ parent: "0003/phase-03"
 unit: "03.01"
 branch: "task/0003/phase-03/remediation-wiring"
 worktree: ".worktrees/0003/phase-03/remediation-wiring"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, skills, review, refactor, wiring]
 depends_on: []
@@ -58,11 +58,18 @@ Update `skills/engineering/review/SKILL.md` (Gate 3 SOLID Audit and Gate 4 Langu
    - Cross-reference `/types` for type-driven refactoring and `/perf` for hot-path and query-driven refactoring.
 3. Validate markdown syntax and link validity.
 
-## Verification
+## Verification Evidence
 
-- Test type: Contract & documentation consistency test.
-- Case 1: Search `skills/engineering/review/SKILL.md` for references to `skills/engineering/types/SKILL.md` and `skills/engineering/perf/SKILL.md`.
-- Case 2: Search `skills/engineering/refactor/SKILL.md` for references to `skills/engineering/types/SKILL.md` and `skills/engineering/perf/SKILL.md`.
+```bash
+$ grep -En "skills/engineering/(types|perf)/SKILL\.md" skills/engineering/review/SKILL.md skills/engineering/refactor/SKILL.md
+skills/engineering/review/SKILL.md:62:   - If interface segregation violations, loose type abstractions, or fat interfaces are found: dispatch remediation to `/types` (`skills/engineering/types/SKILL.md`).
+skills/engineering/review/SKILL.md:73:   - Type Safety & Anti-Slop Safeguards: Ensure zero loose types (`any`), missing schemas, or unvalidated HTTP/database payloads. If `any`, loose `as` casts, or omitted discriminated union exhaustiveness are found, mark **FAIL: Type Slop Detected** and instruct the agent to execute `/types` (`skills/engineering/types/SKILL.md`) before checkpointing.
+skills/engineering/review/SKILL.md:74:   - Query & Performance Boundaries: Ensure database queries adhere to ESR indexing and batching. If unindexed queries, ORM N+1 loops, unbounded `Promise.all` waterfalls, or ESR violations are found, mark **FAIL: Performance Bottleneck Detected** and instruct the agent to execute `/perf` (`skills/engineering/perf/SKILL.md`) before checkpointing.
+skills/engineering/refactor/SKILL.md:29:- **Type-Driven Refactoring & Static Hardening (`/types`):** When refactoring to eliminate loose `any` casts, replace untyped JSON/API payloads with runtime schemas, implement discriminated unions, or apply nominal branded types, consult `skills/engineering/types/SKILL.md`.
+skills/engineering/refactor/SKILL.md:30:- **Hot-Path & Query Performance Refactoring (`/perf`):** When refactoring to eliminate ORM N+1 query loops, apply Equality-Sort-Range (ESR) composite indexes, break up async waterfall starvation, or introduce streaming pagination, consult `skills/engineering/perf/SKILL.md`.
+```
+
+Commit SHA: `d579a7f` on branch `task/0003/phase-03/remediation-wiring`.
 
 ## Rollback
 
@@ -70,8 +77,9 @@ Revert changes to `skills/engineering/review/SKILL.md` and `skills/engineering/r
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-06, AC-07
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-06, AC-07
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
+

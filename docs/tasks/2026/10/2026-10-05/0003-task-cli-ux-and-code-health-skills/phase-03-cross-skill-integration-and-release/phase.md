@@ -4,7 +4,7 @@ type: phase
 parent: "0003"
 phase: "03"
 phase_branch: "task/0003/phase-03-integration"
-status: planned
+status: completed
 created: "2026-10-05"
 tags: [task, phase, integration, review, refactor, sync, doctor, release]
 ---
@@ -24,8 +24,8 @@ Wire the new `perf` and `types` skills into `/review` (Gate 3 SOLID Audit and Ga
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 03.01** | Review & Refactor Remediation Wiring | `unit-01-review-and-refactor-remediation-wiring.md` | `task/0003/phase-03/remediation-wiring` | `.worktrees/0003/phase-03/remediation-wiring` | `none` | `none` | `planned` |
-| **Unit 03.02** | Skills Catalog Sync & Doctor Verification | `unit-02-skills-catalog-sync-and-doctor-verification.md` | `task/0003/phase-03/sync-and-doctor` | `.worktrees/0003/phase-03/sync-and-doctor` | `Unit 03.01` | `none` | `planned` |
+| **Unit 03.01** | Review & Refactor Remediation Wiring | `unit-01-review-and-refactor-remediation-wiring.md` | `task/0003/phase-03/remediation-wiring` | `.worktrees/0003/phase-03/remediation-wiring` | `none` | `none` | `verified` |
+| **Unit 03.02** | Skills Catalog Sync & Doctor Verification | `unit-02-skills-catalog-sync-and-doctor-verification.md` | `task/0003/phase-03/sync-and-doctor` | `.worktrees/0003/phase-03/sync-and-doctor` | `Unit 03.01` | `none` | `verified` |
 
 ## Impacted Files & Components
 
@@ -37,8 +37,8 @@ Wire the new `perf` and `types` skills into `/review` (Gate 3 SOLID Audit and Ga
 
 ## Implementation Tasks
 
-- [ ] Unit 03.01 — Update `skills/engineering/review/SKILL.md` and `skills/engineering/refactor/SKILL.md` with explicit remediation routing.
-- [ ] Unit 03.02 — Update skill READMEs, run `npm run sync`, execute `npm run doctor`, and verify clean diagnostic health.
+- [x] Unit 03.01 — Update `skills/engineering/review/SKILL.md` and `skills/engineering/refactor/SKILL.md` with explicit remediation routing.
+- [x] Unit 03.02 — Update skill READMEs, run `npm run sync`, execute `npm run doctor`, and verify clean diagnostic health.
 
 ## Verification & Testing
 

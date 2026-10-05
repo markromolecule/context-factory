@@ -4,7 +4,7 @@ type: phase
 parent: "0003"
 phase: "01"
 phase_branch: "task/0003/phase-01-integration"
-status: planned
+status: completed
 created: "2026-10-05"
 tags: [task, phase, cli, mascot, terminal, formatter]
 ---
@@ -24,8 +24,8 @@ Build a native zero-dependency Octo-Agent mascot rendering engine using ANSI Tru
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 01.01** | Zero-Dependency Octo-Agent Mascot Engine | `unit-01-zero-dependency-mascot-engine.md` | `task/0003/phase-01/mascot-engine` | `.worktrees/0003/phase-01/mascot-engine` | `none` | `none` | `planned` |
-| **Unit 01.02** | CLI Card Formatter & Help Modernization | `unit-02-cli-card-formatter-modernization.md` | `task/0003/phase-01/cli-formatter-modernization` | `.worktrees/0003/phase-01/cli-formatter-modernization` | `Unit 01.01` | `none` | `planned` |
+| **Unit 01.01** | Zero-Dependency Octo-Agent Mascot Engine | `unit-01-zero-dependency-mascot-engine.md` | `task/0003/phase-01/mascot-engine` | `.worktrees/0003/phase-01/mascot-engine` | `none` | `none` | `merged` |
+| **Unit 01.02** | CLI Card Formatter & Help Modernization | `unit-02-cli-card-formatter-modernization.md` | `task/0003/phase-01/cli-formatter-modernization` | `.worktrees/0003/phase-01/cli-formatter-modernization` | `Unit 01.01` | `none` | `merged` |
 
 ## Impacted Files & Components
 
@@ -35,8 +35,8 @@ Build a native zero-dependency Octo-Agent mascot rendering engine using ANSI Tru
 
 ## Implementation Tasks
 
-- [ ] Unit 01.01 — Implement `app/cli/core/mascot.mjs` with ANSI half-block TrueColor mascot and terminal capability detection.
-- [ ] Unit 01.02 — Modernize `app/cli/core/formatter.mjs` and `app/cli/bin/context-cli.mjs` with card layouts and categorized command help.
+- [x] Unit 01.01 — Implement `app/cli/core/mascot.mjs` with ANSI half-block TrueColor mascot and terminal capability detection.
+- [x] Unit 01.02 — Modernize `app/cli/core/formatter.mjs` and `app/cli/bin/context-cli.mjs` with card layouts and categorized command help.
 
 ## Verification & Testing
 
