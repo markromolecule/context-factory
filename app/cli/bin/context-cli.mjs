@@ -19,61 +19,78 @@ import { handleStatusCommand } from "../commands/status.mjs";
 import { handleSyncCommand } from "../commands/sync.mjs";
 import { handleTaskCommand } from "../commands/task.mjs";
 import { handleValidateCommand } from "../commands/validate.mjs";
-import { banner, colors } from "../core/formatter.mjs";
+import { banner, colors, commandCard, quickStartCard } from "../core/formatter.mjs";
 import { parseArgs } from "../core/options.mjs";
 
 export function showHelp() {
   console.log(banner("CONTEXT FACTORY CLI", "Maintain, validate, evaluate, and bridge context-factory"));
-  console.log(`
-${colors.bold("USAGE:")}
+  console.log();
+
+  console.log(quickStartCard([
+    ["1. Bridge", "context-cli init", "Interactive setup to bridge Context Factory into your repo"],
+    ["2. Validate", "context-cli doctor", "Run full diagnostic health check across rules & skills"],
+    ["3. Sync", "context-cli sync", "Auto-discover context files, refresh manifest and lockfile"],
+    ["4. Plan", "context-cli task new", "Scaffold phased task, milestones, and unit execution files"],
+    ["5. Checkpoint", "context-cli session save", "Save state before context window reaches saturation (>60%)"],
+  ]));
+  console.log();
+
+  console.log(`${colors.bold("USAGE:")}
   ${colors.cyan("context-cli")} <command> [options]
+`);
 
-${colors.bold("PROJECT BRIDGING & SETUP:")}
-  ${colors.bold(colors.green("init"))}         Interactive setup to bridge Context Factory into a project
-  ${colors.bold(colors.green("bridge"))}       Bridge context-factory into host/consumer repository (--ide, --method, --pm)
-  ${colors.bold(colors.green("pull"))}         Pull latest updates & auto-heal symlinks (submodule or git repo)
-  ${colors.bold(colors.green("hook"))}         Install or manage zero-drift git pre-commit hook (hook install)
+  console.log(commandCard("PROJECT BRIDGING & SETUP", [
+    ["init", "Interactive setup to bridge Context Factory into a project"],
+    ["bridge", "Bridge context-factory into host repository", "(--ide, --method, --pm)"],
+    ["pull", "Pull latest updates & auto-heal symlinks", "(submodule or git repo)"],
+    ["hook", "Install or manage zero-drift git pre-commit hook", "(hook install)"],
+  ], { icon: "📦", badgeColor: "cyan" }));
+  console.log();
 
-${colors.bold("CORE MAINTENANCE COMMANDS:")}
-  ${colors.bold(colors.green("build"))}        Compile all rules, skills, and workflows to bundle
-  ${colors.bold(colors.green("lint"))}         Validate manifest, frontmatter, schemas, and links
-  ${colors.bold(colors.green("doctor"))}       Run full diagnostic health check (--repair to auto-fix)
-  ${colors.bold(colors.green("diff"))}         Detect drift and differences against context-lock.json
-  ${colors.bold(colors.green("lock"))}         Generate or verify context-lock.json checksums
-  ${colors.bold(colors.green("sync"))}         Auto-discover files, update manifest and lockfile
-  ${colors.bold(colors.green("eval"))}         Run unit and golden dataset evaluation test suites
-  ${colors.bold(colors.green("status"))}       Display factory overview, lock status, and task stats
-  ${colors.bold(colors.green("export"))}       Export distribution packages
+  console.log(commandCard("CORE MAINTENANCE & HEALTH", [
+    ["doctor", "Run full diagnostic health check", "(--repair to auto-fix)"],
+    ["sync", "Auto-discover files, update manifest and lockfile"],
+    ["diff", "Detect drift and differences against context-lock.json"],
+    ["lock", "Generate or verify context-lock.json checksums"],
+    ["lint", "Validate manifest, frontmatter, schemas, and links"],
+    ["build", "Compile all rules, skills, and workflows to bundle"],
+    ["eval", "Run unit and golden dataset evaluation test suites", "(--unit)"],
+    ["status", "Display factory overview, lock status, and task stats"],
+    ["export", "Export distribution packages"],
+  ], { icon: "🛠️", badgeColor: "blue" }));
+  console.log();
 
-${colors.bold("AGENT EXECUTION & RESOLUTION:")}
-  ${colors.bold(colors.green("resolve"))}      Resolve matching context rules & skills for a prompt
-  ${colors.bold(colors.green("run"))}          Execute 3-stage LLM context run (mock/openai/anthropic/gemini)
-  ${colors.bold(colors.green("task new"))}     Scaffold new phased task and milestone files
-  ${colors.bold(colors.green("task list"))}    List active task plans in docs/tasks/
-  ${colors.bold(colors.green("validate"))}     Validate JSON file against registered schema
+  console.log(commandCard("AGENT ORCHESTRATION & EXECUTION", [
+    ["resolve", "Resolve matching context rules & skills for a prompt"],
+    ["run", "Execute 3-stage LLM context run", "(mock/openai/anthropic/gemini)"],
+    ["task new", "Scaffold new phased task and milestone files", '"<title>"'],
+    ["task list", "List active task plans in docs/tasks/"],
+    ["validate", "Validate JSON file against registered schema"],
+  ], { icon: "🤖", badgeColor: "green" }));
+  console.log();
 
-${colors.bold("SESSION CHECKPOINT & RESUME (LHG):")}
-  ${colors.bold(colors.green("session save"))}     Save compact checkpoint to .context/sessions/ and .tmp/SESSION_RESUME.md
-  ${colors.bold(colors.green("session resume"))}   Load and output cold-start prompt for a saved session
-  ${colors.bold(colors.green("session status"))}   List all saved session checkpoints (alias: session list)
-  ${colors.bold(colors.green("session clear"))}    Delete saved session(s) (--all to clear all)
+  console.log(commandCard("SESSION CHECKPOINTS & RESUME (LHG)", [
+    ["session save", "Save compact checkpoint to .context/sessions/ and .tmp/"],
+    ["session resume", "Load and output cold-start prompt for saved session"],
+    ["session status", "List all saved session checkpoints", "(alias: session list)"],
+    ["session clear", "Delete saved session checkpoints", "(--all to clear all)"],
+  ], { icon: "⏱️", badgeColor: "yellow" }));
+  console.log();
 
-${colors.bold("COMMON OPTIONS:")}
+  console.log(`${colors.bold("COMMON OPTIONS:")}
   ${colors.yellow("--json")}          Output machine-readable JSON
   ${colors.yellow("--quiet")}         Suppress non-error output
   ${colors.yellow("--no-color")}      Disable ANSI terminal colors
   ${colors.yellow("-h, --help")}      Show this help message
   ${colors.yellow("-v, --version")}   Show version information
+`);
 
-${colors.bold("EXAMPLES:")}
+  console.log(`${colors.bold("EXAMPLES:")}
   ${colors.dim("# Bridge context-factory into your target repository")}
   ${colors.white("context-cli bridge --target ../my-app --method submodule")}
 
   ${colors.dim("# Pull latest updates for submodule in host repository")}
   ${colors.white("context-cli pull")}
-
-  ${colors.dim("# Compile full factory bundle")}
-  ${colors.white("context-cli build --out dist/context-bundle.json")}
 
   ${colors.dim("# Run doctor diagnostics")}
   ${colors.white("context-cli doctor")}
@@ -86,9 +103,6 @@ ${colors.bold("EXAMPLES:")}
 
   ${colors.dim("# Resume latest session in fresh context window")}
   ${colors.white("context-cli session resume")}
-
-  ${colors.dim("# Run evaluation tests")}
-  ${colors.white("context-cli eval --unit")}
 `);
 }
 
