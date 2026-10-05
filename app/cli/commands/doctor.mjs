@@ -86,7 +86,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
   } catch {
     manifest = await readJson("context-manifest.json");
   }
-  const expectedLock = await createLock(manifest);
+  const expectedLock = await createLock(manifest, factoryDir);
   let actualLock = null;
   try {
     actualLock = JSON.parse(await readFile(join(factoryDir, "context-lock.json"), "utf8"));

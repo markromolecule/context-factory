@@ -1,16 +1,95 @@
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
-import { dirname, extname, join, relative, resolve } from "node:path";
+import { dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-export async function readText(path) {
-  return readFile(join(root, path), "utf8");
+// Legacy rule path migration map for restructured categories
+export const LEGACY_PATH_MAP = {
+  "rules/backend/controllers-and-routes.md": "rules/typescript/backend/controllers-and-routes.md",
+  "rules/backend/data-access-via-api.md": "rules/typescript/backend/data-access-via-api.md",
+  "rules/backend/module-architecture.md": "rules/typescript/backend/module-architecture.md",
+  "rules/backend/service-layer.md": "rules/typescript/backend/service-layer.md",
+  "rules/database/data-access-via-db.md": "rules/typescript/database/data-access-via-db.md",
+  "rules/database/query-optimization-and-pagination.md": "rules/typescript/database/query-optimization-and-pagination.md",
+  "rules/database/schema-db.md": "rules/typescript/database/schema-db.md",
+  "rules/database/testing-data-access-layer.md": "rules/typescript/database/testing-data-access-layer.md",
+  "rules/hooks/async-discipline.md": "rules/typescript/hooks/async-discipline.md",
+  "rules/hooks/custom-hooks.md": "rules/typescript/hooks/custom-hooks.md",
+  "rules/hooks/mutation-hooks.md": "rules/typescript/hooks/mutation-hooks.md",
+  "rules/hooks/query-hooks.md": "rules/typescript/hooks/query-hooks.md",
+  "rules/hooks/zustand-store.md": "rules/typescript/hooks/zustand-store.md",
+  "rules/ui/accessibility.md": "rules/typescript/ui/accessibility.md",
+  "rules/ui/code-organization.md": "rules/typescript/ui/code-organization.md",
+  "rules/ui/component-composition.md": "rules/typescript/ui/component-composition.md",
+  "rules/ui/dialogs-and-overlays.md": "rules/typescript/ui/dialogs-and-overlays.md",
+  "rules/ui/forms-and-validation.md": "rules/typescript/ui/forms-and-validation.md",
+  "rules/ui/frontend.md": "rules/typescript/ui/frontend.md",
+  "rules/ui/interaction-feedback.md": "rules/typescript/ui/interaction-feedback.md",
+  "rules/ui/next-react-project-structure.md": "rules/typescript/ui/next-react-project-structure.md",
+  "rules/ui/styling-and-themes.md": "rules/typescript/ui/styling-and-themes.md",
+  "rules/typescript/async-discipline.md": "rules/typescript/common/async-discipline.md",
+  "rules/typescript/error-handling.md": "rules/typescript/common/error-handling.md",
+  "rules/typescript/module-and-imports.md": "rules/typescript/common/module-and-imports.md",
+  "rules/typescript/runtime-validation.md": "rules/typescript/common/runtime-validation.md",
+  "rules/typescript/type-safety.md": "rules/typescript/common/type-safety.md",
+};
+
+export function resolveLegacyRulePath(path) {
+  if (!path || typeof path !== "string") return null;
+  const p = path.replaceAll("\\", "/");
+  if (LEGACY_PATH_MAP[p]) return LEGACY_PATH_MAP[p];
+  if (p.startsWith("rules/backend/")) {
+    return p.replace("rules/backend/", "rules/typescript/backend/");
+  }
+  if (p.startsWith("rules/database/")) {
+    return p.replace("rules/database/", "rules/typescript/database/");
+  }
+  if (p.startsWith("rules/hooks/")) {
+    return p.replace("rules/hooks/", "rules/typescript/hooks/");
+  }
+  if (p.startsWith("rules/ui/")) {
+    return p.replace("rules/ui/", "rules/typescript/ui/");
+  }
+  if (/^rules\/typescript\/[^/]+\.md$/.test(p)) {
+    return p.replace("rules/typescript/", "rules/typescript/common/");
+  }
+  return null;
 }
 
-export async function readJson(path) {
-  return JSON.parse(await readText(path));
+export async function readText(path, basePath = root) {
+  const targetPath = isAbsolute(path) ? path : join(basePath, path);
+  try {
+    return await readFile(targetPath, "utf8");
+  } catch (err) {
+    if (err.code === "ENOENT") {
+      const relPath = isAbsolute(path) ? relative(basePath, path).replaceAll("\\", "/") : path.replaceAll("\\", "/");
+      const legacyFallback = resolveLegacyRulePath(relPath);
+      if (legacyFallback) {
+        const fallbackTarget = join(basePath, legacyFallback);
+        try {
+          return await readFile(fallbackTarget, "utf8");
+        } catch { }
+        if (basePath !== root) {
+          const canonicalTarget = join(root, legacyFallback);
+          try {
+            return await readFile(canonicalTarget, "utf8");
+          } catch { }
+        }
+      }
+      if (basePath !== root) {
+        try {
+          return await readFile(join(root, relPath), "utf8");
+        } catch { }
+      }
+    }
+    throw err;
+  }
+}
+
+export async function readJson(path, basePath = root) {
+  return JSON.parse(await readText(path, basePath));
 }
 
 export async function filesUnder(path, options = {}) {
@@ -99,8 +178,8 @@ export function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
-export async function hashPath(path) {
-  return sha256(await readText(path));
+export async function hashPath(path, basePath = root) {
+  return sha256(await readText(path, basePath));
 }
 
 export function manifestPaths(manifest) {
@@ -508,10 +587,16 @@ export async function resolveContext(request, options = {}) {
   };
 }
 
-export async function createLock(manifestInput) {
-  const manifest = manifestInput ?? await readJson("context-manifest.json");
+export async function createLock(manifestInput, basePath = root) {
+  const manifest = manifestInput ?? await readJson("context-manifest.json", basePath);
   const files = {};
-  for (const path of manifestPaths(manifest)) files[path] = `sha256:${await hashPath(path)}`;
+  for (const path of manifestPaths(manifest)) {
+    try {
+      files[path] = `sha256:${await hashPath(path, basePath)}`;
+    } catch (err) {
+      files[path] = `missing:${err.code || "ENOENT"}`;
+    }
+  }
   return {
     schemaVersion: 1,
     contextVersion: manifest.contextVersion,

@@ -19,6 +19,7 @@
     "hook:install": "node app/cli/bin/context-cli.mjs hook install",
     "validate": "node app/cli/bin/context-cli.mjs validate",
     "doctor": "node app/cli/bin/context-cli.mjs doctor",
+    "repair": "node app/cli/bin/context-cli.mjs repair",
     "eval": "node app/cli/bin/context-cli.mjs eval",
     "test": "node app/cli/bin/context-cli.mjs eval",
     "diff": "node app/cli/bin/context-cli.mjs diff",

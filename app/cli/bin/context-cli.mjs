@@ -12,6 +12,7 @@ import { handleInitCommand } from "../commands/init.mjs";
 import { handleLintCommand } from "../commands/lint.mjs";
 import { handleLockCommand } from "../commands/lock.mjs";
 import { handlePullCommand } from "../commands/pull.mjs";
+import { handleRepairCommand } from "../commands/repair.mjs";
 import { handleResolveCommand } from "../commands/resolve.mjs";
 import { handleRunCommand } from "../commands/run.mjs";
 import { handleSessionCommand } from "../commands/session.mjs";
@@ -42,6 +43,7 @@ export function showHelp() {
   console.log(commandCard("PROJECT BRIDGING & SETUP", [
     ["init", "Interactive setup to bridge Context Factory into a project"],
     ["bridge", "Bridge context-factory into host repository", "(--ide, --method, --pm)"],
+    ["repair", "Auto-repair broken symlinks, bridges, and editor rules", "([target])"],
     ["pull", "Pull latest updates & auto-heal symlinks", "(submodule or git repo)"],
     ["hook", "Install or manage zero-drift git pre-commit hook", "(hook install)"],
   ], { icon: "📦", badgeColor: "cyan" }));
@@ -152,6 +154,10 @@ export async function main(argv = process.argv.slice(2)) {
     case "doctor":
     case "health":
       return handleDoctorCommand(args, flags);
+
+    case "repair":
+    case "fix":
+      return handleRepairCommand(args, flags);
 
     case "eval":
     case "test":

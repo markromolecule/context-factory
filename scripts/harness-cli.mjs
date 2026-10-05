@@ -9,6 +9,7 @@ import { handleEvalCommand } from "../app/cli/commands/eval.mjs";
 import { handleInitCommand } from "../app/cli/commands/init.mjs";
 import { handleLintCommand } from "../app/cli/commands/lint.mjs";
 import { handleLockCommand } from "../app/cli/commands/lock.mjs";
+import { handleRepairCommand } from "../app/cli/commands/repair.mjs";
 import { handleResolveCommand } from "../app/cli/commands/resolve.mjs";
 import { handleSessionCommand } from "../app/cli/commands/session.mjs";
 import { handleTaskCommand } from "../app/cli/commands/task.mjs";
@@ -35,7 +36,8 @@ Usage:
   node scripts/harness-cli.mjs eval [--unit] [--datasets] [--json] [--quiet] [--provider <name>]
   node scripts/harness-cli.mjs lock [--check]
   node scripts/harness-cli.mjs lint
-  node scripts/harness-cli.mjs doctor [--repair]`);
+  node scripts/harness-cli.mjs doctor [--repair]
+  node scripts/harness-cli.mjs repair [<target>]`);
 }
 
 function output(value) {
@@ -224,6 +226,10 @@ export async function handleCli(argv = process.argv.slice(2)) {
 
   if (command === "doctor") {
     return handleDoctorCommand(parsedArgs, flags);
+  }
+
+  if (command === "repair" || command === "fix") {
+    return handleRepairCommand(parsedArgs, flags);
   }
 
   usage();
