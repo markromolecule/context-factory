@@ -3,8 +3,8 @@ title: "Phase 4 — Tooling Verification & Release"
 type: phase
 parent: "0002"
 phase: "04"
-phase_branch: "task/0002/phase-04"
-status: planned
+phase_branch: "task/0002/phase-04-integration"
+status: completed
 created: "2026-10-05"
 tags: [task, phase, tooling, verification, release]
 ---
@@ -24,8 +24,8 @@ Enhance the deterministic plan validation script (`scripts/plan-check.mjs`) to o
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 04.01** | Deterministic Plan Checker Script Validation | `unit-01-deterministic-plan-checker-enhancement.md` | `task/0002/phase-04/plan-checker-validation` | `.worktrees/0002/phase-04/plan-checker-validation` | `none` | `Unit 04.02` | `planned` |
-| **Unit 04.02** | Full Lifecycle Synchronization & Doctor Verification | `unit-02-sync-and-doctor-verification.md` | `task/0002/phase-04/sync-and-doctor` | `.worktrees/0002/phase-04/sync-and-doctor` | `Unit 04.01` | `none` | `planned` |
+| **Unit 04.01** | Deterministic Plan Checker Script Validation | `unit-01-deterministic-plan-checker-enhancement.md` | `task/0002/phase-04/plan-checker-validation` | `.worktrees/0002/phase-04/plan-checker-validation` | `none` | `Unit 04.02` | `merged` |
+| **Unit 04.02** | Full Lifecycle Synchronization & Doctor Verification | `unit-02-sync-and-doctor-verification.md` | `task/0002/phase-04/sync-and-doctor` | `.worktrees/0002/phase-04/sync-and-doctor` | `Unit 04.01` | `none` | `merged` |
 
 ## Impacted Files & Components
 
@@ -34,8 +34,8 @@ Enhance the deterministic plan validation script (`scripts/plan-check.mjs`) to o
 
 ## Implementation Tasks
 
-- [ ] Unit 04.01 — Enhance `scripts/plan-check.mjs` to validate `<language_rules>` presence.
-- [ ] Unit 04.02 — Execute `npm run sync`, run `npm run doctor`, and verify clean diagnostic health.
+- [x] Unit 04.01 — Enhance `scripts/plan-check.mjs` to validate `<language_rules>` presence.
+- [x] Unit 04.02 — Execute `npm run sync`, run `npm run doctor`, and verify clean diagnostic health.
 
 ## Verification & Testing
 

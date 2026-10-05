@@ -12,12 +12,12 @@ Perform an independent white-box code and diff audit of an active unit git workt
 A common failure mode in multi-agent execution is presenting unvetted, messy diffs to the human developer at batch checkpoints. If an agent modified files outside its declared boundaries, skipped critical contract tests, or violated architectural boundaries, the human reviewer is forced to act as a linter and compiler.
 
 `review` acts as an automated pre-screener:
-- **`review` (White-Box, Unit-Level):** Evaluates the active worktree diff against the unit's declared scope fence, verifies test completeness, checks SOLID principles, and audits Definition of Done checkboxes.
+- **`review` (White-Box, Unit-Level):** Evaluates the active worktree diff against the unit's declared scope fence, verifies test completeness, checks SOLID principles, audits language rules conformance (`<language_rules>`), and verifies Definition of Done checkboxes.
 - **`verify` (Black-Box, System-Level):** Evaluates the integrated task across the entire repository for acceptance criteria fulfillment, cross-service contracts, operations, and release readiness.
 
 ---
 
-## The Four-Gate Diff Review Procedure
+## The Five-Gate Diff Review Procedure
 
 Run this review inside the unit's active git worktree before declaring the unit verified:
 
@@ -62,7 +62,20 @@ Audit newly written or modified classes and modules against Context Factory SOLI
 5. **Dependency Inversion (DIP):**
    - Do high-level domain modules depend on abstractions/interfaces rather than concrete low-level infrastructure or transport mechanisms?
 
-### Gate 4: Definition of Done & Evidence Audit
+### Gate 4: Language Rules Conformance Audit
+
+Audit the worktree diff against the unit's declared `<language_rules>` block:
+
+1. **Rule Directives Adherence:**
+   - Verify line-by-line that newly written or modified code complies with each checkable directive listed in the unit's `<language_rules>`.
+   - Naming Conventions: Verify variable, class, and method casings conform to stack conventions (e.g. `camelCase`, `snake_case`, `PascalCase`).
+   - Type Safety & Runtime Validation: Ensure zero loose types (`any`), missing schemas, or unvalidated HTTP/database payloads.
+   - Framework Idiomaticity: Ensure standard framework boundaries are respected (e.g., thin controllers, FormRequest validation, DTO usage, Eloquent best practices).
+2. **Precedence Verification:**
+   - Confirm that if any plan instruction was ambiguous or contradicted a language rule, the language rule was prioritized.
+3. If any violation is found, mark **FAIL: Language Rule Violation** with exact file and line number.
+
+### Gate 5: Definition of Done & Evidence Audit
 
 1. Audit every checkbox in the unit artifact's `## Definition of done`:
    - Every checked item `[x]` must be backed by tangible evidence in the git diff or command outputs.
@@ -91,7 +104,8 @@ Produce a structured Pre-Screening Report before the human checkpoint:
 | Gate 1 | Scope Fence | PASS / FAIL | N files modified, 0 out-of-scope leaks |
 | Gate 2 | Test Completeness | PASS / FAIL | All verification cases present & green |
 | Gate 3 | SOLID Principles | PASS / FAIL | SRP, OCP, DIP confirmed |
-| Gate 4 | Definition of Done | PASS / FAIL | All DoD checkboxes backed by evidence |
+| Gate 4 | Language Rules Conformance | PASS / FAIL | Adheres strictly to declared <language_rules> |
+| Gate 5 | Definition of Done | PASS / FAIL | All DoD checkboxes backed by evidence |
 
 ## Diff Inspection Highlights
 - `path/to/modified/file`: [Brief summary of change]

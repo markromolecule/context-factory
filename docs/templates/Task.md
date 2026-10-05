@@ -20,6 +20,12 @@ base_branch: "task/{{task_id}}-{{task_slug}}"
 
 Link the canonical glossary; do not duplicate implementation details here.
 
+### Language stack and applicable rules
+
+- **Declared Stack:** e.g. `typescript`, `laravel`, `flutter`
+- **Applicable Rules:** List rule paths (e.g. `rules/typescript/common/type-safety.md`, `rules/typescript/backend/service-layer.md`) to be bound across units.
+- **Precedence Invariant:** Applicable language rules strictly supersede contradictory procedural plan steps.
+
 ### Scenario coverage
 
 | ID | Actor and situation | Preconditions | Expected outcome | Failure/recovery | Status |

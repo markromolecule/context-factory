@@ -55,6 +55,7 @@ Inspect every individual unit file (`phase-*/unit-*.md`):
    - `**Out of scope:**` explicitly fences adjacent systems and avoids scope creep.
 4. **Actionable Steps:** Step-by-step instructions are concrete and testable, not vague directives like "handle errors properly" or "write clean code".
 5. **Explicit Rollback:** Reversible rollback strategy documented for every unit.
+6. **Language Rule Binding & Precedence:** The unit's Context Packet must contain a non-empty `<language_rules>` block positioned immediately before `## Steps`. Ensure the rules match the touched file scope (not a generic blank block or bloated catalog dump) with checkable directives, and confirm that no planned step contradicts those language rules.
 
 ### Gate 4: Test Justification & Type Audit
 

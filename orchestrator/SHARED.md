@@ -26,6 +26,7 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 - Record multi-phase work under `docs/tasks/` using the task template.
 - Enforce session checkpointing (`session`, `node scripts/context.mjs session:save`) whenever context window load approaches ~60% saturation; snapshot machine state to `.context/sessions/` and resume in a fresh session via `.tmp/SESSION_RESUME.md` to prevent reasoning degradation.
 - For a new system, product, or materially ambiguous feature, use `grill` as the first pre-planning skill (or `context` to author and grill context specifications). Resolve and persist goals, scenarios, language, boundaries, and unknowns before `plan`; do not begin production coding until the plan is approved.
+- Enforce active language rule binding across all task execution units. Code generation must adhere strictly to declared stack standards (`<language_rules>`); procedural checklists must not supersede framework rules.
 
 ## Roles & Subagents
 
@@ -46,6 +47,8 @@ Workflows coordinate these roles across a delivery lifecycle; they do not replac
 ## Conflict order
 
 Follow system/user instructions first, then repository instructions, this contract, applicable rules, and finally skill defaults. More specific instructions override general ones at the same level.
+
+If an implementation step in a plan and an applicable language rule (`<language_rules>`) conflict, the language rule strictly takes precedence.
 
 ## Execution & Harness Contract
 

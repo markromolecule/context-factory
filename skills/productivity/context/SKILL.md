@@ -46,6 +46,7 @@ Record all clarified decisions directly into the context specification according
   - Explicit edge cases, failure modes, and graceful recovery paths.
 - **3. Technical & Architectural Context:**
   - Affected layers (`web/`, `api/`, `mobile/`, database).
+  - Language Stack & Rules: Identify the active technology stack (via `node scripts/context.mjs resolve "<task description>"` or `.context-bridge.json`) and record the specific rule files and key constraints that govern this feature.
   - Existing reference files, endpoints, or data models to inspect or modify.
   - Schema changes and migrations.
   - Security, authorization (RBAC/tenant isolation), and input sanitization boundaries.
@@ -59,6 +60,7 @@ Do not mark the context specification as `ready` until:
 
 - Measurable success criteria and outcomes are explicit;
 - Every actor and permission boundary is identified;
+- Applicable language stack rules are identified and key constraints recorded;
 - Primary journeys and edge cases have defined failure/recovery behaviors;
 - In-scope vs. non-goal boundaries prevent scope expansion;
 - Technical contracts and database/schema impacts are clearly bounded;

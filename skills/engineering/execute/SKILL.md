@@ -44,17 +44,21 @@ Inside the unit's own worktree:
 
 1. **Inspect Scope Boundaries:** Modify only the files in the unit's declared Scope (`**In scope:**`), plus necessary tests, generated artifacts, and documentation. If a change needs a file outside that scope, stop — that means the unit or the dependency graph was drawn wrong, not something to route around.
 2. **Test-First Implementation (`/test`):** Invoke `skills/engineering/test/SKILL.md` (`/test`) to author failing tests first for the unit's declared verification types (unit, integration, architecture, contract, migration) before writing functional code. Execute the test command and verify it fails with an expected assertion or module error (Red).
-3. **Minimal Functional Implementation (Green):** Implement the minimal code strictly within the unit's declared scope to make the tests pass. Follow all applicable domain rules from `rules/` matching touched files (TypeScript type safety, runtime validation, ESR query optimization, vertical backend modules, UI guidelines, and strict SOLID principles under `rules/solid/`).
+3. **Minimal Functional Implementation (Green):**
+   - *Re-Anchor on Language Rules:* Immediately before emitting code, re-read the unit's `<language_rules>` block positioned directly above the steps in the unit context packet. Treat these rules as active hard invariants for code generation.
+   - *Apply the Precedence Rule:* If a written step in the unit artifact contradicts an applicable language rule (e.g. step asks for a loose array return, but the language rule mandates a typed DTO/Resource), the language rule strictly takes precedence. Implement the code conforming to the language rule and note the precedence override in the unit log.
+   - Implement the minimal code strictly within the unit's declared scope to make the tests pass, adhering to all applicable stack rules (TypeScript strict typing, runtime validation, ESR query optimization, vertical backend modules, Laravel Eloquent standards, and strict SOLID principles under `rules/solid/`).
 4. **Independent Diff Review (`/review`):** Invoke `skills/engineering/review/SKILL.md` (`/review`) to conduct an independent pre-screening diff review:
    - *Scope Fence:* Compare `git diff --name-only` against `**In scope:**` to confirm zero unallocated files were modified.
    - *Test Completeness:* Confirm all verification test types exist, ran, and passed.
    - *SOLID Audit:* Confirm single-responsibility decomposition, open/closed extension, and dependency inversion on new code.
+   - *Language Rules Conformance:* Confirm diff strictly adheres to the unit's declared `<language_rules>`.
    - *Definition of Done:* Ensure all DoD criteria are substantiated by concrete evidence.
 5. **Database & Configuration Changes:**
    - Review migration SQL before applying.
    - Update `.env.example` without exposing secrets.
    - Regenerate types and typecheck all consumers reachable from this worktree.
-6. **Commit & Verification Logging:** Once pre-screening passes, commit on the unit's branch with a message referencing the task, phase, and unit ids. Mark the unit `[x]` and `status: verified` (not yet merged) in the unit artifact, and log command output, test counts, pre-screening status, and files modified into its Verification section.
+6. **Commit & Verification Logging:** Once pre-screening passes, commit on the unit's branch with a message referencing the task, phase, and unit ids. Mark the unit `[x]` and `status: verified` (not yet merged) in the unit artifact, and log command output, test counts, pre-screening status, language rule conformance status, and files modified into its Verification section.
 
 Work through every unit in the batch this way before moving on — the checkpoint below reports the whole batch at once, not one unit at a time.
 

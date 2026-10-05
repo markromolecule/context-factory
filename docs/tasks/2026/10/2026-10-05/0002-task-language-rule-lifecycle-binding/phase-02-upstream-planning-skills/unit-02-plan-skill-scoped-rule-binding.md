@@ -5,7 +5,7 @@ parent: "0002/phase-02"
 unit: "02.02"
 branch: "task/0002/phase-02/plan-skill-rule-binding"
 worktree: ".worktrees/0002/phase-02/plan-skill-rule-binding"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, plan, skills]
 depends_on: []
@@ -56,7 +56,9 @@ Update `skills/productivity/plan/SKILL.md` to instruct agents during unit decomp
 
 - Test type: Skill procedure inspection.
 - Case: Confirm that `skills/productivity/plan/SKILL.md` mandates unit-scoped rule subsets and checkable directives.
-- Command: `grep -n "<language_rules>" skills/productivity/plan/SKILL.md`
+- Command: `grep -n "<language_rules>" skills/productivity/plan/SKILL.md` (PASS: lines 69, 83, 98)
+- Files modified: `skills/productivity/plan/SKILL.md`
+- Pre-screening review: PASS (0 scope leaks, 0 SOLID violations)
 
 ## Rollback
 
@@ -64,8 +66,8 @@ Revert changes to `skills/productivity/plan/SKILL.md` with `git checkout skills/
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-05
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-05
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes

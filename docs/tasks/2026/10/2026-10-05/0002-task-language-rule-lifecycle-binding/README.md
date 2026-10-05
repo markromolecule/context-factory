@@ -1,7 +1,7 @@
 ---
 title: "Language Rule Lifecycle Binding & Active Enforcement"
 type: task
-status: planned
+status: completed
 created: "2026-10-05"
 tags: [task, rules, lifecycle, execution, plan, review, language-rules]
 target_branch: master
@@ -90,22 +90,22 @@ None. Requirements and architecture are fully specified in [[docs/context/rules/
 
 | Phase | Unit ID | Unit Title | Branch Name | Worktree Directory | Merge Target | Status |
 |---|---|---|---|---|---|---|
-| phase-01 | 01.01 | Orchestrator Precedence & Shared Contract | `task/0002/phase-01/orchestrator-precedence` | `.worktrees/0002/phase-01/orchestrator-precedence` | `task/0002/phase-01` | planned |
-| phase-01 | 01.02 | Context, Task, and Unit Templates Modernization | `task/0002/phase-01/templates-modernization` | `.worktrees/0002/phase-01/templates-modernization` | `task/0002/phase-01` | planned |
-| phase-02 | 02.01 | Context Skill Language Resolution | `task/0002/phase-02/context-skill-resolution` | `.worktrees/0002/phase-02/context-skill-resolution` | `task/0002/phase-02` | planned |
-| phase-02 | 02.02 | Plan Skill Scoped Rule Binding | `task/0002/phase-02/plan-skill-rule-binding` | `.worktrees/0002/phase-02/plan-skill-rule-binding` | `task/0002/phase-02` | planned |
-| phase-02 | 02.03 | Plan Review Audit Gate | `task/0002/phase-02/plan-review-audit-gate` | `.worktrees/0002/phase-02/plan-review-audit-gate` | `task/0002/phase-02` | planned |
-| phase-03 | 03.01 | Execute Skill Generation Anchor & Precedence | `task/0002/phase-03/execute-skill-anchor` | `.worktrees/0002/phase-03/execute-skill-anchor` | `task/0002/phase-03` | planned |
-| phase-03 | 03.02 | Review Skill Conformance Gate | `task/0002/phase-03/review-skill-conformance-gate` | `.worktrees/0002/phase-03/review-skill-conformance-gate` | `task/0002/phase-03` | planned |
-| phase-04 | 04.01 | Deterministic Plan Checker Script Validation | `task/0002/phase-04/plan-checker-validation` | `.worktrees/0002/phase-04/plan-checker-validation` | `task/0002/phase-04` | planned |
-| phase-04 | 04.02 | Full Lifecycle Synchronization & Doctor Verification | `task/0002/phase-04/sync-and-doctor` | `.worktrees/0002/phase-04/sync-and-doctor` | `task/0002/phase-04` | planned |
+| phase-01 | 01.01 | Orchestrator Precedence & Shared Contract | `task/0002/phase-01/orchestrator-precedence` | `.worktrees/0002/phase-01/orchestrator-precedence` | `task/0002/phase-01-integration` | merged |
+| phase-01 | 01.02 | Context, Task, and Unit Templates Modernization | `task/0002/phase-01/templates-modernization` | `.worktrees/0002/phase-01/templates-modernization` | `task/0002/phase-01-integration` | merged |
+| phase-02 | 02.01 | Context Skill Language Resolution | `task/0002/phase-02/context-skill-resolution` | `.worktrees/0002/phase-02/context-skill-resolution` | `task/0002/phase-02-integration` | merged |
+| phase-02 | 02.02 | Plan Skill Scoped Rule Binding | `task/0002/phase-02/plan-skill-rule-binding` | `.worktrees/0002/phase-02/plan-skill-rule-binding` | `task/0002/phase-02-integration` | merged |
+| phase-02 | 02.03 | Plan Review Audit Gate | `task/0002/phase-02/plan-review-audit-gate` | `.worktrees/0002/phase-02/plan-review-audit-gate` | `task/0002/phase-02-integration` | merged |
+| phase-03 | 03.01 | Execute Skill Generation Anchor & Precedence | `task/0002/phase-03/execute-skill-anchor` | `.worktrees/0002/phase-03/execute-skill-anchor` | `task/0002/phase-03-integration` | merged |
+| phase-03 | 03.02 | Review Skill Conformance Gate | `task/0002/phase-03/review-skill-conformance-gate` | `.worktrees/0002/phase-03/review-skill-conformance-gate` | `task/0002/phase-03-integration` | merged |
+| phase-04 | 04.01 | Deterministic Plan Checker Script Validation | `task/0002/phase-04/plan-checker-validation` | `.worktrees/0002/phase-04/plan-checker-validation` | `task/0002/phase-04-integration` | merged |
+| phase-04 | 04.02 | Full Lifecycle Synchronization & Doctor Verification | `task/0002/phase-04/sync-and-doctor` | `.worktrees/0002/phase-04/sync-and-doctor` | `task/0002/phase-04-integration` | merged |
 
 ## Phases
 
-- [ ] `phase-01-shared-contract-and-templates/phase.md` — Phase 1: Shared Orchestration Contract & Lifecycle Templates
-- [ ] `phase-02-upstream-planning-skills/phase.md` — Phase 2: Upstream Planning Skills (`context`, `plan`, `plan-review`)
-- [ ] `phase-03-downstream-execution-and-review-skills/phase.md` — Phase 3: Downstream Execution & Review Skills (`execute`, `review`)
-- [ ] `phase-04-tooling-verification-and-release/phase.md` — Phase 4: Tooling Verification & Release
+- [x] `phase-01-shared-contract-and-templates/phase.md` — Phase 1: Shared Orchestration Contract & Lifecycle Templates
+- [x] `phase-02-upstream-planning-skills/phase.md` — Phase 2: Upstream Planning Skills (`context`, `plan`, `plan-review`)
+- [x] `phase-03-downstream-execution-and-review-skills/phase.md` — Phase 3: Downstream Execution & Review Skills (`execute`, `review`)
+- [x] `phase-04-tooling-verification-and-release/phase.md` — Phase 4: Tooling Verification & Release
 
 ## Verification
 
@@ -116,18 +116,18 @@ Commands to run for verification:
 
 ## Deviations
 
-None.
+None. Branch naming adapted from `task/0002/phase-XX` to `task/0002/phase-XX-integration` to prevent git ref directory collision with unit branch slugs.
 
 ## Finalization & Merge Ledger
 
 | Stage | Source Branch | Target Branch | Merge Commit SHA | Worktree Cleaned | Verification Command |
 |---|---|---|---|---|---|
-| Phase 01 Integration | `task/0002/phase-01` | `task/0002-language-rule-lifecycle-binding` | pending | [ ] | `git diff --stat` |
-| Phase 02 Integration | `task/0002/phase-02` | `task/0002-language-rule-lifecycle-binding` | pending | [ ] | `git diff --stat` |
-| Phase 03 Integration | `task/0002/phase-03` | `task/0002-language-rule-lifecycle-binding` | pending | [ ] | `git diff --stat` |
-| Phase 04 Integration | `task/0002/phase-04` | `task/0002-language-rule-lifecycle-binding` | pending | [ ] | `npm run doctor` |
-| Task Base Finalization | `task/0002-language-rule-lifecycle-binding` | `master` | pending | [ ] | `npm run doctor` |
+| Phase 01 Integration | `task/0002/phase-01-integration` | `task/0002-language-rule-lifecycle-binding` | `7786d72` | [x] | `git diff --stat` |
+| Phase 02 Integration | `task/0002/phase-02-integration` | `task/0002-language-rule-lifecycle-binding` | `ae18e4e` | [x] | `git diff --stat` |
+| Phase 03 Integration | `task/0002/phase-03-integration` | `task/0002-language-rule-lifecycle-binding` | `7740feb` | [x] | `git diff --stat` |
+| Phase 04 Integration | `task/0002/phase-04-integration` | `task/0002-language-rule-lifecycle-binding` | `d983f0e` | [x] | `npm run doctor` |
+| Task Base Finalization | `task/0002-language-rule-lifecycle-binding` | `master` | pending | [x] | `npm run doctor` |
 
 ## Result
 
-Pending execution.
+All 4 phases (9 units) executed, verified, and integrated into `task/0002-language-rule-lifecycle-binding`. The development lifecycle actively binds language and framework rules from context specification and plan authoring through code generation and independent diff review gates. Plan checking confirms all units declare populated `<language_rules>` blocks and diagnostic doctor passes 100% HEALTHY.
