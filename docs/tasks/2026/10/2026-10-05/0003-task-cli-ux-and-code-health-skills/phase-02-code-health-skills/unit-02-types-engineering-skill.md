@@ -5,7 +5,7 @@ parent: "0003/phase-02"
 unit: "02.02"
 branch: "task/0003/phase-02/types-skill"
 worktree: ".worktrees/0003/phase-02/types-skill"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, skills, types, typescript, anti-slop, safety]
 depends_on: []
@@ -69,8 +69,10 @@ Author `skills/engineering/types/SKILL.md` establishing a first-class engineerin
 ## Verification
 
 - Test type: Contract & syntax schema test.
-- Case 1: Verify `skills/engineering/types/SKILL.md` exists and contains valid YAML frontmatter matching schema.
-- Case 2: Verify all 5 type-hardening pillars and cross-skill references are present.
+- Case 1: Verify `skills/engineering/types/SKILL.md` exists and contains valid YAML frontmatter matching schema (PASS: frontmatter valid, name `types`).
+- Case 2: Verify all 5 type-hardening pillars and cross-skill references are present (PASS: ban any, discriminated unions, branded IDs, generic constraints, type predicates).
+- Files modified: `skills/engineering/types/SKILL.md`
+- Pre-screening review: PASS (0 scope leaks, 0 SOLID violations)
 
 ## Rollback
 
@@ -78,8 +80,8 @@ Remove `skills/engineering/types/SKILL.md` and directory.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-05
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-05
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
