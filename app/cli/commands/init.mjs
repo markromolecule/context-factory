@@ -3,7 +3,11 @@ import { stdin as input, stdout as output } from "node:process";
 import { existsSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
 import { badges, colors } from "../core/formatter.mjs";
-import { detectPackageManager } from "../core/bridge-generator.mjs";
+import {
+  checkHostSubmoduleStatus,
+  detectPackageManager,
+  detectSubmoduleContext,
+} from "../core/bridge-generator.mjs";
 import { handleBridgeCommand } from "./bridge.mjs";
 
 /**
@@ -17,10 +21,16 @@ export async function handleInitCommand(args = [], flags = {}) {
   const dryRun = Boolean(flags.dryRun);
   const force = Boolean(flags.force);
 
+  const submodCtx = detectSubmoduleContext(process.cwd());
+  const defaultTarget = submodCtx.isInsideSubmodule ? submodCtx.hostDir : ".";
+
   const isInteractive = input.isTTY && !flags.quiet && !flags.json && !flags.nonInteractive;
 
   if (!flags.json) {
     console.log(`\n${badges.init("INIT")} ${colors.bold(colors.cyan("Initialize Context Factory in Project"))}\n`);
+    if (submodCtx.isInsideSubmodule) {
+      console.log(`  ${badges.info("SUBMODULE")} ${colors.dim("Detected execution from inside submodule")} ${colors.cyan(submodCtx.submoduleDirName)} ${colors.dim("-> host target:")} ${colors.cyan(defaultTarget)}\n`);
+    }
   }
 
   if (isInteractive && (!target || !method || !ide)) {
@@ -29,7 +39,6 @@ export async function handleInitCommand(args = [], flags = {}) {
     try {
       // 1. Target directory prompt
       if (!target) {
-        const defaultTarget = ".";
         const answer = await rl.question(`  ${colors.bold("Project Target Directory")} ${colors.dim(`[default: ${defaultTarget}]`)}: `);
         target = answer.trim() || defaultTarget;
       }
@@ -45,6 +54,35 @@ export async function handleInitCommand(args = [], flags = {}) {
           method = "linked";
         } else {
           method = "submodule";
+        }
+      }
+
+      // 2b. Hybrid Submodule Assistant
+      if (method === "submodule") {
+        const resolvedTarget = resolve(process.cwd(), target || defaultTarget);
+        const isGitRepo = existsSync(resolve(resolvedTarget, ".git"));
+        const hostSubmodStatus = checkHostSubmoduleStatus(resolvedTarget);
+
+        if (isGitRepo && !hostSubmodStatus.isContextFactorySubmoduled && !submodCtx.isInsideSubmodule) {
+          console.log(`\n  ${badges.warn("NOTICE")} ${colors.yellow("Context Factory is not yet registered as a git submodule in this project.")}`);
+          const addAnswer = await rl.question(`  ${colors.bold("Add submodule now into .context-factory? [Y/n]")} `);
+          const shouldAdd = addAnswer.trim().toLowerCase() !== "n";
+          if (shouldAdd) {
+            try {
+              console.log(`  ${colors.dim("Executing git submodule add...")}`);
+              const { execSync } = await import("node:child_process");
+              execSync("git submodule add https://github.com/markromolecule/context-factory.git .context-factory", {
+                cwd: resolvedTarget,
+                stdio: "inherit",
+              });
+              console.log(`  ${badges.done()} Git submodule added successfully.`);
+            } catch (err) {
+              console.log(`  ${badges.warn("WARNING")} Could not run git command automatically: ${err.message}`);
+              console.log(`  ${colors.dim("Run this manually in your host project root:")} ${colors.yellow("git submodule add <repo-url> .context-factory")}\n`);
+            }
+          } else {
+            console.log(`  ${colors.dim("To add manually later, run:")} ${colors.yellow("git submodule add <repo-url> .context-factory")}\n`);
+          }
         }
       }
 
@@ -91,7 +129,7 @@ export async function handleInitCommand(args = [], flags = {}) {
   }
 
   // Fallbacks for non-interactive mode
-  target = target || process.cwd();
+  target = target || (submodCtx.isInsideSubmodule ? submodCtx.hostDir : process.cwd());
   method = method || (existsSync(resolve(target, ".git")) ? "submodule" : "linked");
   ide = ide || "all";
   pm = pm || detectPackageManager(resolve(process.cwd(), target));
