@@ -985,23 +985,21 @@ export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}
     }
   }
 
-  // 3. Fallback to existing .context-bridge.json
-  if (!factoryPath) {
-    try {
-      const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
-      if (bridgeJson.factoryPath) {
-        const candidate = resolve(targetDir, bridgeJson.factoryPath);
-        if (existsSync(candidate)) {
-          factoryPath = bridgeJson.factoryPath;
-        }
+  // 3. Inspect existing .context-bridge.json for ides, method, and fallback factoryPath
+  try {
+    const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
+    if (!factoryPath && bridgeJson.factoryPath) {
+      const candidate = resolve(targetDir, bridgeJson.factoryPath);
+      if (existsSync(candidate)) {
+        factoryPath = bridgeJson.factoryPath;
       }
-      if (bridgeJson.ides) ide = bridgeJson.ides;
-      if (bridgeJson.integrationMethod) method = bridgeJson.integrationMethod;
-    } catch {
-      // If inside context-factory itself
-      if (targetDir === root) {
-        factoryPath = ".";
-      }
+    }
+    if (bridgeJson.ides && (!flags.ide || flags.ide.length === 0)) ide = bridgeJson.ides;
+    if (bridgeJson.integrationMethod && !flags.method) method = bridgeJson.integrationMethod;
+  } catch {
+    // If inside context-factory itself
+    if (targetDir === root) {
+      factoryPath = ".";
     }
   }
 

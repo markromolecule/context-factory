@@ -5,7 +5,7 @@ parent: "phase-03-diagnostics-and-evaluations"
 unit: "03.02"
 branch: "task/0001/phase-03/unit-02-integration-evals"
 worktree: ".worktrees/0001/phase-03/unit-02-integration-evals"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, evals, tests, integration, verification]
 depends_on: ["03.01"]
@@ -61,6 +61,7 @@ Author automated evaluation cases and unit test suites covering the end-to-end m
   - Multi-editor flag generates all expected files without error.
   - Pre-existing settings in `.vscode/settings.json` (`editor.fontSize`, `workbench.colorTheme`) are completely preserved after bridge run.
 - Command: `node --test tests/bridge-multi-editor.test.mjs`
+- Result: **PASS** (4/4 tests passed in 366ms). Commit: `dea864c`.
 
 ## Rollback
 
@@ -68,8 +69,8 @@ Remove test file `tests/bridge-multi-editor.test.mjs`.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-01, AC-02, AC-05
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-01, AC-02, AC-05
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`dea864c`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes (4/4 integration tests, 32/32 tests, 23/23 evaluations)
