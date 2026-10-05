@@ -98,6 +98,61 @@ export function checkHostSubmoduleStatus(hostDir = process.cwd()) {
 }
 
 /**
+ * Scans a project directory for installed/configured IDE folders.
+ * Returns array of detected IDE identifiers ('vscode', 'cursor', 'trae', 'antigravity').
+ */
+export function detectInstalledIdes(targetDir = process.cwd()) {
+  const detected = [];
+  if (existsSync(join(targetDir, ".vscode"))) {
+    detected.push("vscode");
+  }
+  if (existsSync(join(targetDir, ".cursor")) || existsSync(join(targetDir, ".cursorrules"))) {
+    detected.push("cursor");
+  }
+  if (existsSync(join(targetDir, ".trae"))) {
+    detected.push("trae");
+  }
+  if (existsSync(join(targetDir, ".agents")) || existsSync(join(targetDir, "GEMINI.md"))) {
+    detected.push("antigravity");
+  }
+  return detected;
+}
+
+/**
+ * Parses user choice input from the interactive IDE menu.
+ * Maps '1' -> 'vscode', '2' -> 'antigravity', '3' -> 'cursor', '4' -> 'trae', '5' -> 'all'.
+ * Supports comma/space separated inputs (e.g. '1, 4' or '1 4').
+ */
+export function parseIdeChoices(input = "", detectedDefaults = []) {
+  const cleaned = (input || "").trim().toLowerCase();
+  if (!cleaned) {
+    return detectedDefaults && detectedDefaults.length > 0 ? detectedDefaults : ["all"];
+  }
+
+  // Split on commas or whitespace
+  const tokens = cleaned.split(/[\s,]+/).filter(Boolean);
+  const result = new Set();
+
+  for (const token of tokens) {
+    if (token === "1" || token === "vscode") {
+      result.add("vscode");
+    } else if (token === "2" || token === "antigravity" || token === "agy" || token === "gemini") {
+      result.add("antigravity");
+    } else if (token === "3" || token === "cursor") {
+      result.add("cursor");
+    } else if (token === "4" || token === "trae") {
+      result.add("trae");
+    } else if (token === "5" || token === "all" || token === "*") {
+      return ["all"];
+    } else {
+      result.add(token);
+    }
+  }
+
+  return result.size > 0 ? Array.from(result) : ["all"];
+}
+
+/**
  * Detects the package manager used in the target directory by checking lockfiles.
  * Returns 'pnpm', 'yarn', 'bun', or 'npm'.
  */
