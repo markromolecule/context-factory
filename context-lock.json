@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.15.0",
-  "digest": "sha256:e0b4300cbc4e6dd9b5ba8bbfa531d74d34f6031ae2b34a9cc9a081e577833e47",
+  "digest": "sha256:a41ce14b9e8da41ebc87f76d17648209bd0cfeee3b5ac40ed50940e0aa454785",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -227,7 +227,7 @@
     "skills/productivity/grill/agents/openai.yaml": "sha256:94d86a5546ceee15adcb18b62ed1c9877604cb2980e0192160b6491f3dc1e183",
     "skills/productivity/grill/references/glossary-format.md": "sha256:9a1a06adcd2c9472f85ff66d93379135a0b0e23f8232ef9b6f57baa9bc9b645a",
     "skills/productivity/grounding/SKILL.md": "sha256:d7f96293af67446444d4fb60468a421940d2bc6fa2183fcf0172766321b5ecb1",
-    "skills/productivity/plan-review/SKILL.md": "sha256:d638e33c0dc01457020ce20f291da84a349b65e8c7de87ab83fb9cd5faf0ed94",
+    "skills/productivity/plan-review/SKILL.md": "sha256:e954f241674c883e654eca5ee5a7e69552d00760d487ba167dd9deefb672ab2a",
     "skills/productivity/plan-review/agents/openai.yaml": "sha256:5dedbf44f3c21cc4912f001c9990f4df98506a33edbfc1ee964a80f65185098f",
     "skills/productivity/plan/SKILL.md": "sha256:92413c820637408d741cfecdcdc0f55f61d32ef62c967585c7150dd75edcab26",
     "skills/productivity/plan/agents/openai.yaml": "sha256:14d0833d975634a5f605bf12900bbf437233866a28191de6438d8d7142a24bec",
