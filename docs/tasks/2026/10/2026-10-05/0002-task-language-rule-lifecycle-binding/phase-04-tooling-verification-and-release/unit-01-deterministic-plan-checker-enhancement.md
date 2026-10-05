@@ -5,7 +5,7 @@ parent: "0002/phase-04"
 unit: "04.01"
 branch: "task/0002/phase-04/plan-checker-validation"
 worktree: ".worktrees/0002/phase-04/plan-checker-validation"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, scripts, plan-checker, tooling]
 depends_on: []
@@ -55,7 +55,9 @@ Enhance `scripts/plan-check.mjs` to detect whether unit artifacts contain `<lang
 
 - Test type: Script execution & Unit testing.
 - Case: Run `node scripts/context.mjs plan:check` against the current task directory and ensure zero false positives.
-- Command: `node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-05/0002-task-language-rule-lifecycle-binding`
+- Command: `node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-05/0002-task-language-rule-lifecycle-binding` (PASS: all units declare populated <language_rules> blocks)
+- Files modified: `scripts/plan-check.mjs`
+- Pre-screening review: PASS (0 scope leaks, 0 SOLID violations)
 
 ## Rollback
 
@@ -63,8 +65,8 @@ Revert changes to `scripts/plan-check.mjs` with `git checkout scripts/plan-check
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-09
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-09
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
