@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.15.0",
-  "digest": "sha256:a41ce14b9e8da41ebc87f76d17648209bd0cfeee3b5ac40ed50940e0aa454785",
+  "digest": "sha256:37be4e4963aa78dcfb67a66ea5955a3b55d0134ce4227a530dab6c0f517650df",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -206,7 +206,7 @@
     "scripts/worktree.mjs": "sha256:8ce2a608a8bb6840ce318ff9f3bd4958c5e3fad9da9bd1b5e05444f203500d4a",
     "skills/README.md": "sha256:fb3199fe8ebe416d28fa1cc5bdffe4458f0e07ec56463b5befd402488ff0b9d0",
     "skills/engineering/README.md": "sha256:36ecb45d08ddc2fbbb5abe9dfec871bdf15e5c6aa96cb2655f0650f1a0212afc",
-    "skills/engineering/execute/SKILL.md": "sha256:3c29255fd6f7fe343fcca86287a367b3ea44fd2a40b0ab7cb50198f8b3d71743",
+    "skills/engineering/execute/SKILL.md": "sha256:b2e42799ab24e06d9d664e67b46aa08bfc888f8eed304f747473ee491a065fcd",
     "skills/engineering/execute/agents/openai.yaml": "sha256:2675ddc31b45c40a0898808a4795de2728f8400bf35f6ebfad97691683b1bcda",
     "skills/engineering/explore/SKILL.md": "sha256:ecfd1b31ab89d5f115f14b3f70860637556d2b7badbf3f6826291d13e8c8de41",
     "skills/engineering/refactor/SKILL.md": "sha256:bfbe95a54563e34096bfe6768ca506715e6ee2da6268e422fe09e6313eae61f7",
