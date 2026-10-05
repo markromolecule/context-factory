@@ -16,10 +16,12 @@ The **Engineering** group contains procedural skills for exploring target codeba
 | :--- | :--- | :--- | :--- |
 | [[skills/engineering/execute/SKILL|execute]] | `/execute`, `/exec`, `[EXEC]` | Execute approved task plans strictly one phase at a time with mandatory verification stops | `agents/openai.yaml` |
 | [[skills/engineering/explore/SKILL|explore]] | `/explore`, `[EXPLORE]` | Map code entry points, contracts, database models, test suites, and project conventions | — |
+| [[skills/engineering/perf/SKILL|perf]] | `/perf`, `[PERF]` | Profile runtime bottlenecks, detect ORM N+1 queries, audit ESR composite indexes, and optimize async waterfalls | — |
 | [[skills/engineering/refactor/SKILL|refactor]] | `/refactor`, `[REFACTOR]` | Decompose lengthy (>200 lines) or multi-responsibility files into modular single-responsibility components | `agents/openai.yaml` |
 | [[skills/engineering/review/SKILL|review]] | `/review`, `[REVIEW]` | Independent diff review of a unit worktree against its unit file before developer checkpoints | `agents/openai.yaml` |
 | [[skills/engineering/security/SKILL|security]] | `/sec`, `/security`, `[SEC]`, `[SECURITY]` | Threat-model and audit trust boundaries, authentication, credentials, data isolation, and replay risks | — |
 | [[skills/engineering/test/SKILL|test]] | `/test`, `[TEST]` | Turn a unit's Verification section into real tests, written test-first (failing assertions first, then implementation) | `agents/openai.yaml` |
+| [[skills/engineering/types/SKILL|types]] | `/types`, `[TYPES]` | Harden static TypeScript types, eliminate loose any/casts, enforce discriminated unions, and validate schemas | — |
 | [[skills/engineering/verify/SKILL|verify]] | `/verify`, `/release`, `[RELEASE]`, `[QA]` | Audit implementation claims against fresh command outputs, typechecks, and test suites | — |
 
 ---

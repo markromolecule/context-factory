@@ -59,6 +59,7 @@ Audit newly written or modified classes and modules against Context Factory SOLI
    - Do derived types or implementations honor all preconditions and postconditions of their base interfaces without throwing `NotImplementedError`?
 4. **Interface Segregation (ISP):**
    - Are client interfaces cohesive and minimal? Clients must not be forced to depend on methods they do not invoke.
+   - If interface segregation violations, loose type abstractions, or fat interfaces are found: dispatch remediation to `/types` (`skills/engineering/types/SKILL.md`).
 5. **Dependency Inversion (DIP):**
    - Do high-level domain modules depend on abstractions/interfaces rather than concrete low-level infrastructure or transport mechanisms?
 
@@ -69,7 +70,8 @@ Audit the worktree diff against the unit's declared `<language_rules>` block:
 1. **Rule Directives Adherence:**
    - Verify line-by-line that newly written or modified code complies with each checkable directive listed in the unit's `<language_rules>`.
    - Naming Conventions: Verify variable, class, and method casings conform to stack conventions (e.g. `camelCase`, `snake_case`, `PascalCase`).
-   - Type Safety & Runtime Validation: Ensure zero loose types (`any`), missing schemas, or unvalidated HTTP/database payloads.
+   - Type Safety & Anti-Slop Safeguards: Ensure zero loose types (`any`), missing schemas, or unvalidated HTTP/database payloads. If `any`, loose `as` casts, or omitted discriminated union exhaustiveness are found, mark **FAIL: Type Slop Detected** and instruct the agent to execute `/types` (`skills/engineering/types/SKILL.md`) before checkpointing.
+   - Query & Performance Boundaries: Ensure database queries adhere to ESR indexing and batching. If unindexed queries, ORM N+1 loops, unbounded `Promise.all` waterfalls, or ESR violations are found, mark **FAIL: Performance Bottleneck Detected** and instruct the agent to execute `/perf` (`skills/engineering/perf/SKILL.md`) before checkpointing.
    - Framework Idiomaticity: Ensure standard framework boundaries are respected (e.g., thin controllers, FormRequest validation, DTO usage, Eloquent best practices).
 2. **Precedence Verification:**
    - Confirm that if any plan instruction was ambiguous or contradicted a language rule, the language rule was prioritized.

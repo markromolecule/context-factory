@@ -22,6 +22,14 @@ graph LR
     D --> E[Behavioral Invariance Verification<br/>Typecheck & Unit Tests]
 ```
 
+## Specialized Refactoring Workflows
+
+When refactoring targets specific non-functional code smells or architectural deficiencies, route to the specialized skill:
+
+- **Type-Driven Refactoring & Static Hardening (`/types`):** When refactoring to eliminate loose `any` casts, replace untyped JSON/API payloads with runtime schemas, implement discriminated unions, or apply nominal branded types, consult `skills/engineering/types/SKILL.md`.
+- **Hot-Path & Query Performance Refactoring (`/perf`):** When refactoring to eliminate ORM N+1 query loops, apply Equality-Sort-Range (ESR) composite indexes, break up async waterfall starvation, or introduce streaming pagination, consult `skills/engineering/perf/SKILL.md`.
+
+
 ## Session Procedure
 
 ### 1. Analyze & Target Decomposition
