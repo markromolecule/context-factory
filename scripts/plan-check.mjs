@@ -236,6 +236,17 @@ export function checkDisjointScopes(parallelPairs) {
 }
 
 /**
+ * Checks if unit markdown content contains a non-empty <language_rules> block
+ * @param {string} unitContent
+ * @returns {boolean}
+ */
+export function hasLanguageRulesBlock(unitContent) {
+  if (typeof unitContent !== "string") return false;
+  const match = unitContent.match(/<language_rules>([\s\S]*?)<\/language_rules>/i);
+  return Boolean(match && match[1].trim().length > 0);
+}
+
+/**
  * Recursively locates all unit-*.md files in a task directory and parses frontmatter & scope
  * @param {string} taskDirPath
  */
@@ -264,6 +275,7 @@ export async function parseUnitArtifacts(taskDirPath) {
             phase: meta.parent || meta.phase || entry.name,
             dependsOn: dependsOn.map(String),
             scope,
+            hasLanguageRules: hasLanguageRulesBlock(content),
           });
         }
       }
@@ -282,6 +294,7 @@ export async function parseUnitArtifacts(taskDirPath) {
         phase: meta.parent || meta.phase || null,
         dependsOn: dependsOn.map(String),
         scope,
+        hasLanguageRules: hasLanguageRulesBlock(content),
       });
     }
   }
@@ -350,6 +363,7 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
     const scopeResult = checkDisjointScopes(parallelPairs);
 
     const isValid = cycleResult.valid && scopeResult.valid;
+    const unitsMissingLanguageRules = units.filter((u) => !u.hasLanguageRules);
 
     if (flags.json) {
       console.log(
@@ -361,6 +375,11 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
             topologicalOrder: cycleResult.sortedOrder,
             cycles: cycleResult.cycles,
             conflicts: scopeResult.conflicts,
+            languageRules: {
+              valid: unitsMissingLanguageRules.length === 0,
+              missingCount: unitsMissingLanguageRules.length,
+              missingUnits: unitsMissingLanguageRules.map((u) => u.id),
+            },
           },
           null,
           2
@@ -394,6 +413,15 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
           console.error(`        * ${file}`);
         }
       }
+    }
+
+    if (unitsMissingLanguageRules.length > 0) {
+      console.log(`Language Rules:    ⚠️  ${unitsMissingLanguageRules.length} unit(s) missing <language_rules> block:`);
+      for (const u of unitsMissingLanguageRules) {
+        console.log(`                     * Unit ${u.id} (${u.title})`);
+      }
+    } else {
+      console.log(`Language Rules:    All units declare populated <language_rules> blocks.`);
     }
 
     if (isValid) {
