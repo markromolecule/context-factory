@@ -5,7 +5,7 @@ parent: "0002/phase-01"
 unit: "01.02"
 branch: "task/0002/phase-01/templates-modernization"
 worktree: ".worktrees/0002/phase-01/templates-modernization"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, templates, scaffolding]
 depends_on: []
@@ -66,7 +66,9 @@ Modernize `docs/templates/Context.md`, `docs/templates/Task.md`, and `docs/templ
 
 - Test type: Template inspection & linting.
 - Case: Ensure all three templates contain the new sections and `<language_rules>` XML tags without markdown syntax errors.
-- Command: `npm run lint`
+- Command: `npm run lint` (PASS)
+- Files modified: `docs/templates/Context.md`, `docs/templates/Task.md`, `docs/templates/Unit.md`
+- Pre-screening review: PASS (0 scope leaks, 0 SOLID violations)
 
 ## Rollback
 
@@ -74,8 +76,8 @@ Revert modifications to `docs/templates/Context.md`, `docs/templates/Task.md`, a
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-02, AC-03
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-02, AC-03
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes
