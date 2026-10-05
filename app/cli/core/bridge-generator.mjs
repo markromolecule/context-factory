@@ -1,7 +1,156 @@
-import { existsSync, realpathSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { cp, lstat, mkdir, readFile, readlink, rm, symlink, unlink, writeFile } from "node:fs/promises";
-import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { root } from "../../../scripts/context-core.mjs";
+
+/**
+ * Detects whether the current directory is running inside a submodule or if target has a submodule.
+ */
+export function detectSubmoduleContext(currentDir = process.cwd()) {
+  const dirName = basename(currentDir);
+  const parentDir = dirname(currentDir);
+
+  const isSubmoduleName = dirName === ".context-factory" || dirName === "context-factory";
+  const parentHasGit = existsSync(join(parentDir, ".git")) || existsSync(join(parentDir, ".gitmodules"));
+
+  if (isSubmoduleName && parentHasGit) {
+    return {
+      isInsideSubmodule: true,
+      hostDir: "..",
+      submoduleDirName: dirName,
+      submodulePath: ".",
+      hasSubmodule: true,
+    };
+  }
+
+  // Check if currentDir has a submodule folder
+  const dotFactory = join(currentDir, ".context-factory");
+  const visibleFactory = join(currentDir, "context-factory");
+
+  if (existsSync(dotFactory)) {
+    return {
+      isInsideSubmodule: false,
+      hostDir: ".",
+      submoduleDirName: ".context-factory",
+      submodulePath: ".context-factory",
+      hasSubmodule: true,
+    };
+  }
+
+  if (existsSync(visibleFactory) && currentDir !== root) {
+    return {
+      isInsideSubmodule: false,
+      hostDir: ".",
+      submoduleDirName: "context-factory",
+      submodulePath: "context-factory",
+      hasSubmodule: true,
+    };
+  }
+
+  return {
+    isInsideSubmodule: false,
+    hostDir: ".",
+    submoduleDirName: null,
+    submodulePath: null,
+    hasSubmodule: false,
+  };
+}
+
+/**
+ * Checks whether the host directory contains .gitmodules and if context-factory is configured.
+ */
+export function checkHostSubmoduleStatus(hostDir = process.cwd()) {
+  const gitmodulesPath = join(hostDir, ".gitmodules");
+  if (!existsSync(gitmodulesPath)) {
+    return {
+      hasGitModules: false,
+      isContextFactorySubmoduled: false,
+      submodulePath: null,
+    };
+  }
+
+  try {
+    const content = readFileSync(gitmodulesPath, "utf8");
+    const isContextFactory = content.includes("context-factory");
+    let submodulePath = null;
+
+    if (isContextFactory) {
+      const match = content.match(/path\s*=\s*(.+)/);
+      if (match) {
+        submodulePath = match[1].trim();
+      } else {
+        submodulePath = ".context-factory";
+      }
+    }
+
+    return {
+      hasGitModules: true,
+      isContextFactorySubmoduled: isContextFactory,
+      submodulePath: submodulePath || (isContextFactory ? ".context-factory" : null),
+    };
+  } catch {
+    return {
+      hasGitModules: false,
+      isContextFactorySubmoduled: false,
+      submodulePath: null,
+    };
+  }
+}
+
+/**
+ * Scans a project directory for installed/configured IDE folders.
+ * Returns array of detected IDE identifiers ('vscode', 'cursor', 'trae', 'antigravity').
+ */
+export function detectInstalledIdes(targetDir = process.cwd()) {
+  const detected = [];
+  if (existsSync(join(targetDir, ".vscode"))) {
+    detected.push("vscode");
+  }
+  if (existsSync(join(targetDir, ".cursor")) || existsSync(join(targetDir, ".cursorrules"))) {
+    detected.push("cursor");
+  }
+  if (existsSync(join(targetDir, ".trae"))) {
+    detected.push("trae");
+  }
+  if (existsSync(join(targetDir, ".agents")) || existsSync(join(targetDir, "GEMINI.md"))) {
+    detected.push("antigravity");
+  }
+  return detected;
+}
+
+/**
+ * Parses user choice input from the interactive IDE menu.
+ * Maps '1' -> 'vscode', '2' -> 'antigravity', '3' -> 'cursor', '4' -> 'trae', '5' -> 'all'.
+ * Supports comma/space separated inputs (e.g. '1, 4' or '1 4').
+ */
+export function parseIdeChoices(input = "", detectedDefaults = []) {
+  const cleaned = (input || "").trim().toLowerCase();
+  if (!cleaned) {
+    return detectedDefaults && detectedDefaults.length > 0 ? detectedDefaults : ["all"];
+  }
+
+  // Split on commas or whitespace
+  const tokens = cleaned.split(/[\s,]+/).filter(Boolean);
+  const result = new Set();
+
+  for (const token of tokens) {
+    if (token === "1" || token === "vscode") {
+      result.add("vscode");
+    } else if (token === "2" || token === "antigravity" || token === "agy" || token === "gemini") {
+      result.add("antigravity");
+    } else if (token === "3" || token === "cursor") {
+      result.add("cursor");
+    } else if (token === "4" || token === "trae") {
+      result.add("trae");
+    } else if (token === "5" || token === "all" || token === "*") {
+      return ["all"];
+    } else {
+      result.add(token);
+    }
+  }
+
+  return result.size > 0 ? Array.from(result) : ["all"];
+}
 
 /**
  * Detects the package manager used in the target directory by checking lockfiles.
@@ -126,6 +275,49 @@ export async function createRelativeSymlink({
 }
 
 /**
+ * Non-destructively merges new properties into an existing JSON file, or creates it if absent.
+ */
+export async function mergeJsonFile(filePath, newProps, dryRun = false) {
+  let existing = null;
+  try {
+    const raw = await readFile(filePath, "utf8");
+    existing = JSON.parse(raw);
+  } catch {
+    existing = null;
+  }
+
+  const isNew = existing === null;
+  const merged = isNew ? {} : { ...existing };
+  let modified = isNew;
+
+  for (const [key, val] of Object.entries(newProps)) {
+    if (typeof val === "object" && val !== null && !Array.isArray(val)) {
+      merged[key] = { ...(merged[key] || {}), ...val };
+      if (JSON.stringify(merged[key]) !== JSON.stringify(existing?.[key])) {
+        modified = true;
+      }
+    } else if (Array.isArray(val)) {
+      const existingArr = Array.isArray(merged[key]) ? merged[key] : [];
+      const combined = Array.from(new Set([...existingArr, ...val]));
+      if (combined.length !== existingArr.length) {
+        merged[key] = combined;
+        modified = true;
+      }
+    } else if (merged[key] !== val) {
+      merged[key] = val;
+      modified = true;
+    }
+  }
+
+  if (modified && !dryRun) {
+    await mkdir(dirname(filePath), { recursive: true });
+    await writeFile(filePath, `${JSON.stringify(merged, null, 2)}\n`, "utf8");
+  }
+
+  return { modified, created: isNew, content: merged };
+}
+
+/**
  * Normalizes requested IDE profiles from flags.
  */
 export function normalizeIdeProfiles(input = ["all"]) {
@@ -133,7 +325,7 @@ export function normalizeIdeProfiles(input = ["all"]) {
   const cleaned = rawList.map((s) => s.trim().toLowerCase()).filter(Boolean);
 
   if (cleaned.length === 0 || cleaned.includes("all") || cleaned.includes("*")) {
-    return ["antigravity", "gemini", "cursor", "windsurf", "claude", "copilot", "codex"];
+    return ["antigravity", "gemini", "cursor", "vscode", "trae", "windsurf", "claude", "copilot", "codex"];
   }
 
   const result = new Set();
@@ -144,6 +336,11 @@ export function normalizeIdeProfiles(input = ["all"]) {
     } else if (item === "gemini") {
       result.add("gemini");
       result.add("antigravity");
+    } else if (item === "vscode") {
+      result.add("vscode");
+      result.add("copilot");
+    } else if (item === "trae") {
+      result.add("trae");
     } else if (["cursor", "windsurf", "claude", "copilot", "codex"].includes(item)) {
       result.add(item);
     }
@@ -293,7 +490,7 @@ Authoritative contract: \`${normalizedFactoryPath}/orchestrator/SHARED.md\`.
     filesToGenerate.push({ path: join(targetDir, "CODEX.md"), content: codexMdContent, id: "CODEX.md", category: "contract" });
   }
 
-  // 5. .cursorrules (Cursor Rules)
+  // 5. Cursor Rules (.cursorrules + modern .cursor/rules/context-factory.mdc)
   if (isAll || activeIdes.includes("cursor")) {
     const cursorRulesContent = `# Cursor Rules - Context Factory Bridge
 
@@ -302,6 +499,25 @@ Authoritative contract: \`${normalizedFactoryPath}/orchestrator/SHARED.md\`.
 - Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
 `;
     filesToGenerate.push({ path: join(targetDir, ".cursorrules"), content: cursorRulesContent, id: ".cursorrules", category: "contract" });
+
+    const cursorMdcContent = `---
+description: "Context Factory Orchestrator & Architecture Directives"
+alwaysApply: true
+---
+
+# Cursor Rules - Context Factory Bridge
+
+- Refer to \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for shared orchestration directives.
+- Use \`${scriptPrefix} resolve "<prompt>"\` to determine relevant rules and skills.
+- Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+- Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
+`;
+    filesToGenerate.push({
+      path: join(targetDir, ".cursor", "rules", "context-factory.mdc"),
+      content: cursorMdcContent,
+      id: ".cursor/rules/context-factory.mdc",
+      category: "contract",
+    });
   }
 
   // 6. .windsurfrules (Windsurf Rules)
@@ -315,8 +531,28 @@ Authoritative contract: \`${normalizedFactoryPath}/orchestrator/SHARED.md\`.
     filesToGenerate.push({ path: join(targetDir, ".windsurfrules"), content: windsurfRulesContent, id: ".windsurfrules", category: "contract" });
   }
 
-  // 7. .github/copilot-instructions.md (Copilot instructions)
-  if (isAll || activeIdes.includes("copilot")) {
+  // 7. Trae IDE Rules (.trae/rules/project_rules.md)
+  if (isAll || activeIdes.includes("trae")) {
+    const traeRulesContent = `# Trae Project Rules - Context Factory Bridge
+
+This repository connects to **Context Factory** at \`${normalizedFactoryPath}\` for engineering standards, workflows, and subagent orchestration contracts.
+
+## Mandatory Guidelines for Trae AI
+- Consult \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for the authoritative orchestration contract.
+- Resolve context before non-trivial tasks: \`${scriptPrefix} resolve "<prompt>"\`.
+- Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+- Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
+`;
+    filesToGenerate.push({
+      path: join(targetDir, ".trae", "rules", "project_rules.md"),
+      content: traeRulesContent,
+      id: ".trae/rules/project_rules.md",
+      category: "contract",
+    });
+  }
+
+  // 8. VS Code & GitHub Copilot Instructions
+  if (isAll || activeIdes.includes("copilot") || activeIdes.includes("vscode")) {
     const copilotContent = `# GitHub Copilot Instructions - Context Factory Bridge
 
 This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
@@ -325,6 +561,31 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
 - Write task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
 `;
     filesToGenerate.push({ path: join(targetDir, ".github", "copilot-instructions.md"), content: copilotContent, id: ".github/copilot-instructions.md", category: "contract" });
+  }
+
+  if (isAll || activeIdes.includes("vscode")) {
+    filesToGenerate.push({
+      path: join(targetDir, ".vscode", "extensions.json"),
+      mergeJson: {
+        recommendations: [
+          "github.copilot",
+          "github.copilot-chat",
+        ],
+      },
+      id: ".vscode/extensions.json",
+      category: "config",
+    });
+
+    filesToGenerate.push({
+      path: join(targetDir, ".vscode", "settings.json"),
+      mergeJson: {
+        "files.associations": {
+          "*.mdc": "markdown",
+        },
+      },
+      id: ".vscode/settings.json",
+      category: "config",
+    });
   }
 
   // 8. Common Scaffolding: docs/tasks/README.md, docs/decisions/README.md, rules/README.md
@@ -476,6 +737,20 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
       exists = true;
     } catch {
       exists = false;
+    }
+
+    if (item.mergeJson) {
+      const { modified, created } = await mergeJsonFile(item.path, item.mergeJson, dryRun);
+      fileResults.push({
+        path: item.path,
+        id: item.id,
+        status: dryRun
+          ? (exists ? "would update" : "would create")
+          : (created ? "created" : (modified ? "updated" : "skipped (up to date)")),
+        category: item.category,
+        isSymlink: false,
+      });
+      continue;
     }
 
     if (exists && !force) {
@@ -710,23 +985,21 @@ export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}
     }
   }
 
-  // 3. Fallback to existing .context-bridge.json
-  if (!factoryPath) {
-    try {
-      const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
-      if (bridgeJson.factoryPath) {
-        const candidate = resolve(targetDir, bridgeJson.factoryPath);
-        if (existsSync(candidate)) {
-          factoryPath = bridgeJson.factoryPath;
-        }
+  // 3. Inspect existing .context-bridge.json for ides, method, and fallback factoryPath
+  try {
+    const bridgeJson = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
+    if (!factoryPath && bridgeJson.factoryPath) {
+      const candidate = resolve(targetDir, bridgeJson.factoryPath);
+      if (existsSync(candidate)) {
+        factoryPath = bridgeJson.factoryPath;
       }
-      if (bridgeJson.ides) ide = bridgeJson.ides;
-      if (bridgeJson.integrationMethod) method = bridgeJson.integrationMethod;
-    } catch {
-      // If inside context-factory itself
-      if (targetDir === root) {
-        factoryPath = ".";
-      }
+    }
+    if (bridgeJson.ides && (!flags.ide || flags.ide.length === 0)) ide = bridgeJson.ides;
+    if (bridgeJson.integrationMethod && !flags.method) method = bridgeJson.integrationMethod;
+  } catch {
+    // If inside context-factory itself
+    if (targetDir === root) {
+      factoryPath = ".";
     }
   }
 

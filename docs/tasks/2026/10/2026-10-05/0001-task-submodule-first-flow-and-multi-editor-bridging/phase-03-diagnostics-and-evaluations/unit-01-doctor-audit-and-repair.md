@@ -5,7 +5,7 @@ parent: "phase-03-diagnostics-and-evaluations"
 unit: "03.01"
 branch: "task/0001/phase-03/unit-01-doctor-audit-repair"
 worktree: ".worktrees/0001/phase-03/unit-01-doctor-audit-repair"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, doctor, audit, repair, diagnostics]
 depends_on: ["02.02"]
@@ -63,6 +63,7 @@ Enhance `context-cli doctor` and `verifySymlinkHealth` to audit the presence, va
   - Host repo missing `.trae/rules/project_rules.md` (when Trae configured) is flagged as FAIL.
   - Running `doctor --repair` recreates `.trae/rules/project_rules.md` and subsequent check PASSES.
 - Command: `node --test tests/doctor-editor-audit.test.mjs`
+- Result: **PASS** (2/2 integration tests passed in 536ms). Commit: `2358c98`.
 
 ## Rollback
 
@@ -70,8 +71,8 @@ Revert modifications to `app/cli/commands/doctor.mjs` and `app/cli/core/bridge-g
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-05
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-05
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`2358c98`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes (2/2 unit tests, 23/23 evaluations)
