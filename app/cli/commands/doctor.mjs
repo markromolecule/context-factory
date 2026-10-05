@@ -99,19 +99,25 @@ export async function handleDoctorCommand(args = [], flags = {}) {
   let symlinkHealth = await verifySymlinkHealth(symlinkTarget);
   let symlinkPassed = symlinkHealth.passed;
 
-  // If symlinks failed and repair was requested, recheck
-  if (!symlinkPassed && repair) {
+  // 4. Editor Configuration Health Check
+  let editorHealth = await auditEditorConfigurations(symlinkTarget);
+  let editorPassed = editorHealth.passed;
+
+  // If symlinks or editor artifacts failed and repair was requested, recheck
+  if ((!symlinkPassed || !editorPassed) && repair) {
     repairResult = await repairBridgeSymlinks(symlinkTarget, flags);
     symlinkHealth = await verifySymlinkHealth(symlinkTarget);
     symlinkPassed = symlinkHealth.passed;
+    editorHealth = await auditEditorConfigurations(symlinkTarget);
+    editorPassed = editorHealth.passed;
   }
 
-  // 4. Evaluations
+  // 5. Evaluations
   const evalReport = await runAllEvaluations({ runUnit: true, runDatasets: true, provider: "mock" });
   const evalsPassed = evalReport.failed === 0;
 
   const totalDuration = Date.now() - startTime;
-  const allPassed = lintPassed && lockPassed && symlinkPassed && evalsPassed;
+  const allPassed = lintPassed && lockPassed && symlinkPassed && editorPassed && evalsPassed;
 
   if (isJson) {
     console.log(JSON.stringify({
@@ -130,6 +136,14 @@ export async function handleDoctorCommand(args = [], flags = {}) {
           brokenCount: symlinkHealth.brokenCount,
           missingCount: symlinkHealth.missingCount,
           links: symlinkHealth.links,
+        },
+        editorIntegrity: {
+          passed: editorPassed,
+          configuredIdes: editorHealth.configuredIdes,
+          healthyCount: editorHealth.healthyCount,
+          brokenCount: editorHealth.brokenCount,
+          missingCount: editorHealth.missingCount,
+          items: editorHealth.items,
         },
         evaluations: { passed: evalsPassed, total: evalReport.total, passedCount: evalReport.passed, failedCount: evalReport.failed },
       },
@@ -166,6 +180,15 @@ export async function handleDoctorCommand(args = [], flags = {}) {
         : `${symlinkHealth.brokenCount} broken, ${symlinkHealth.missingCount} missing. Run \`context-cli doctor --repair\``,
     ],
     [
+      "Editor Artifact Integrity",
+      editorPassed ? badges.pass() : badges.fail(),
+      editorPassed
+        ? (editorHealth.totalCount > 0
+            ? `${editorHealth.healthyCount}/${editorHealth.totalCount} editor configurations verified (${editorHealth.configuredIdes.join(", ") || "native"})`
+            : "No external editors configured")
+        : `${editorHealth.missingCount} missing, ${editorHealth.brokenCount} broken. Run \`context-cli doctor --repair\``,
+    ],
+    [
       "Evaluation Suite",
       evalsPassed ? badges.pass() : badges.fail(),
       `${evalReport.passed}/${evalReport.total} evaluations passed in ${evalReport.durationMs}ms`,
@@ -189,6 +212,16 @@ export async function handleDoctorCommand(args = [], flags = {}) {
     console.log(`  ${colors.bold("Auto-fix:")} Run ${colors.cyan("context-cli doctor --repair")} to restore links.\n`);
   }
 
+  if (!editorPassed) {
+    console.log(`${colors.bold(colors.yellow("Editor Artifact Details:"))}`);
+    for (const item of editorHealth.items) {
+      if (item.status !== "healthy") {
+        console.log(`  - [${item.ide}] ${colors.red(item.name)}: ${item.status} (${colors.dim(item.path)})`);
+      }
+    }
+    console.log(`  ${colors.bold("Auto-fix:")} Run ${colors.cyan("context-cli doctor --repair")} to restore editor rules.\n`);
+  }
+
   if (allPassed) {
     console.log(`  ${badges.done("HEALTHY")} ${colors.bold(colors.green("Context Factory is completely synchronized, valid, and healthy."))}\n`);
   } else {
@@ -197,4 +230,183 @@ export async function handleDoctorCommand(args = [], flags = {}) {
   }
 
   return allPassed ? 0 : 1;
+}
+
+/**
+ * Audit editor configuration integrity in a host repository or factory.
+ * Verifies existence, valid contents, and contract links for configured editors.
+ */
+export async function auditEditorConfigurations(targetDir = process.cwd()) {
+  let canonicalTarget = targetDir;
+  try {
+    if (existsSync(targetDir)) canonicalTarget = realpathSync(targetDir);
+  } catch {}
+
+  let bridgeConfig = null;
+  try {
+    const raw = await readFile(join(canonicalTarget, ".context-bridge.json"), "utf8");
+    bridgeConfig = JSON.parse(raw);
+  } catch {}
+
+  const isHostRepo = Boolean(bridgeConfig) || existsSync(join(canonicalTarget, ".gitmodules")) || existsSync(join(canonicalTarget, ".agents"));
+
+  // Determine configured IDEs
+  let configuredIdes = bridgeConfig?.ides;
+  if (!configuredIdes || !Array.isArray(configuredIdes) || configuredIdes.length === 0) {
+    if (bridgeConfig?.ides && typeof bridgeConfig.ides === "string") {
+      configuredIdes = [bridgeConfig.ides];
+    } else {
+      configuredIdes = [];
+    }
+  }
+
+  // If no .context-bridge.json exists and it's context-factory itself, return healthy
+  if (!isHostRepo && canonicalTarget === (existsSync(root) ? realpathSync(root) : root)) {
+    return {
+      passed: true,
+      isHostRepo: false,
+      configuredIdes: ["factory-native"],
+      healthyCount: 1,
+      missingCount: 0,
+      brokenCount: 0,
+      totalCount: 1,
+      items: [
+        { name: "AGENTS.md", ide: "universal", status: "healthy", path: join(canonicalTarget, "AGENTS.md") },
+      ],
+    };
+  }
+
+  const items = [];
+  let healthyCount = 0;
+  let missingCount = 0;
+  let brokenCount = 0;
+
+  const isAll = configuredIdes.includes("all") || configuredIdes.includes("*");
+
+  // Universal Host Contract: AGENTS.md
+  const agentsMdPath = join(canonicalTarget, "AGENTS.md");
+  if (existsSync(agentsMdPath)) {
+    try {
+      const content = await readFile(agentsMdPath, "utf8");
+      if (content.includes("Context Factory") && content.includes("SHARED.md")) {
+        healthyCount++;
+        items.push({ name: "AGENTS.md", ide: "universal", status: "healthy", path: agentsMdPath });
+      } else {
+        brokenCount++;
+        items.push({ name: "AGENTS.md", ide: "universal", status: "invalid contract content", path: agentsMdPath });
+      }
+    } catch {
+      brokenCount++;
+      items.push({ name: "AGENTS.md", ide: "universal", status: "unreadable", path: agentsMdPath });
+    }
+  } else {
+    missingCount++;
+    items.push({ name: "AGENTS.md", ide: "universal", status: "missing", path: agentsMdPath });
+  }
+
+  // Trae rules
+  if (isAll || configuredIdes.includes("trae")) {
+    const traeRulesPath = join(canonicalTarget, ".trae", "rules", "project_rules.md");
+    if (existsSync(traeRulesPath)) {
+      try {
+        const content = await readFile(traeRulesPath, "utf8");
+        if (content.includes("SHARED.md") || content.includes("orchestrator") || content.includes("Context Factory")) {
+          healthyCount++;
+          items.push({ name: ".trae/rules/project_rules.md", ide: "trae", status: "healthy", path: traeRulesPath });
+        } else {
+          brokenCount++;
+          items.push({ name: ".trae/rules/project_rules.md", ide: "trae", status: "missing orchestrator reference", path: traeRulesPath });
+        }
+      } catch {
+        brokenCount++;
+        items.push({ name: ".trae/rules/project_rules.md", ide: "trae", status: "unreadable", path: traeRulesPath });
+      }
+    } else {
+      missingCount++;
+      items.push({ name: ".trae/rules/project_rules.md", ide: "trae", status: "missing", path: traeRulesPath });
+    }
+  }
+
+  // VS Code / Copilot
+  if (isAll || configuredIdes.includes("vscode") || configuredIdes.includes("copilot")) {
+    const copilotPath = join(canonicalTarget, ".github", "copilot-instructions.md");
+    if (existsSync(copilotPath)) {
+      try {
+        const content = await readFile(copilotPath, "utf8");
+        if (content.length > 20) {
+          healthyCount++;
+          items.push({ name: ".github/copilot-instructions.md", ide: "vscode", status: "healthy", path: copilotPath });
+        } else {
+          brokenCount++;
+          items.push({ name: ".github/copilot-instructions.md", ide: "vscode", status: "empty instructions", path: copilotPath });
+        }
+      } catch {
+        brokenCount++;
+        items.push({ name: ".github/copilot-instructions.md", ide: "vscode", status: "unreadable", path: copilotPath });
+      }
+    } else {
+      missingCount++;
+      items.push({ name: ".github/copilot-instructions.md", ide: "vscode", status: "missing", path: copilotPath });
+    }
+  }
+
+  // Cursor rules
+  if (isAll || configuredIdes.includes("cursor")) {
+    const cursorRulesPath = join(canonicalTarget, ".cursor", "rules", "context-factory.mdc");
+    if (existsSync(cursorRulesPath)) {
+      try {
+        const content = await readFile(cursorRulesPath, "utf8");
+        if (content.length > 20) {
+          healthyCount++;
+          items.push({ name: ".cursor/rules/context-factory.mdc", ide: "cursor", status: "healthy", path: cursorRulesPath });
+        } else {
+          brokenCount++;
+          items.push({ name: ".cursor/rules/context-factory.mdc", ide: "cursor", status: "empty mdc file", path: cursorRulesPath });
+        }
+      } catch {
+        brokenCount++;
+        items.push({ name: ".cursor/rules/context-factory.mdc", ide: "cursor", status: "unreadable", path: cursorRulesPath });
+      }
+    } else {
+      missingCount++;
+      items.push({ name: ".cursor/rules/context-factory.mdc", ide: "cursor", status: "missing", path: cursorRulesPath });
+    }
+  }
+
+  // Antigravity / Gemini
+  if (isAll || configuredIdes.includes("antigravity") || configuredIdes.includes("gemini")) {
+    const geminiMdPath = join(canonicalTarget, "GEMINI.md");
+    if (existsSync(geminiMdPath)) {
+      try {
+        const content = await readFile(geminiMdPath, "utf8");
+        if (content.length > 20) {
+          healthyCount++;
+          items.push({ name: "GEMINI.md", ide: "antigravity", status: "healthy", path: geminiMdPath });
+        } else {
+          brokenCount++;
+          items.push({ name: "GEMINI.md", ide: "antigravity", status: "empty entrypoint", path: geminiMdPath });
+        }
+      } catch {
+        brokenCount++;
+        items.push({ name: "GEMINI.md", ide: "antigravity", status: "unreadable", path: geminiMdPath });
+      }
+    } else {
+      missingCount++;
+      items.push({ name: "GEMINI.md", ide: "antigravity", status: "missing", path: geminiMdPath });
+    }
+  }
+
+  const totalCount = items.length;
+  const passed = totalCount > 0 ? (missingCount === 0 && brokenCount === 0) : true;
+
+  return {
+    passed,
+    isHostRepo,
+    configuredIdes,
+    healthyCount,
+    missingCount,
+    brokenCount,
+    totalCount,
+    items,
+  };
 }
