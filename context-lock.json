@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.14.0",
-  "digest": "sha256:bb6837491840eb64adf63d4931eceb7b4dcc21c22c1cc0d0e78995cecb8f881e",
+  "digest": "sha256:da4741eb414d5e329b77a7dd4273dfd70a4c439dad58454bbcf458a9e7572e73",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -12,7 +12,7 @@
     "CLAUDE.md": "sha256:9807a502d39c2cfadc3d6afab596f5ea11bbdcd506b3d07e31646f47c4e6614f",
     "CODEX.md": "sha256:262d5dc5c150c21c80c737a4f7ba556cfe5d13ffc3153bdf9debf421e2bea6ec",
     "GEMINI.md": "sha256:cca16fa665d661b2874d2ef9a2be5336cb3b31041086c8b2a15bb7b52e890242",
-    "README.md": "sha256:5339445093d6d70e74a30b705f9baf07de3d57f998f6b5cd812a3b1ce537f290",
+    "README.md": "sha256:466453891a59d70fb44397e0d3341197043b3e52b0d4f31bd0a82bf2be56a8ee",
     "agents/README.md": "sha256:a561178dced06bc941779bb808caec0885760c07b90b6bc5ecf043705c3f322f",
     "agents/architect-agent/AGENT.md": "sha256:f3d6003f618eb6b10ec6966ff441d151c20b7c7722d94af724d6d79261432e2b",
     "agents/architect-agent/prompts/subagent-invocation.md": "sha256:56b61708ee7101864f731b894644bc9baac89fccaa813a93d6abe95f7a4441f9",
@@ -74,7 +74,7 @@
     "docs/decisions/0026-submodule-first-ide-onboarding-flow.md": "sha256:cebc846e172c1075b75169db79738c51ea31d393c6c26aa68f00e2a359804f7a",
     "docs/decisions/README.md": "sha256:af911304a94a2740f0702d9598f44c73e9f0c575abdb7dbf18abba405094f7ae",
     "docs/guide/README.md": "sha256:d94360ea22bde81983ffc65f7c31f65d2b68940ec93fa767c7b8a54fc663188e",
-    "docs/guide/cross-workspace-integration.md": "sha256:af9a6ad917c22a9ed1d2e7d33ff498bb1a688c3c0b196a62959206bb106dffbd",
+    "docs/guide/cross-workspace-integration.md": "sha256:5a7092fdda752499ecd99a0f9706f663f345d3f0e2b726dae180c093c56f158b",
     "docs/guide/rules-and-workflows.md": "sha256:ba73cb2f4fb2c557d97271be8991306bbc15315b328a969b8c0bf06673da2270",
     "docs/guide/skills.md": "sha256:91d5ecfddbd370dd5c9d5b9d983500702994cf57b54600ec5407adb49bbc21b0",
     "docs/guide/subagents-lifecycle.md": "sha256:51960eb865eef8b5a88b07882d03f31da36b860f63e38b5392ed2254258ee02a",

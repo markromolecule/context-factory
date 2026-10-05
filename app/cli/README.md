@@ -42,29 +42,45 @@ npm run diff
 ## Command Reference
 
 ### 1. Interactive Project Initialization (`init`)
-Launches an interactive setup wizard to bridge Context Factory into a target project, prompting for target directory, integration method, and IDE selection:
+Launches the streamlined 3-step setup wizard to onboard and bridge Context Factory into any host repository:
+
+1. **Submodule Integration:** Embed Context Factory into `.context-factory` via `git submodule add <url> .context-factory`. If run before submoduling, `init` detects the host environment and offers a hybrid assistant to automatically run or display the command.
+2. **Auto-Detection:** Automatically detects whether it is running from within the submodule or from the host root, resolving target directories and relative paths seamlessly.
+3. **Numbered Multi-Select IDE Menu:** Scans the host repository for existing editor folders (`.vscode/`, `.cursor/`, `.trae/`, `.agents/`) to recommend defaults, then presents an interactive numbered multi-select prompt:
+   - `[1] VS Code` — Scaffolds `.github/copilot-instructions.md`, non-destructive `.vscode/settings.json`, `.vscode/extensions.json`, and `AGENTS.md`.
+   - `[2] Antigravity` — Scaffolds `.agents/` live symlinks (`skills/`, `rules/`, `agents/`, `workflows/`, `AGENTS.md`, `GEMINI.md`) and `.agents/skills.json`.
+   - `[3] Cursor` — Scaffolds modern `.cursor/rules/context-factory.mdc` (with `alwaysApply: true`) alongside `.cursorrules` and `AGENTS.md`.
+   - `[4] Trae` — Scaffolds `.trae/rules/project_rules.md` and `AGENTS.md`.
+   - `[5] All IDEs` — Bridges all supported editors for mixed-editor teams.
+
+Supports single digits (`1`), comma/space-separated digits (`1, 4` or `1 3`), or direct names (`vscode,trae`).
 
 ```sh
-# Interactive guided setup
+# Interactive guided setup (smart scanner & multi-select menu)
 context-cli init
 
-# Non-interactive initialization with flags
-context-cli init --target ../my-app --ide antigravity --method submodule
+# Non-interactive initialization with explicit flags
+context-cli init --target ../my-app --ide vscode,trae --method submodule
 ```
 
 ---
 
 ### 2. Cross-Repository Bridging (`bridge`)
-Generates the complete bridging layer and `.agents/` symlinks in any target/consumer repository:
-- **`.agents/` Directory & Symlinks (Antigravity):** Creates relative symlinks to `skills/`, `rules/`, `agents/`, `workflows/`, `AGENTS.md`, and `GEMINI.md`.
-- **IDE Entry Contracts:** `AGENTS.md`, `GEMINI.md`, `CLAUDE.md`, `CODEX.md`, `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md`.
-- **Host Scaffolding:** `docs/tasks/README.md`, `docs/decisions/README.md`, and `rules/README.md`.
-- **Bridge Configuration:** `.context-bridge.json`.
-- **Host `package.json` Scripts:** Helper scripts for context resolution, doctor diagnostics, updates, and task planning.
+Generates the complete bridging layer and editor configurations in any target host repository:
+- **VS Code & GitHub Copilot:** `.github/copilot-instructions.md`, `.vscode/extensions.json`, and non-destructive JSON merge for `.vscode/settings.json` (preserves existing user font, theme, and tab preferences).
+- **Trae AI IDE:** `.trae/rules/project_rules.md` referencing Context Factory's orchestrator contracts, rules, and workflows.
+- **Cursor IDE:** Modern `.cursor/rules/context-factory.mdc` rules alongside legacy `.cursorrules`.
+- **Antigravity & Gemini:** `.agents/` directory with relative symlinks to `skills/`, `rules/`, `agents/`, `workflows/`, `AGENTS.md`, `GEMINI.md`, and `.agents/skills.json`.
+- **Universal Entry Point:** `AGENTS.md` orchestrator contract and `docs/tasks/`, `docs/decisions/`, `rules/` scaffolds.
+- **Bridge Configuration:** `.context-bridge.json` tracking configured IDE profiles and relative paths.
+- **Host `package.json` Scripts:** Injects `context:resolve`, `context:doctor`, `context:update`, and `context:bridge`.
 
 ```sh
 # Bridge current directory for all IDEs
 context-cli bridge
+
+# Bridge specific editors (e.g. Trae and VS Code)
+context-cli bridge --target ../my-host-app --ide trae,vscode --method submodule
 
 # Bridge targeting Antigravity specifically with Git Submodule
 context-cli bridge --target ../my-host-app --ide antigravity --method submodule
@@ -107,13 +123,18 @@ context-cli pull --no-doctor
 ---
 
 ### 4. Diagnostics, Health & Auto-Repair (`doctor`)
-Runs a comprehensive multi-point health check across manifest linting, lockfile currency, `.agents` symlink integrity, and evaluation test suites.
+Runs a comprehensive multi-point health check across:
+- **Manifest & Syntax Lint:** Validates YAML frontmatter, schema conformance, and catalog rules.
+- **Lockfile Integrity:** Verifies `context-lock.json` against current repository hashes.
+- **`.agents` Symlink Integrity:** Validates Antigravity live symlinks and `.agents/skills.json`.
+- **Editor Artifact Integrity:** Audits existence and valid contents of Trae (`.trae/rules/project_rules.md`), VS Code (`.github/copilot-instructions.md`), Cursor (`.cursor/rules/context-factory.mdc`), Antigravity (`GEMINI.md`), and universal `AGENTS.md`.
+- **Evaluation Suite:** Verifies 100% pass across core evaluation cases.
 
 ```sh
 # Run doctor diagnostics
 context-cli doctor
 
-# Automatically repair broken or missing symlinks
+# Automatically repair broken or missing symlinks and regenerate missing editor rules
 context-cli doctor --repair
 
 # Check a specific host repository

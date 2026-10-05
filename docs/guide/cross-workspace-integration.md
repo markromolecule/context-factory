@@ -10,37 +10,62 @@ This guide covers how to integrate and use **Context Factory** across multiple p
 
 ---
 
-## 1. Quick Start: Scaffolding a Host Project
+## 1. Quick Start: Submodule-First Onboarding
 
-You can bridge Context Factory into any new or existing project with a single command:
+Context Factory connects to host repositories through a clean 3-step flow:
 
+### Step 1: Add as a Git Submodule
+In your host repository root, add Context Factory as a submodule pointing to `.context-factory`:
 ```sh
-# Option A: Interactive guided wizard (prompted for directory, method, and IDEs)
-context-cli init
+git submodule add <context-factory-git-url> .context-factory
+```
+*(Tip: Running `node path/to/context-factory/app/cli/bin/context-cli.mjs init` before submoduling will detect the host and offer a hybrid assistant to run or display the command!)*
 
-# Option B: Direct bridge targeting Antigravity using Git Submodule
-context-cli bridge --target ./my-app --ide antigravity --method submodule
-
-# Option C: Direct bridge for all IDEs in a shared local workspace
-context-cli bridge --target ./my-app --ide all --method linked
+### Step 2: Launch the Onboarding Wizard
+Run the CLI `init` wizard from within the submodule (it automatically detects the host repository root):
+```sh
+node .context-factory/app/cli/bin/context-cli.mjs init
 ```
 
-### What `context-cli bridge` Generates:
-1. **`.agents/` Directory & Symlinks (for Antigravity):**
-   - `.agents/skills` $\rightarrow$ `<factoryPath>/skills`
-   - `.agents/rules` $\rightarrow$ `<factoryPath>/rules`
-   - `.agents/agents` $\rightarrow$ `<factoryPath>/agents`
-   - `.agents/workflows` $\rightarrow$ `<factoryPath>/workflows`
-   - `.agents/AGENTS.md` $\rightarrow$ `<factoryPath>/AGENTS.md`
-   - `.agents/GEMINI.md` $\rightarrow$ `<factoryPath>/GEMINI.md`
-2. **IDE Entry Point Contracts:** `AGENTS.md`, `GEMINI.md`, `CLAUDE.md`, `CODEX.md`, `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md`.
-3. **Scaffolding Directories:** `docs/tasks/README.md`, `docs/decisions/README.md`, `rules/README.md`.
-4. **Bridge Configuration:** `.context-bridge.json`.
-5. **Host `package.json` Scripts:** Helper scripts for context resolution, doctor diagnostics, updates, and task planning.
+### Step 3: Select Your Preferred AI Code Editor(s)
+The wizard scans your repository for existing editor directories (`.vscode/`, `.cursor/`, `.trae/`, `.agents/`) and presents a numbered multi-select prompt:
+- `[1] VS Code` — Scaffolds `.github/copilot-instructions.md`, non-destructive `.vscode/settings.json`, and `.vscode/extensions.json`.
+- `[2] Antigravity` — Scaffolds `.agents/` live symlinks (`skills/`, `rules/`, `agents/`, `workflows/`, `AGENTS.md`, `GEMINI.md`) and `.agents/skills.json`.
+- `[3] Cursor` — Scaffolds modern `.cursor/rules/context-factory.mdc` (with `alwaysApply: true`) and `.cursorrules`.
+- `[4] Trae` — Scaffolds `.trae/rules/project_rules.md` referencing Context Factory orchestrator contracts and rules.
+- `[5] All IDEs` — Bridges all supported editors for mixed-editor teams.
+
+Input numbers (e.g. `1, 4` or `All`) to configure one or more editors without conflicts.
+
+```sh
+# Or bridge non-interactively with CLI flags:
+context-cli bridge --target ./my-app --ide vscode,trae --method submodule
+```
 
 ---
 
-## 2. Integration Methods Comparison
+## 2. Editor Support & Configuration Details
+
+### Trae IDE (`.trae/rules/project_rules.md`)
+ByteDance's Trae AI IDE uses `.trae/rules/project_rules.md` to define project-level agent rules. Context Factory scaffolds this file with direct directives pointing to the shared orchestrator contract, universal rules, workflows, and task scaffolds.
+
+### VS Code & GitHub Copilot
+Context Factory creates:
+- `.github/copilot-instructions.md` containing core directives and context resolution guides.
+- `.vscode/extensions.json` recommending Copilot and Copilot Chat.
+- `.vscode/settings.json` configuring markdown associations for `.mdc` rule files using **safe JSON merging** (existing user themes, fonts, and preferences are strictly preserved).
+
+### Cursor IDE
+Context Factory provisions:
+- Modern `.cursor/rules/context-factory.mdc` with frontmatter `alwaysApply: true`, ensuring agents automatically index Context Factory rules.
+- Legacy `.cursorrules` in the root directory for backward compatibility.
+
+### Antigravity & Gemini
+Context Factory establishes native `.agents/` symlinks linking rules, workflows, agents, and individual skills directly into the Antigravity discovery root, alongside `GEMINI.md`.
+
+---
+
+## 3. Integration Methods Comparison
 
 | Method | Best For | Pros | Cons |
 | :--- | :--- | :--- | :--- |
@@ -50,20 +75,18 @@ context-cli bridge --target ./my-app --ide all --method linked
 
 ---
 
-## 3. Host Project Architecture & Scoping
+## 4. Host Project Architecture & Scoping
 
-When skills like `plan` or `adr` run in a bridged setup, generated artifacts always land in the **host repository**:
+When skills like `plan`, `context`, or `adr` run in a bridged setup, generated artifacts always land in the **host repository**:
 
 ```
 HOST_REPO_ROOT/
-├── .agents/                    <-- Real folder with relative symlinks to Context Factory
-│   ├── skills                  --> .context-factory/skills (or ../context-factory/skills)
-│   ├── rules                   --> .context-factory/rules (or ../context-factory/rules)
-│   ├── agents                  --> .context-factory/agents
-│   ├── workflows               --> .context-factory/workflows
-│   ├── AGENTS.md               --> .context-factory/AGENTS.md
-│   └── GEMINI.md               --> .context-factory/GEMINI.md
-├── .context-factory/           <-- Submodule (Framework / Rules / Engine / Templates)
+├── .agents/                    <-- Symlinks for Antigravity (skills, rules, workflows)
+├── .trae/rules/                <-- Trae AI rules (project_rules.md)
+├── .cursor/rules/              <-- Cursor modern rules (context-factory.mdc)
+├── .github/                    <-- VS Code Copilot instructions
+├── .vscode/                    <-- Merged VS Code settings and extensions
+├── .context-factory/           <-- Git Submodule (Framework / Rules / Engine / Templates)
 ├── .context-bridge.json        <-- Bridge configuration metadata
 ├── docs/                       <-- TARGET: Host repo artifacts
 │   ├── context/                <-- Context specifications for this project
@@ -75,16 +98,16 @@ HOST_REPO_ROOT/
 ```
 
 ### Key Working Rules:
-1. **Always open the Host Repository Root in your IDE**: Never open `.context-factory/` directly unless you are developing the context factory itself.
-2. **Antigravity automatically discovers skills & rules**: Native scanning of `.agents/skills/` and `.agents/rules/` indexes all capabilities immediately.
+1. **Always open the Host Repository Root in your IDE**: Open the project root in VS Code, Antigravity, Cursor, or Trae.
+2. **Native AI rule discovery**: Each editor's AI agent immediately detects its tailored configuration folder.
 3. **Artifacts are written to the host root**: `./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/`, `./docs/context/`, and `./docs/decisions/`.
 
 ---
 
-## 4. Diagnostics & Self-Healing Maintenance
+## 5. Diagnostics & Self-Healing Maintenance
 
 ### Checking Health (`doctor`)
-Run `doctor` inside any bridged project to verify manifest synchronization, lock integrity, and symlink validity:
+Run `doctor` inside any bridged project to verify manifest synchronization, lock integrity, symlink validity, and editor artifact integrity:
 
 ```sh
 # Run doctor diagnostic
@@ -92,7 +115,7 @@ npm run context:doctor
 # Or via CLI:
 context-cli doctor
 
-# Automatically repair any broken or missing symlinks:
+# Automatically repair broken/missing symlinks and regenerate missing editor rules:
 context-cli doctor --repair
 ```
 
