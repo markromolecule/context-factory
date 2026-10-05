@@ -4,7 +4,7 @@ type: phase
 parent: "0001-task-submodule-first-flow-and-multi-editor-bridging"
 phase: "01"
 phase_branch: "task/0001/phase-01/integration"
-status: planned
+status: completed
 created: "2026-10-05"
 tags: [task, phase, bridge, generator, trae, vscode, cursor]
 ---
@@ -24,7 +24,7 @@ Extend Context Factory's core bridge engine (`app/cli/core/bridge-generator.mjs`
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 01.01** | Trae, VS Code, and Cursor Generator Enhancements | `unit-01-trae-vscode-cursor-generator.md` | `task/0001/phase-01/unit-01-bridge-core` | `.worktrees/0001/phase-01/unit-01-bridge-core` | `none` | `none` | `planned` |
+| **Unit 01.01** | Trae, VS Code, and Cursor Generator Enhancements | `unit-01-trae-vscode-cursor-generator.md` | `task/0001/phase-01/unit-01-bridge-core` | `.worktrees/0001/phase-01/unit-01-bridge-core` | `none` | `none` | `merged` |
 
 ## Impacted Files & Components
 
@@ -36,7 +36,7 @@ Extend Context Factory's core bridge engine (`app/cli/core/bridge-generator.mjs`
 
 ## Implementation Tasks
 
-- [ ] Unit 01.01 — Implement Trae, VS Code, and Cursor generator logic with safe JSON merge in `bridge-generator.mjs`.
+- [x] Unit 01.01 — Implement Trae, VS Code, and Cursor generator logic with safe JSON merge in `bridge-generator.mjs`.
 
 ## Verification & Testing
 

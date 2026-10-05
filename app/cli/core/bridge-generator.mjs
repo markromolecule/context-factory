@@ -1,7 +1,156 @@
-import { existsSync, realpathSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { cp, lstat, mkdir, readFile, readlink, rm, symlink, unlink, writeFile } from "node:fs/promises";
-import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { root } from "../../../scripts/context-core.mjs";
+
+/**
+ * Detects whether the current directory is running inside a submodule or if target has a submodule.
+ */
+export function detectSubmoduleContext(currentDir = process.cwd()) {
+  const dirName = basename(currentDir);
+  const parentDir = dirname(currentDir);
+
+  const isSubmoduleName = dirName === ".context-factory" || dirName === "context-factory";
+  const parentHasGit = existsSync(join(parentDir, ".git")) || existsSync(join(parentDir, ".gitmodules"));
+
+  if (isSubmoduleName && parentHasGit) {
+    return {
+      isInsideSubmodule: true,
+      hostDir: "..",
+      submoduleDirName: dirName,
+      submodulePath: ".",
+      hasSubmodule: true,
+    };
+  }
+
+  // Check if currentDir has a submodule folder
+  const dotFactory = join(currentDir, ".context-factory");
+  const visibleFactory = join(currentDir, "context-factory");
+
+  if (existsSync(dotFactory)) {
+    return {
+      isInsideSubmodule: false,
+      hostDir: ".",
+      submoduleDirName: ".context-factory",
+      submodulePath: ".context-factory",
+      hasSubmodule: true,
+    };
+  }
+
+  if (existsSync(visibleFactory) && currentDir !== root) {
+    return {
+      isInsideSubmodule: false,
+      hostDir: ".",
+      submoduleDirName: "context-factory",
+      submodulePath: "context-factory",
+      hasSubmodule: true,
+    };
+  }
+
+  return {
+    isInsideSubmodule: false,
+    hostDir: ".",
+    submoduleDirName: null,
+    submodulePath: null,
+    hasSubmodule: false,
+  };
+}
+
+/**
+ * Checks whether the host directory contains .gitmodules and if context-factory is configured.
+ */
+export function checkHostSubmoduleStatus(hostDir = process.cwd()) {
+  const gitmodulesPath = join(hostDir, ".gitmodules");
+  if (!existsSync(gitmodulesPath)) {
+    return {
+      hasGitModules: false,
+      isContextFactorySubmoduled: false,
+      submodulePath: null,
+    };
+  }
+
+  try {
+    const content = readFileSync(gitmodulesPath, "utf8");
+    const isContextFactory = content.includes("context-factory");
+    let submodulePath = null;
+
+    if (isContextFactory) {
+      const match = content.match(/path\s*=\s*(.+)/);
+      if (match) {
+        submodulePath = match[1].trim();
+      } else {
+        submodulePath = ".context-factory";
+      }
+    }
+
+    return {
+      hasGitModules: true,
+      isContextFactorySubmoduled: isContextFactory,
+      submodulePath: submodulePath || (isContextFactory ? ".context-factory" : null),
+    };
+  } catch {
+    return {
+      hasGitModules: false,
+      isContextFactorySubmoduled: false,
+      submodulePath: null,
+    };
+  }
+}
+
+/**
+ * Scans a project directory for installed/configured IDE folders.
+ * Returns array of detected IDE identifiers ('vscode', 'cursor', 'trae', 'antigravity').
+ */
+export function detectInstalledIdes(targetDir = process.cwd()) {
+  const detected = [];
+  if (existsSync(join(targetDir, ".vscode"))) {
+    detected.push("vscode");
+  }
+  if (existsSync(join(targetDir, ".cursor")) || existsSync(join(targetDir, ".cursorrules"))) {
+    detected.push("cursor");
+  }
+  if (existsSync(join(targetDir, ".trae"))) {
+    detected.push("trae");
+  }
+  if (existsSync(join(targetDir, ".agents")) || existsSync(join(targetDir, "GEMINI.md"))) {
+    detected.push("antigravity");
+  }
+  return detected;
+}
+
+/**
+ * Parses user choice input from the interactive IDE menu.
+ * Maps '1' -> 'vscode', '2' -> 'antigravity', '3' -> 'cursor', '4' -> 'trae', '5' -> 'all'.
+ * Supports comma/space separated inputs (e.g. '1, 4' or '1 4').
+ */
+export function parseIdeChoices(input = "", detectedDefaults = []) {
+  const cleaned = (input || "").trim().toLowerCase();
+  if (!cleaned) {
+    return detectedDefaults && detectedDefaults.length > 0 ? detectedDefaults : ["all"];
+  }
+
+  // Split on commas or whitespace
+  const tokens = cleaned.split(/[\s,]+/).filter(Boolean);
+  const result = new Set();
+
+  for (const token of tokens) {
+    if (token === "1" || token === "vscode") {
+      result.add("vscode");
+    } else if (token === "2" || token === "antigravity" || token === "agy" || token === "gemini") {
+      result.add("antigravity");
+    } else if (token === "3" || token === "cursor") {
+      result.add("cursor");
+    } else if (token === "4" || token === "trae") {
+      result.add("trae");
+    } else if (token === "5" || token === "all" || token === "*") {
+      return ["all"];
+    } else {
+      result.add(token);
+    }
+  }
+
+  return result.size > 0 ? Array.from(result) : ["all"];
+}
 
 /**
  * Detects the package manager used in the target directory by checking lockfiles.

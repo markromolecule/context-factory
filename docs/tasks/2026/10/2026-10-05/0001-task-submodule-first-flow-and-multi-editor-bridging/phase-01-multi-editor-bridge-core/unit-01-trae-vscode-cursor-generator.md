@@ -5,7 +5,7 @@ parent: "phase-01-multi-editor-bridge-core"
 unit: "01.01"
 branch: "task/0001/phase-01/unit-01-bridge-core"
 worktree: ".worktrees/0001/phase-01/unit-01-bridge-core"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, bridge, generator, trae, vscode, cursor]
 depends_on: []
@@ -64,6 +64,7 @@ Enhance `generateBridge` in `app/cli/core/bridge-generator.mjs` to scaffold Trae
   - `generateBridge` with `--ide vscode` merges `.vscode/settings.json` preserving pre-existing keys.
   - `generateBridge` with `--ide cursor` creates both `.cursorrules` and `.cursor/rules/context-factory.mdc`.
 - Command: `node --test tests/bridge-generator.test.mjs`
+- Result: **PASS** (4/4 tests passed in 19ms). Commit: `7355b1a`.
 
 ## Rollback
 
@@ -71,8 +72,9 @@ Revert modifications to `app/cli/core/bridge-generator.mjs`.
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-01, AC-02
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-01, AC-02
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`7355b1a`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes (4/4 unit tests, 23/23 evaluations)
+
