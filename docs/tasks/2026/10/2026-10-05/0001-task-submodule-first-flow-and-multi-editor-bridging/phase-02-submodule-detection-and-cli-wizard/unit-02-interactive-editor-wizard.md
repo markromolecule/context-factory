@@ -5,7 +5,7 @@ parent: "phase-02-submodule-detection-and-cli-wizard"
 unit: "02.02"
 branch: "task/0001/phase-02/unit-02-editor-wizard"
 worktree: ".worktrees/0001/phase-02/unit-02-editor-wizard"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, cli, init, wizard, multi-select, ide]
 depends_on: ["02.01"]
@@ -71,6 +71,7 @@ Build the smart IDE scanner and interactive numbered multi-select prompt `[1] VS
   - Empty input defaults to detected editors, or `all` if none detected.
   - Target containing `.vscode` and `.cursor` is detected accurately.
 - Command: `node --test tests/editor-wizard.test.mjs`
+- Result: **PASS** (2/2 unit tests passed in 3.8ms). Commit: `5e34e02`.
 
 ## Rollback
 
@@ -78,8 +79,8 @@ Revert modifications to `app/cli/commands/init.mjs` and `app/cli/commands/bridge
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-04
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-04
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`5e34e02`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes (2/2 unit tests, 23/23 evaluations)

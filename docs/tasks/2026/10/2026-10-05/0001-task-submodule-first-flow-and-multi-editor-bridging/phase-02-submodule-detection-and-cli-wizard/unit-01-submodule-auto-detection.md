@@ -5,7 +5,7 @@ parent: "phase-02-submodule-detection-and-cli-wizard"
 unit: "02.01"
 branch: "task/0001/phase-02/unit-01-submodule-detection"
 worktree: ".worktrees/0001/phase-02/unit-01-submodule-detection"
-status: planned
+status: verified
 created: "2026-10-05"
 tags: [task, unit, submodule, detection, cli, init]
 depends_on: ["01.01"]
@@ -63,6 +63,7 @@ Implement smart host/submodule detection and hybrid git submodule guidance in `a
   - Inside host repo with `.gitmodules`: `checkHostSubmoduleStatus` reports `alreadySubmoduled: true`.
   - Host repo without submodule: correctly triggers hybrid assistant branch.
 - Command: `node --test tests/submodule-detection.test.mjs`
+- Result: **PASS** (2/2 unit tests passed in 4.7ms). Commit: `cdde589`.
 
 ## Rollback
 
@@ -70,8 +71,9 @@ Revert additions to `app/cli/core/bridge-generator.mjs` and `app/cli/commands/in
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-03
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-03
+- [x] Executed inside dedicated worktree without touching main workspace
+- [x] Changes committed cleanly to unit branch (`cdde589`)
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes (2/2 unit tests, 23/23 evaluations)
+

@@ -23,7 +23,7 @@ Equip `context-cli init` and `bridge` with intelligent environment detection (au
 
 | Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 02.01** | Submodule Environment Auto-Detection and Hybrid Assistant | `unit-01-submodule-auto-detection.md` | `task/0001/phase-02/unit-01-submodule-detection` | `.worktrees/0001/phase-02/unit-01-submodule-detection` | `01.01` | `none` | `planned` |
+| **Unit 02.01** | Submodule Environment Auto-Detection and Hybrid Assistant | `unit-01-submodule-auto-detection.md` | `task/0001/phase-02/unit-01-submodule-detection` | `.worktrees/0001/phase-02/unit-01-submodule-detection` | `01.01` | `none` | `merged` |
 | **Unit 02.02** | Installed IDE Folder Scanner & Numbered Multi-Select Onboarding Menu | `unit-02-interactive-editor-wizard.md` | `task/0001/phase-02/unit-02-editor-wizard` | `.worktrees/0001/phase-02/unit-02-editor-wizard` | `02.01` | `none` | `planned` |
 
 ## Impacted Files & Components
@@ -39,7 +39,7 @@ Equip `context-cli init` and `bridge` with intelligent environment detection (au
 
 ## Implementation Tasks
 
-- [ ] Unit 02.01 — Implement submodule environment auto-detection and hybrid assistant in `bridge-generator.mjs` and `init.mjs`.
+- [x] Unit 02.01 — Implement submodule environment auto-detection and hybrid assistant in `bridge-generator.mjs` and `init.mjs`.
 - [ ] Unit 02.02 — Implement IDE directory scanner, interactive multi-select menu, and updated bridge CLI flags.
 
 ## Verification & Testing
