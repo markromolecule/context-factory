@@ -197,7 +197,8 @@
     "docs/decisions/0023-laravel-modular-domain-architecture-and-unified-conventions.md",
     "docs/decisions/0024-unit-execution-review-and-testing-skills.md",
     "docs/decisions/0025-lhg-minimal-input-and-session-state-primitives.md",
-    "docs/decisions/0026-submodule-first-ide-onboarding-flow.md"
+    "docs/decisions/0026-submodule-first-ide-onboarding-flow.md",
+    "docs/decisions/0027-language-rule-lifecycle-binding-and-verification.md"
   ],
   "tools": [
     "evals/plan-check.test.mjs",

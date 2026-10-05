@@ -34,3 +34,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0024-unit-execution-review-and-testing-skills|Unit Lifecycle Primitives: Plan Review, Test-Driven Execution, and Diff Review]]
 - [[docs/decisions/0025-lhg-minimal-input-and-session-state-primitives|LHG Architecture: Minimal Input and Session State Checkpoint Primitives]]
 - [[docs/decisions/0026-submodule-first-ide-onboarding-flow|Submodule-First Flow & Multi-Editor Bridging Architecture (VS Code, Antigravity, Cursor, Trae)]]
+- [[docs/decisions/0027-language-rule-lifecycle-binding-and-verification|Language Rule Lifecycle Binding, Precedence, and Verification]]
