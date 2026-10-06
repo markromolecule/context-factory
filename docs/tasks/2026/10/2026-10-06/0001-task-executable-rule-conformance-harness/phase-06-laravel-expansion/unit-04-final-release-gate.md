@@ -5,7 +5,7 @@ parent: "phase-06-laravel-expansion"
 unit: "06.04"
 branch: "task/0001/phase-06/final-release-gate"
 worktree: ".worktrees/0001/phase-06/final-release-gate"
-status: verified
+status: merged
 created: "2026-10-06"
 tags: [task, unit, release, doctor, sync]
 depends_on: ["06.02", "06.03"]
