@@ -1,7 +1,8 @@
 import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { frontmatter, root } from "./context-core.mjs";
 import { parseRuleCatalog } from "../orchestrator/rules/descriptor-parser.mjs";
+import { verifyDiscoveryBrief } from "./handoff-contract.mjs";
 
 /**
  * Builds dependency graph from unit objects
@@ -794,6 +795,14 @@ export async function validatePlanDoneCheck(taskDirPath, units, graph) {
   return { applicable: true, valid: diagnostics.length === 0, diagnostics };
 }
 
+export async function validatePlanHandoff(taskDirPath) {
+  const master = await findTaskMaster(taskDirPath);
+  const briefPath = master?.meta?.discovery_brief;
+  if (!briefPath) return { applicable: false, valid: true, diagnostics: [] };
+  const result = await verifyDiscoveryBrief(resolve(taskDirPath, briefPath));
+  return result.valid ? { applicable: true, valid: true, diagnostics: [] } : { applicable: true, valid: false, diagnostics: [{ failureClass: "handoff", message: result.message, remediation: "Release a fresh grill brief before planning." }] };
+}
+
 /**
  * CLI runner for plan:check command
  * @param {string} taskDirPath Path to task directory
@@ -818,8 +827,9 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
     const scopeResult = checkDisjointScopes(parallelPairs);
     const ruleResult = await validatePlanRules(units);
     const doneCheckResult = await validatePlanDoneCheck(taskDirPath, units, graph);
+    const handoffResult = await validatePlanHandoff(taskDirPath);
 
-    const isValid = cycleResult.valid && scopeResult.valid && ruleResult.valid && doneCheckResult.valid;
+    const isValid = cycleResult.valid && scopeResult.valid && ruleResult.valid && doneCheckResult.valid && handoffResult.valid;
 
     if (flags.json) {
       console.log(
@@ -838,6 +848,7 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
               missingUnits: ruleResult.missingUnits,
             },
             doneCheck: doneCheckResult,
+            handoff: handoffResult,
           },
           null,
           2

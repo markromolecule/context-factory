@@ -19,6 +19,7 @@ import { handleTaskCommand } from "../app/cli/commands/task.mjs";
 import { parseArgs } from "../app/cli/core/options.mjs";
 import { runPlanCheckCli } from "./plan-check.mjs";
 import { runSkillAccessCheckCli } from "./skill-access-check.mjs";
+import { issueExecutionPacket, releaseDiscoveryBrief, verifyDiscoveryBrief, verifyExecutionPacket } from "./handoff-contract.mjs";
 
 export function usage() {
   console.log(`Context Factory Harness CLI
@@ -37,6 +38,10 @@ Usage:
   node scripts/harness-cli.mjs task:list [--json]
   node scripts/harness-cli.mjs plan:check <task-dir> [--json]
   node scripts/harness-cli.mjs skill:access-check <skill-path> [...]
+  node scripts/harness-cli.mjs handoff:release-brief <source> <brief>
+  node scripts/harness-cli.mjs handoff:verify-brief <brief>
+  node scripts/harness-cli.mjs handoff:issue-packet <plan> <packet> --review <ref> --approval <ref>
+  node scripts/harness-cli.mjs handoff:verify-packet <packet>
   node scripts/harness-cli.mjs validate <file-path> --schema <schema-name>
   node scripts/harness-cli.mjs eval [--unit] [--datasets] [--json] [--quiet] [--provider <name>]
   node scripts/harness-cli.mjs lock [--check]
@@ -169,6 +174,21 @@ export async function handleCli(argv = process.argv.slice(2)) {
 
   if (command === "skill:access-check") {
     return runSkillAccessCheckCli(parsedArgs);
+  }
+
+  if (command === "handoff:release-brief") {
+    if (parsedArgs.length !== 2) throw new Error("handoff:release-brief requires <source> <brief>");
+    output(await releaseDiscoveryBrief({ sourcePath: parsedArgs[0], briefPath: parsedArgs[1] })); return 0;
+  }
+  if (command === "handoff:verify-brief") {
+    const result = await verifyDiscoveryBrief(parsedArgs[0]); if (!result.valid) console.error(result.message); else output(result); return result.valid ? 0 : 1;
+  }
+  if (command === "handoff:issue-packet") {
+    if (parsedArgs.length !== 2) throw new Error("handoff:issue-packet requires <plan> <packet>");
+    output(await issueExecutionPacket({ planPath: parsedArgs[0], packetPath: parsedArgs[1], reviewReference: flags.review, approvalReference: flags.approval })); return 0;
+  }
+  if (command === "handoff:verify-packet") {
+    const result = await verifyExecutionPacket(parsedArgs[0]); if (!result.valid) console.error(result.message); else output(result); return result.valid ? 0 : 1;
   }
 
   if (command === "run") {

@@ -6,7 +6,7 @@ unit: "03.02"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
 checkout_mode: worktree
 checkout_path: ".worktrees/PLN-0003-skill-lifecycle-handoffs"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit]
 depends_on: ["03.01"]
@@ -38,6 +38,12 @@ Dependency units are verified and their phase checkpoints accepted. Recheck targ
 - scripts/harness-cli.mjs
 - scripts/plan-check.mjs
 - evals/handoff-contract.test.mjs
+- context-manifest.json
+- context-lock.json
+- docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/phase-03-implementation-and-tests/phase.md
+- docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/phase-03-implementation-and-tests/unit-02-handoff-freshness.md
+
+The manifest inventories the handoff contract and its tests; the lock pins those canonical paths. The task artifacts record the execution evidence.
 
 **Out of scope:** Do not implement per-skill ACLs, change Git topology, or create approval packets from an unreviewed plan.
 
@@ -65,14 +71,19 @@ Applicable language and architecture rules take precedence over conflicting proc
 - git diff --check
 - **Conformance gate:** Run context-cli preflight for exact modified scope, then context-cli conform; record PASS report ID, diff hash, and binding hash. If unavailable or blocked, leave the unit incomplete.
 
+### Execution evidence
+
+- **Focused checks:** `node --test evals/handoff-contract.test.mjs` passed 4/4. CLI release/verify checks passed for a released brief and approved packet. `node scripts/context.mjs doctor` passed 31/31; task `plan:check` and `git diff --check` passed.
+- **Conformance:** PASS `report-binding-adhoc-00-00-753fbce05d96-1791306808514`; binding hash `sha256:753fbce05d96ff06526b6c22694cc7926ca103370246bc81562f72e0c1c77b74`; diff hash `sha256:d44a4629b919344129dace0aa1a434eecae4daed0821d0aa5cc61d25c305a950`.
+
 ## Rollback
 
 Stop issuing new packets and revert the handoff CLI/contract; retain existing artifacts for inspection rather than deleting them.
 
 ## Definition of done
 
-- [ ] AC-06 maps to this unit's passing evidence.
-- [ ] Every stale or unapproved handoff fails before execution.
-- [ ] Scope review finds no unallocated files.
-- [ ] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
-- [ ] Commit message records PLN-0003 and 03.02; stop at the required checkpoint.
+- [x] AC-06 maps to this unit's passing evidence.
+- [x] Every stale or unapproved handoff fails before execution.
+- [x] Scope review finds no unallocated files.
+- [x] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
+- [x] Commit message records PLN-0003 and 03.02; stop at the required checkpoint.
