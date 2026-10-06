@@ -11,8 +11,8 @@ export function getSessionProjectRoot(cwd = process.cwd()) {
   let curr = resolve(cwd);
   while (curr !== dirname(curr)) {
     if (existsSync(join(curr, ".context-bridge.json")) ||
-        existsSync(join(curr, "context-manifest.json")) ||
-        existsSync(join(curr, ".git"))) {
+      existsSync(join(curr, "context-manifest.json")) ||
+      existsSync(join(curr, ".git"))) {
       return curr;
     }
     curr = dirname(curr);
@@ -137,23 +137,28 @@ export async function resolveActiveTask(cwd = process.cwd()) {
   // Search inside active task directory for phase and unit files
   try {
     const taskEntries = await readdir(join(root, activeTaskDir), { withFileTypes: true });
-    for (const entry of taskEntries) {
-      if (entry.isDirectory() && entry.name.startsWith("phase-")) {
-        const phaseNum = entry.name.split("-")[1];
-        if (!activePhase) activePhase = phaseNum;
-        const phaseUnits = await readdir(join(root, activeTaskDir, entry.name), { withFileTypes: true }).catch(() => []);
-        for (const u of phaseUnits) {
-          if (u.name.startsWith("unit-") && u.name.endsWith(".md")) {
-            const unitPath = join(activeTaskDir, entry.name, u.name).replaceAll("\\", "/");
-            const content = await readFile(join(root, unitPath), "utf8");
-            if (content.includes("status: planned") || content.includes("status: in-progress")) {
-              activeUnitFile = unitPath;
-              activeUnit = u.name.replace(/^unit-/, "").replace(/\.md$/, "");
-              break;
-            }
-          }
+    const phaseEntries = taskEntries
+      .filter((e) => e.isDirectory() && e.name.startsWith("phase-"))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    for (const entry of phaseEntries) {
+      const phaseNum = entry.name.split("-")[1];
+      const phaseUnits = await readdir(join(root, activeTaskDir, entry.name), { withFileTypes: true }).catch(() => []);
+      const sortedUnits = phaseUnits
+        .filter((u) => u.name.startsWith("unit-") && u.name.endsWith(".md"))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      for (const u of sortedUnits) {
+        const unitPath = join(activeTaskDir, entry.name, u.name).replaceAll("\\", "/");
+        const content = await readFile(join(root, unitPath), "utf8");
+        if (content.includes("status: planned") || content.includes("status: in-progress")) {
+          if (!activePhase) activePhase = phaseNum;
+          activeUnitFile = unitPath;
+          activeUnit = u.name.replace(/^unit-/, "").replace(/\.md$/, "");
+          break;
         }
       }
+      if (activeUnitFile) break;
     }
   } catch {
     // Non-fatal

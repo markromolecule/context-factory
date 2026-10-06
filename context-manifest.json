@@ -201,7 +201,8 @@
     "docs/decisions/0025-lhg-minimal-input-and-session-state-primitives.md",
     "docs/decisions/0026-submodule-first-ide-onboarding-flow.md",
     "docs/decisions/0027-language-rule-lifecycle-binding-and-verification.md",
-    "docs/decisions/0028-cli-ux-modernization-and-code-health-skills.md"
+    "docs/decisions/0028-cli-ux-modernization-and-code-health-skills.md",
+    "docs/decisions/0029-executable-rule-conformance-harness.md"
   ],
   "tools": [
     "evals/plan-check.test.mjs",
