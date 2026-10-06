@@ -134,7 +134,7 @@ No product-policy blocker remains. Exact host tool commands are discovered per r
 02.01 -> 02.03
 {02.02, 02.03} -> 03.01 -> 03.02 -> 03.03
 03.03 -> {04.01, 04.02} -> 04.03
-04.03 -> {05.01, 05.02, 05.03} -> 05.04 -> DEVELOPER CHECKPOINT
+04.03 -> 05.00 -> {05.01, 05.02, 05.03} -> 05.04 -> DEVELOPER CHECKPOINT
 05.04 -> 06.01 -> {06.02, 06.03} -> 06.04
 ```
 
@@ -157,6 +157,7 @@ No product-policy blocker remains. Exact host tool commands are discovered per r
 | 05 | 05.02 | `task/0001/phase-05/typescript-data-ui` | `.worktrees/0001/phase-05/typescript-data-ui` | `task/0001/phase-05-integration` |
 | 05 | 05.03 | `task/0001/phase-05/global-solid-contracts` | `.worktrees/0001/phase-05/global-solid-contracts` | `task/0001/phase-05-integration` |
 | 05 | 05.04 | `task/0001/phase-05/typescript-release-gate` | `.worktrees/0001/phase-05/typescript-release-gate` | `task/0001/phase-05-integration` |
+| 05 | 05.00 | `task/0001/phase-05/conformance-scope-repair` | `.worktrees/0001/phase-05/conformance-scope-repair` | `task/0001/phase-05-integration` |
 | 06 | 06.01 | `task/0001/phase-06/laravel-adapter` | `.worktrees/0001/phase-06/laravel-adapter` | `task/0001/phase-06-integration` |
 | 06 | 06.02 | `task/0001/phase-06/laravel-http-application` | `.worktrees/0001/phase-06/laravel-http-application` | `task/0001/phase-06-integration` |
 | 06 | 06.03 | `task/0001/phase-06/laravel-data-security` | `.worktrees/0001/phase-06/laravel-data-security` | `task/0001/phase-06-integration` |

@@ -8,7 +8,7 @@ worktree: ".worktrees/0001/phase-05/global-solid-contracts"
 status: planned
 created: "2026-10-06"
 tags: [task, unit, global, solid, rules]
-depends_on: ["04.03"]
+depends_on: ["05.00"]
 parallelizable_with: ["05.01", "05.02"]
 ---
 
@@ -52,8 +52,8 @@ Classify global and SOLID rules as cross-stack contracts with precise applicabil
 ## Verification
 
 - **Migration tests:** unique IDs and complete mode/evidence metadata.
-- **Resolver contract tests:** action, documentation, and code scopes demonstrate narrow selection.
-- Commands: scoped catalog audit; focused binding tests; `npm run lint`.
+- **Resolver contract tests:** action, documentation, and code scopes demonstrate narrow selection, including a SOLID-only scope that excludes unrelated Git, security, and naming directives.
+- Commands: scoped catalog audit; focused binding tests. Repository-wide `npm run lint` is deferred to Unit 05.04 because this unit intentionally does not own `context-lock.json`.
 
 ## Rollback
 

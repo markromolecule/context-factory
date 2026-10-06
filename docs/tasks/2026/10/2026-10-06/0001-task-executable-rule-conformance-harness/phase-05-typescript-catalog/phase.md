@@ -23,13 +23,15 @@ Classify and migrate the TypeScript/global/SOLID directives, audit enforcement c
 
 | Unit | Artifact | Branch | Worktree | Depends on | Parallelizable |
 |---|---|---|---|---|---|
-| 05.01 TypeScript Common/Backend | `unit-01-typescript-common-backend.md` | `task/0001/phase-05/typescript-common-backend` | `.worktrees/0001/phase-05/typescript-common-backend` | 04.03 | 05.02, 05.03 |
-| 05.02 TypeScript Data/Hooks/UI | `unit-02-typescript-data-ui.md` | `task/0001/phase-05/typescript-data-ui` | `.worktrees/0001/phase-05/typescript-data-ui` | 04.03 | 05.01, 05.03 |
-| 05.03 Global/SOLID Contracts | `unit-03-global-solid-contracts.md` | `task/0001/phase-05/global-solid-contracts` | `.worktrees/0001/phase-05/global-solid-contracts` | 04.03 | 05.01, 05.02 |
+| 05.00 Conformance Scope Repair | `unit-00-conformance-scope-repair.md` | `task/0001/phase-05/conformance-scope-repair` | `.worktrees/0001/phase-05/conformance-scope-repair` | 04.03 | none |
+| 05.01 TypeScript Common/Backend | `unit-01-typescript-common-backend.md` | `task/0001/phase-05/typescript-common-backend` | `.worktrees/0001/phase-05/typescript-common-backend` | 05.00 | 05.02, 05.03 |
+| 05.02 TypeScript Data/Hooks/UI | `unit-02-typescript-data-ui.md` | `task/0001/phase-05/typescript-data-ui` | `.worktrees/0001/phase-05/typescript-data-ui` | 05.00 | 05.01, 05.03 |
+| 05.03 Global/SOLID Contracts | `unit-03-global-solid-contracts.md` | `task/0001/phase-05/global-solid-contracts` | `.worktrees/0001/phase-05/global-solid-contracts` | 05.00 | 05.01, 05.02 |
 | 05.04 TypeScript Release Gate | `unit-04-typescript-release-gate.md` | `task/0001/phase-05/typescript-release-gate` | `.worktrees/0001/phase-05/typescript-release-gate` | 05.01, 05.02, 05.03 | none |
 
 ## Phase verification and mandatory stop
 
+- Only Unit 05.04 performs `npm run sync`, lock refresh, and repository-wide `npm run lint`; isolated catalog units run their focused contract tests and defer the lock-dependent lint gate to 05.04.
 - Full catalog audit, adversarial evaluations, sync, lock check, and doctor must pass.
 - Produce directive counts by mode/status without counting unsupported as enforced.
 - **STOP after Phase 5.** Present the TypeScript evidence to the developer. Do not begin Phase 6 until the developer explicitly continues.

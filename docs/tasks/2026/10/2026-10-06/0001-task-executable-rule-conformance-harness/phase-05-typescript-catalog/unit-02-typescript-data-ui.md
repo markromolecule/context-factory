@@ -8,7 +8,7 @@ worktree: ".worktrees/0001/phase-05/typescript-data-ui"
 status: planned
 created: "2026-10-06"
 tags: [task, unit, typescript, database, hooks, ui]
-depends_on: ["04.03"]
+depends_on: ["05.00"]
 parallelizable_with: ["05.01", "05.03"]
 ---
 
@@ -51,7 +51,7 @@ Classify database, hooks, and UI directives with narrow layer/path applicability
 
 - **Migration tests:** every directory parses with unique IDs and registered verifiers.
 - **Selection contract tests:** representative paths bind only their layer-relevant directives.
-- Commands: scoped catalog audit; focused binding fixtures; `npm run lint`.
+- Commands: scoped catalog audit; focused binding fixtures. Repository-wide `npm run lint` is deferred to Unit 05.04 because this unit intentionally does not own `context-lock.json`.
 
 ## Rollback
 

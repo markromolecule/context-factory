@@ -8,7 +8,7 @@ worktree: ".worktrees/0001/phase-05/typescript-common-backend"
 status: planned
 created: "2026-10-06"
 tags: [task, unit, typescript, backend, rules]
-depends_on: ["04.03"]
+depends_on: ["05.00"]
 parallelizable_with: ["05.02", "05.03"]
 ---
 
@@ -52,7 +52,7 @@ Add stable applicability and enforcement metadata to TypeScript common/backend r
 
 - **Migration/contract tests:** parse every scoped rule and validate uniqueness, verifier existence, and no lost enforceable statement.
 - **Review checklist:** diff contains metadata/markers only unless separately justified.
-- Commands: catalog audit scoped to `rules/typescript/common` and `rules/typescript/backend`; `npm run lint`.
+- Commands: catalog audit scoped to `rules/typescript/common` and `rules/typescript/backend`. Repository-wide `npm run lint` is deferred to Unit 05.04 because this unit intentionally does not own `context-lock.json`.
 
 ## Rollback
 
