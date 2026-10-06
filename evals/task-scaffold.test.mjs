@@ -5,7 +5,8 @@ import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { scaffoldTask } from "../scripts/task-workflow.mjs";
+import { listTasks, scaffoldTask } from "../scripts/task-workflow.mjs";
+import { releasePlanIdReservation, reserveNextPlanId } from "../scripts/plan-id-reservation.mjs";
 
 const execFileAsync = promisify(execFile);
 const contextCliPath = join(process.cwd(), "scripts/context.mjs");
@@ -20,6 +21,9 @@ describe("Evaluation Suite: Task Scaffolding & Plan Check Integration", () => {
 
     assert.ok(res.taskId, "taskId should be defined");
     assert.ok(res.baseBranch, "baseBranch should be defined");
+    assert.match(res.taskId, /^PLN-\d{4}$/);
+    assert.match(res.baseBranch, /^feat\/PLN-\d{4}-payment-processing-service$/);
+    assert.match(res.planPath, /\/feat-PLN-\d{4}-payment-processing-service\.md$/);
     assert.equal(res.units.length, 4, "Should scaffold 4 starter units for feature type");
 
     // Verify all rendered files contain zero unparsed template tokens
@@ -34,8 +38,8 @@ describe("Evaluation Suite: Task Scaffolding & Plan Check Integration", () => {
 
     // Verify starter unit branch and worktree format
     for (const u of res.units) {
-      assert.match(u.branch, /^task\/\d{4}\/phase-\d{2}\/unit-01-[a-z0-9-]+$/);
-      assert.match(u.worktree, /^\.worktrees\/\d{4}\/phase-\d{2}\/unit-01-[a-z0-9-]+$/);
+      assert.match(u.branch, /^task\/PLN-\d{4}\/phase-\d{2}\/unit-01-[a-z0-9-]+$/);
+      assert.match(u.worktree, /^\.worktrees\/PLN-\d{4}\/phase-\d{2}\/unit-01-[a-z0-9-]+$/);
     }
   });
 
@@ -94,5 +98,52 @@ describe("Evaluation Suite: Task Scaffolding & Plan Check Integration", () => {
     assert.equal(noUnitsJson.units.length, 0);
     const unitFiles = noUnitsJson.files.filter((f) => f.includes("/unit-"));
     assert.equal(unitFiles.length, 0);
+  });
+
+  it("Case 5: lists a historical README plan and a named plan once each", async () => {
+    const temporary = await mkdtemp(join(tmpdir(), "cf-task-list-"));
+    try {
+      await execFileAsync("git", ["init", "--quiet", temporary]);
+      await execFileAsync("git", ["-C", temporary, "config", "user.email", "test@example.com"]);
+      await execFileAsync("git", ["-C", temporary, "config", "user.name", "Test User"]);
+      await writeFile(join(temporary, "README.md"), "fixture\n");
+      await execFileAsync("git", ["-C", temporary, "add", "README.md"]);
+      await execFileAsync("git", ["-C", temporary, "commit", "--quiet", "-m", "fixture"]);
+
+      const legacyPath = join(temporary, "docs/tasks/2026/01/2026-01-01/0001-task-legacy/README.md");
+      await mkdir(dirname(legacyPath), { recursive: true });
+      await writeFile(legacyPath, "---\ntitle: Legacy\ntype: task\nstatus: planned\ncreated: 2026-01-01\n---\n");
+      await scaffoldTask({ title: "Named Plan", targetDir: temporary });
+
+      const tasks = await listTasks(temporary);
+      assert.equal(tasks.length, 2);
+      assert.equal(new Set(tasks.map((task) => task.path)).size, 2);
+      assert.ok(tasks.some((task) => task.path.endsWith("README.md")));
+      assert.ok(tasks.some((task) => /feat-PLN-\d{4}-named-plan\.md$/.test(task.path)));
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  });
+
+  it("Case 6: releases an unused ID when scaffolding fails", async () => {
+    const temporary = await mkdtemp(join(tmpdir(), "cf-task-recovery-"));
+    try {
+      await execFileAsync("git", ["init", "--quiet", temporary]);
+      await execFileAsync("git", ["-C", temporary, "config", "user.email", "test@example.com"]);
+      await execFileAsync("git", ["-C", temporary, "config", "user.name", "Test User"]);
+      await writeFile(join(temporary, "README.md"), "fixture\n");
+      await execFileAsync("git", ["-C", temporary, "add", "README.md"]);
+      await execFileAsync("git", ["-C", temporary, "commit", "--quiet", "-m", "fixture"]);
+
+      const preview = await scaffoldTask({ title: "Recovery Plan", targetDir: temporary, dryRun: true });
+      await mkdir(join(temporary, preview.planPath), { recursive: true });
+
+      await assert.rejects(scaffoldTask({ title: "Recovery Plan", targetDir: temporary }));
+      const reservation = await reserveNextPlanId({ repository: temporary });
+      assert.equal(reservation.id, "PLN-0001");
+      await releasePlanIdReservation({ repository: temporary, id: reservation.id, owner: reservation.owner });
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
   });
 });

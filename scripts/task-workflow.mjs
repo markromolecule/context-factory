@@ -2,6 +2,14 @@ import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { frontmatter, readText, root } from "./context-core.mjs";
+import {
+  createPlanBranchName,
+  planFilenameForBranch,
+  previewNextPlanId,
+  releasePlanIdReservation,
+  reserveNextPlanId,
+  validatePlanSlug,
+} from "./plan-id-reservation.mjs";
 
 const DEFAULT_PHASES = {
   feature: [
@@ -27,12 +35,37 @@ const DEFAULT_PHASES = {
   ],
 };
 
+const BRANCH_TYPE_ALIASES = {
+  feature: "feat",
+  defect: "fix",
+};
+
+const PHASE_PROFILE_BY_BRANCH_TYPE = {
+  feat: "feature",
+  fix: "defect",
+  refactor: "refactor",
+  migration: "migration",
+  chore: "feature",
+  docs: "feature",
+  test: "feature",
+  perf: "feature",
+  build: "feature",
+  ci: "feature",
+};
+
 export function slugify(text) {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 50);
+    .slice(0, 40);
+}
+
+function resolveScaffoldType(type) {
+  const branchType = BRANCH_TYPE_ALIASES[type] ?? type;
+  const phaseProfile = PHASE_PROFILE_BY_BRANCH_TYPE[branchType];
+  if (!phaseProfile) throw new Error(`Unsupported plan type: ${type}`);
+  return { branchType, phaseProfile };
 }
 
 export async function findNextTaskId(year, month, dayStr, targetDir = process.cwd()) {
@@ -55,18 +88,22 @@ export async function findNextTaskId(year, month, dayStr, targetDir = process.cw
 
 export async function scaffoldTask({ title, type = "feature", customPhases = null, dryRun = false, includeUnits = true, targetDir = process.cwd() }) {
   if (!title) throw new Error("Task title is required");
-  const normalizedType = DEFAULT_PHASES[type] ? type : "feature";
+  const { branchType, phaseProfile } = resolveScaffoldType(type);
   const now = new Date();
   const year = String(now.getFullYear());
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   const dateStr = `${year}-${month}-${day}`;
 
-  const taskId = await findNextTaskId(year, month, dateStr, targetDir);
   const taskSlug = slugify(title);
-  const taskFolderName = `${taskId}-task-${taskSlug}`;
+  validatePlanSlug(taskSlug);
+  const reservation = dryRun ? null : await reserveNextPlanId({ repository: targetDir });
+  const taskId = reservation?.id ?? await previewNextPlanId({ repository: targetDir });
+  const baseBranch = createPlanBranchName({ type: branchType, id: taskId, slug: taskSlug });
+  const planFilename = planFilenameForBranch(baseBranch);
+  const taskFolderName = planFilename.replace(/\.md$/, "");
   const taskRelativeDir = join("docs/tasks", year, month, dateStr, taskFolderName).replaceAll("\\", "/");
-  const taskAbsoluteDir = join(targetDir, taskRelativeDir);
+  const taskPlanPath = join("docs/tasks", year, month, dateStr, planFilename).replaceAll("\\", "/");
 
   let taskTemplate, phaseTemplate, unitTemplate;
   try {
@@ -85,7 +122,7 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     unitTemplate = await readText("docs/templates/Unit.md");
   }
 
-  const phases = customPhases ?? DEFAULT_PHASES[normalizedType];
+  const phases = customPhases ?? DEFAULT_PHASES[phaseProfile];
   const phaseListMarkdown = phases
     .map((p, idx) => {
       const pNum = String(idx + 1).padStart(2, "0");
@@ -117,13 +154,14 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     .replaceAll("{{date}}", dateStr)
     .replaceAll("{{task_id}}", taskId)
     .replaceAll("{{task_slug}}", taskSlug)
+    .replaceAll(`task/${taskId}-${taskSlug}`, baseBranch)
     .replace(/- \[ \] `phase-01-<feature>\.md`[\s\S]*?- \[ \] `phase-02-<feature>\.md`[^\n]*/, phaseListMarkdown)
     .replace(/\| phase-01 \| 01\.01 \|[\s\S]*?\| planned \|/, topologyRows)
     .replace(/\| Phase 01 Integration \|[\s\S]*?\| `node scripts\/context\.mjs doctor` \|/, ledgerRows);
 
   const filesToWrite = [
     {
-      path: `${taskRelativeDir}/README.md`,
+      path: taskPlanPath,
       content: renderedTask,
     },
   ];
@@ -188,16 +226,19 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     }
   }
 
-  if (!dryRun) {
-    for (const file of filesToWrite) {
-      const fullPath = join(root, file.path);
-      const parentDir = resolve(fullPath, "..");
-      await mkdir(parentDir, { recursive: true });
-      await writeFile(fullPath, file.content, "utf8");
+  try {
+    if (!dryRun) {
+      for (const file of filesToWrite) {
+        const fullPath = join(targetDir, file.path);
+        const parentDir = resolve(fullPath, "..");
+        await mkdir(parentDir, { recursive: true });
+        await writeFile(fullPath, file.content, "utf8");
+      }
     }
+  } catch (error) {
+    if (reservation) await releasePlanIdReservation({ repository: targetDir, id: reservation.id, owner: reservation.owner });
+    throw error;
   }
-
-  const baseBranch = `task/${taskId}-${taskSlug}`;
 
   return {
     taskId,
@@ -205,12 +246,14 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     taskDirectory: taskRelativeDir,
     taskSlug,
     baseBranch,
-    type: normalizedType,
+    type: branchType,
+    planPath: taskPlanPath,
     date: dateStr,
     units,
     files: filesToWrite.map((f) => f.path),
     renderedFiles: filesToWrite,
     dryRun,
+    reservation: reservation ? { id: reservation.id, ref: reservation.ref } : null,
   };
 }
 
@@ -230,7 +273,7 @@ export async function listTasks(targetDir = process.cwd()) {
       const fullPath = join(dir, entry.name);
       if (entry.isDirectory()) {
         await walk(fullPath);
-      } else if (entry.name === "README.md" && fullPath !== join(tasksRoot, "README.md")) {
+      } else if (entry.name.endsWith(".md") && fullPath !== join(tasksRoot, "README.md")) {
         const content = await readFile(fullPath, "utf8");
         const meta = frontmatter(content);
         if (meta && meta.type === "task") {
