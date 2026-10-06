@@ -5,7 +5,7 @@ parent: "phase-06-laravel-expansion"
 unit: "06.01"
 branch: "task/0001/phase-06/laravel-adapter"
 worktree: ".worktrees/0001/phase-06/laravel-adapter"
-status: verified
+status: merged
 created: "2026-10-06"
 tags: [task, unit, laravel, adapter]
 depends_on: ["05.04"]
