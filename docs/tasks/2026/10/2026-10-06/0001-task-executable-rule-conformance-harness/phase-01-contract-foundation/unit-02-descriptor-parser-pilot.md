@@ -5,7 +5,7 @@ parent: "phase-01-contract-foundation"
 unit: "01.02"
 branch: "task/0001/phase-01/descriptor-parser-pilot"
 worktree: ".worktrees/0001/phase-01/descriptor-parser-pilot"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, parser, rules]
 depends_on: ["01.01"]
@@ -58,7 +58,15 @@ Parse stable directive descriptors from canonical Markdown and prove the format 
 - **Unit tests:** isolate marker/frontmatter parsing and error paths.
 - **Contract tests:** validate parser output against `rule-descriptor.schema.json`.
 - **Migration tests:** prove unmarked files remain readable and reported unsupported.
-- Commands: `node --test evals/rule-descriptor-parser.test.mjs`; `npm run lint`.
+- Commands: `node --test evals/rule-descriptor-parser.test.mjs` (PASS: 10/10 passed in 109ms); `npm run lint` (PASS).
+- Workspace Regression: `node --test` (PASS: 82/82 passed in 955ms).
+
+```text
+▶ Unit 01.02: Rule Descriptor Parser and Pilot Rules
+  ▶ Inline Marker and Frontmatter Parsing (5 passed)
+  ▶ Pilot Rule Files Contract Validation (5 passed)
+✔ Unit 01.02: Rule Descriptor Parser and Pilot Rules (10 passed)
+```
 
 ## Rollback
 
@@ -66,7 +74,7 @@ Remove the parser/test and revert only pilot metadata markers; original rule pro
 
 ## Definition of done
 
-- [ ] AC-01 and the pilot slice of AC-11 pass.
-- [ ] Unsupported coverage is explicit and excluded from enforced counts.
-- [ ] Parser has no dependency on resolver, runner, adapters, or CLI.
-- [ ] Unit is reviewed and committed cleanly.
+- [x] AC-01 and the pilot slice of AC-11 pass.
+- [x] Unsupported coverage is explicit and excluded from enforced counts.
+- [x] Parser has no dependency on resolver, runner, adapters, or CLI.
+- [x] Unit is reviewed and committed cleanly.

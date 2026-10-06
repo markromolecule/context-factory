@@ -1,7 +1,9 @@
 ---
+ruleId: cf-rule-global-architecture-conformance
 name: architecture-conformance
-description: Preserve declared system boundaries, dependency direction, approved patterns, and durable architectural decisions.
-scope: Material code structure, public contracts, cross-module dependencies, infrastructure boundaries, and architecture documentation.
+description: Preserve system boundaries, dependency direction, and decisions.
+scope: Code structure, contracts, and module boundaries.
+stack: global
 alwaysApply: true
 ---
 
@@ -9,26 +11,23 @@ alwaysApply: true
 
 ## Authority Hierarchy
 
-Evaluate in order:
-1. Project instructions & declared architecture profile.
+1. Project instructions & profile.
 2. Accepted ADRs under `docs/decisions/`.
-3. Established dependency directions & public contracts.
-4. Applicable Context Factory rules.
-
-*Never introduce new layers, abstractions, or libraries from personal preference.*
+3. Dependency directions & contracts.
+4. Context Factory rules.
 
 ## Architecture Boundary Constraints
 
-| Boundary | Constraint & Invariant |
+| Boundary | Constraint |
 | :--- | :--- |
-| **SOLID Principles** | Enforce single-responsibility, open/closed extension, interface segregation, and dependency inversion (`rules/solid/`). |
-| **Layer Isolation** | Preserve transport, application, domain, persistence, and presentation separation. |
-| **Dependency Direction** | Point inward/per profile; circular dependencies are forbidden. |
-| **Public Contracts** | Cross-module communication uses public contracts; bypass of internal implementations is prohibited. |
-| **Single Policy** | Each business rule has one authoritative domain implementation. |
-| **Trust Gate** | Auth and tenant ownership checks reside strictly at trusted backend boundaries. |
-| **Pattern Parity** | Use existing patterns unless verified requirements prove them inadequate. |
+| **SOLID** | [directive:cf.arch.solid][mode:automated-blocking][verifier:linter] Enforce SRP, OCP, LSP, ISP, and DIP. |
+| **Layer Isolation** | [directive:cf.arch.layers][mode:evidence-blocking][verifier:human-evidence] Preserve transport, domain, persistence, UI separation. |
+| **Dependency Direction** | [directive:cf.arch.direction][mode:automated-blocking][verifier:linter] Point inward; circular dependencies forbidden. |
+| **Public Contracts** | [directive:cf.arch.contracts][mode:evidence-blocking][verifier:human-evidence] Cross-module calls use public contracts; bypass prohibited. |
+| **Single Policy** | [directive:cf.arch.policy][mode:evidence-blocking][verifier:human-evidence] Each business rule has one authoritative domain implementation. |
+| **Trust Gate** | [directive:cf.arch.trust][mode:automated-blocking][verifier:test] Auth and tenant checks reside at backend boundaries. |
+| **Pattern Parity** | [directive:cf.arch.patterns][mode:advisory][verifier:none] Use existing patterns unless requirements prove inadequate. |
 
 ## Material Architectural Changes
 
-Trigger `architecture-change` workflow and record an ADR in `docs/decisions/` whenever modifying system boundaries, layer dependency direction, public contracts, persistence strategies, or deployment topology.
+- [directive:cf.arch.adrs][mode:automated-blocking][verifier:test] Trigger `architecture-change` and record an ADR in `docs/decisions/` when altering boundaries or contracts.

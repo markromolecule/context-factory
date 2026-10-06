@@ -1,7 +1,11 @@
 ---
+ruleId: cf-rule-ts-type-safety
 name: type-safety
 description: Enforce strict type safety, exhaustiveness checking, branded identifiers, and disciplined narrowing while banning any and unsafe assertions.
 scope: TypeScript files, type definitions, generic utilities, and type guards.
+stack: typescript
+appliesTo: ["**/*.ts", "**/*.tsx"]
+layers: ["common", "services", "models", "controllers"]
 alwaysApply: true
 ---
 
@@ -9,30 +13,30 @@ alwaysApply: true
 
 ## Strict typing standards
 
-- Ban `any`. Use `unknown` when incoming data types are indeterminate, and require narrowing via type guards, assertion functions, or schema parsing before consumption.
-- Avoid loose `Object`, `object`, or `{}` types. Use `Record<string, unknown>` or explicit typed schemas.
-- Enable and adhere to strict compiler settings (`strict: true`, `noImplicitAny: true`, `strictNullChecks: true`, `noUncheckedIndexedAccess: true`).
-- Use `satisfies` to validate that an expression matches a type contract without widening literal types or losing exact property inference.
+- [directive:ts.type-safety.ban-any][mode:automated-blocking][verifier:typechecker] Ban `any`. Use `unknown` when incoming data types are indeterminate, and require narrowing via type guards, assertion functions, or schema parsing before consumption.
+- [directive:ts.type-safety.no-loose-objects][mode:automated-blocking][verifier:typechecker] Avoid loose `Object`, `object`, or `{}` types. Use `Record<string, unknown>` or explicit typed schemas.
+- [directive:ts.type-safety.strict-compiler-settings][mode:automated-blocking][verifier:typechecker] Enable and adhere to strict compiler settings (`strict: true`, `noImplicitAny: true`, `strictNullChecks: true`, `noUncheckedIndexedAccess: true`).
+- [directive:ts.type-safety.use-satisfies][mode:advisory][verifier:none] Use `satisfies` to validate that an expression matches a type contract without widening literal types or losing exact property inference.
 
 ## Discriminated unions and exhaustiveness
 
-- Model complex domain states, action types, and lifecycle statuses as discriminated unions with a common literal discriminator (e.g. `type: "idle" | "loading" | "success" | "error"`).
-- Ensure all `switch` or conditional branches handling discriminated unions are exhaustive. Use an unreachable `assertNever(value: never): never` utility in default branches to fail at compile time when new union variants are added.
+- [directive:ts.type-safety.discriminated-unions][mode:automated-blocking][verifier:typechecker] Model complex domain states, action types, and lifecycle statuses as discriminated unions with a common literal discriminator (e.g. `type: "idle" | "loading" | "success" | "error"`).
+- [directive:ts.type-safety.exhaustive-branches][mode:automated-blocking][verifier:typechecker] Ensure all `switch` or conditional branches handling discriminated unions are exhaustive. Use an unreachable `assertNever(value: never): never` utility in default branches to fail at compile time when new union variants are added.
 
 ## Type assertions and casting discipline
 
-- Forbid type assertions (`as Type`) for bypassing type checking. Type assertions hide bugs and break compile-time safety guarantees.
-- Restrict `as const` to immutable value definitions, literal arrays, and configuration maps.
-- Avoid non-null assertions (`!`). Use explicit null-checking conditionals, fallback defaults (`??`), or invariant assertion functions that provide runtime failure diagnostics.
-- When narrowing types, write custom type predicates (`function isUser(val: unknown): val is User`) with runtime validation checks rather than arbitrary casts.
+- [directive:ts.type-safety.forbid-unsafe-type-assertions][mode:automated-blocking][verifier:linter] Forbid type assertions (`as Type`) for bypassing type checking. Type assertions hide bugs and break compile-time safety guarantees.
+- [directive:ts.type-safety.restrict-as-const][mode:advisory][verifier:none] Restrict `as const` to immutable value definitions, literal arrays, and configuration maps.
+- [directive:ts.type-safety.avoid-non-null-assertions][mode:automated-blocking][verifier:linter] Avoid non-null assertions (`!`). Use explicit null-checking conditionals, fallback defaults (`??`), or invariant assertion functions that provide runtime failure diagnostics.
+- [directive:ts.type-safety.custom-type-predicates][mode:automated-blocking][verifier:typechecker] When narrowing types, write custom type predicates (`function isUser(val: unknown): val is User`) with runtime validation checks rather than arbitrary casts.
 
 ## Branded and nominal identifiers
 
-- Use branded/nominal types (e.g. `type UserId = string & { readonly __brand: unique symbol }`) for primary keys and distinct entity identifiers to prevent accidentally passing an `OrderId` to a function expecting a `UserId`.
-- Provide typed constructor/parsing helpers for branded types at application boundaries.
+- [directive:ts.type-safety.branded-identifiers][mode:evidence-blocking][verifier:human-evidence] Use branded/nominal types (e.g. `type UserId = string & { readonly __brand: unique symbol }`) for primary keys and distinct entity identifiers to prevent accidentally passing an `OrderId` to a function expecting a `UserId`.
+- [directive:ts.type-safety.branded-constructors][mode:evidence-blocking][verifier:human-evidence] Provide typed constructor/parsing helpers for branded types at application boundaries.
 
 ## Generics discipline
 
-- Use generics only when a function or component operates uniformly over multiple types while preserving relationship between inputs and outputs.
-- Avoid overly speculative or deeply recursive type acrobatics that degrade `tsc` compiler performance and obscure IDE error messages.
-- Always provide sensible default type parameters where applicable (`<T = unknown>`).
+- [directive:ts.type-safety.generics-uniform-types][mode:advisory][verifier:none] Use generics only when a function or component operates uniformly over multiple types while preserving relationship between inputs and outputs.
+- [directive:ts.type-safety.avoid-recursive-type-acrobatics][mode:advisory][verifier:none] Avoid overly speculative or deeply recursive type acrobatics that degrade `tsc` compiler performance and obscure IDE error messages.
+- [directive:ts.type-safety.default-type-parameters][mode:advisory][verifier:none] Always provide sensible default type parameters where applicable (`<T = unknown>`).
