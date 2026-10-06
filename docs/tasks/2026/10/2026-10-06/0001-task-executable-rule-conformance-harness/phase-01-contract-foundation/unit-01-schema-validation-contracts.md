@@ -5,7 +5,7 @@ parent: "phase-01-contract-foundation"
 unit: "01.01"
 branch: "task/0001/phase-01/schema-validation-contracts"
 worktree: ".worktrees/0001/phase-01/schema-validation-contracts"
-status: verified
+status: merged
 created: "2026-10-06"
 tags: [task, unit, schemas, validation]
 depends_on: []
