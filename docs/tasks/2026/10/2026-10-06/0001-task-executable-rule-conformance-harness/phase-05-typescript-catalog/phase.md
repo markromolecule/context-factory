@@ -4,7 +4,7 @@ type: phase
 parent: "0001-task-executable-rule-conformance-harness"
 phase: "05"
 phase_branch: "task/0001/phase-05-integration"
-status: planned
+status: completed
 created: "2026-10-06"
 tags: [task, phase, typescript, catalog, release]
 ---
@@ -35,6 +35,11 @@ Classify and migrate the TypeScript/global/SOLID directives, audit enforcement c
 - Full catalog audit, adversarial evaluations, sync, lock check, and doctor must pass.
 - Produce directive counts by mode/status without counting unsupported as enforced.
 - **STOP after Phase 5.** Present the TypeScript evidence to the developer. Do not begin Phase 6 until the developer explicitly continues.
+
+## Completion evidence
+
+- Phase integration: `npm run lint`, `npm test` (31/31), and `npm run doctor` passed on 2026-10-06.
+- Lock digest: `sha256:4c5b4be3a138e7732075f920da99abae9f931a67f9e6d133a1101b6e1959cb84`.
 
 ## Risks and rollback
 
