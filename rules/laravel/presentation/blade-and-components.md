@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-presentation-blade-and-components
 name: blade-and-components
 description: Enforce component-first Blade architecture, layout slots, attribute passing, and Vite asset pipeline integration.
 scope: Blade templates (resources/views/), Blade components, layout slots, and frontend assets in Laravel.
+stack: laravel
+appliesTo: ["resources/views/**/*.blade.php", "resources/js/**/*.js"]
+layers: ["presentation"]
 alwaysApply: false
 ---
 
 # Blade Templates, Components, Layout Slots, and Assets
+
+- [directive:laravel.presentation.blade-components][mode:advisory][verifier:none] Keep Blade composition, layout slots, and assets within presentation boundaries.
 
 ## Boundaries
 

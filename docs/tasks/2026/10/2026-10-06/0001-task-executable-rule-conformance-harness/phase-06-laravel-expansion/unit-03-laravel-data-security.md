@@ -5,7 +5,7 @@ parent: "phase-06-laravel-expansion"
 unit: "06.03"
 branch: "task/0001/phase-06/laravel-data-security"
 worktree: ".worktrees/0001/phase-06/laravel-data-security"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, laravel, database, security, presentation]
 depends_on: ["06.01"]
@@ -55,13 +55,20 @@ Classify remaining Laravel directives with strict trust/data boundaries and scop
 - **Selection tests:** presentation and data rules do not cross-bind.
 - Commands: scoped audit; Laravel adapter fixtures; `npm run lint`.
 
+### Execution evidence (2026-10-06)
+
+- Red: `node --test evals/unit-06-03-laravel-data-security.test.mjs` failed before metadata migration for missing Laravel directive coverage, selection boundaries, and blocking semantics.
+- Green: `node --test evals/unit-06-03-laravel-data-security.test.mjs` passed 3/3 catalog, data/security/presentation selection, and mode-classification tests.
+- Conformance: `report-binding-adhoc-00-00-6026018c9a51` — PASS; binding `sha256:6026018c9a510e1c0bff7a28c14d879ddaadcf99e1519da1c9ebd575a31ae613`; diff `sha256:d908c413fec01e445af1a89aad4350b242794a064eb25afcda1f2740a8f34d08`.
+- Deferred release check: `npm run lint` remains owned by Unit 06.04 because manifest/lock inventory synchronization is intentionally outside this unit.
+
 ## Rollback
 
 Revert only scoped metadata; report partial Laravel coverage.
 
 ## Definition of done
 
-- [ ] Scoped AC-12 coverage passes.
-- [ ] Security/data blocking semantics are preserved.
-- [ ] No cross-layer over-selection appears.
-- [ ] Unit passes `/review`.
+- [x] Scoped AC-12 coverage passes.
+- [x] Security/data blocking semantics are preserved.
+- [x] No cross-layer over-selection appears.
+- [x] Unit passes `/review`.

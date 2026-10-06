@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-database-migrations-and-seeders
 name: migrations-and-seeders
 description: Govern atomic database migrations, schema indexing, foreign key constraints, model factories, and test seeders.
 scope: Database migrations (database/migrations), seeders (database/seeders), and factories (database/factories).
-alwaysApply: true
+stack: laravel
+appliesTo: ["database/migrations/**/*.php", "database/seeders/**/*.php", "database/factories/**/*.php"]
+layers: ["data", "migrations"]
+alwaysApply: false
 ---
 
 # Migrations, Seeders, and Model Factories
+
+- [directive:laravel.database.migrations][mode:evidence-blocking][verifier:human-evidence] Require reviewed forward and rollback evidence for schema migrations and deterministic seed behavior.
 
 ## Boundaries
 

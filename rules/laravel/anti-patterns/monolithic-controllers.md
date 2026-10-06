@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-anti-patterns-monolithic-controllers
 name: monolithic-controllers
 description: Prevent monolithic controller bloat by keeping controllers skinny and delegating domain workflows to Invokable Actions and Queued Jobs.
 scope: Controllers, HTTP routing, actions, and jobs in Laravel.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/Http/Controllers/**/*.php", "app/**/Controllers/**/*.php"]
+layers: ["controllers"]
+alwaysApply: false
 ---
 
 # Monolithic Controllers Anti-Pattern
+
+- [directive:laravel.anti-patterns.monolithic-controllers][mode:evidence-blocking][verifier:human-evidence] Review controller responsibility boundaries and action delegation.
 
 Monolithic controllers (also known as "Fat Controllers" or "God Controllers") occur when controller methods accumulate dozens or hundreds of lines of code handling transport routing, raw input validation, multi-table database transactions, third-party API SDK calls, file storage operations, and notification/mail dispatching all in a single method or class.
 

@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-security-defense-and-protection
 name: defense-and-protection
 description: Standardize rate limiting, secure file upload defense, output escaping, and CSRF protection.
 scope: Security defenses, file uploads, rate limiters, Blade escaping, and input sanitization across Laravel.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php", "resources/views/**/*.blade.php"]
+layers: ["security"]
+alwaysApply: false
 ---
 
 # Application Defense, Rate Limiting, Uploads, and Protection
+
+- [directive:laravel.security.defense][mode:evidence-blocking][verifier:human-evidence] Require negative and abuse-case evidence for rate limits, uploads, escaping, and CSRF defenses.
 
 ## Boundaries
 

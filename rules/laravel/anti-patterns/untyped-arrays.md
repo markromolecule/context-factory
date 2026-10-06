@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-anti-patterns-untyped-arrays
 name: untyped-arrays
 description: Prohibit passing untyped associative array payloads across layers; mandate PHP 8.2+ readonly class DTOs, Value Objects, or Form Requests.
 scope: All PHP classes, method signatures, controllers, actions, and DTOs in Laravel.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php"]
+layers: ["controllers", "services", "data"]
+alwaysApply: false
 ---
 
 # Untyped Arrays Anti-Pattern
+
+- [directive:laravel.anti-patterns.untyped-arrays][mode:evidence-blocking][verifier:human-evidence] Review cross-layer payloads for value objects, DTOs, or validated request boundaries.
 
 Passing arbitrary, untyped associative arrays (`array $data` or `array $payload`) between architectural layers obscures data contracts, eliminates static analysis guarantees, disables IDE autocomplete, and causes runtime `Undefined array key` crashes.
 

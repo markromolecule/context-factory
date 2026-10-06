@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-database-eloquent-and-models
 name: eloquent-and-models
 description: Govern Eloquent Active Record conventions, explicit relationship typing, attribute casting, and local query scopes.
 scope: Eloquent models, relationships, scopes, casts, and model lifecycle observers.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/Models/**/*.php", "app/**/Models/*.php"]
+layers: ["data", "models"]
+alwaysApply: false
 ---
 
 # Eloquent ORM and Models
+
+- [directive:laravel.database.eloquent-models][mode:evidence-blocking][verifier:human-evidence] Review model relationships, casts, and lifecycle behavior at the Eloquent boundary.
 
 ## Boundaries
 

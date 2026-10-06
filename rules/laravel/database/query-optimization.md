@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-database-query-optimization
 name: query-optimization
 description: Enforce eager loading, N+1 query prevention, cursor pagination, and ESR compound index alignment.
 scope: Database queries, Eloquent queries, pagination, and migration indexes.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php", "database/migrations/**/*.php"]
+layers: ["data", "queries"]
+alwaysApply: false
 ---
 
 # Database Query Optimization and Performance
+
+- [directive:laravel.database.query-discipline][mode:automated-blocking][verifier:linter] Reject detectable unbounded Eloquent query patterns and require evidence for performance claims.
 
 ## Boundaries
 

@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-anti-patterns-config-caching
 name: config-caching
 description: Prevent runtime failures during config:cache by eliminating direct env() calls in application code.
 scope: All PHP classes, controllers, services, models, actions, commands, and Blade templates outside config/.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php", "routes/**/*.php"]
+layers: ["foundation", "security"]
+alwaysApply: false
 ---
 
 # Direct env() Calls Outside Config Anti-Pattern
+
+- [directive:laravel.anti-patterns.config-caching][mode:automated-blocking][verifier:linter] Reject direct environment reads outside configuration files.
 
 Calling Laravel's `env()` helper function directly inside application code (controllers, actions, services, models, console commands, or views) works during local development when configuration is not cached. However, once `php artisan config:cache` is executed in staging or production, Laravel does not load `.env` files into PHP's environment at runtime; consequently, all `env()` invocations outside files in `config/` return `null`.
 

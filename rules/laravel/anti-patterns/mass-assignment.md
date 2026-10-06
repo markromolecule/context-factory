@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-anti-patterns-mass-assignment
 name: mass-assignment
 description: Prevent mass-assignment vulnerabilities by banning raw request->all() and mandating Form Request validated data.
 scope: Eloquent model persistence, controllers, actions, and Form Requests.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php"]
+layers: ["security", "controllers", "services"]
+alwaysApply: false
 ---
 
 # Mass-Assignment Security Hole Anti-Pattern
+
+- [directive:laravel.anti-patterns.mass-assignment][mode:automated-blocking][verifier:test] Require validated request data at Eloquent persistence boundaries.
 
 Mass assignment occurs when client-provided HTTP payload data (`$request->all()` or raw `$request->input()`) is passed directly into Eloquent persistence methods (`Model::create()`, `Model::update()`, or `Model::fill()`). Without strict input gatekeeping, malicious clients can inject arbitrary database fields (e.g. `is_admin`, `role`, `account_balance`, `tenant_id`) leading to privilege escalation or unauthorized data modification.
 

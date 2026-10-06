@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-anti-patterns-n-plus-one-queries
 name: n-plus-one-queries
 description: Eliminate N+1 database queries through eager loading, query root preloading, and strict model enforcement in dev/test.
 scope: Eloquent models, queries, relationship iteration, controllers, and Blade templates.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php", "resources/views/**/*.blade.php"]
+layers: ["data", "queries"]
+alwaysApply: false
 ---
 
 # N+1 Database Queries Anti-Pattern
+
+- [directive:laravel.anti-patterns.n-plus-one][mode:automated-blocking][verifier:linter] Require eager-loading and query evidence where relationship iteration can create N+1 behavior.
 
 The N+1 database query problem occurs when an initial query fetches $N$ records (1 query), and iterating through those records executes an additional relational query for every single record ($N$ queries), producing $N + 1$ queries instead of 2. In production, this causes massive database load, connection pool starvation, and severe latency spikes.
 

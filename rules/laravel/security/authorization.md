@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-security-authorization
 name: authorization
 description: Enforce Laravel Policies, Gates, multi-tenant isolation, and resource ownership verification.
 scope: Authorization policies (app/Policies/), Gates, Form Requests, and controllers across Laravel.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/Policies/**/*.php", "app/Http/Requests/**/*.php", "app/**/Controllers/**/*.php"]
+layers: ["security", "authorization"]
+alwaysApply: false
 ---
 
 # Authorization, Policies, Gates, and Multi-Tenant Isolation
+
+- [directive:laravel.security.authorization][mode:automated-blocking][verifier:test] Require server-side authorization and negative-case coverage at policy, request, and controller boundaries.
 
 ## Boundaries
 
