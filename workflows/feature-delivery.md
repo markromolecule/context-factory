@@ -32,7 +32,7 @@ Use when a request adds or materially changes user-visible or system behavior. C
 
 ## Applicable rules and skills
 
-Load global rules and only the domain rules relevant to touched files. For a new system, product, or feature context, author and grill requirements with `context` or `grill`; they use `explore` to answer code-discoverable questions and hand the stable context record to `plan`. Use `execution` only for an approved plan.
+Load global rules and only the domain rules relevant to touched files. For a new system, product, or feature context, author and grill requirements with `context` or `grill`; `grill` releases one verified brief to `plan`. `plan-review` reviews the plan and issues an approved execution packet. Use `execute` only with that current packet.
 
 ## Phases
 

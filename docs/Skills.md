@@ -11,7 +11,7 @@ The Context Factory defines 18 focused procedural skills across two primary cate
 ## Engineering & Coding
 *Group Index:* [[skills/engineering/README|Engineering Skills Overview]]
 
-- [[skills/engineering/execute/SKILL|execute]] — Execute an existing task or implementation plan artifact unit by unit, each in its own git worktree and branch, verify the resulting code, record evidence, and stop at batch and phase boundaries for developer inspection before anything merges. Use for /execute, /exec, [EXEC].
+- [[skills/engineering/execute/SKILL|execute]] — Execute an approved reviewed packet on one task branch by default, record evidence, and stop at batch and phase boundaries. Use a worktree only when isolation is recorded. Use for /execute, /exec, [EXEC].
 - [[skills/engineering/explore/SKILL|explore]] — Build a verified map of an unfamiliar repository's entry points, architecture, contracts and their consumers, tests, conventions, and risks before planning material work (/explore, [EXPLORE]).
 - [[skills/engineering/perf/SKILL|perf]] — Profile and fix runtime bottlenecks: N+1 queries, missing indexes, async waterfalls, memory, bundle size. Triggers: /perf, [PERF], "optimize queries", "reduce latency", or review performance findings.
 - [[skills/engineering/refactor/SKILL|refactor]] — Refactor and modularize lengthy, multi-responsibility code into maintainable, single-responsibility files that sync cleanly while preserving public contracts and behavioral equivalence (/refactor, [REFACTOR]).
@@ -36,4 +36,4 @@ The Context Factory defines 18 focused procedural skills across two primary cate
 
 Skills trigger through their YAML descriptions and slash command shortcuts. All declarative engineering standards (TypeScript type safety, runtime validation, database query optimization, backend module architecture, and UI styling) are defined in and loaded from `rules/`.
 
-For a new system, product, or feature capability, the skill sequence is `context` / `grill` → `explore` → `plan` → approval → `execute` → `refactor` (optional). Repository discovery may run inside context authoring and grilling to answer evidence-discoverable questions.
+For a new system, product, or feature capability, the skill sequence is `context` → `grounding` / `grill` → released brief → `plan` → `plan-review` → approved packet → `execute` → `refactor` (optional).

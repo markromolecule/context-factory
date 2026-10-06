@@ -6,7 +6,7 @@ unit: "04.01"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
 checkout_mode: worktree
 checkout_path: ".worktrees/PLN-0003-skill-lifecycle-handoffs"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit]
 depends_on: ["03.03"]
@@ -85,14 +85,19 @@ Applicable language and architecture rules take precedence over conflicting proc
 - git diff --check
 - **Conformance gate:** Run context-cli preflight for exact modified scope, then context-cli conform; record PASS report ID, diff hash, and binding hash. If unavailable or blocked, leave the unit incomplete.
 
+### Execution evidence
+
+- **Checks:** 32 focused tests passed; `node evals/run-evals.mjs` and `doctor` passed 31/31; `git diff --check` passed.
+- **Conformance:** PASS `report-binding-adhoc-00-00-b620b32423ff-1791307810540`; binding hash `sha256:b620b32423ff10dce2b2f79b5748d02726fa07c784534553dfc7edb0bb149fb4`; diff hash `sha256:1a9c46e23bacb5fbdeb2ec58bfe25f03f1dc5429f862ab7de518bf9ff46d10a8`.
+
 ## Rollback
 
 Revert synchronized guidance and catalog changes together; regenerate the lock after rollback.
 
 ## Definition of done
 
-- [ ] AC-08 maps to this unit's passing evidence.
-- [ ] All eight ACs have recorded evidence, canonical context is synchronized, and the task is ready for normal review/merge.
-- [ ] Scope review finds no unallocated files.
-- [ ] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
-- [ ] Commit message records PLN-0003 and 04.01; stop at the required checkpoint.
+- [x] AC-08 maps to this unit's passing evidence.
+- [x] All eight ACs have recorded evidence, canonical context is synchronized, and the task is ready for normal review/merge.
+- [x] Scope review finds no unallocated files.
+- [x] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
+- [x] Commit message records PLN-0003 and 04.01; stop at the required checkpoint.
