@@ -5,6 +5,10 @@ description: Independent diff review of a unit worktree against its unit file to
 
 # Unit Diff Review: Worktree Pre-Screening Protocol
 
+## Execution handoff
+
+Consume the approved execution packet, unit evidence, and execution ledger. Do not read the full task plan or context specification directly.
+
 Perform an independent white-box code and diff audit of an active unit git worktree against its unit specification artifact (`unit-*.md`) *before developer inspection checkpoints*.
 
 ## Why Diff Review Exists (review vs verify)

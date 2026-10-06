@@ -217,6 +217,7 @@
     "evals/conformance-gate.test.mjs",
     "evals/discovery-handoff.test.mjs",
     "evals/handoff-contract.test.mjs",
+    "evals/execution-handoff.test.mjs",
     "evals/laravel-adapter.test.mjs",
     "evals/lifecycle-conformance.test.mjs",
     "evals/plan-check.test.mjs",

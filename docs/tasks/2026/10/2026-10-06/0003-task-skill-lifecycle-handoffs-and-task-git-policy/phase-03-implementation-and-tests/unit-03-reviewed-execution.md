@@ -6,7 +6,7 @@ unit: "03.03"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
 checkout_mode: worktree
 checkout_path: ".worktrees/PLN-0003-skill-lifecycle-handoffs"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit]
 depends_on: ["03.02"]
@@ -42,6 +42,12 @@ Dependency units are verified and their phase checkpoints accepted. Recheck targ
 - skills/productivity/docs/SKILL.md
 - docs/execution/README.md
 - evals/execution-handoff.test.mjs
+- context-manifest.json
+- context-lock.json
+- docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/phase-03-implementation-and-tests/phase.md
+- docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/phase-03-implementation-and-tests/unit-03-reviewed-execution.md
+
+The manifest inventories the execution-handoff evaluation and the lock pins canonical skill changes; task artifacts record execution evidence.
 
 **Out of scope:** Do not modify production code, bypass approval, or rewrite historical execution logs.
 
@@ -71,14 +77,19 @@ Applicable language and architecture rules take precedence over conflicting proc
 - git diff --check
 - **Conformance gate:** Run context-cli preflight for exact modified scope, then context-cli conform; record PASS report ID, diff hash, and binding hash. If unavailable or blocked, leave the unit incomplete.
 
+### Execution evidence
+
+- **Focused checks:** `node --test evals/execution-handoff.test.mjs` passed 3/3. `git diff --check` passed.
+- **Conformance:** PASS `report-binding-adhoc-00-00-2a362448af1a-1791307383663`; binding hash `sha256:2a362448af1a66bdaf3c1c589715d1a03d21e845cc511af20308167a2eae54e0`; diff hash `sha256:b760dcd8e6982483a00c12902b147a7f92327e11e7150cbec4dca08f79bc745b`.
+
 ## Rollback
 
 Restore reviewer/executor skills together; preserve packet and ledger artifacts for audit.
 
 ## Definition of done
 
-- [ ] AC-07 maps to this unit's passing evidence.
-- [ ] No direct plan read remains in execute and all existing safety gates are retained.
-- [ ] Scope review finds no unallocated files.
-- [ ] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
-- [ ] Commit message records PLN-0003 and 03.03; stop at the required checkpoint.
+- [x] AC-07 maps to this unit's passing evidence.
+- [x] No direct plan read remains in execute and all existing safety gates are retained.
+- [x] Scope review finds no unallocated files.
+- [x] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
+- [x] Commit message records PLN-0003 and 03.03; stop at the required checkpoint.

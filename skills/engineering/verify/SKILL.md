@@ -5,6 +5,8 @@ description: Audit implementation and completion claims against acceptance crite
 
 # Verification Review
 
+Use the approved execution packet and `docs/execution/PLN-NNNN/ledger.md` as the task handoff. Do not require a direct full-plan or context-specification read.
+
 ## Procedure
 
 1. Read the requested outcome, acceptance criteria, task record, and deviations.

@@ -5,7 +5,7 @@ description: Synthesize evidence-backed development and system reports, performa
 
 # Synthesize Documentation & System Reports
 
-The `docs` skill transforms user reporting and documentation requests into structured, comparative, and conclusion-driven reports under `docs/reports/` (or designated documentation target). It enforces strict historical inspection across recent context specifications (`docs/context/`), implementation tasks (`docs/tasks/`), and architectural decision records (`docs/decisions/`), embedding the `grill` discovery discipline whenever parameters or goals require clarification.
+ The `docs` skill transforms user reporting and documentation requests into structured, comparative, and conclusion-driven reports under `docs/reports/` (or designated documentation target). For active execution work, it consumes the approved packet and execution ledger rather than directly reading context specifications or task plans. It may inspect ADRs and completed historical evidence when the report requires them.
 
 ```mermaid
 flowchart TD

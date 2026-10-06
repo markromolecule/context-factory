@@ -5,6 +5,10 @@ description: Turn a unit's Verification section into real tests, written test-fi
 
 # Test-First Implementation: Red-Green-Refactor Protocol
 
+## Execution handoff
+
+Consume the approved execution packet and its ledger entry for active-unit scope and verification. Do not read the full task plan or context specification directly.
+
 Turn an active task unit's `## Verification` requirements into concrete automated tests *before* writing functional code.
 
 ## Why Test-First Exists for AI Agents

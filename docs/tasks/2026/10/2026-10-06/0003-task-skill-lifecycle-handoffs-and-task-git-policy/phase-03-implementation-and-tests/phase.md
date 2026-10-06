@@ -25,7 +25,7 @@ Previous phase verified and developer checkpoint accepted. Work sequentially on 
 |---|---|---|---|---|---|
 | 03.01 | Lint skill access declarations | unit-01-implementation-and-tests.md | 02.02 | sequential | verified |
 | 03.02 | Verify discovery briefs and execution packets | unit-02-handoff-freshness.md | 03.01 | sequential | verified |
-| 03.03 | Consume reviewed packets and preserve worktrees | unit-03-reviewed-execution.md | 03.02 | sequential | planned |
+| 03.03 | Consume reviewed packets and preserve worktrees | unit-03-reviewed-execution.md | 03.02 | sequential | verified |
 
 ## Impacted Files & Components
 
