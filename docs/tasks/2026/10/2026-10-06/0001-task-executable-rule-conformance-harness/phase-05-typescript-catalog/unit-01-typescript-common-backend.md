@@ -5,7 +5,7 @@ parent: "phase-05-typescript-catalog"
 unit: "05.01"
 branch: "task/0001/phase-05/typescript-common-backend"
 worktree: ".worktrees/0001/phase-05/typescript-common-backend"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, typescript, backend, rules]
 depends_on: ["05.00"]
@@ -53,6 +53,7 @@ Add stable applicability and enforcement metadata to TypeScript common/backend r
 - **Migration/contract tests:** parse every scoped rule and validate uniqueness, verifier existence, and no lost enforceable statement.
 - **Review checklist:** diff contains metadata/markers only unless separately justified.
 - Commands: catalog audit scoped to `rules/typescript/common` and `rules/typescript/backend`. Repository-wide `npm run lint` is deferred to Unit 05.04 because this unit intentionally does not own `context-lock.json`.
+- **Execution evidence (2026-10-06):** `node --test evals/unit-05-01-typescript-common-backend.test.ts` passed 62/62 tests. Scope fence against `task/0001/phase-05-integration` passed with the focused test plus the modified common/backend rules only; `git diff --check` passed. Conformance receipt `report-binding-adhoc-00-00-810321786087-1791277567901` returned PASS (Binding Hash: `sha256:810321786087436d89138a3e967875fa0cf5b73d5ffe208bc89b7fddf970d350`; Diff Hash: `sha256:d5c56670a285b40719130ccf888970447a4ecef8bb7090c493bb398176e01cbb`).
 
 ## Rollback
 
@@ -60,7 +61,7 @@ Revert markers/frontmatter in these two directories only; catalog coverage retur
 
 ## Definition of done
 
-- [ ] Scoped catalog passes AC-11 audit.
-- [ ] No unsupported directive is counted as enforced.
-- [ ] Policy meaning is unchanged.
-- [ ] Unit passes `/review`.
+- [x] Scoped catalog passes AC-11 audit.
+- [x] No unsupported directive is counted as enforced.
+- [x] Policy meaning is unchanged.
+- [x] Unit passes `/review`.
