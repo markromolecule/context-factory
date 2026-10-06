@@ -4,7 +4,7 @@ type: phase
 parent: "0003-task-skill-lifecycle-handoffs-and-task-git-policy"
 phase: "03"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
-status: planned
+status: in_progress
 created: "2026-10-06"
 tags: [task, phase]
 ---
@@ -23,7 +23,7 @@ Previous phase verified and developer checkpoint accepted. Work sequentially on 
 
 | Unit | Outcome | Artifact | Depends on | Execution | Status |
 |---|---|---|---|---|---|
-| 03.01 | Lint skill access declarations | unit-01-implementation-and-tests.md | 02.02 | sequential | planned |
+| 03.01 | Lint skill access declarations | unit-01-implementation-and-tests.md | 02.02 | sequential | verified |
 | 03.02 | Verify discovery briefs and execution packets | unit-02-handoff-freshness.md | 03.01 | sequential | planned |
 | 03.03 | Consume reviewed packets and preserve worktrees | unit-03-reviewed-execution.md | 03.02 | sequential | planned |
 

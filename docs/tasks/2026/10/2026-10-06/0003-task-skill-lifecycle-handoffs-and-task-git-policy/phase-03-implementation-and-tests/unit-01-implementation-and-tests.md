@@ -6,7 +6,7 @@ unit: "03.01"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
 checkout_mode: worktree
 checkout_path: ".worktrees/PLN-0003-skill-lifecycle-handoffs"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit]
 depends_on: ["02.02"]
@@ -37,6 +37,12 @@ Dependency units are verified and their phase checkpoints accepted. Recheck targ
 - scripts/skill-access-check.mjs
 - scripts/harness-cli.mjs
 - evals/skill-access-check.test.mjs
+- context-manifest.json
+- context-lock.json
+- docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/phase-03-implementation-and-tests/phase.md
+- docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/phase-03-implementation-and-tests/unit-01-implementation-and-tests.md
+
+The manifest inventories the new checker and contract test; the lock pins those canonical paths after regeneration. The phase and unit artifacts record the scope correction and execution evidence.
 
 **Out of scope:** Do not build runtime file ACLs or modify the six skill files in this unit.
 
@@ -51,7 +57,7 @@ Applicable language and architecture rules take precedence over conflicting proc
 
 1. Define and parse a small access declaration for each skill; validate it against the six-skill allowlist and artifact owner matrix.
 2. Detect positive read instructions involving forbidden source paths, while allowing negative prohibitions and historical explanation.
-3. Expose a nonzero lint command adjacent to plan:check, with skill/path/line diagnostics; add positive, forbidden, negated, and malformed-declaration cases.
+3. Expose a nonzero lint command adjacent to `plan:check`, with skill/path/line diagnostics; add positive, forbidden, negated, and malformed-declaration cases.
 
 ## Verification
 
@@ -64,14 +70,19 @@ Applicable language and architecture rules take precedence over conflicting proc
 - git diff --check
 - **Conformance gate:** Run context-cli preflight for exact modified scope, then context-cli conform; record PASS report ID, diff hash, and binding hash. If unavailable or blocked, leave the unit incomplete.
 
+### Execution evidence
+
+- **Focused checks:** node --test evals/skill-access-check.test.mjs passed 3/3; node scripts/context.mjs skill:access-check skills/productivity/context/SKILL.md passed; an intentionally incomplete execute declaration returned a path-and-line diagnostic; node scripts/context.mjs doctor passed 31/31; the task plan:check passed; and git diff --check passed.
+- **Conformance:** Preflight for the exact modified scope had no deterministic binding. With the repository user's explicit continuation authorization as human evidence, context-cli conform evaluated the fallback binding and returned PASS: report-binding-adhoc-00-00-b51a52ed5cf2-1791306234236; binding hash sha256:b51a52ed5cf2b732889fc357c54c640782f18b6d97617d4b408db6b7a1b33765; diff hash sha256:fb5d209444f3e4e565a2268e27e2e79bb3b783fa5a776948885ae6c5c268f83d.
+
 ## Rollback
 
 Remove the checker/CLI route and focused test; declarations are not yet required until the later skill-sync unit.
 
 ## Definition of done
 
-- [ ] AC-05 maps to this unit's passing evidence.
-- [ ] The lint result is deterministic and does not claim runtime isolation.
-- [ ] Scope review finds no unallocated files.
-- [ ] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
-- [ ] Commit message records PLN-0003 and 03.01; stop at the required checkpoint.
+- [x] AC-05 maps to this unit's passing evidence.
+- [x] The lint result is deterministic and does not claim runtime isolation.
+- [x] Scope review finds no unallocated files.
+- [x] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
+- [x] Commit message records PLN-0003 and 03.01; stop at the required checkpoint.

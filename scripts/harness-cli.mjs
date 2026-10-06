@@ -18,6 +18,7 @@ import { handleSessionCommand } from "../app/cli/commands/session.mjs";
 import { handleTaskCommand } from "../app/cli/commands/task.mjs";
 import { parseArgs } from "../app/cli/core/options.mjs";
 import { runPlanCheckCli } from "./plan-check.mjs";
+import { runSkillAccessCheckCli } from "./skill-access-check.mjs";
 
 export function usage() {
   console.log(`Context Factory Harness CLI
@@ -35,6 +36,7 @@ Usage:
   node scripts/harness-cli.mjs task:new <title> [--type <feature|defect|refactor|migration>] [--no-units] [--dry-run]
   node scripts/harness-cli.mjs task:list [--json]
   node scripts/harness-cli.mjs plan:check <task-dir> [--json]
+  node scripts/harness-cli.mjs skill:access-check <skill-path> [...]
   node scripts/harness-cli.mjs validate <file-path> --schema <schema-name>
   node scripts/harness-cli.mjs eval [--unit] [--datasets] [--json] [--quiet] [--provider <name>]
   node scripts/harness-cli.mjs lock [--check]
@@ -163,6 +165,10 @@ export async function handleCli(argv = process.argv.slice(2)) {
     }
     const taskPath = isAbsolute(targetDir) ? targetDir : resolve(process.cwd(), targetDir);
     return runPlanCheckCli(taskPath, flags);
+  }
+
+  if (command === "skill:access-check") {
+    return runSkillAccessCheckCli(parsedArgs);
   }
 
   if (command === "run") {
