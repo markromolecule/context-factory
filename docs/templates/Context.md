@@ -53,3 +53,24 @@ feature: "{{feature_name}}"
 ## 6. References & External Context
 
 - Figma links, PRDs, API specs, related ADRs ([[docs/decisions/README|Decisions]]), or related tasks ([[docs/tasks/README|Tasks]]).
+
+## 7. Discovery Evidence & Handoff
+
+### Evidence Inventory
+
+| ID | Source path / reference | Verification state | Finding | Consequence |
+| --- | --- | --- | --- | --- |
+| E-01 |  | verified / assumption / unknown |  |  |
+
+### Unknowns and Blockers
+
+| ID | Question or gap | Classification | Owner | Blocks readiness? | Resolution |
+| --- | --- | --- | --- | --- | --- |
+| U-01 |  | assumption / unknown / blocker |  | yes / no |  |
+
+### Discovery Handoff
+
+- **Allowed recipients:** `grounding`, `grill`
+- **Forbidden direct recipients:** `plan`, `plan-review`, `execute`
+- **Ready for grill:** yes / no
+- **Context content hash:**

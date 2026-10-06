@@ -215,6 +215,7 @@
     "evals/catalog-coverage.test.mjs",
     "evals/conformance-cli.test.mjs",
     "evals/conformance-gate.test.mjs",
+    "evals/discovery-handoff.test.mjs",
     "evals/laravel-adapter.test.mjs",
     "evals/lifecycle-conformance.test.mjs",
     "evals/plan-check.test.mjs",

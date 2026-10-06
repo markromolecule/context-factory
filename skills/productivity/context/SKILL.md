@@ -7,6 +7,14 @@ description: Author, discover, and structure a comprehensive, grilled context sp
 
 Remain in discovery and context formulation. Do not write production code or jump prematurely into implementation.
 
+## Access declaration
+
+- **Reads:** the user brief, repository evidence, applicable rules, decisions, and source contracts.
+- **Writes:** its own context specification under `docs/context/`.
+- **Exposes to:** `grounding` and `grill` only.
+
+Do not hand the context specification directly to `plan`, `plan-review`, `execute`, or another downstream skill. `grill` owns the released discovery brief.
+
 ## Overview & Mental Model
 
 The `context` skill transforms raw product concepts, user requests, or bug reports into unambiguous, high-fidelity context specifications under `docs/context/`. It embeds the `grill` discovery methodology to interrogate requirements, scenarios, and constraints *before* handing off to `plan`.
@@ -26,6 +34,7 @@ graph LR
 - Determine the domain or feature name (e.g. `auth/social-login`, `billing/stripe-checkout`, `fixes/session-timeout`).
 - Check if an existing context document exists in `docs/context/`. If not, initialize a new specification file (e.g., `docs/context/features/<domain>/<feature>.md` or `docs/context/fixes/<date>-<feature>.md`) using [[docs/templates/Context|Context Template]] (`docs/templates/Context.md`).
 - Set frontmatter `status: draft`.
+- Record evidence with source path, heading or symbol, verification state, and consequence. Classify every gap as an assumption, an unknown with an owner, or a blocker. A material unknown keeps the specification `draft`.
 
 ### 2. Embedded Grilling & Discovery
 
@@ -33,7 +42,8 @@ graph LR
   - Interrogate the core problem, user personas, desired business value, happy-path journeys, edge cases, and non-goals.
   - Ask **exactly one unresolved question at a time**, explaining why it matters and providing recommended options with clear trade-offs.
   - Inspect existing repository source files, tests, configuration, schemas, and ADRs (`explore`) to resolve facts that code can already answer without asking the user.
-  - Formulate concrete happy-path, boundary, failure, abuse, concurrency, and lifecycle scenarios.
+- Formulate concrete happy-path, boundary, failure, abuse, concurrency, and lifecycle scenarios.
+- Do not turn an assumption into a decision without recorded evidence or user confirmation.
 
 ### 3. Structure & Document Context Sections
 
@@ -67,10 +77,12 @@ Do not mark the context specification as `ready` until:
 - Unresolved assumptions are resolved or explicitly marked as blockers;
 - The user confirms the shared understanding.
 
+Do not mark the context `ready` while a material unknown or blocker remains.
+
 ### 5. Synchronization & Handoff to `/plan`
 
 - Once audited and confirmed, update the frontmatter to `status: ready`.
-- Hand off the stable context specification path directly to `plan` (`skills/plan/SKILL.md`) to decompose the requirements into a phased task plan under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`.
+- Supply the ready context specification only to `grounding` and `grill`. `grounding` returns provenance-labeled claims to `grill`; `grill` challenges the evidence and releases the sole plan-facing brief.
 - Stop without writing production code.
 
 ## Completion

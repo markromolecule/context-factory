@@ -5,6 +5,14 @@ description: Retrieve and reconcile canonical LLM Wiki knowledge by scope, autho
 
 # Knowledge Grounding
 
+## Access declaration
+
+- **Reads:** canonical knowledge and, when supplied, a `context` specification.
+- **Writes:** no discovery record or brief.
+- **Exposes to:** `grill` only, as a provenance-labeled claim packet.
+
+Do not expose a context-derived claim directly to `plan`, `plan-review`, `execute`, or another downstream skill.
+
 ## Retrieval
 
 1. Filter knowledge by applicable scope, path, type, lifecycle status, and task terms.
@@ -23,4 +31,6 @@ description: Retrieve and reconcile canonical LLM Wiki knowledge by scope, autho
 
 ## Output
 
-For each selected note, retain its ID, path, heading, status, authority, owner, last-verified date, content hash, and reason for selection. State when the Wiki has no grounded answer.
+Give `grill` one claim packet per requested scope. Each claim retains its ID, source path and heading, authority, lifecycle state, last-verified date, content hash, selection reason, and one of `verified`, `assumption`, `conflict`, or `unknown`.
+
+Conflicting claims remain separate records. Do not select a winner, change a context specification, or create a discovery brief; `grill` records any resolution and its evidence. State explicitly when the Wiki has no grounded answer, then stop.

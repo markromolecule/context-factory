@@ -1,7 +1,7 @@
 ---
 title: "Skill Lifecycle Handoffs and Task Git Policy"
 type: task
-status: planned
+status: in_progress
 created: "2026-10-06"
 tags: [task, skills, workflow]
 plan_id: "PLN-0003"

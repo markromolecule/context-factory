@@ -4,7 +4,7 @@ type: phase
 parent: "0003-task-skill-lifecycle-handoffs-and-task-git-policy"
 phase: "01"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, phase]
 ---
@@ -23,8 +23,8 @@ Context ready and user decisions accepted. Work sequentially on the task branch;
 
 | Unit | Outcome | Artifact | Depends on | Execution | Status |
 | --- | --- | --- | --- | --- | --- |
-| 01.01 | Record the superseding lifecycle decision | unit-01-discovery-and-scenarios.md | none | sequential | planned |
-| 01.02 | Strengthen context, grounding, and grill handoffs | unit-02-discovery-contract.md | 01.01 | sequential | planned |
+| 01.01 | Record the superseding lifecycle decision | unit-01-discovery-and-scenarios.md | none | sequential | verified |
+| 01.02 | Strengthen context, grounding, and grill handoffs | unit-02-discovery-contract.md | 01.01 | sequential | verified |
 
 ## Impacted Files & Components
 
@@ -32,8 +32,8 @@ ADRs 0014/0024, three discovery skills, Context template, discovery ownership. E
 
 ## Implementation Tasks
 
-- [ ] 01.01 Record the superseding lifecycle decision
-- [ ] 01.02 Strengthen context, grounding, and grill handoffs
+- [x] 01.01 Record the superseding lifecycle decision
+- [x] 01.02 Strengthen context, grounding, and grill handoffs
 
 ## Verification & Testing
 
