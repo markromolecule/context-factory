@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.15.1",
-  "digest": "sha256:8b2a9c0f2d30d0bf52edcc76aeca2ea946c3cdc8fcd796670c359632e93773ce",
+  "digest": "sha256:0aee9205ffcd3b762f9b5f9bfbf7be5174d78268ac5e5fd51272db41c309cedf",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -111,7 +111,7 @@
     "evals/cases/solid-principles.json": "sha256:8d3f57d760e9b3ff8dfd86bc4f8ed4ea771c8f12e5a158a3590dc42a14f798e6",
     "evals/cases/sync-modernization.json": "sha256:15dc784f77c4a52326b2c851bd47b94580a8b0065133cfdd6928f00f2790a40f",
     "evals/cases/unsupported-completion.json": "sha256:95679764dadfe313f2e31ac97a9785a5a9136ca0dc724fe469f4486c0b360e9e",
-    "evals/conformance-cli.test.mjs": "sha256:ccd05ce2d836f2c7e466d9ef98b3a8b9cea1143163c6febeece29ee6a60d645a",
+    "evals/conformance-cli.test.mjs": "sha256:40618ee7062ae5a9f1aeb3059c332758bd8bf3bb8307a454e6b3f72d8f694aad",
     "evals/conformance-gate.test.mjs": "sha256:e10a232bc011558cd497fecbb2df4e173f7e8e51c407eaa463d8853e0275aa54",
     "evals/datasets/conformance/01-missing-binding.json": "sha256:2fd12d8c3d16cd38b1535053e1c0fd3e997af44e0171b7aecdfbd4f58d11c132",
     "evals/datasets/conformance/02-wrong-stack.json": "sha256:b502d6c0a620745af6292315b396dd248107e420d8254ca9ad6c488d3e0fd7ee",

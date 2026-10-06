@@ -27,12 +27,12 @@ export function parseArgs(rawArgs = []) {
       if (eqIndex >= 0) {
         const key = camelCase(arg.slice(2, eqIndex));
         const val = parseValue(arg.slice(eqIndex + 1));
-        flags[key] = val;
+        assignFlag(flags, key, val);
       } else {
         const key = camelCase(arg.slice(2));
         const nextArg = rawArgs[i + 1];
         if (nextArg !== undefined && !nextArg.startsWith("-")) {
-          flags[key] = parseValue(nextArg);
+          assignFlag(flags, key, parseValue(nextArg));
           i++;
         } else {
           flags[key] = true;
@@ -58,6 +58,21 @@ export function parseArgs(rawArgs = []) {
   }
 
   return { command: positionals[0], args: positionals.slice(1), flags, positionals };
+}
+
+export function normalizeScope(scope) {
+  const values = Array.isArray(scope) ? scope : [scope];
+  return values.flatMap((value) => typeof value === "string"
+    ? value.split(",").map((path) => path.trim()).filter(Boolean)
+    : []);
+}
+
+function assignFlag(flags, key, value) {
+  if (key === "scope" || key === "paths") {
+    flags[key] = [...normalizeScope(flags[key]), ...normalizeScope(value)];
+    return;
+  }
+  flags[key] = value;
 }
 
 function camelCase(str) {

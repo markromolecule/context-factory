@@ -3,14 +3,15 @@ import { resolve } from "node:path";
 import { resolveContext, root } from "../../../scripts/context-core.mjs";
 import { validateWaiver } from "../../../orchestrator/conformance/waiver-policy.mjs";
 import { badges, colors } from "../core/formatter.mjs";
+import { normalizeScope } from "../core/options.mjs";
 
 export async function handlePreflightCommand(args = [], flags = {}) {
   const isJson = Boolean(flags.json);
   const stack = flags.stack || flags.stacks || undefined;
-  const scope = flags.scope || flags.paths || undefined;
+  const scope = normalizeScope(flags.scope || flags.paths);
   const waiverPath = flags.waiver || null;
 
-  const request = args.join(" ").trim() || (scope ? `Verify scope ${scope}` : "");
+  const request = args.join(" ").trim() || (scope.length > 0 ? `Verify scope ${scope.join(", ")}` : "");
   if (!request && !scope) {
     throw new Error("Usage: context-cli preflight \"<prompt>\" [--stack <name>] [--scope <paths>] [--waiver <path>] [--json]");
   }
@@ -41,7 +42,7 @@ export async function handlePreflightCommand(args = [], flags = {}) {
       status: "PASS",
       request,
       stack: binding?.stack || stack || "typescript",
-      scope: binding?.affectedScope || (scope ? [scope] : []),
+      scope: binding?.affectedScope || scope,
       bindingId: binding?.id || null,
       bindingHash: binding?.bindingHash || null,
       directivesCount: binding?.directives?.length || 0,

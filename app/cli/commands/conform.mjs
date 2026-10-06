@@ -5,6 +5,7 @@ import { evaluateConformance } from "../../../orchestrator/conformance/conforman
 import { registerTypeScriptAdapter } from "../../../orchestrator/conformance/adapters/typescript.mjs";
 import { validateWaiver } from "../../../orchestrator/conformance/waiver-policy.mjs";
 import { badges, colors } from "../core/formatter.mjs";
+import { normalizeScope } from "../core/options.mjs";
 
 export async function handleConformCommand(args = [], flags = {}) {
   // Ensure TypeScript adapter is registered at composition root
@@ -12,12 +13,12 @@ export async function handleConformCommand(args = [], flags = {}) {
 
   const isJson = Boolean(flags.json);
   const stack = flags.stack || flags.stacks || "typescript";
-  const scope = flags.scope || flags.paths || null;
+  const scope = normalizeScope(flags.scope || flags.paths);
   const waiverPath = flags.waiver || null;
   const humanEvidence = flags["human-evidence"] || flags.humanEvidence || flags.evidence || null;
   const outPath = flags.out || flags.output || null;
 
-  const request = args.join(" ").trim() || (scope ? `Verify conformance for ${scope}` : "");
+  const request = args.join(" ").trim() || (scope.length > 0 ? `Verify conformance for ${scope.join(", ")}` : "");
   if (!request && !scope) {
     throw new Error("Usage: context-cli conform \"<prompt>\" [--stack <name>] [--scope <paths>] [--waiver <path>] [--human-evidence <text>] [--out <path>] [--json]");
   }
@@ -31,7 +32,7 @@ export async function handleConformCommand(args = [], flags = {}) {
       waivers.push(waiverContent);
     }
 
-    const changedScope = scope ? (Array.isArray(scope) ? scope : [scope]) : [];
+    const changedScope = scope;
     const selection = await resolveContext(request, {
       stack,
       scope: changedScope,

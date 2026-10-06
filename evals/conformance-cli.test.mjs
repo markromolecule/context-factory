@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { handlePreflightCommand } from "../app/cli/commands/preflight.mjs";
 import { handleConformCommand } from "../app/cli/commands/conform.mjs";
+import { parseArgs } from "../app/cli/core/options.mjs";
 import { loadSchema, assertValid } from "../orchestrator/validator.mjs";
 
 const VALID_HUMAN_WAIVER = {
@@ -31,6 +32,45 @@ const AGENT_FORGED_WAIVER = {
 };
 
 describe("Unit 03.03: AC-08 Authoritative Preflight CLI Command", () => {
+  it("normalizes repeated and comma-delimited --scope values into one exact path list", () => {
+    const parsed = parseArgs([
+      "preflight",
+      "--scope", "src/services/auth.ts,src/controllers/auth.ts",
+      "--scope", "src/data/auth-repository.ts",
+    ]);
+
+    assert.deepEqual(parsed.flags.scope, [
+      "src/services/auth.ts",
+      "src/controllers/auth.ts",
+      "src/data/auth-repository.ts",
+    ]);
+  });
+
+  it("records each comma-delimited scope path independently in its receipt", async () => {
+    let capturedJson = null;
+    const originalLog = console.log;
+    console.log = (text) => {
+      try { capturedJson = JSON.parse(text); } catch { /* non-JSON output */ }
+    };
+
+    try {
+      const exitCode = await handlePreflightCommand(
+        ["Verify multi-path scope receipt"],
+        {
+          stack: "typescript",
+          scope: "src/services/auth.ts,src/controllers/auth.ts",
+          strict: true,
+          json: true,
+        }
+      );
+
+      assert.equal(exitCode, 0);
+      assert.deepEqual(capturedJson.scope, ["src/controllers/auth.ts", "src/services/auth.ts"]);
+    } finally {
+      console.log = originalLog;
+    }
+  });
+
   it("exits 0 with valid preflight result when scope and stack are specified", async () => {
     let capturedJson = null;
     const originalLog = console.log;
