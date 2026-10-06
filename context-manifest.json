@@ -158,9 +158,14 @@
   ],
   "schemas": [
     "schemas/claim-evidence.schema.json",
+    "schemas/conformance-report.schema.json",
+    "schemas/conformance-result.schema.json",
     "schemas/evaluation-report.schema.json",
     "schemas/knowledge.schema.json",
     "schemas/project-profile.schema.json",
+    "schemas/rule-binding.schema.json",
+    "schemas/rule-descriptor.schema.json",
+    "schemas/rule-waiver.schema.json",
     "schemas/run-result.schema.json",
     "schemas/session-state.schema.json"
   ],
@@ -206,6 +211,7 @@
   ],
   "tools": [
     "evals/plan-check.test.mjs",
+    "evals/rule-contract-schema.test.mjs",
     "evals/rule-density.test.mjs",
     "evals/run-evals.mjs",
     "evals/session-checkpoint.test.mjs",

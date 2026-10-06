@@ -66,6 +66,13 @@ export function validateSchema(data, schema, path = "#") {
     }
   }
 
+  // Const check
+  if (schema.const !== undefined) {
+    if (JSON.stringify(data) !== JSON.stringify(schema.const)) {
+      errors.push(`${path}: value ${JSON.stringify(data)} does not match const ${JSON.stringify(schema.const)}`);
+    }
+  }
+
   // Enum check
   if (schema.enum && Array.isArray(schema.enum)) {
     if (!schema.enum.includes(data)) {
@@ -73,8 +80,20 @@ export function validateSchema(data, schema, path = "#") {
     }
   }
 
-  // String format check
-  if (schema.type === "string" && schema.format) {
+  // String checks
+  if (typeof data === "string") {
+    if (typeof schema.minLength === "number" && data.length < schema.minLength) {
+      errors.push(`${path}: string length ${data.length} is less than minLength ${schema.minLength}`);
+    }
+    if (typeof schema.maxLength === "number" && data.length > schema.maxLength) {
+      errors.push(`${path}: string length ${data.length} is greater than maxLength ${schema.maxLength}`);
+    }
+    if (typeof schema.pattern === "string") {
+      const regex = new RegExp(schema.pattern);
+      if (!regex.test(data)) {
+        errors.push(`${path}: "${data}" does not match pattern "${schema.pattern}"`);
+      }
+    }
     if (schema.format === "date" && !isValidDate(data)) {
       errors.push(`${path}: "${data}" is not a valid ISO date (YYYY-MM-DD)`);
     } else if (schema.format === "date-time" && !isValidDateTime(data)) {
@@ -97,10 +116,25 @@ export function validateSchema(data, schema, path = "#") {
       }
     }
 
-    if (schema.properties && typeof schema.properties === "object") {
-      for (const [propKey, propSchema] of Object.entries(schema.properties)) {
-        if (data[propKey] !== undefined) {
-          const res = validateSchema(data[propKey], propSchema, `${path}/${propKey}`);
+    const definedProperties = schema.properties && typeof schema.properties === "object" ? schema.properties : {};
+
+    for (const [propKey, propSchema] of Object.entries(definedProperties)) {
+      if (data[propKey] !== undefined) {
+        const res = validateSchema(data[propKey], propSchema, `${path}/${propKey}`);
+        errors.push(...res.errors);
+      }
+    }
+
+    if (schema.additionalProperties === false) {
+      for (const dataKey of Object.keys(data)) {
+        if (definedProperties[dataKey] === undefined) {
+          errors.push(`${path}: additional property "${dataKey}" is not allowed`);
+        }
+      }
+    } else if (schema.additionalProperties && typeof schema.additionalProperties === "object") {
+      for (const dataKey of Object.keys(data)) {
+        if (definedProperties[dataKey] === undefined) {
+          const res = validateSchema(data[dataKey], schema.additionalProperties, `${path}/${dataKey}`);
           errors.push(...res.errors);
         }
       }
@@ -111,6 +145,21 @@ export function validateSchema(data, schema, path = "#") {
   if (Array.isArray(data)) {
     if (typeof schema.minItems === "number" && data.length < schema.minItems) {
       errors.push(`${path}: array length ${data.length} is less than minItems ${schema.minItems}`);
+    }
+    if (typeof schema.maxItems === "number" && data.length > schema.maxItems) {
+      errors.push(`${path}: array length ${data.length} is greater than maxItems ${schema.maxItems}`);
+    }
+
+    if (schema.uniqueItems === true) {
+      const seen = new Set();
+      for (let i = 0; i < data.length; i++) {
+        const serialized = JSON.stringify(data[i]);
+        if (seen.has(serialized)) {
+          errors.push(`${path}: array items must be unique, duplicate found at index ${i}`);
+          break;
+        }
+        seen.add(serialized);
+      }
     }
 
     if (schema.items) {

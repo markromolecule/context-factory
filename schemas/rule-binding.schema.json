@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-factory.local/schemas/rule-binding.schema.json",
+  "title": "Context Factory Rule Binding Contract",
+  "type": "object",
+  "required": [
+    "id",
+    "taskId",
+    "phase",
+    "unit",
+    "stack",
+    "workflow",
+    "affectedScope",
+    "directives",
+    "waivers",
+    "bindingHash",
+    "createdAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phase": {
+      "type": "string",
+      "minLength": 1
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stack": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflow": {
+      "type": "string",
+      "minLength": 1
+    },
+    "affectedScope": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "directives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "rulePath",
+          "mode",
+          "contentHash"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rulePath": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "automated-blocking",
+              "evidence-blocking",
+              "advisory",
+              "unsupported"
+            ]
+          },
+          "contentHash": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "waivers": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "bindingHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

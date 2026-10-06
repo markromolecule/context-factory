@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-factory.local/schemas/conformance-report.schema.json",
+  "title": "Context Factory Conformance Report Contract",
+  "type": "object",
+  "required": [
+    "id",
+    "bindingId",
+    "bindingHash",
+    "diffHash",
+    "verdict",
+    "summary",
+    "results",
+    "generatedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bindingId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bindingHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "diffHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED"
+      ]
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "passed",
+        "failed",
+        "waived",
+        "notAutomatable",
+        "toolUnavailable",
+        "unsupported",
+        "total"
+      ],
+      "properties": {
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "waived": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "notAutomatable": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "toolUnavailable": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unsupported": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "directiveId",
+          "status",
+          "mode",
+          "evidence",
+          "evaluatedAt"
+        ],
+        "properties": {
+          "directiveId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PASS",
+              "FAIL",
+              "WAIVED",
+              "NOT_AUTOMATABLE",
+              "TOOL_UNAVAILABLE",
+              "UNSUPPORTED"
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "automated-blocking",
+              "evidence-blocking",
+              "advisory",
+              "unsupported"
+            ]
+          },
+          "evidence": {
+            "type": "object",
+            "required": ["verifierType"],
+            "properties": {
+              "verifierType": {
+                "type": "string",
+                "minLength": 1
+              },
+              "command": {
+                "type": "string"
+              },
+              "exitCode": {
+                "type": "integer"
+              },
+              "outputFragment": {
+                "type": "string"
+              },
+              "humanEvidence": {
+                "type": "string"
+              },
+              "waiverId": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "durationMs": {
+            "type": "number",
+            "minimum": 0
+          },
+          "evaluatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

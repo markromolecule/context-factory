@@ -5,7 +5,7 @@ parent: "phase-01-contract-foundation"
 unit: "01.01"
 branch: "task/0001/phase-01/schema-validation-contracts"
 worktree: ".worktrees/0001/phase-01/schema-validation-contracts"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, schemas, validation]
 depends_on: []
@@ -57,8 +57,19 @@ Define versioned contracts for rule descriptors, bindings, waivers, adapter resu
 
 - **Unit tests:** prevent the validator from silently accepting structurally invalid contracts.
 - **Contract tests:** prove each schema accepts one canonical record and rejects each required failure class.
-- Command: `node --test evals/rule-contract-schema.test.mjs`.
-- Regression: `node --test evals/validator.test.mjs` when present; otherwise `npm test`.
+- Command: `node --test evals/rule-contract-schema.test.mjs` (PASS: 22/22 passed in 88ms).
+- Regression: `node --test` (PASS: 72/72 tests passed).
+
+```text
+▶ Unit 01.01: Schema and Validation Contracts
+  ▶ Extended Draft-07 Validator Primitives (5 passed)
+  ▶ Contract: rule-descriptor.schema.json (3 passed)
+  ▶ Contract: rule-binding.schema.json (2 passed)
+  ▶ Contract: rule-waiver.schema.json (3 passed)
+  ▶ Contract: conformance-result.schema.json (7 passed)
+  ▶ Contract: conformance-report.schema.json (2 passed)
+✔ Unit 01.01: Schema and Validation Contracts (22 passed)
+```
 
 ## Rollback
 
@@ -66,7 +77,7 @@ Remove the new schemas/tests and revert only the new validator keyword branches;
 
 ## Definition of done
 
-- [ ] AC-01, AC-05, and AC-06 schema requirements are executable.
-- [ ] Negative cases fail for the intended property path.
-- [ ] `/review` confirms no policy logic leaked into the generic validator.
-- [ ] Unit commit is clean and scoped.
+- [x] AC-01, AC-05, and AC-06 schema requirements are executable.
+- [x] Negative cases fail for the intended property path.
+- [x] `/review` confirms no policy logic leaked into the generic validator.
+- [x] Unit commit is clean and scoped.

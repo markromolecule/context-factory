@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-factory.local/schemas/rule-descriptor.schema.json",
+  "title": "Context Factory Rule Descriptor Contract",
+  "type": "object",
+  "required": [
+    "id",
+    "rulePath",
+    "title",
+    "stack",
+    "sourceHash",
+    "directives"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rulePath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stack": {
+      "type": "string",
+      "enum": [
+        "typescript",
+        "laravel",
+        "global",
+        "common",
+        "solid",
+        "flutter",
+        "general"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "sourceHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "directives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "mode",
+          "statement",
+          "contentHash"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "automated-blocking",
+              "evidence-blocking",
+              "advisory",
+              "unsupported"
+            ]
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contentHash": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "verifier": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "linter",
+                  "typechecker",
+                  "test",
+                  "ast",
+                  "human-evidence",
+                  "none"
+                ]
+              },
+              "command": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "applicability": {
+            "type": "object",
+            "properties": {
+              "paths": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "layers": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "workflows": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
