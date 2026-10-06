@@ -211,6 +211,7 @@
   ],
   "tools": [
     "evals/bridge-conformance.test.mjs",
+    "evals/catalog-coverage.test.mjs",
     "evals/conformance-cli.test.mjs",
     "evals/conformance-gate.test.mjs",
     "evals/lifecycle-conformance.test.mjs",

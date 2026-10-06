@@ -6,7 +6,7 @@ scope: Code structure, contracts, and module boundaries.
 stack: global
 appliesTo: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs", "**/*.php", "**/*.dart"]
 layers: ["architecture", "domain", "services", "controllers", "components"]
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Architecture Conformance

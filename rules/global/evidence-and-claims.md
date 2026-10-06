@@ -6,7 +6,7 @@ scope: Planning, implementation, review, research, documentation, tool use, and 
 stack: global
 appliesTo: ["docs/**/*.md", "docs/**/*.mdx", "docs/**/*.json"]
 layers: ["documentation", "planning", "review"]
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Evidence and Claims
