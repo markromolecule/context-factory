@@ -5,7 +5,7 @@ parent: "phase-05-typescript-catalog"
 unit: "05.00"
 branch: "task/0001/phase-05/conformance-scope-repair"
 worktree: ".worktrees/0001/phase-05/conformance-scope-repair"
-status: verified
+status: merged
 created: "2026-10-06"
 tags: [task, unit, conformance, cli, repair]
 depends_on: ["04.03"]
