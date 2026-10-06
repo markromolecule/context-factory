@@ -1,0 +1,13 @@
+{
+  "id": "ds-conf-03-stale-hash",
+  "name": "Adversarial: Stale or Forged Binding Hash Rejection",
+  "domain": "conformance",
+  "adversarial": true,
+  "adversarialClass": "stale-hash",
+  "request": "Implement user service with forged binding hash",
+  "stack": "typescript",
+  "scope": ["src/services/user-service.ts"],
+  "tamperedBindingHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "expectedStatus": "rejected",
+  "expectedErrorMatch": "bindingHash mismatch"
+}

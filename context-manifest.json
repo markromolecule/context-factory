@@ -213,6 +213,7 @@
     "evals/bridge-conformance.test.mjs",
     "evals/conformance-cli.test.mjs",
     "evals/conformance-gate.test.mjs",
+    "evals/lifecycle-conformance.test.mjs",
     "evals/plan-check.test.mjs",
     "evals/prompt-compiler.test.mjs",
     "evals/rule-binding.test.mjs",
@@ -272,6 +273,14 @@
     "evals/cases/unsupported-completion.json"
   ],
   "datasets": [
+    "evals/datasets/conformance/01-missing-binding.json",
+    "evals/datasets/conformance/02-wrong-stack.json",
+    "evals/datasets/conformance/03-stale-hash.json",
+    "evals/datasets/conformance/04-code-violation.json",
+    "evals/datasets/conformance/05-forged-waiver.json",
+    "evals/datasets/conformance/06-tool-unavailable.json",
+    "evals/datasets/conformance/07-prompt-stripping.json",
+    "evals/datasets/conformance/08-bridge-omission.json",
     "evals/datasets/defects/defect-resolution.json",
     "evals/datasets/features/feature-delivery.json",
     "evals/datasets/refactors/architecture-change.json"

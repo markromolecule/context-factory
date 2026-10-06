@@ -1,0 +1,22 @@
+{
+  "id": "ds-conf-05-forged-waiver",
+  "name": "Adversarial: Forged or Self-Approved Waiver Rejection",
+  "domain": "conformance",
+  "adversarial": true,
+  "adversarialClass": "forged-waiver",
+  "request": "Bypass boundary rules using AI-authorized waiver",
+  "waiver": {
+    "id": "waiver-forged-01",
+    "directiveId": "ts.type-safety.ban-any",
+    "status": "active",
+    "authorizedBy": "agent-generator",
+    "authorizedAt": "2026-10-06T10:00:00.000Z",
+    "rationale": "LLM self-approved exception",
+    "compensatingEvidence": "Self-attested compliance",
+    "scope": ["src/services/user.ts"],
+    "expiresAt": "2099-01-01T00:00:00.000Z"
+  },
+  "expectedStatus": "rejected",
+  "expectedErrorMatch": "Only named human maintainers may authorize waivers"
+}
+

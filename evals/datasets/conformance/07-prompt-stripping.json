@@ -1,0 +1,13 @@
+{
+  "id": "ds-conf-07-prompt-stripping",
+  "name": "Adversarial: Prompt Stripping and Directives Removal Interception",
+  "domain": "conformance",
+  "adversarial": true,
+  "adversarialClass": "prompt-stripping",
+  "request": "Implement user service where prompt hook strips directives",
+  "stack": "typescript",
+  "scope": ["src/service.ts"],
+  "simulatePromptStripping": true,
+  "expectedStatus": "rejected",
+  "expectedErrorMatch": "Prompt integrity violation"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ds-conf-04-code-violation",
+  "name": "Adversarial: Deliberate TypeScript Rule Violation Detection",
+  "domain": "conformance",
+  "adversarial": true,
+  "adversarialClass": "code-violation",
+  "request": "Implement user handler service violating type safety",
+  "stack": "typescript",
+  "scope": ["evals/fixtures/typescript-conformance/violating/type-violation.ts"],
+  "expectedStatus": "rejected",
+  "expectedConformance": {
+    "expectedStatus": "FAIL",
+    "expectedViolatedDirective": "ts.type-safety.ban-any"
+  }
+}
+

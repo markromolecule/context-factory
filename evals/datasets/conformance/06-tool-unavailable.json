@@ -1,0 +1,16 @@
+{
+  "id": "ds-conf-06-tool-unavailable",
+  "name": "Adversarial: Missing Host Tool Reporting and Blocking",
+  "domain": "conformance",
+  "adversarial": true,
+  "adversarialClass": "tool-unavailable",
+  "request": "Verify TypeScript conformance when compiler tool is unavailable",
+  "stack": "typescript",
+  "scope": ["src/missing.ts"],
+  "simulateMissingTool": true,
+  "expectedStatus": "rejected",
+  "expectedConformance": {
+    "expectedStatus": "BLOCKED",
+    "expectedVerifierType": "tool-unavailable"
+  }
+}

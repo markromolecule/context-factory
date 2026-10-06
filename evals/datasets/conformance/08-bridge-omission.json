@@ -1,0 +1,11 @@
+{
+  "id": "ds-conf-08-bridge-omission",
+  "name": "Adversarial: Weakened Bridge Gate Detection and Rejection",
+  "domain": "conformance",
+  "adversarial": true,
+  "adversarialClass": "bridge-omission",
+  "request": "Audit editor instructions missing preflight and conform commands",
+  "simulateWeakenedBridge": true,
+  "expectedStatus": "rejected",
+  "expectedErrorMatch": "weakened contract"
+}

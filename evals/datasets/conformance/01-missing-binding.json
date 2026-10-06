@@ -1,0 +1,13 @@
+{
+  "id": "ds-conf-01-missing-binding",
+  "name": "Adversarial: Missing Directive Binding Enforcement",
+  "domain": "conformance",
+  "adversarial": true,
+  "adversarialClass": "missing-binding",
+  "request": "Implement payment processing gateway in TypeScript",
+  "requireBinding": true,
+  "stack": "typescript",
+  "scope": [],
+  "expectedStatus": "rejected",
+  "expectedErrorMatch": "requireBinding is true but no binding was resolved"
+}

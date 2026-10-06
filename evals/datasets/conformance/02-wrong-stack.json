@@ -1,0 +1,15 @@
+{
+  "id": "ds-conf-02-wrong-stack",
+  "name": "Adversarial: Unsupported / Unmigrated Stack Conformance",
+  "domain": "conformance",
+  "adversarial": true,
+  "adversarialClass": "wrong-stack",
+  "request": "Build mobile widget tree for user profile",
+  "stack": "flutter",
+  "scope": ["lib/screens/profile_view.dart"],
+  "expectedStatus": "rejected",
+  "expectedConformance": {
+    "expectedStatus": "FAIL",
+    "expectedVerifierType": "no-adapter-registered"
+  }
+}
