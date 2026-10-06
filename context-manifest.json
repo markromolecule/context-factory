@@ -210,6 +210,7 @@
     "docs/decisions/0029-executable-rule-conformance-harness.md"
   ],
   "tools": [
+    "evals/conformance-gate.test.mjs",
     "evals/plan-check.test.mjs",
     "evals/prompt-compiler.test.mjs",
     "evals/rule-binding.test.mjs",
@@ -220,6 +221,10 @@
     "evals/session-checkpoint.test.mjs",
     "evals/session-contract.test.mjs",
     "evals/task-scaffold.test.mjs",
+    "orchestrator/conformance/adapter-contract.mjs",
+    "orchestrator/conformance/conformance-orchestrator.mjs",
+    "orchestrator/conformance/evidence-gate.mjs",
+    "orchestrator/conformance/waiver-policy.mjs",
     "orchestrator/rules/binding-compiler.mjs",
     "orchestrator/rules/descriptor-parser.mjs",
     "orchestrator/rules/prompt-compiler.mjs",

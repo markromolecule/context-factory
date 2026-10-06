@@ -5,7 +5,7 @@ parent: "phase-03-typescript-enforcement"
 unit: "03.01"
 branch: "task/0001/phase-03/conformance-evidence-gate"
 worktree: ".worktrees/0001/phase-03/conformance-evidence-gate"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, conformance, waiver, evidence]
 depends_on: ["02.02", "02.03"]
@@ -63,7 +63,7 @@ Remove orchestrator modules/tests; bindings and prompt compilation remain usable
 
 ## Definition of done
 
-- [ ] AC-05 and AC-06 pass.
-- [ ] No agent-provided field can activate a waiver.
-- [ ] Coverage and success calculations preserve all distinct states.
-- [ ] Architecture review confirms inward dependency direction.
+- [x] AC-05 and AC-06 pass.
+- [x] No agent-provided field can activate a waiver.
+- [x] Coverage and success calculations preserve all distinct states.
+- [x] Architecture review confirms inward dependency direction.
