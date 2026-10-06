@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.15.1",
-  "digest": "sha256:82b5586f6e245ded1979d68e90e31a453c42ba469872430a314fbf413d9a0fb7",
+  "digest": "sha256:fd615ab8ffd7853e5d4503303740f05f872e82c5132b33458c7b993f343c28ee",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -113,7 +113,7 @@
     "evals/datasets/defects/defect-resolution.json": "sha256:b0faa6d18d613418710598561a0abd7488df477d8ff3bbb357bf4ba18413b91f",
     "evals/datasets/features/feature-delivery.json": "sha256:edfdf324b7504cabce3af030d572d5eb0392c113570c16cd6e8de6b1e33411ff",
     "evals/datasets/refactors/architecture-change.json": "sha256:a09dfaf98ea783e66b090ae9e7f77fb9e5e0ea12753a9e1db90c1e3e7bedece8",
-    "evals/plan-check.test.mjs": "sha256:bd0b1aba3b549b502f2f2f50cf24d53404edcb4acabfbb1c094043fb62539a23",
+    "evals/plan-check.test.mjs": "sha256:b2ecd944bdf5b2d35e4cee2441c9afd3d0fe539010ccfb0447e60daf84906444",
     "evals/rule-binding.test.mjs": "sha256:6ea97caefd6ec7c624ec2087f9c5abef85f21436609f7f836e8e76e03fa8e5da",
     "evals/rule-contract-schema.test.mjs": "sha256:e2e032cf43a482476eb8b5833333d4240246d835b2a255f9e9443deda7022a07",
     "evals/rule-density.test.mjs": "sha256:9042e003ed9402720a8f9e23c9a07d2dd10e6dbf76d8662d80eb026648b49db1",
@@ -210,7 +210,7 @@
     "scripts/context-core.mjs": "sha256:5731f5b6a344ed1425e8ea96605155356ce29a51f149a685eb8c96b98b6f5e5a",
     "scripts/context.mjs": "sha256:3ab8c1e11c3528a9227cfe11e10632894ced6ab8b2a3cbfcad5caa757342b0f2",
     "scripts/harness-cli.mjs": "sha256:522e79fdcc96caa58719a44ff42beebfc563c36d0e78d61e28fd7c497d0ae73e",
-    "scripts/plan-check.mjs": "sha256:b2c184f3629826346a9b5ce3f992d6f11ad69255dc9f7ccfc8f8d1139cda564f",
+    "scripts/plan-check.mjs": "sha256:e3346468863a585646808894783e4dd5631a0aa8431d392705c9c1226496fb11",
     "scripts/session-core.mjs": "sha256:bdf5ff9eee8b383542fb3d889a02331df1e105cac368ab2112c3b2facdb1678c",
     "scripts/task-workflow.mjs": "sha256:da8ca339e448a7e381c29fcfa7f36df343b49305528fa83af992ac186af4591d",
     "scripts/triage.mjs": "sha256:a03ef4870822061f9509fed284274d631a39a164a3d3e672dc072b07eafe0706",

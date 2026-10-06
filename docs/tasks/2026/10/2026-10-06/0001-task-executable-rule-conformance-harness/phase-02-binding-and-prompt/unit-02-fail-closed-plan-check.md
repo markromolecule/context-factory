@@ -5,7 +5,7 @@ parent: "phase-02-binding-and-prompt"
 unit: "02.02"
 branch: "task/0001/phase-02/fail-closed-plan-check"
 worktree: ".worktrees/0001/phase-02/fail-closed-plan-check"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, plan-check, validation]
 depends_on: ["01.02"]
@@ -52,7 +52,9 @@ Make plan validation reject missing, placeholder, nonexistent, wrong-stack, irre
 
 - **Unit tests:** parser/diagnostic helpers.
 - **Contract/CLI tests:** exact non-zero exit behavior for all AC-04 cases.
-- Command: `node --test evals/plan-check.test.mjs`.
+- Command: `node --test evals/plan-check.test.mjs` (12/12 passed).
+- Command: `node --test` (98/98 passed).
+- Doctor & Sync: `npm run sync && node scripts/context.mjs doctor` (healthy).
 
 ## Rollback
 
@@ -60,7 +62,7 @@ Revert rule-specific checks and fixtures; DAG/scope validation remains untouched
 
 ## Definition of done
 
-- [ ] AC-04 passes and missing bindings cannot produce PASS.
-- [ ] JSON and human output agree.
-- [ ] Existing DAG/scope cases remain green.
-- [ ] Unit passes `/review`.
+- [x] AC-04 passes and missing bindings cannot produce PASS.
+- [x] JSON and human output agree.
+- [x] Existing DAG/scope cases remain green.
+- [x] Unit passes `/review`.

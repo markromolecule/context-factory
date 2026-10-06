@@ -1,6 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { frontmatter } from "./context-core.mjs";
+import { frontmatter, root } from "./context-core.mjs";
+import { parseRuleCatalog } from "../orchestrator/rules/descriptor-parser.mjs";
 
 /**
  * Builds dependency graph from unit objects
@@ -89,7 +90,7 @@ export function extractDeclaredScopes(unitContent) {
   const scopeBlock = nextHeaderMatch ? afterHeader.slice(0, nextHeaderMatch.index) : afterHeader;
 
   const inScopeMatch = scopeBlock.match(
-    /(?:^|\n)\s*[-*]*\s*\*\*In scope:\*\*\s*([\s\S]*?)(?=(?:\n\s*[-*]*\s*\*\*Out of scope:\*\*|\n\s*##|$))/i
+    /(?:^|\n)\s*[-*]*\s*\*\*In scope:\*\*\s*([\s\S]*?)(?=(?:\n\s*[-*]*\s*\*\*Out of scope:\*\*|\n\s*<language_rules>|\n\s*##|$))/i
   );
   if (!inScopeMatch) return [];
 
@@ -129,17 +130,22 @@ export function extractDeclaredScopes(unitContent) {
 
 function isLikelyFilePath(token) {
   if (!token || typeof token !== "string") return false;
+  const clean = token.trim();
+  // Ignore phrases containing spaces (e.g. "exact files/functions/endpoints/schemas.")
+  if (/\s/.test(clean)) return false;
   // Ignore CLI flags like --help
-  if (token.startsWith("-")) return false;
+  if (clean.startsWith("-")) return false;
+  // Rule catalog paths are rules, not application file scope
+  if (clean.startsWith("rules/") && clean.endsWith(".md")) return false;
   // Ignore single identifier without dots or slashes (e.g. function names or keywords)
-  if (!token.includes("/") && !token.includes(".")) {
+  if (!clean.includes("/") && !clean.includes(".")) {
     // Unless known special filenames
-    return /^(Dockerfile|Makefile|LICENSE|Procfile|Gemfile)$/i.test(token);
+    return /^(Dockerfile|Makefile|LICENSE|Procfile|Gemfile)$/i.test(clean);
   }
   // If it has a slash, e.g. path/to/file or .agents/skills/
-  if (token.includes("/")) return true;
+  if (clean.includes("/")) return true;
   // If it has a file extension (e.g. foo.js, config.json)
-  return /\.[a-zA-Z0-9_-]+$/.test(token);
+  return /\.[a-zA-Z0-9_-]+$/.test(clean);
 }
 
 function normalizePath(p) {
@@ -236,14 +242,152 @@ export function checkDisjointScopes(parallelPairs) {
 }
 
 /**
- * Checks if unit markdown content contains a non-empty <language_rules> block
+ * Pure glob matcher for file patterns
+ */
+export function matchesGlob(filePath, pattern) {
+  const normPath = filePath.replaceAll("\\", "/").replace(/^\.\//, "");
+  const normPattern = pattern.replaceAll("\\", "/").replace(/^\.\//, "");
+
+  if (normPattern === "**/*" || normPattern === "**" || normPattern === "*") {
+    return true;
+  }
+  if (normPath === normPattern) return true;
+
+  let regexStr = "^";
+  let i = 0;
+  while (i < normPattern.length) {
+    const c = normPattern[i];
+    if (c === "*" && normPattern[i + 1] === "*") {
+      if (normPattern[i + 2] === "/") {
+        regexStr += "(?:.*/)?";
+        i += 3;
+        continue;
+      } else {
+        regexStr += ".*";
+        i += 2;
+        continue;
+      }
+    } else if (c === "*") {
+      regexStr += "[^/]*";
+      i += 1;
+      continue;
+    } else if (c === "?") {
+      regexStr += "[^/]";
+      i += 1;
+      continue;
+    } else if (/[.+^$[\](){}|\\]/.test(c)) {
+      regexStr += `\\${c}`;
+      i += 1;
+      continue;
+    } else {
+      regexStr += c;
+      i += 1;
+    }
+  }
+  regexStr += "$";
+
+  try {
+    return new RegExp(regexStr).test(normPath);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Check applicability with JS/TS file extension tolerance
+ */
+export function matchesApplicability(filePath, pattern) {
+  if (matchesGlob(filePath, pattern)) return true;
+  if (pattern === "**/*.ts" || pattern === "**/*.tsx" || pattern.endsWith("/*.ts") || pattern.endsWith("/*.tsx")) {
+    if (/\.(js|mjs|cjs|jsx|ts|tsx)$/i.test(filePath)) return true;
+  }
+  return false;
+}
+
+/**
+ * Infer unit stack from declared scope and frontmatter
+ */
+export function inferUnitStack(scope = [], meta = {}) {
+  if (meta && typeof meta.stack === "string" && meta.stack.trim()) {
+    return meta.stack.trim().toLowerCase();
+  }
+  const tags = Array.isArray(meta?.tags) ? meta.tags.map((t) => String(t).toLowerCase()) : [];
+  if (tags.includes("laravel") || String(meta?.parent || "").includes("laravel")) {
+    return "laravel";
+  }
+  if (tags.includes("flutter") || String(meta?.parent || "").includes("flutter")) {
+    return "flutter";
+  }
+  if (tags.includes("typescript") || String(meta?.parent || "").includes("typescript")) {
+    return "typescript";
+  }
+  const scopeFiles = Array.isArray(scope) ? scope : [];
+  if (scopeFiles.some((f) => /\.(php)$/i.test(f))) return "laravel";
+  if (scopeFiles.some((f) => /\.(dart)$/i.test(f))) return "flutter";
+  if (scopeFiles.some((f) => /\.(ts|tsx|js|mjs|jsx)$/i.test(f))) return "typescript";
+  return "typescript";
+}
+
+/**
+ * Extracts and parses <language_rules> block from unit markdown content.
+ */
+export function extractLanguageRules(unitContent) {
+  if (typeof unitContent !== "string") {
+    return { hasBlock: false, raw: "", entries: [], failure: "missing" };
+  }
+
+  const match = unitContent.match(/<language_rules>([\s\S]*?)<\/language_rules>/i);
+  if (!match || !match[1].trim()) {
+    return { hasBlock: false, raw: "", entries: [], failure: "missing" };
+  }
+
+  const raw = match[1].trim();
+
+  // Template placeholder rejection
+  if (
+    /Rule\s+\d+:\s+Concrete checkable directive/i.test(raw) ||
+    /\{\{[^}]+\}\}/.test(raw) ||
+    /\b(TODO|TBD)\b/i.test(raw) ||
+    /e\.g\.\s*["']no implicit any["']/i.test(raw)
+  ) {
+    return { hasBlock: true, raw, entries: [], failure: "placeholder" };
+  }
+
+  const entries = [];
+  const lines = raw.split(/\r?\n/);
+  for (const line of lines) {
+    const trimmed = line.trim().replace(/^[-*]\s*/, "");
+    if (!trimmed) continue;
+
+    const hashMatch = trimmed.match(/(?:hash|sourceHash|contentHash)?:?(sha256:[a-f0-9]{64})/i);
+    const hash = hashMatch ? hashMatch[1] : null;
+
+    const dirTagMatch = trimmed.match(/\[directive:([a-z0-9_.-]+)\]/i);
+    const rulePathMatch = trimmed.match(/`?(rules\/[a-z0-9_/.-]+\.md)`?/i);
+    const dirIdMatch = trimmed.match(/`?([a-z]{2,}\.[a-z0-9_.-]+)`?/i);
+
+    const directiveId = dirTagMatch ? dirTagMatch[1] : (dirIdMatch && !rulePathMatch ? dirIdMatch[1] : null);
+    const rulePath = rulePathMatch ? rulePathMatch[1] : null;
+
+    entries.push({
+      raw: trimmed,
+      rulePath,
+      directiveId,
+      hash,
+    });
+  }
+
+  return { hasBlock: true, raw, entries, failure: null };
+}
+
+/**
+ * Checks if unit markdown content contains a populated, non-placeholder <language_rules> block
  * @param {string} unitContent
  * @returns {boolean}
  */
 export function hasLanguageRulesBlock(unitContent) {
-  if (typeof unitContent !== "string") return false;
-  const match = unitContent.match(/<language_rules>([\s\S]*?)<\/language_rules>/i);
-  return Boolean(match && match[1].trim().length > 0);
+  const result = extractLanguageRules(unitContent);
+  return result.hasBlock && !result.failure && result.entries.length > 0;
 }
 
 /**
@@ -340,6 +484,217 @@ export async function checkPlanScopes(taskDirPathOrUnits) {
 }
 
 /**
+ * Validates language rules for all units against descriptor catalog and scope
+ */
+export async function validatePlanRules(units, options = {}) {
+  const diagnostics = [];
+  let descriptors = options.descriptors;
+  if (!descriptors) {
+    const rulesDir = options.rulesDir || join(root, "rules");
+    const catalog = await parseRuleCatalog(rulesDir).catch(() => ({ descriptors: [] }));
+    descriptors = catalog.descriptors || [];
+  }
+
+  const ruleMap = new Map();
+  const directiveMap = new Map();
+  for (const desc of descriptors) {
+    ruleMap.set(desc.rulePath, desc);
+    for (const dir of desc.directives || []) {
+      directiveMap.set(dir.id, { directive: dir, descriptor: desc });
+    }
+  }
+
+  const missingUnits = [];
+
+  for (const unit of units) {
+    // Check if starter unit (freshly scaffolded task starter with no files in scope)
+    const isStarter = Boolean(
+      (unit.title?.endsWith("Starter") || unit.id.endsWith(".01")) &&
+      (!unit.scope || unit.scope.length === 0) &&
+      unit.content.includes("One sentence: what this unit accomplishes")
+    );
+
+    const extracted = extractLanguageRules(unit.content);
+
+    if (isStarter) {
+      continue;
+    }
+
+    if (extracted.failure === "missing") {
+      missingUnits.push(unit.id);
+      diagnostics.push({
+        unitId: unit.id,
+        failureClass: "missing",
+        message: `Unit ${unit.id} is missing a <language_rules> block or it is empty.`,
+        remediation: `Add a populated <language_rules> block with applicable rule paths or directive IDs.`
+      });
+      continue;
+    }
+
+    if (extracted.failure === "placeholder") {
+      missingUnits.push(unit.id);
+      diagnostics.push({
+        unitId: unit.id,
+        failureClass: "placeholder",
+        message: `Unit ${unit.id} contains template placeholder text in <language_rules>.`,
+        remediation: `Replace placeholder text with concrete rule paths or directive IDs.`
+      });
+      continue;
+    }
+
+    // Check contradictory steps in unit body targeting a known rule/directive
+    const bodyWithoutRules = unit.content.replace(/<language_rules>[\s\S]*?<\/language_rules>/i, "");
+    const contradictMatch = bodyWithoutRules.match(/(?:bypass|contradict|disable|ignore)\s+(`?[a-z0-9_./-]+`?)/i);
+    if (contradictMatch) {
+      const target = contradictMatch[1].replace(/[`']/g, "").trim();
+      const isKnownRuleOrDirective =
+        ruleMap.has(target) ||
+        directiveMap.has(target) ||
+        target.startsWith("rules/") ||
+        target.endsWith(".md") ||
+        descriptors.some((d) => d.directives?.some((dir) => dir.id === target));
+      if (isKnownRuleOrDirective) {
+        const hasWaiver = Boolean(
+          (Array.isArray(unit.meta.waivers) && unit.meta.waivers.length > 0) ||
+          unit.meta.waiver ||
+          /\[waiver:[^\]]+\]/i.test(unit.content) ||
+          /\bwaiver-[a-z0-9-]+\b/i.test(unit.content)
+        );
+        if (!hasWaiver) {
+          diagnostics.push({
+            unitId: unit.id,
+            failureClass: "contradictory",
+            directiveOrRule: target,
+            message: `Unit ${unit.id} steps declare bypass/contradiction of "${target}" without an authorized waiver reference.`,
+            remediation: `Obtain and reference an authorized waiver or align unit steps with the applicable language rule.`
+          });
+        }
+      }
+    }
+
+    const unitStack = inferUnitStack(unit.scope, unit.meta);
+
+    for (const entry of extracted.entries) {
+      if (!entry.rulePath && !entry.directiveId) {
+        diagnostics.push({
+          unitId: unit.id,
+          failureClass: "nonexistent",
+          directiveOrRule: entry.raw,
+          message: `Unit ${unit.id} rule entry "${entry.raw}" does not reference an existing rule file or directive ID.`,
+          remediation: `Reference an existing rule path in rules/ or a valid directive ID.`
+        });
+        continue;
+      }
+
+      if (entry.rulePath) {
+        const desc = ruleMap.get(entry.rulePath);
+        if (!desc) {
+          diagnostics.push({
+            unitId: unit.id,
+            failureClass: "nonexistent",
+            directiveOrRule: entry.rulePath,
+            message: `Unit ${unit.id} references nonexistent rule file "${entry.rulePath}".`,
+            remediation: `Reference an existing rule file under rules/.`
+          });
+          continue;
+        }
+
+        const descStack = (desc.stack || "general").toLowerCase();
+        if (descStack !== "global" && descStack !== "general" && descStack !== "solid" && descStack !== unitStack) {
+          diagnostics.push({
+            unitId: unit.id,
+            failureClass: "wrong-stack",
+            directiveOrRule: entry.rulePath,
+            message: `Unit ${unit.id} stack "${unitStack}" does not match rule "${entry.rulePath}" stack "${descStack}".`,
+            remediation: `Remove wrong-stack rule reference or align unit stack.`
+          });
+        }
+
+        const allPaths = (desc.directives || []).flatMap((d) => d.applicability?.paths || []).filter(Boolean);
+        if (allPaths.length > 0 && Array.isArray(unit.scope) && unit.scope.length > 0) {
+          const matchesAny = unit.scope.some((f) => allPaths.some((p) => matchesApplicability(f, p)));
+          if (!matchesAny) {
+            diagnostics.push({
+              unitId: unit.id,
+              failureClass: "irrelevant",
+              directiveOrRule: entry.rulePath,
+              message: `Unit ${unit.id} scope [${unit.scope.join(", ")}] does not match applicability paths [${allPaths.join(", ")}] for rule "${entry.rulePath}".`,
+              remediation: `Scope unit to matching files or bind rules relevant to touched files.`
+            });
+          }
+        }
+
+        if (entry.hash && entry.hash !== desc.sourceHash) {
+          diagnostics.push({
+            unitId: unit.id,
+            failureClass: "stale",
+            directiveOrRule: entry.rulePath,
+            message: `Unit ${unit.id} references "${entry.rulePath}" with stale hash "${entry.hash}" (current: "${desc.sourceHash}").`,
+            remediation: `Update rule source hash in <language_rules>.`
+          });
+        }
+      }
+
+      if (entry.directiveId) {
+        const item = directiveMap.get(entry.directiveId);
+        if (!item) {
+          diagnostics.push({
+            unitId: unit.id,
+            failureClass: "nonexistent",
+            directiveOrRule: entry.directiveId,
+            message: `Unit ${unit.id} references nonexistent directive ID "${entry.directiveId}".`,
+            remediation: `Reference a valid directive ID from the descriptor catalog.`
+          });
+          continue;
+        }
+
+        const { directive, descriptor } = item;
+        const descStack = (descriptor.stack || "general").toLowerCase();
+        if (descStack !== "global" && descStack !== "general" && descStack !== "solid" && descStack !== unitStack) {
+          diagnostics.push({
+            unitId: unit.id,
+            failureClass: "wrong-stack",
+            directiveOrRule: entry.directiveId,
+            message: `Unit ${unit.id} stack "${unitStack}" does not match directive "${entry.directiveId}" stack "${descStack}".`,
+            remediation: `Remove wrong-stack directive reference or align unit stack.`
+          });
+        }
+
+        const dirPaths = directive.applicability?.paths || [];
+        if (dirPaths.length > 0 && Array.isArray(unit.scope) && unit.scope.length > 0) {
+          const matchesAny = unit.scope.some((f) => dirPaths.some((p) => matchesApplicability(f, p)));
+          if (!matchesAny) {
+            diagnostics.push({
+              unitId: unit.id,
+              failureClass: "irrelevant",
+              directiveOrRule: entry.directiveId,
+              message: `Unit ${unit.id} scope does not match applicability paths [${dirPaths.join(", ")}] for directive "${entry.directiveId}".`,
+              remediation: `Bind directives relevant to touched scope.`
+            });
+          }
+        }
+
+        if (entry.hash && entry.hash !== directive.contentHash && entry.hash !== descriptor.sourceHash) {
+          diagnostics.push({
+            unitId: unit.id,
+            failureClass: "stale",
+            directiveOrRule: entry.directiveId,
+            message: `Unit ${unit.id} references "${entry.directiveId}" with stale hash "${entry.hash}" (current: "${directive.contentHash}").`,
+            remediation: `Update directive hash in <language_rules>.`
+          });
+        }
+      }
+    }
+  }
+
+  return {
+    valid: diagnostics.length === 0,
+    diagnostics,
+    missingUnits,
+  };
+}
+
+/**
  * CLI runner for plan:check command
  * @param {string} taskDirPath Path to task directory
  * @param {Record<string, any>} flags CLI options (e.g. { json: boolean })
@@ -361,9 +716,9 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
     const cycleResult = detectCycles(graph);
     const parallelPairs = findParallelUnitPairs(units, graph);
     const scopeResult = checkDisjointScopes(parallelPairs);
+    const ruleResult = await validatePlanRules(units);
 
-    const isValid = cycleResult.valid && scopeResult.valid;
-    const unitsMissingLanguageRules = units.filter((u) => !u.hasLanguageRules);
+    const isValid = cycleResult.valid && scopeResult.valid && ruleResult.valid;
 
     if (flags.json) {
       console.log(
@@ -376,9 +731,10 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
             cycles: cycleResult.cycles,
             conflicts: scopeResult.conflicts,
             languageRules: {
-              valid: unitsMissingLanguageRules.length === 0,
-              missingCount: unitsMissingLanguageRules.length,
-              missingUnits: unitsMissingLanguageRules.map((u) => u.id),
+              valid: ruleResult.valid,
+              diagnostics: ruleResult.diagnostics,
+              missingCount: ruleResult.missingUnits.length,
+              missingUnits: ruleResult.missingUnits,
             },
           },
           null,
@@ -415,17 +771,18 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
       }
     }
 
-    if (unitsMissingLanguageRules.length > 0) {
-      console.log(`Language Rules:    ⚠️  ${unitsMissingLanguageRules.length} unit(s) missing <language_rules> block:`);
-      for (const u of unitsMissingLanguageRules) {
-        console.log(`                     * Unit ${u.id} (${u.title})`);
-      }
+    if (ruleResult.valid) {
+      console.log(`Language Rules:    All units declare valid, non-stale, stack-conforming rule bindings.`);
     } else {
-      console.log(`Language Rules:    All units declare populated <language_rules> blocks.`);
+      console.error(`\n  FAIL  Language rule validation failure(s):`);
+      for (const diag of ruleResult.diagnostics) {
+        console.error(`    - [${diag.failureClass.toUpperCase()}] Unit ${diag.unitId}: ${diag.message}`);
+        console.error(`      Remediation: ${diag.remediation}`);
+      }
     }
 
     if (isValid) {
-      console.log(`\n   PASS  Plan graph is acyclic and parallel scopes are disjoint.\n`);
+      console.log(`\n   PASS  Plan graph is acyclic, parallel scopes are disjoint, and language rules are valid.\n`);
       return 0;
     } else {
       console.error(`\n   FAIL  Plan check failed.\n`);
