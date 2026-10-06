@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-http-routing-and-controllers
 name: routing-and-controllers
 description: Keep Laravel controllers skinny, RESTful, and transport-focused; enforce Route Model Binding and API Resources.
 scope: Routes (web.php, api.php), controllers, and API resource transformers.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/Http/Controllers/**/*.php", "app/Modules/**/Controllers/**/*.php", "routes/**/*.php"]
+layers: ["controllers", "routing"]
+alwaysApply: false
 ---
 
 # Routing and Controllers
 
 ## Boundaries
+
+- [directive:laravel.http.controllers-thin][mode:evidence-blocking][verifier:human-evidence] Keep controller orchestration thin and delegate business policy to application actions.
 
 - **Single Responsibility Principle (SRP):** Controllers must have one, and only one, reason to change: adapting HTTP transport requests and shaping HTTP responses. Controllers must never handle database transaction orchestration, business validation rules, or external service calls directly; delegate these to Form Requests, Invokable Actions, and Queued Jobs. Reference: [[rules/solid/single-responsibility|Single Responsibility (SRP)]].
 - Keep controllers strictly focused on HTTP transport: receiving the request, delegating to authorization, invoking domain actions or direct Eloquent mutations, and returning an HTTP response.

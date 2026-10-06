@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-foundation-error-handling
 name: error-handling
 description: Standardize exception handling, domain error classification, fail-fast boundary validation, and safe error responses.
 scope: Exception classes, error reporting, HTTP error response formatting, and global exception handlers.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php"]
+layers: ["foundation", "http"]
+alwaysApply: false
 ---
 
 # Error and Exception Handling
 
 ## Boundaries
+
+- [directive:laravel.foundation.error-handling][mode:evidence-blocking][verifier:human-evidence] Review exception translation and public-error boundaries without claiming automatic semantic coverage.
 
 - **Single Responsibility Principle (SRP):** Separate error reporting and HTTP presentation from domain logic. Domain models and actions raise expressive exceptions reflecting broken business invariants; HTTP status code translation and JSON error envelope formatting belong in `bootstrap/app.php` exception renderers or renderable exceptions (`render(Request $request)`). Reference: `[[rules/solid/single-responsibility|Single Responsibility (SRP)]]`.
 - Centralize HTTP exception reporting and rendering in Laravel's bootstrap exception configuration (`bootstrap/app.php` in Laravel 11+ or `app/Exceptions/Handler.php` in earlier versions).

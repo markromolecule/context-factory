@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-application-async-and-events
 name: async-and-events
 description: Standardize queued jobs, domain event dispatching, cache stampede prevention, and resilient HTTP client calls.
 scope: Queued jobs, event listeners, Cache operations, and external HTTP client interactions across Laravel.
+stack: laravel
+appliesTo: ["app/**/Events/**/*.php", "app/**/Listeners/**/*.php", "app/**/Jobs/**/*.php"]
+layers: ["events", "jobs"]
 alwaysApply: false
 ---
 
 # Asynchronous Workloads, Events, Caching, and Resilient HTTP
 
 ## Boundaries
+
+- [directive:laravel.application.async-events][mode:evidence-blocking][verifier:human-evidence] Review event, listener, and queued-job delivery guarantees at asynchronous boundaries.
 
 - **Offload Heavy Network I/O:** Always offload non-blocking operations—such as sending customer emails, webhook deliveries, third-party API syncs, image processing, and report exports—to queued jobs implementing `ShouldQueue`. Never perform slow or blocking network operations inside synchronous HTTP request-response cycles.
 - **Queue Job Resilience:** Every queued job must configure explicit runtime resilience properties: `$tries`, `$backoff`, `$timeout`, and a `failed(\Throwable $exception)` callback. Unbounded retry loops without backoff exhaust queue workers and overwhelm downstream APIs.

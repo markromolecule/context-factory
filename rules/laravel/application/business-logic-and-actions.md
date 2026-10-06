@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-application-business-logic-and-actions
 name: business-logic-and-actions
 description: Enforce Eloquent-first discipline, skinny controllers, and strict complexity thresholds for invokable actions.
 scope: Domain logic, Action classes (app/Actions/), controllers, and application services across Laravel.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/Actions/**/*.php", "app/**/Actions/*.php"]
+layers: ["services", "actions"]
+alwaysApply: false
 ---
 
 # Business Logic, Invokable Actions, and Anti-Overengineering
 
 ## Boundaries
+
+- [directive:laravel.application.business-action][mode:evidence-blocking][verifier:human-evidence] Keep business policy and orchestration in focused application actions rather than controllers.
 
 - **Single Responsibility Principle (SRP):** Adhere to [[rules/solid/single-responsibility|Single Responsibility (SRP)]] across the application layer. Controllers only handle HTTP transport, Form Request validation, and response transformation; Invokable Actions encapsulate a single cohesive domain transaction.
 - **Interface Segregation Principle (ISP):** Strictly adhere to [[rules/solid/interface-segregation|Interface Segregation (ISP)]]. Prohibit 1:1 interfaces for action classes or application services where only a single concrete implementation exists. Introduce interfaces solely for external infrastructure boundaries with multiple swappable implementations.

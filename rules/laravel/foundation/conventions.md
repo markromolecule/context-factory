@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-foundation-conventions
 name: conventions
 description: Enforce modern PHP 8.2+ strict typing, Pint formatting, backed enums, and configuration hygiene across Laravel applications.
 scope: All PHP classes, models, controllers, actions, commands, and configuration in Laravel applications.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php", "config/**/*.php"]
+layers: ["foundation"]
+alwaysApply: false
 ---
 
 # Laravel & Modern PHP Conventions
 
 ## Boundaries
+
+- [directive:laravel.foundation.conventions][mode:automated-blocking][verifier:linter] Verify configured Laravel formatting and PHP convention tooling when it is available; otherwise report tool unavailability.
 
 - Require `declare(strict_types=1);` as the first statement in every PHP file without exception.
 - Enforce full type declarations on all class properties, method parameters, and method return types.

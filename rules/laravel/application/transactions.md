@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-application-transactions
 name: transactions
 description: Enforce atomic database transaction boundaries, deadlock handling, and side-effect isolation.
 scope: Database transactions, state mutations, concurrency locking, and external side-effects in Laravel.
+stack: laravel
+appliesTo: ["app/**/Actions/**/*.php", "app/**/Actions/*.php"]
+layers: ["services", "actions", "transactions"]
 alwaysApply: false
 ---
 
 # Database Transactions and Concurrency Safety
 
 ## Boundaries
+
+- [directive:laravel.application.transactions][mode:evidence-blocking][verifier:human-evidence] Review transaction ownership and rollback semantics for multi-write application actions.
 
 - **Atomic State Mutations (Single Responsibility):** Encapsulate multi-table writes, state transitions, or dependent balance changes within a dedicated Invokable Action executing a `DB::transaction()` boundary. Adhere to [[rules/solid/single-responsibility|Single Responsibility (SRP)]] by separating atomic database consistency guarantees from transport controllers, jobs, and console commands.
 - **Isolate External Side-Effects:** Never execute blocking network I/O, external HTTP calls (payment gateways, third-party APIs), or synchronous email deliveries inside a database transaction closure. If an external call hangs or fails, the database connection locks and holds open uncommitted rows, leading to connection starvation and deadlocks.

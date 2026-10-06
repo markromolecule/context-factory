@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-common-naming-conventions
 name: naming-conventions
 description: Enforce canonical Laravel naming conventions across models, tables, relationships, controllers, requests, resources, policies, events, jobs, routes, and artisan commands.
 scope: All PHP classes, database migrations, routes, views, components, and configuration in Laravel applications.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php", "routes/**/*.php"]
+layers: ["common"]
+alwaysApply: false
 ---
 
 # Laravel Naming Conventions
 
 ## Boundaries
+
+- [directive:laravel.common.naming-conventions][mode:evidence-blocking][verifier:human-evidence] Review Laravel naming against the canonical matrix when introducing framework artifacts.
 
 - **Strict Framework Idioms:** Never invent bespoke casing or arbitrary abbreviations that deviate from standard Laravel conventions.
 - **Singular Models & Plural Tables:** Model classes MUST be singular `PascalCase` (`User`, `OrderItem`). Database tables MUST be plural `snake_case` (`users`, `order_items`).

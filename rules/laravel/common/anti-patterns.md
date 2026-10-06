@@ -1,11 +1,17 @@
 ---
+ruleId: cf-rule-laravel-common-anti-patterns
 name: anti-patterns
 description: Overview and index of common Laravel anti-patterns and bad habits with links to dedicated deep-dive rules.
 scope: All PHP classes, controllers, models, actions, queries, and configuration in Laravel applications.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php", "routes/**/*.php"]
+layers: ["common"]
+alwaysApply: false
 ---
 
 # Laravel Anti-Patterns & Bad Habits Guide
+
+- [directive:laravel.common.anti-patterns][mode:advisory][verifier:none] Apply the linked Laravel anti-pattern rules at their specific code boundaries rather than treating this index as an automated check.
 
 This guide indexes the five most common high-impact anti-patterns in Laravel development. Each bad habit has a dedicated, actionable rule detailing failure mechanisms, concrete code remediations, and [[rules/solid/single-responsibility|SOLID principles]] alignment.
 

@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-common-artisan-commands
 name: artisan-commands
 description: Enforce command signature discipline, safe production confirmation, memory-safe streaming, progress feedback, and action delegation for Laravel Artisan console commands.
 scope: All Artisan Console commands (app/Console/Commands/ or routes/console.php) and console scheduling in Laravel applications.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/Console/**/*.php", "routes/console.php"]
+layers: ["commands"]
+alwaysApply: false
 ---
 
 # Laravel Artisan Console Commands
 
 ## Boundaries
+
+- [directive:laravel.common.artisan-commands][mode:evidence-blocking][verifier:human-evidence] Keep operational command confirmation, authorization, and batch-safety reviewable at the command boundary.
 
 - **No Unbounded Memory Allocation:** Never invoke `Model::all()` or unbounded `->get()` inside Artisan commands processing collections. Always stream or batch records using `chunkById()`, `lazyById()`, or `cursor()`.
 - **Disable Query Logging on Batch Runs:** Always disable the query log (`DB::disableQueryLog()`) before running batch commands to prevent silent out-of-memory crashes caused by logged SQL strings.

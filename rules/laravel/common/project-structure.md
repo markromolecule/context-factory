@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-common-project-structure
 name: project-structure
 description: Enforce modular domain architecture, modern Laravel 11/12 lean bootstrapping, and component-first Blade frontend structure.
 scope: Application layout, modular architecture, Blade frontend hierarchy, bootstrapping, and configuration in Laravel applications.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/**/*.php", "routes/**/*.php", "resources/**/*.blade.php"]
+layers: ["architecture"]
+alwaysApply: false
 ---
 
 # Modular Laravel Project Structure & Frontend Architecture
 
 ## Boundaries
+
+- [directive:laravel.common.project-structure][mode:evidence-blocking][verifier:human-evidence] Keep Laravel-specific modules, routes, and presentation structure within their designated boundaries.
 
 - **Modular Domain Organization (Single Responsibility & Cohesion):** Organize scalable applications by **Native PSR-4 Modules** (`app/Modules/<Feature>/`) rather than a flat, disconnected MVC hierarchy. Adhere to [[rules/solid/single-responsibility|Single Responsibility (SRP)]] at the architectural boundary: group all domain-specific primitives (Models, Actions, Controllers, Requests, Resources, Policies, Events, and co-located Routes) within their parent module so each feature forms a cohesive, self-contained unit.
 - **Co-located Routing & Canonical Route Names:** Each module owns its endpoints in `app/Modules/<Feature>/routes.php` (or `routes/api.php` and `routes/web.php`). Route names MUST follow clean canonical dot notation (`orders.index`, `orders.show`); NEVER prefix route names with internal directory artifacts (no `modules.orders.show`).

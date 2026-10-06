@@ -1,13 +1,19 @@
 ---
+ruleId: cf-rule-laravel-http-middleware
 name: middleware
 description: Standardize HTTP middleware pipeline usage, authentication gatekeepers, context initialization, and performance safety.
 scope: HTTP middleware classes, pipeline configuration, and route middleware aliases.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/Http/Middleware/**/*.php", "bootstrap/app.php"]
+layers: ["middleware"]
+alwaysApply: false
 ---
 
 # HTTP Middleware
 
 ## Boundaries
+
+- [directive:laravel.http.middleware][mode:evidence-blocking][verifier:human-evidence] Review middleware ordering and trusted HTTP boundary behavior in the configured Laravel bootstrap.
 
 - **Cross-Cutting Single Responsibility:** Keep middleware strictly focused on a single cross-cutting transport concern per class (authentication, authorization guards, CORS negotiation, security headers, rate limiting, or request context initialization). Adhere to [[rules/solid/single-responsibility|Single Responsibility (SRP)]] by preventing composite middleware that handles multiple distinct concerns.
 - Never place heavy business logic, database transactions, or external third-party API calls inside middleware.

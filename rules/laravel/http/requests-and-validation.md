@@ -1,13 +1,20 @@
 ---
+ruleId: cf-rule-laravel-http-requests-and-validation
 name: requests-and-validation
 description: Enforce dedicated Form Requests, strict validated data extraction, custom validation rules, and input security.
 scope: HTTP requests, Form Requests, validation rules, and request sanitization.
-alwaysApply: true
+stack: laravel
+appliesTo: ["app/Http/Requests/**/*.php", "app/Modules/**/Requests/**/*.php"]
+layers: ["requests", "validation"]
+alwaysApply: false
 ---
 
 # Requests and Validation
 
 ## Boundaries
+
+- [directive:laravel.http.validation-form-request][mode:automated-blocking][verifier:test] Enforce dedicated FormRequest boundaries for untrusted Laravel request input.
+- [directive:laravel.http.validation-authorization][mode:automated-blocking][verifier:test] Enforce request-level authorization before controller mutation.
 
 - **Single Responsibility Principle (SRP):** Form Requests isolate HTTP request payload authorization and validation rules from transport handling and domain mutation. This adheres to [[rules/solid/single-responsibility|Single Responsibility (SRP)]] by preventing controller action bloat and safeguarding domain logic from untrusted input.
 - Encapsulate all incoming HTTP validation logic inside dedicated Form Request classes (`app/Http/Requests/`); never place inline `$request->validate([...])` arrays inside controller methods for store/update endpoints.
