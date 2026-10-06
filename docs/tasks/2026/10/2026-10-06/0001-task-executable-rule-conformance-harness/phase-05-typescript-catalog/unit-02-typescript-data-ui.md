@@ -5,7 +5,7 @@ parent: "phase-05-typescript-catalog"
 unit: "05.02"
 branch: "task/0001/phase-05/typescript-data-ui"
 worktree: ".worktrees/0001/phase-05/typescript-data-ui"
-status: verified
+status: merged
 created: "2026-10-06"
 tags: [task, unit, typescript, database, hooks, ui]
 depends_on: ["05.00"]

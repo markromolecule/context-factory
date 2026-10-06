@@ -5,7 +5,7 @@ parent: "phase-05-typescript-catalog"
 unit: "05.01"
 branch: "task/0001/phase-05/typescript-common-backend"
 worktree: ".worktrees/0001/phase-05/typescript-common-backend"
-status: verified
+status: merged
 created: "2026-10-06"
 tags: [task, unit, typescript, backend, rules]
 depends_on: ["05.00"]
