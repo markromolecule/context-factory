@@ -297,4 +297,94 @@ depends_on: []
       }
     });
   });
+
+  describe("AC-04: Task checkout and done-check", () => {
+    async function writeVersionTwoPlan(directory, { blockers = "- None.", checkoutMode = "branch" } = {}) {
+      await mkdir(join(directory, "phase-01"), { recursive: true });
+      await writeFile(join(directory, "feat-PLN-0042-oauth-login.md"), `---
+title: OAuth login
+type: task
+status: ready
+plan_contract_version: 2
+plan_id: PLN-0042
+target_branch: master
+task_branch: feat/PLN-0042-oauth-login
+checkout_mode: ${checkoutMode}
+checkout_reason: Clean serial work uses the task branch.
+checkout_path:
+---
+# OAuth login
+
+## Acceptance criteria
+
+| ID | Criterion | Unit | Verification |
+| --- | --- | --- | --- |
+| AC-01 | Login plan is ready | 01.01 | node --test evals/plan-check.test.mjs |
+
+## Unknowns and blockers
+
+${blockers}
+
+## Risk and dependency register
+
+| Risk | Mitigation |
+| --- | --- |
+| Contract drift | Run plan check |
+
+## Plan done-check
+
+- [x] Acceptance criteria map to units and verification.
+- [x] Blockers are resolved or absent.
+- [x] Risks and dependencies are recorded.
+- [x] Checkout decision is justified.
+`);
+      await writeFile(join(directory, "phase-01", "unit-01.md"), `---
+unit: "01.01"
+depends_on: []
+task_branch: feat/PLN-0042-oauth-login
+checkout_mode: ${checkoutMode}
+checkout_reason: Clean serial work uses the task branch.
+checkout_path:
+---
+# Unit 01.01
+
+## Scope
+**In scope:** \`scripts/plan-check.mjs\`
+
+<language_rules>
+- \`rules/global/architecture-conformance.md\`: Architecture conformance
+</language_rules>
+`);
+    }
+
+    it("passes a complete serial plan with one task branch", async () => {
+      const tempDir = await mkdtemp(join(tmpdir(), "cf-plan-ready-"));
+      try {
+        await writeVersionTwoPlan(tempDir);
+        const { stdout } = await execFileAsync("node", [contextCliPath, "plan:check", tempDir]);
+        assert.match(stdout, /Done Check:\s+Complete/);
+      } finally {
+        await rm(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    it("fails a plan with a material blocker or invalid checkout mode", async () => {
+      const tempDir = await mkdtemp(join(tmpdir(), "cf-plan-incomplete-"));
+      try {
+        await writeVersionTwoPlan(tempDir, { blockers: "- Blocking authority decision remains open." });
+        await assert.rejects(
+          execFileAsync("node", [contextCliPath, "plan:check", tempDir]),
+          (error) => /BLOCKER/i.test(`${error.stdout || ""} ${error.stderr || ""}`)
+        );
+
+        await writeVersionTwoPlan(tempDir, { checkoutMode: "unit-worktree" });
+        await assert.rejects(
+          execFileAsync("node", [contextCliPath, "plan:check", tempDir]),
+          (error) => /CHECKOUT/i.test(`${error.stdout || ""} ${error.stderr || ""}`)
+        );
+      } finally {
+        await rm(tempDir, { recursive: true, force: true });
+      }
+    });
+  });
 });

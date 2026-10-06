@@ -4,7 +4,7 @@ type: phase
 parent: "0003-task-skill-lifecycle-handoffs-and-task-git-policy"
 phase: "02"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
-status: in_progress
+status: verified
 created: "2026-10-06"
 tags: [task, phase]
 ---
@@ -24,7 +24,7 @@ Previous phase verified and developer checkpoint accepted. Work sequentially on 
 | Unit | Outcome | Artifact | Depends on | Execution | Status |
 |---|---|---|---|---|---|
 | 02.01 | Reserve repo-wide plan IDs and scaffold named plans | unit-01-architecture-and-contracts.md | 01.02 | sequential | verified |
-| 02.02 | Apply task-branch policy and plan done-check | unit-02-planning-contract.md | 02.01 | sequential | planned |
+| 02.02 | Apply task-branch policy and plan done-check | unit-02-planning-contract.md | 02.01 | sequential | verified |
 
 ## Impacted Files & Components
 
@@ -33,7 +33,7 @@ Existing scaffold, listing, plan skill, templates, plan checker. Exact file scop
 ## Implementation Tasks
 
 - [x] 02.01 Reserve repo-wide plan IDs and scaffold named plans
-- [ ] 02.02 Apply task-branch policy and plan done-check
+- [x] 02.02 Apply task-branch policy and plan done-check
 
 ## Verification & Testing
 

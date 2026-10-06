@@ -3,7 +3,10 @@ title: "{{title}}"
 type: phase
 parent: "{{parent_task}}"
 phase: "{{phase_number}}"
-phase_branch: "task/{{parent_task}}/phase-{{phase_number}}"
+task_branch: "{{task_branch}}"
+checkout_mode: "{{checkout_mode}}"
+checkout_reason: "{{checkout_reason}}"
+checkout_path: "{{checkout_path}}"
 status: planned
 created: "{{date}}"
 tags: [task, phase]
@@ -19,11 +22,11 @@ Summarize the specific goal and desired outcome of this phase.
 
 - Prior phases or external blockers required before starting this phase.
 
-## Unit Index & Worktree Allocation
+## Unit Index & Checkout Allocation
 
-| Unit ID | Title | Artifact File | Branch | Worktree Directory | Depends On | Parallelizable With | Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit {{phase_number}}.01** | {{unit_title}} | `{{unit_filename}}` | `{{branch}}` | `{{worktree}}` | `none` | `none` | `planned` |
+| Unit ID | Title | Artifact File | Task Branch | Checkout Mode | Depends On | Parallelizable With | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Unit {{phase_number}}.01** | {{unit_title}} | `{{unit_filename}}` | `{{task_branch}}` | `{{checkout_mode}}` | `none` | `none` | `planned` |
 
 ## Impacted Files & Components
 
@@ -40,4 +43,4 @@ Summarize the specific goal and desired outcome of this phase.
 ## Risks, Worktree Teardown & Rollback
 
 - Specific risks, backward compatibility notes, or rollback strategy.
-- Teardown: after phase integration merge, remove unit worktrees with `git worktree remove --force`, prune worktrees, and clean empty parent directories under `.worktrees/`.
+- Use the recorded task checkout. Concurrent units require explicit worktree paths, clean checks, and merge order. Never force-remove a worktree with residual files.

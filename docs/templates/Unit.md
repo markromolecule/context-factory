@@ -3,8 +3,10 @@ title: "{{title}}"
 type: unit
 parent: "{{parent_phase}}"
 unit: "{{unit_id}}"
-branch: "{{branch}}"
-worktree: "{{worktree}}"
+task_branch: "{{task_branch}}"
+checkout_mode: "{{checkout_mode}}"
+checkout_reason: "{{checkout_reason}}"
+checkout_path: "{{checkout_path}}"
 status: planned
 created: "{{date}}"
 tags: [task, unit]
@@ -15,7 +17,7 @@ parallelizable_with: []
 # Unit {{unit_id}}: {{title}}
 
 > Phase: {{parent_phase}} · Depends on: {{depends_on}} · Parallelizable with: {{parallelizable_with}}
-> Worktree: {{worktree}} · Branch: {{branch}}
+> Task branch: {{task_branch}} · Checkout: {{checkout_mode}} · Path: {{checkout_path}}
 
 ## Objective
 
@@ -38,7 +40,7 @@ Copied in, not referenced — this is what lets the unit run without the master 
 
 ## Preconditions
 
-- Dedicated git worktree and branch provisioned at declared path.
+- The task checkout decision remains valid; recheck Git state before changing it.
 - What must already exist or be true, including outputs of dependency units.
 
 ## Scope

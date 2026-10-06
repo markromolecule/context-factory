@@ -13,26 +13,13 @@ A phase tells you *what order* things happen in. A unit tells a fresh session *e
 
 Size units by responsibility, not by line count. A unit should correspond to one coherent seam surfaced by the SOLID audit below — one responsibility, one contract, one boundary — not an arbitrary file count. If you can't describe what a unit does in one sentence, it's too big; if two units only ever make sense executed together, merge them.
 
-## Worktree and Branch Architecture
+## Task branch and checkout decision
 
-Atomic units are designed to run in physical isolation. Without dedicated worktrees and branches, concurrent sessions or interrupted units pollute the shared working tree, leading to uncommitted file leaks, phantom changes, merge collisions, and untracked debris.
+Create one task branch by default: `<type>/PLN-NNNN-<slug>`. Record target branch, task branch, checkout mode, reason, and path in the master plan and every unit.
 
-The plan MUST establish a deterministic 3-tier branch and worktree hierarchy upfront:
+Use `checkout_mode: branch` for clean serial work. Use `checkout_mode: worktree` only for unrelated conflicting changes, long-running isolation, or concurrent work. Concurrent agents always use separate worktrees; concurrent units require disjoint scopes and merge order.
 
-1. **Task Base Branch:** `task/<id>-<type>-<feature>`
-   - Cut from the target base branch (e.g. `master` or `main`).
-   - Serves as the integration baseline for the entire task.
-2. **Phase Integration Branch:** `task/<id>/<phase-slug>`
-   - Cut from the task base branch at the start of each phase.
-   - Aggregates approved unit branches within that phase before merging up.
-3. **Unit Branch:** `task/<id>/<phase-slug>/<unit-slug>`
-   - Cut from the phase integration branch when the unit worktree is provisioned.
-   - Scoped strictly to the unit's declared files.
-4. **Dedicated Worktree Directory:** `.worktrees/<id>/<phase-slug>/<unit-slug>/`
-   - Located under `.worktrees/` at the repository root (must be in `.gitignore`).
-   - Every unit executes strictly inside its own worktree; sessions must NEVER modify the primary working tree or another unit's worktree directly.
-
-The plan must pre-document this topology across all artifacts (`README.md`, `phase.md`, and `unit-*.md`) so executors, reviewers, and automated harnesses execute and finalize work deterministically without guessing branch names or worktree paths.
+The plan records one branch and the checkout decision across `README.md`, `phase.md`, and each unit. A worktree path is required only when checkout mode is `worktree`.
 
 ## Workflow
 

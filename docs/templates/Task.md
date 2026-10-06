@@ -1,11 +1,16 @@
 ---
 title: "{{title}}"
 type: task
-status: planned
+status: draft
+plan_contract_version: 2
+plan_id: "{{task_id}}"
 created: "{{date}}"
 tags: [task]
 target_branch: main
-base_branch: "task/{{task_id}}-{{task_slug}}"
+task_branch: "task/{{task_id}}-{{task_slug}}"
+checkout_mode: branch
+checkout_reason: "Clean serial work uses the task branch."
+checkout_path:
 ---
 
 # {{title}}
@@ -44,6 +49,8 @@ Link the canonical glossary; do not duplicate implementation details here.
 
 ### Unknowns and blockers
 
+- None.
+
 ## Acceptance criteria
 
 | ID | Source goal/scenario/decision | Criterion | Implementation | Verification | Status |
@@ -55,11 +62,21 @@ Link the canonical glossary; do not duplicate implementation details here.
 
 ## Constraints and decisions
 
-## Worktree & Branch Topology
+## Risk and dependency register
 
-| Phase | Unit ID | Unit Title | Branch Name | Worktree Directory | Merge Target | Status |
-|---|---|---|---|---|---|---|
-| phase-01 | 01.01 | [Unit Title] | `task/{{task_id}}/phase-01/[slug]` | `.worktrees/{{task_id}}/phase-01/[slug]` | `task/{{task_id}}/phase-01` | planned |
+| Risk or dependency | Impact | Mitigation or owner |
+|---|---|---|
+| | | |
+
+## Checkout decision
+
+| Field | Recorded decision |
+|---|---|
+| Target branch | `main` |
+| Task branch | `task/{{task_id}}-{{task_slug}}` |
+| Checkout mode | `branch` or `worktree` |
+| Reason | State the clean-serial, dirty-checkout, concurrent-work, or long-running-isolation condition. |
+| Checkout path | Required only for `worktree`. |
 
 ## Phases
 
@@ -71,6 +88,13 @@ Link the canonical glossary; do not duplicate implementation details here.
 Record the command or inspection, outcome, and the acceptance criterion it supports. Do not mark a result verified from an unrun check.
 
 ## Deviations
+
+## Plan done-check
+
+- [ ] Acceptance criteria map to units and verification.
+- [ ] Blockers are resolved or absent.
+- [ ] Risks and dependencies are recorded.
+- [ ] Checkout decision is justified.
 
 ## Finalization & Merge Ledger
 

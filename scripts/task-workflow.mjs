@@ -134,10 +134,7 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     .map((p, idx) => {
       const pNum = String(idx + 1).padStart(2, "0");
       const unitSlug = `unit-01-${p.slug}`;
-      const branchName = `task/${taskId}/phase-${pNum}/${unitSlug}`;
-      const worktreeDir = `.worktrees/${taskId}/phase-${pNum}/${unitSlug}`;
-      const mergeTarget = `task/${taskId}/phase-${pNum}/integration`;
-      return `| phase-${pNum} | ${pNum}.01 | ${p.title} Starter | \`${branchName}\` | \`${worktreeDir}\` | \`${mergeTarget}\` | planned |`;
+      return `| phase-${pNum} | ${pNum}.01 | ${p.title} Starter | \`${baseBranch}\` | branch | planned |`;
     })
     .join("\n");
 
@@ -174,8 +171,6 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     const phaseDirName = `phase-${pNum}-${p.slug}`;
     const phasePath = `${taskRelativeDir}/${phaseDirName}/phase.md`;
     const unitSlug = `unit-01-${p.slug}`;
-    const unitBranch = `task/${taskId}/phase-${pNum}/${unitSlug}`;
-    const unitWorktree = `.worktrees/${taskId}/phase-${pNum}/${unitSlug}`;
     const unitTitle = `${p.title} Starter`;
     const unitFilename = `${unitSlug}.md`;
 
@@ -185,11 +180,12 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
       .replaceAll("{{parent_task}}", taskFolderName)
       .replaceAll("{{phase_number}}", pNum)
       .replaceAll("{{phase_slug}}", p.slug)
-      .replaceAll("{{phase_branch}}", `task/${taskFolderName}/phase-${pNum}`)
+      .replaceAll("{{task_branch}}", baseBranch)
+      .replaceAll("{{checkout_mode}}", "branch")
+      .replaceAll("{{checkout_reason}}", "Clean serial work uses the task branch.")
+      .replaceAll("{{checkout_path}}", "")
       .replaceAll("{{unit_title}}", unitTitle)
       .replaceAll("{{unit_filename}}", unitFilename)
-      .replaceAll("{{branch}}", unitBranch)
-      .replaceAll("{{worktree}}", unitWorktree)
       .replaceAll("{{date}}", dateStr);
 
     filesToWrite.push({
@@ -205,8 +201,10 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
         .replaceAll("{{parent_phase}}", phaseDirName)
         .replaceAll("{{unit_id}}", `${pNum}.01`)
         .replaceAll("{{slug}}", p.slug)
-        .replaceAll("{{branch}}", unitBranch)
-        .replaceAll("{{worktree}}", unitWorktree)
+        .replaceAll("{{task_branch}}", baseBranch)
+        .replaceAll("{{checkout_mode}}", "branch")
+        .replaceAll("{{checkout_reason}}", "Clean serial work uses the task branch.")
+        .replaceAll("{{checkout_path}}", "")
         .replaceAll("{{depends_on}}", "none")
         .replaceAll("{{parallelizable_with}}", "none")
         .replaceAll("{{date}}", dateStr);
@@ -219,8 +217,8 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
       units.push({
         id: `${pNum}.01`,
         path: unitPath,
-        branch: unitBranch,
-        worktree: unitWorktree,
+        branch: baseBranch,
+        worktree: null,
         title: unitTitle,
       });
     }

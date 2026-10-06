@@ -36,14 +36,14 @@ describe("Evaluation Suite: Task Scaffolding & Plan Check Integration", () => {
       );
     }
 
-    // Verify starter unit branch and worktree format
+    // Verify starter units inherit the one task branch and need no worktree.
     for (const u of res.units) {
-      assert.match(u.branch, /^task\/PLN-\d{4}\/phase-\d{2}\/unit-01-[a-z0-9-]+$/);
-      assert.match(u.worktree, /^\.worktrees\/PLN-\d{4}\/phase-\d{2}\/unit-01-[a-z0-9-]+$/);
+      assert.equal(u.branch, res.baseBranch);
+      assert.equal(u.worktree, null);
     }
   });
 
-  it("Case 3: scaffolded task passes node scripts/context.mjs plan:check out-of-the-box", async () => {
+  it("Case 3: scaffolded draft cannot pass node scripts/context.mjs plan:check", async () => {
     const res = await scaffoldTask({
       title: "Order Fulfillment Service",
       type: "feature",
@@ -61,10 +61,10 @@ describe("Evaluation Suite: Task Scaffolding & Plan Check Integration", () => {
         await writeFile(destPath, file.content, "utf8");
       }
 
-      const { stdout } = await execFileAsync("node", [contextCliPath, "plan:check", tempDir]);
-      assert.match(stdout, /PASS/i, "plan:check should output PASS");
-      assert.doesNotMatch(stdout, /FAIL|cycle detected/i, "plan:check should not detect cycles");
-      assert.match(stdout, /Units Found:\s+4/, "plan:check should find all 4 units in nested phases");
+      await assert.rejects(
+        execFileAsync("node", [contextCliPath, "plan:check", tempDir]),
+        (error) => /DONE-CHECK/i.test(String(error.stdout || "") + String(error.stderr || ""))
+      );
     } finally {
       await rm(tempDir, { recursive: true, force: true });
     }

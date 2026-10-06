@@ -6,7 +6,7 @@ unit: "02.02"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
 checkout_mode: worktree
 checkout_path: ".worktrees/PLN-0003-skill-lifecycle-handoffs"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit]
 depends_on: ["02.01"]
@@ -34,12 +34,23 @@ Dependency units are verified and their phase checkpoints accepted. Recheck targ
 ## Scope
 
 **In scope:**
-- skills/productivity/plan/SKILL.md
-- docs/templates/Task.md
-- docs/templates/Phase.md
-- docs/templates/Unit.md
-- scripts/plan-check.mjs
-- evals/plan-check.test.mjs
+- `skills/productivity/plan/SKILL.md`
+- `docs/templates/Task.md`
+- `docs/templates/Phase.md`
+- `docs/templates/Unit.md`
+- `scripts/task-workflow.mjs`
+- `scripts/plan-check.mjs`
+- `evals/task-scaffold.test.mjs`
+- `evals/plan-check.test.mjs`
+- `context-manifest.json`
+- `context-lock.json`
+- `context-manifest.json`
+- `context-lock.json`
+- `docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/README.md`
+- `docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/phase-02-architecture-and-contracts/phase.md`
+- `docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/phase-02-architecture-and-contracts/unit-02-planning-contract.md`
+
+The renderer is included because it populates the templates for newly scaffolded plans. `context-lock.json` must be regenerated for the canonical skill, templates, and scripts; task artifacts record the scope correction and execution evidence.
 
 **Out of scope:** Do not edit plan-review or execute skill; their handoff behavior is assigned later.
 
@@ -68,14 +79,19 @@ Applicable language and architecture rules take precedence over conflicting proc
 - node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy
 - **Conformance gate:** Run context-cli preflight for exact modified scope, then context-cli conform; record PASS report ID, diff hash, and binding hash. If unavailable or blocked, leave the unit incomplete.
 
+### Execution evidence
+
+- **Red/green:** Added complete-plan and blocker/checkout rejection cases; focused plan-check and scaffold suites passed 19/19.
+- **Conformance:** `report-binding-adhoc-00-00-b748f500e201-1791304996276` (PASS); binding hash `sha256:b748f500e201878993af55d82d77dc75a4e980c7e1feea1df1f66bab8ab9ff21`; diff hash `sha256:bf5db34d1fe5602c13e7ed8564960ac49d2c049b80bf2da22f816288f3806ecf`.
+
 ## Rollback
 
 Restore the old parser/template/skill set together; leave created plan directories untouched.
 
 ## Definition of done
 
-- [ ] AC-04 maps to this unit's passing evidence.
-- [ ] The checker can distinguish a complete plan from a merely scaffolded one.
-- [ ] Scope review finds no unallocated files.
-- [ ] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
-- [ ] Commit message records PLN-0003 and 02.02; stop at the required checkpoint.
+- [x] AC-04 maps to this unit's passing evidence.
+- [x] The checker can distinguish a complete plan from a merely scaffolded one.
+- [x] Scope review finds no unallocated files.
+- [x] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
+- [x] Commit message records PLN-0003 and 02.02; stop at the required checkpoint.

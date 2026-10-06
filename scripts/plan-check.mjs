@@ -694,6 +694,106 @@ export async function validatePlanRules(units, options = {}) {
   };
 }
 
+function sectionContent(content, heading) {
+  const match = content.match(new RegExp(`^##\\s+${heading}\\s*$([\\s\\S]*?)(?=^##\\s+|(?![\\s\\S]))`, "im"));
+  return match ? match[1].trim() : "";
+}
+
+async function findTaskMaster(taskDirPath) {
+  const entries = await readdir(taskDirPath, { withFileTypes: true });
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
+    const path = join(taskDirPath, entry.name);
+    const content = await readFile(path, "utf8");
+    const meta = frontmatter(content) || {};
+    if (meta.type === "task") return { path, content, meta };
+  }
+  return null;
+}
+
+function planDoneDiagnostic(failureClass, message, remediation) {
+  return { failureClass, message, remediation };
+}
+
+function hasResolvedBlockers(blockerSection) {
+  if (!blockerSection) return false;
+  if (/\bnone\b/i.test(blockerSection)) return true;
+  return !/\b(blocking|blocker)\b/i.test(blockerSection) || /\bresolved\b/i.test(blockerSection);
+}
+
+function hasDoneCheck(content) {
+  const section = sectionContent(content, "Plan done-check");
+  const required = ["acceptance", "blocker", "risk", "checkout"];
+  return required.every((term) => new RegExp(`- \\[x\\][^\\n]*${term}`, "i").test(section));
+}
+
+/**
+ * Validates the prospective v2 task-plan contract. Plans without the explicit
+ * version remain readable as recorded historical artifacts.
+ */
+export async function validatePlanDoneCheck(taskDirPath, units, graph) {
+  const master = await findTaskMaster(taskDirPath);
+  if (!master || Number(master.meta.plan_contract_version) !== 2) {
+    return { applicable: false, valid: true, diagnostics: [] };
+  }
+
+  const diagnostics = [];
+  const { meta, content } = master;
+  const branchTypes = "feat|fix|refactor|chore|docs|test|perf|build|ci|migration";
+  const branchPattern = new RegExp(`^(${branchTypes})/(PLN-\\d{4})-([a-z0-9]+(?:-[a-z0-9]+)*)$`);
+  const branchMatch = String(meta.task_branch || "").match(branchPattern);
+  const checkoutMode = meta.checkout_mode;
+
+  if (!meta.plan_id || !meta.target_branch || !branchMatch || branchMatch[2] !== meta.plan_id) {
+    diagnostics.push(planDoneDiagnostic("checkout", "New plan must declare matching plan_id, target_branch, and task_branch.", "Set plan_id to PLN-NNNN and task_branch to <type>/PLN-NNNN-<slug>."));
+  }
+  if (!["branch", "worktree"].includes(checkoutMode)) {
+    diagnostics.push(planDoneDiagnostic("checkout", `Invalid checkout_mode "${checkoutMode ?? "missing"}".`, "Use branch or worktree."));
+  }
+  if (!String(meta.checkout_reason || "").trim()) {
+    diagnostics.push(planDoneDiagnostic("checkout", "Plan is missing checkout_reason.", "Record why branch or worktree is required for this task."));
+  }
+  if (checkoutMode === "branch" && meta.checkout_path) {
+    diagnostics.push(planDoneDiagnostic("checkout", "branch checkout_mode must not declare checkout_path.", "Remove checkout_path or select worktree."));
+  }
+  if (checkoutMode === "worktree" && !/^\.worktrees\//.test(String(meta.checkout_path || ""))) {
+    diagnostics.push(planDoneDiagnostic("checkout", "worktree checkout_mode requires a .worktrees/ checkout_path.", "Record the task worktree path."));
+  }
+
+  const acceptance = sectionContent(content, "Acceptance criteria");
+  const acRows = acceptance.split("\n").filter((line) => /^\|\s*AC-\d+/i.test(line));
+  if (acRows.length === 0 || acRows.some((row) => !/\b\d{2}\.\d{2}\b/.test(row) || !/\b(node|npm|pnpm|git|context-cli)\b/i.test(row))) {
+    diagnostics.push(planDoneDiagnostic("acceptance", "Acceptance criteria need a unit ID and concrete verification command.", "Map every AC-XX row to a unit and command."));
+  }
+
+  if (!hasResolvedBlockers(sectionContent(content, "Unknowns and blockers"))) {
+    diagnostics.push(planDoneDiagnostic("blocker", "Plan has a material blocker or no resolved blocker state.", "Resolve the blocker or keep the plan draft."));
+  }
+  if (!sectionContent(content, "Risk and dependency register")) {
+    diagnostics.push(planDoneDiagnostic("risk", "Plan is missing a risk and dependency register.", "Record concrete risks, dependencies, and mitigations."));
+  }
+  if (!hasDoneCheck(content)) {
+    diagnostics.push(planDoneDiagnostic("done-check", "Plan done-check is incomplete.", "Check acceptance, blocker, risk, and checkout completion only after evidence is present."));
+  }
+
+  for (const unit of units) {
+    if (unit.meta.task_branch !== meta.task_branch || unit.meta.checkout_mode !== checkoutMode) {
+      diagnostics.push(planDoneDiagnostic("checkout", `Unit ${unit.id} does not inherit the task branch and checkout mode.`, "Align unit task_branch and checkout_mode with the master plan."));
+      continue;
+    }
+    if (checkoutMode === "worktree" && !String(unit.meta.checkout_path || "").trim()) {
+      diagnostics.push(planDoneDiagnostic("checkout", `Unit ${unit.id} is missing the recorded task worktree path.`, "Copy checkout_path from the master plan."));
+    }
+  }
+
+  const parallelPairs = findParallelUnitPairs(units, graph);
+  if (parallelPairs.length > 0 && checkoutMode !== "worktree") {
+    diagnostics.push(planDoneDiagnostic("checkout", "Concurrent units require worktree checkout_mode.", "Use a task worktree and record the concurrent-unit merge order."));
+  }
+
+  return { applicable: true, valid: diagnostics.length === 0, diagnostics };
+}
+
 /**
  * CLI runner for plan:check command
  * @param {string} taskDirPath Path to task directory
@@ -717,8 +817,9 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
     const parallelPairs = findParallelUnitPairs(units, graph);
     const scopeResult = checkDisjointScopes(parallelPairs);
     const ruleResult = await validatePlanRules(units);
+    const doneCheckResult = await validatePlanDoneCheck(taskDirPath, units, graph);
 
-    const isValid = cycleResult.valid && scopeResult.valid && ruleResult.valid;
+    const isValid = cycleResult.valid && scopeResult.valid && ruleResult.valid && doneCheckResult.valid;
 
     if (flags.json) {
       console.log(
@@ -736,6 +837,7 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
               missingCount: ruleResult.missingUnits.length,
               missingUnits: ruleResult.missingUnits,
             },
+            doneCheck: doneCheckResult,
           },
           null,
           2
@@ -781,8 +883,20 @@ export async function runPlanCheckCli(taskDirPath, flags = {}) {
       }
     }
 
+    if (!doneCheckResult.applicable) {
+      console.log(`Done Check:         Legacy plan contract; prospective done-check not applicable.`);
+    } else if (doneCheckResult.valid) {
+      console.log(`Done Check:         Complete.`);
+    } else {
+      console.error(`\n  FAIL  Plan done-check failure(s):`);
+      for (const diag of doneCheckResult.diagnostics) {
+        console.error(`    - [${diag.failureClass.toUpperCase()}] ${diag.message}`);
+        console.error(`      Remediation: ${diag.remediation}`);
+      }
+    }
+
     if (isValid) {
-      console.log(`\n   PASS  Plan graph is acyclic, parallel scopes are disjoint, and language rules are valid.\n`);
+      console.log(`\n   PASS  Plan graph is acyclic, parallel scopes are disjoint, language rules are valid, and the done-check is complete.\n`);
       return 0;
     } else {
       console.error(`\n   FAIL  Plan check failed.\n`);
