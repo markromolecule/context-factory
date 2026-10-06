@@ -170,7 +170,7 @@ No product-policy blocker remains. Exact host tool commands are discovered per r
 - [x] `phase-03-typescript-enforcement/phase.md` — evidence gate, TypeScript adapter, and CLI.
 - [x] `phase-04-lifecycle-and-bridges/phase.md` — lifecycle contracts, bridges, and adversarial evaluations.
 - [x] `phase-05-typescript-catalog/phase.md` — TypeScript catalog migration and hard checkpoint.
-- [ ] `phase-06-laravel-expansion/phase.md` — Laravel adapter/catalog and final release.
+- [x] `phase-06-laravel-expansion/phase.md` — Laravel adapter/catalog and final release.
 
 ## Finalization & Merge Ledger
 
@@ -181,7 +181,7 @@ No product-policy blocker remains. Exact host tool commands are discovered per r
 | Phase 03 | `task/0001/phase-03-integration` | task base | TypeScript adapter/CLI tests | merged |
 | Phase 04 | `task/0001/phase-04-integration` | task base | lifecycle/bridge/adversarial evals | merged |
 | Phase 05 | `task/0001/phase-05-integration` | task base | TypeScript catalog audit + doctor | pending; hard developer checkpoint |
-| Phase 06 | `task/0001/phase-06-integration` | task base | Laravel adapter/catalog + doctor | pending |
+| Phase 06 | `task/0001/phase-06-integration` | task base | Laravel adapter/catalog + doctor | merged (`fd68e41fc6875949539a018412e47209c01d0c4b`) |
 | Final | task base | `master` | all ACs, evals, doctor, lock check | pending |
 
 For each unit, create its worktree from the phase branch, run `/test` and `/review`, merge only verified commits, remove the worktree, prune metadata, and remove empty `.worktrees/0001/<phase>/` directories. Execution never modifies the primary working tree.

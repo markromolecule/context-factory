@@ -4,7 +4,7 @@ type: phase
 parent: "0001-task-executable-rule-conformance-harness"
 phase: "06"
 phase_branch: "task/0001/phase-06-integration"
-status: planned
+status: completed
 created: "2026-10-06"
 tags: [task, phase, laravel, adapter, release]
 ---
@@ -34,6 +34,14 @@ After explicit developer continuation, reuse the proven conformance port for Lar
 - Laravel adapter fixtures plus complete catalog audit.
 - Full TypeScript and Laravel regression suite.
 - Sync, lock, lint, evaluations, and doctor.
+
+## Completion record
+
+- Merged into task base at `fd68e41fc6875949539a018412e47209c01d0c4b` on 2026-10-06.
+- Combined adapter/catalog suite: PASS, 31/31 tests.
+- `npm run lint`: PASS; `npm test`: PASS, 31/31; `npm run doctor`: HEALTHY.
+- Lock digest: `sha256:586355c624ab32ea2256572675c1e4962d59b38ac6fa8f4fb9a9b10574d002a6`.
+- TypeScript and Laravel adapters are ready; Flutter remains explicitly unsupported.
 
 ## Risks and rollback
 
