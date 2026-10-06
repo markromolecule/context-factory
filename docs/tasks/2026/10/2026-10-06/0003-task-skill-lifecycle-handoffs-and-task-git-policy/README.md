@@ -148,7 +148,7 @@ Planning-only checks: `node scripts/context.mjs plan:check <this directory>` and
 | Stage | Evidence | Status |
 |---|---|---|
 | Phase 01–04 checkpoints | Unit tests, conformance receipts, reviewer packet/ledger checks | pending |
-| Bootstrap reviewed plan package | Package paths, passing plan check/diff check, and bootstrap commit SHA | pending |
+| Bootstrap reviewed plan package | Context specification and complete task directory; `plan:check` and cached diff check passed | `0ac8b0f` (`docs(PLN-0003): bootstrap reviewed plan package`) |
 | Task branch review and merge to `master` | AC-01–AC-08 evidence and diff review | pending |
 | Worktree cleanup, if one was needed | Clean checkout and normal `git worktree remove` | pending |
 
