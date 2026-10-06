@@ -6,7 +6,7 @@ unit: "01.01"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
 checkout_mode: worktree
 checkout_path: ".worktrees/PLN-0003-skill-lifecycle-handoffs"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit]
 depends_on: []
@@ -67,14 +67,25 @@ Applicable language and architecture rules take precedence over conflicting proc
 - node scripts/context.mjs doctor
 - **Conformance gate:** Run context-cli preflight for exact modified scope, then context-cli conform; record PASS report ID, diff hash, and binding hash. If unavailable or blocked, leave the unit incomplete.
 
+### Execution evidence
+
+- **Test-first assessment:** This is a documentation-contract unit. Its declared verification is ADR inspection plus factory validation, so no automated behavior seam exists for a Red/Green test without inventing a tautological test.
+- **Manual contract review:** Passed. ADR 0031 names the three alternatives, selected lifecycle, artifact owners, branch/worktree rule, ADR precedence, compatibility, and validation criteria.
+- **Commands:** `node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy` (PASS); `node scripts/context.mjs doctor` (PASS, 31/31 evaluations); `git diff --check` (PASS).
+- **Preflight:** `binding-adhoc-00-00-7002e20260e3`; binding hash `sha256:7002e20260e36de689331936fdc9ca33b1cb9be8955e767c87a24ed0a940a648`.
+- **Conformance:** `report-binding-adhoc-00-00-7002e20260e3-1791301475295` (PASS); diff hash `sha256:e035a04193d42b4711ece2a463edbdc7003a1360ae3e9611502cb08e30d7cc7c`.
+- **Pre-screening review:** PASS. Six modified files were allocated to this unit; no executable code, SOLID boundary, or unallocated-file finding applies.
+- **Commit:** `17eae08` (`docs(PLN-0003 01.01): record lifecycle decision`).
+- **Files modified:** `docs/decisions/0031-skill-lifecycle-handoffs-and-task-git-policy.md`, `docs/decisions/README.md`, `context-manifest.json`, `context-lock.json`, the task README, and this unit artifact.
+
 ## Rollback
 
 Remove the new ADR if no later unit depends on it; otherwise supersede it with a corrective decision.
 
 ## Definition of done
 
-- [ ] AC-02 maps to this unit's passing evidence.
-- [ ] A single accepted decision is reviewable and names the source of every new lifecycle contract.
-- [ ] Scope review finds no unallocated files.
-- [ ] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
-- [ ] Commit message records PLN-0003 and 01.01; stop at the required checkpoint.
+- [x] AC-02 maps to this unit's passing evidence.
+- [x] A single accepted decision is reviewable and names the source of every new lifecycle contract.
+- [x] Scope review finds no unallocated files.
+- [x] Required test/conformance results are recorded; no passing result is inferred from an unrun command.
+- [x] Commit message records PLN-0003 and 01.01; stop at the required checkpoint.
