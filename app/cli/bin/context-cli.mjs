@@ -11,6 +11,8 @@ import { handleHookCommand } from "../commands/hook.mjs";
 import { handleInitCommand } from "../commands/init.mjs";
 import { handleLintCommand } from "../commands/lint.mjs";
 import { handleLockCommand } from "../commands/lock.mjs";
+import { handlePreflightCommand } from "../commands/preflight.mjs";
+import { handleConformCommand } from "../commands/conform.mjs";
 import { handlePullCommand } from "../commands/pull.mjs";
 import { handleRepairCommand } from "../commands/repair.mjs";
 import { handleResolveCommand } from "../commands/resolve.mjs";
@@ -183,6 +185,13 @@ export async function main(argv = process.argv.slice(2)) {
     case "resolve":
     case "match":
       return handleResolveCommand(args, flags);
+
+    case "preflight":
+      return handlePreflightCommand(args, flags);
+
+    case "conform":
+    case "conformance":
+      return handleConformCommand(args, flags);
 
     case "run":
     case "exec":

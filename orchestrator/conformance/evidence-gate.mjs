@@ -148,25 +148,20 @@ export async function aggregateConformanceResults({
   };
 
   // Add metadata for enforced coverage without mutating schema-constrained root
-  report._enforcedCoverage = {
-    enforcedTotal,
-    enforcedPassed,
-    coveragePercentage: enforcedTotal > 0 ? Math.round((enforcedPassed / enforcedTotal) * 100) : 100,
-  };
+  Object.defineProperty(report, "_enforcedCoverage", {
+    value: {
+      enforcedTotal,
+      enforcedPassed,
+      coveragePercentage: enforcedTotal > 0 ? Math.round((enforcedPassed / enforcedTotal) * 100) : 100,
+    },
+    enumerable: false,
+    configurable: true,
+    writable: true,
+  });
 
-  // Validate against JSON schema (removing transient metadata during validation)
+  // Validate against JSON schema
   const schema = await loadSchema("conformance-report");
-  const cleanReport = {
-    id: report.id,
-    bindingId: report.bindingId,
-    bindingHash: report.bindingHash,
-    diffHash: report.diffHash,
-    verdict: report.verdict,
-    summary: report.summary,
-    results: report.results,
-    generatedAt: report.generatedAt,
-  };
-  assertValid(cleanReport, schema);
+  assertValid(report, schema);
 
   return report;
 }

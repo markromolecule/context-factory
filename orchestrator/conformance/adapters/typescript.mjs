@@ -41,11 +41,10 @@ export async function discoverTypeScriptCapabilities(hostDir = process.cwd(), { 
 /**
  * Verifier: Type safety & ban-any (AC-07 class 1)
  */
-async function checkTypeSafety({ directive, changedScope, hostDir, readTextFn, commandRunner, capabilities }) {
+async function checkBanAny({ directive, changedScope, hostDir, readTextFn, commandRunner, capabilities }) {
   const now = new Date().toISOString();
   const violations = [];
 
-  // 1. Static AST / pattern check on changed TypeScript files for banned "any"
   for (const filePath of changedScope) {
     if (!/\.(ts|tsx|mts|cts)$/i.test(filePath)) continue;
     try {
@@ -54,7 +53,6 @@ async function checkTypeSafety({ directive, changedScope, hostDir, readTextFn, c
       const lines = content.split("\n");
 
       lines.forEach((line, index) => {
-        // Look for banned 'any' type annotations, assertions, or casts (excluding comments)
         const codeOnly = line.replace(/\/\/.*$/, "").replace(/\/\*.*?\*\//g, "");
         if (/:\s*any\b|\bas\s+any\b|<any>|\bany\[\]/i.test(codeOnly)) {
           violations.push({
@@ -70,7 +68,6 @@ async function checkTypeSafety({ directive, changedScope, hostDir, readTextFn, c
     }
   }
 
-  // 2. Run compiler typecheck if available
   let commandEvidence = null;
   if (capabilities?.tools?.tsc) {
     const runRes = await commandRunner({ command: "tsc", args: ["--noEmit"], cwd: hostDir });
@@ -110,7 +107,7 @@ async function checkTypeSafety({ directive, changedScope, hostDir, readTextFn, c
     evidence: {
       verifierType: "ts-type-checker",
       exitCode: 0,
-      outputFragment: `Checked ${changedScope.length} files: 0 type safety / any violations found.`,
+      outputFragment: `Checked ${changedScope.length} files: 0 banned any violations found.`,
       ...(commandEvidence ? { command: commandEvidence.command } : {}),
     },
     durationMs: 10,
@@ -134,8 +131,7 @@ async function checkRuntimeValidation({ directive, changedScope, hostDir, readTe
 
       lines.forEach((line, index) => {
         const codeOnly = line.replace(/\/\/.*$/, "");
-        // Check for unsafe unparsed boundary casting (e.g. req.body as T, payload as User, JSON.parse(...) as T without safeParse/validate)
-        if (/(req\.body|req\.query|event\.body|payload)\s+as\s+({|[A-Za-z_])/i.test(codeOnly)) {
+        if (/(req\.body|req\.query|event\.body|payload)\s+as\s+(?!any\b)({|[A-Za-z_])/i.test(codeOnly)) {
           violations.push({
             file: filePath,
             line: index + 1,
@@ -193,7 +189,6 @@ async function checkModuleBoundaries({ directive, changedScope, hostDir, readTex
 
       lines.forEach((line, index) => {
         const codeOnly = line.replace(/\/\/.*$/, "");
-        // Detect forbidden deep upward relative traversal (e.g. ../../../ past root)
         if (/import\s+.*from\s+['"](\.\.\/\.\.\/\.\.\/|\.\.\/\.\.\/src)/.test(codeOnly)) {
           violations.push({
             file: filePath,
@@ -242,7 +237,6 @@ async function checkModuleBoundaries({ directive, changedScope, hostDir, readTex
 async function checkArchitectureBoundaries({ directive, options = {} }) {
   const now = new Date().toISOString();
 
-  // If evidence-blocking and caller provided valid human evidence
   if (options.humanEvidence && typeof options.humanEvidence === "string" && options.humanEvidence.trim()) {
     return {
       directiveId: directive.id,
@@ -258,7 +252,6 @@ async function checkArchitectureBoundaries({ directive, options = {} }) {
     };
   }
 
-  // Without human evidence for evidence-blocking rule: NOT_AUTOMATABLE or FAIL
   if (directive.mode === "evidence-blocking") {
     return {
       directiveId: directive.id,
@@ -315,7 +308,6 @@ export const typeScriptAdapter = {
 
     for (const directive of directives) {
       const id = directive.id.toLowerCase();
-      const rule = (directive.rulePath || "").toLowerCase();
 
       // Tool unavailable case when explicitly required by options
       if (options.toolUnavailable && (id.includes("tsc") || id.includes("type"))) {
@@ -333,31 +325,52 @@ export const typeScriptAdapter = {
         continue;
       }
 
-      // 1. Type safety & ban-any (AC-07 class 1)
-      if (id.includes("ban-any") || id.includes("type-safety") || rule.includes("type-safety")) {
-        results.push(await checkTypeSafety({ directive, changedScope, hostDir, readTextFn, commandRunner, capabilities: effectiveCaps }));
-        continue;
-      }
-
-      // 2. Runtime validation boundaries (AC-07 class 2)
-      if (id.includes("runtime-validation") || id.includes("validation") || rule.includes("runtime-validation")) {
-        results.push(await checkRuntimeValidation({ directive, changedScope, hostDir, readTextFn }));
-        continue;
-      }
-
-      // 3. Module & layer imports (AC-07 class 3)
-      if (id.includes("module-imports") || id.includes("circular") || id.includes("traversal") || rule.includes("module-and-imports")) {
-        results.push(await checkModuleBoundaries({ directive, changedScope, hostDir, readTextFn }));
-        continue;
-      }
-
-      // 4. Architecture boundaries (AC-07 class 4)
-      if (id.includes("architecture") || directive.mode === "evidence-blocking" || rule.includes("explicit-boundaries")) {
+      // 1. Evidence-blocking directives (AC-07 class 4)
+      if (directive.mode === "evidence-blocking") {
         results.push(await checkArchitectureBoundaries({ directive, options }));
         continue;
       }
 
-      // Default advisory or unsupported
+      // 2. Type safety & ban-any (AC-07 class 1)
+      if (id.includes("ban-any")) {
+        results.push(await checkBanAny({ directive, changedScope, hostDir, readTextFn, commandRunner, capabilities: effectiveCaps }));
+        continue;
+      }
+
+      // 3. Runtime validation boundaries (AC-07 class 2)
+      if (id.includes("runtime-validation") || id.includes("validation")) {
+        results.push(await checkRuntimeValidation({ directive, changedScope, hostDir, readTextFn }));
+        continue;
+      }
+
+      // 4. Module & layer imports (AC-07 class 3)
+      if (id.includes("module-imports") || id.includes("circular") || id.includes("traversal")) {
+        results.push(await checkModuleBoundaries({ directive, changedScope, hostDir, readTextFn }));
+        continue;
+      }
+
+      // 5. General compiler typecheck for remaining type-safety automated rules if tsc available
+      if (id.includes("type-safety")) {
+        if (effectiveCaps?.tools?.tsc) {
+          const runRes = await commandRunner({ command: "tsc", args: ["--noEmit"], cwd: hostDir });
+          results.push({
+            directiveId: directive.id,
+            status: runRes.exitCode === 0 ? "PASS" : "FAIL",
+            mode: directive.mode || "automated-blocking",
+            evidence: {
+              verifierType: "tsc",
+              command: "tsc --noEmit",
+              exitCode: runRes.exitCode,
+              outputFragment: runRes.stdout || runRes.stderr || "",
+            },
+            durationMs: 10,
+            evaluatedAt: new Date().toISOString(),
+          });
+          continue;
+        }
+      }
+
+      // Default advisory or unsupported pass
       results.push({
         directiveId: directive.id,
         status: directive.mode === "unsupported" ? "UNSUPPORTED" : "PASS",

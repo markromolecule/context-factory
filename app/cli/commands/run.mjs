@@ -12,7 +12,10 @@ export async function handleRunCommand(args = [], flags = {}) {
   const outputPath = flags.output || flags.out || null;
   const stack = flags.stack || flags.stacks || undefined;
   const scope = flags.scope || flags.paths || undefined;
-  const requireBinding = Boolean(flags["require-binding"] || flags.strict || flags.requireBinding);
+  const isMaterialScope = Boolean(scope);
+  const requireBinding = Boolean(
+    flags["require-binding"] || flags.strict || flags.requireBinding || isMaterialScope
+  );
 
   const request = args.join(" ").trim();
   if (!request) {
