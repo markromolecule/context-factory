@@ -1,4 +1,5 @@
 import { resolveContext, sha256 } from "../scripts/context-core.mjs";
+import { compilePrompt, validatePromptIntegrity } from "./rules/prompt-compiler.mjs";
 import { assertValid, loadSchema, validateSchema } from "./validator.mjs";
 
 export class ProviderError extends Error {
@@ -13,7 +14,7 @@ export class ProviderError extends Error {
 /**
  * Mock Provider for offline, deterministic testing and golden dataset assertions.
  */
-export async function mockProvider({ prompt, selection, fixture, model = "mock-v1" }) {
+export async function mockProvider({ prompt, systemPrompt, selection, binding, fixture, model = "mock-v1" }) {
   if (fixture) {
     return {
       output: fixture.output ?? fixture,
@@ -22,11 +23,18 @@ export async function mockProvider({ prompt, selection, fixture, model = "mock-v
     };
   }
 
-  // Generate deterministic synthetic response based on matched context
+  // Generate deterministic synthetic response based on matched context and compiled binding
   const output = {
-    workflow: selection.workflow?.path ?? null,
-    rules: selection.rules.map((r) => r.path),
-    skills: selection.skills.map((s) => s.path),
+    workflow: selection?.workflow?.path ?? null,
+    rules: selection?.rules?.map((r) => r.path) ?? [],
+    skills: selection?.skills?.map((s) => s.path) ?? [],
+    binding: binding ? {
+      id: binding.id,
+      hash: binding.bindingHash,
+      stack: binding.stack,
+      directivesCount: binding.directives?.length ?? 0,
+      directives: binding.directives?.map((d) => ({ id: d.id, mode: d.mode, rule: d.rulePath })) ?? [],
+    } : null,
     summary: `Executed workflow for request: "${prompt}"`,
     status: "completed",
   };
@@ -39,27 +47,42 @@ export async function mockProvider({ prompt, selection, fixture, model = "mock-v
 }
 
 /**
- * Native fetch OpenAI-compatible Provider
+ * Builds standard OpenAI chat completion payload.
  */
-export async function openAIProvider({ prompt, systemPrompt, model = "gpt-4o", apiKey, baseUrl = "https://api.openai.com/v1" }) {
-  const key = apiKey ?? process.env.OPENAI_API_KEY;
-  if (!key) throw new ProviderError("Missing OPENAI_API_KEY environment variable", 401);
-
+export function buildOpenAIPayload({ prompt, systemPrompt, model = "gpt-4o", temperature = 0.2 }) {
   const messages = [];
   if (systemPrompt) messages.push({ role: "system", content: systemPrompt });
   messages.push({ role: "user", content: prompt });
+  return {
+    model,
+    messages,
+    temperature,
+  };
+}
 
-  const response = await fetch(`${baseUrl}/chat/completions`, {
+/**
+ * Native fetch OpenAI-compatible Provider
+ */
+export async function openAIProvider({
+  prompt,
+  systemPrompt,
+  model = "gpt-4o",
+  apiKey,
+  baseUrl = "https://api.openai.com/v1",
+  fetchFn = fetch,
+}) {
+  const key = apiKey ?? process.env.OPENAI_API_KEY;
+  if (!key) throw new ProviderError("Missing OPENAI_API_KEY environment variable", 401);
+
+  const payload = buildOpenAIPayload({ prompt, systemPrompt, model });
+
+  const response = await fetchFn(`${baseUrl}/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${key}`,
     },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature: 0.2,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
@@ -88,26 +111,42 @@ export async function openAIProvider({ prompt, systemPrompt, model = "gpt-4o", a
 }
 
 /**
+ * Builds standard Anthropic messages payload.
+ */
+export function buildAnthropicPayload({ prompt, systemPrompt, model = "claude-3-5-sonnet-20241022", max_tokens = 4096, temperature = 0.2 }) {
+  return {
+    model,
+    ...(systemPrompt ? { system: systemPrompt } : {}),
+    messages: [{ role: "user", content: prompt }],
+    max_tokens,
+    temperature,
+  };
+}
+
+/**
  * Native fetch Anthropic Provider
  */
-export async function anthropicProvider({ prompt, systemPrompt, model = "claude-3-5-sonnet-20241022", apiKey, baseUrl = "https://api.anthropic.com/v1" }) {
+export async function anthropicProvider({
+  prompt,
+  systemPrompt,
+  model = "claude-3-5-sonnet-20241022",
+  apiKey,
+  baseUrl = "https://api.anthropic.com/v1",
+  fetchFn = fetch,
+}) {
   const key = apiKey ?? process.env.ANTHROPIC_API_KEY;
   if (!key) throw new ProviderError("Missing ANTHROPIC_API_KEY environment variable", 401);
 
-  const response = await fetch(`${baseUrl}/messages`, {
+  const payload = buildAnthropicPayload({ prompt, systemPrompt, model });
+
+  const response = await fetchFn(`${baseUrl}/messages`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-api-key": key,
       "anthropic-version": "2023-06-01",
     },
-    body: JSON.stringify({
-      model,
-      system: systemPrompt,
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: 4096,
-      temperature: 0.2,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
@@ -136,23 +175,38 @@ export async function anthropicProvider({ prompt, systemPrompt, model = "claude-
 }
 
 /**
- * Native fetch Gemini Provider
+ * Builds standard Gemini contents payload.
  */
-export async function geminiProvider({ prompt, systemPrompt, model = "gemini-2.0-flash", apiKey, baseUrl = "https://generativelanguage.googleapis.com/v1beta" }) {
-  const key = apiKey ?? process.env.GEMINI_API_KEY;
-  if (!key) throw new ProviderError("Missing GEMINI_API_KEY environment variable", 401);
-
-  const url = `${baseUrl}/models/${model}:generateContent?key=${key}`;
+export function buildGeminiPayload({ prompt, systemPrompt, model = "gemini-2.0-flash" }) {
   const contents = [];
   if (systemPrompt) {
     contents.push({ role: "user", parts: [{ text: `System Instruction: ${systemPrompt}` }] });
   }
   contents.push({ role: "user", parts: [{ text: prompt }] });
+  return { contents };
+}
 
-  const response = await fetch(url, {
+/**
+ * Native fetch Gemini Provider
+ */
+export async function geminiProvider({
+  prompt,
+  systemPrompt,
+  model = "gemini-2.0-flash",
+  apiKey,
+  baseUrl = "https://generativelanguage.googleapis.com/v1beta",
+  fetchFn = fetch,
+}) {
+  const key = apiKey ?? process.env.GEMINI_API_KEY;
+  if (!key) throw new ProviderError("Missing GEMINI_API_KEY environment variable", 401);
+
+  const url = `${baseUrl}/models/${model}:generateContent?key=${key}`;
+  const payload = buildGeminiPayload({ prompt, systemPrompt, model });
+
+  const response = await fetchFn(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ contents }),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
@@ -181,7 +235,7 @@ export async function geminiProvider({ prompt, systemPrompt, model = "gemini-2.0
   };
 }
 
-const PROVIDERS = {
+export const PROVIDERS = {
   mock: mockProvider,
   openai: openAIProvider,
   anthropic: anthropicProvider,
@@ -189,7 +243,7 @@ const PROVIDERS = {
 };
 
 /**
- * Execute a complete run with 3-stage lifecycle hooks, provider invocation, and schema validation.
+ * Execute a complete run with 3-stage lifecycle hooks, prompt compiler, provider invocation, and schema validation.
  */
 export async function executeRun({
   request,
@@ -200,6 +254,12 @@ export async function executeRun({
   fixture = null,
   apiKey = null,
   systemPrompt = "You are an AI developer following Context Factory orchestration guidelines.",
+  options = {},
+  stack = undefined,
+  scope = undefined,
+  workflow = undefined,
+  requireBinding = false,
+  binding = undefined,
 }) {
   const startTime = Date.now();
   const hooksExecuted = [];
@@ -213,25 +273,52 @@ export async function executeRun({
       processedRequest = (await hooks.beforeContext({ request, runId })) ?? request;
     }
 
+    const runOptions = {
+      ...options,
+      ...(stack !== undefined ? { stack } : {}),
+      ...(scope !== undefined ? { scope } : {}),
+      ...(workflow !== undefined ? { workflow } : {}),
+      ...(requireBinding !== undefined ? { requireBinding } : {}),
+    };
+
     // Resolve deterministic context
-    const selection = await resolveContext(processedRequest);
+    const selection = await resolveContext(processedRequest, runOptions);
+
+    const targetBinding = binding ?? runOptions.binding ?? selection?.binding ?? null;
+
+    // Mandatory Prompt Compilation (occurs before user onPromptPrepare hook)
+    const compiled = compilePrompt({
+      request: processedRequest,
+      systemPrompt,
+      selection,
+      binding: targetBinding,
+      options: runOptions,
+    });
 
     // Stage 2: onPromptPrepare hook
-    let preparedPrompt = processedRequest;
-    let preparedSystemPrompt = systemPrompt;
+    let preparedPrompt = compiled.prompt;
+    let preparedSystemPrompt = compiled.systemPrompt;
     if (typeof hooks.onPromptPrepare === "function") {
       hooksExecuted.push("onPromptPrepare");
       const prepResult = await hooks.onPromptPrepare({
         request: processedRequest,
         selection,
-        systemPrompt,
+        systemPrompt: compiled.systemPrompt,
         runId,
+        binding: compiled.binding,
       });
       if (prepResult) {
         preparedPrompt = prepResult.prompt ?? preparedPrompt;
         preparedSystemPrompt = prepResult.systemPrompt ?? preparedSystemPrompt;
       }
     }
+
+    // Post-hook Prompt Integrity Validation (ensures custom hooks did not remove directives or hash)
+    validatePromptIntegrity({
+      prompt: preparedPrompt,
+      systemPrompt: preparedSystemPrompt,
+      binding: compiled.binding,
+    });
 
     // Model / Provider Dispatch
     const providerFn = typeof provider === "function" ? provider : PROVIDERS[provider];
@@ -243,6 +330,7 @@ export async function executeRun({
       prompt: preparedPrompt,
       systemPrompt: preparedSystemPrompt,
       selection,
+      binding: compiled.binding,
       fixture,
       model,
       apiKey,

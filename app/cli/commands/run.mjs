@@ -10,13 +10,24 @@ export async function handleRunCommand(args = [], flags = {}) {
   const schema = flags.schema || null;
   const isJson = Boolean(flags.json);
   const outputPath = flags.output || flags.out || null;
+  const stack = flags.stack || flags.stacks || undefined;
+  const scope = flags.scope || flags.paths || undefined;
+  const requireBinding = Boolean(flags["require-binding"] || flags.strict || flags.requireBinding);
 
   const request = args.join(" ").trim();
   if (!request) {
-    throw new Error("Usage: context-cli run \"<prompt>\" [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>]");
+    throw new Error("Usage: context-cli run \"<prompt>\" [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>] [--stack <stack>] [--scope <paths>] [--require-binding]");
   }
 
-  const result = await executeRun({ request, provider, model, schema });
+  const result = await executeRun({
+    request,
+    provider,
+    model,
+    schema,
+    stack,
+    scope,
+    requireBinding,
+  });
 
   if (outputPath) {
     const destination = isAbsolute(outputPath) ? outputPath : resolve(root, outputPath);

@@ -5,7 +5,7 @@ parent: "phase-02-binding-and-prompt"
 unit: "02.03"
 branch: "task/0001/phase-02/prompt-compiler-runner"
 worktree: ".worktrees/0001/phase-02/prompt-compiler-runner"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, prompt, runner]
 depends_on: ["02.01"]
@@ -62,7 +62,7 @@ Restore raw prompt dispatch behind compatibility mode; keep binding artifacts av
 
 ## Definition of done
 
-- [ ] AC-03 passes without custom hooks.
-- [ ] Provider is never invoked after compilation failure.
-- [ ] Prompt content is scoped and hash-linked, not a full catalog dump.
-- [ ] Unit passes `/review` and regression evaluations.
+- [x] AC-03 passes without custom hooks.
+- [x] Provider is never invoked after compilation failure.
+- [x] Prompt content is scoped and hash-linked, not a full catalog dump.
+- [x] Unit passes `/review` and regression evaluations.

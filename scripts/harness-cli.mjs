@@ -3,6 +3,7 @@ import { isAbsolute, join, resolve } from "node:path";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { hashPath, readText, resolveContext, root, sha256 } from "./context-core.mjs";
 import { executeRun } from "../orchestrator/runner.mjs";
+import { buildContextBundle } from "../orchestrator/rules/prompt-compiler.mjs";
 import { loadSchema, validateSchema } from "../orchestrator/validator.mjs";
 import { handleDoctorCommand } from "../app/cli/commands/doctor.mjs";
 import { handleEvalCommand } from "../app/cli/commands/eval.mjs";
@@ -24,7 +25,7 @@ Usage:
   node scripts/harness-cli.mjs resolve <request>
   node scripts/harness-cli.mjs bundle <request> [--out <path>]
   node scripts/harness-cli.mjs explain <run-id-or-bundle-path>
-  node scripts/harness-cli.mjs run <request> [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>]
+  node scripts/harness-cli.mjs run <request> [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>] [--stack <name>] [--scope <paths>] [--require-binding]
   node scripts/harness-cli.mjs session:save [--name <id>] [--prompt <text>]
   node scripts/harness-cli.mjs session:resume [<id>]
   node scripts/harness-cli.mjs session:status
@@ -64,37 +65,25 @@ export async function handleCli(argv = process.argv.slice(2)) {
     const rawArgs = argv.slice(1);
     const outIndex = rawArgs.indexOf("--out");
     const outArg = outIndex >= 0 ? rawArgs[outIndex + 1] : null;
-    const requestArgs = outIndex >= 0 ? rawArgs.slice(0, outIndex) : rawArgs;
-    const request = requestArgs.join(" ").trim();
+    const stackIndex = rawArgs.indexOf("--stack");
+    const stack = stackIndex >= 0 ? rawArgs[stackIndex + 1] : flags.stack;
+    const scopeIndex = rawArgs.indexOf("--scope");
+    const scope = scopeIndex >= 0 ? rawArgs[scopeIndex + 1] : flags.scope;
+
+    const indicesToSkip = new Set([
+      ...(outIndex >= 0 ? [outIndex, outIndex + 1] : []),
+      ...(stackIndex >= 0 ? [stackIndex, stackIndex + 1] : []),
+      ...(scopeIndex >= 0 ? [scopeIndex, scopeIndex + 1] : []),
+    ]);
+
+    const requestTokens = rawArgs.filter((arg, idx) => !indicesToSkip.has(idx));
+    const request = requestTokens.join(" ").trim();
     if (!request) throw new Error("bundle requires a request");
     if (outIndex >= 0 && !outArg) throw new Error("--out requires a path");
 
-    const selection = await resolveContext(request);
-    const sources = [];
-    for (const path of selection.selectedPaths) {
-      sources.push({
-        path,
-        hash: `sha256:${await hashPath(path)}`,
-        content: await readText(path),
-      });
-    }
-    const runId = sha256(JSON.stringify({
-      contextVersion: selection.contextVersion,
-      request,
-      sources: sources.map(({ path, hash }) => ({ path, hash })),
-    })).slice(0, 16);
-    const bundle = {
-      schemaVersion: 1,
-      runId,
-      createdFrom: {
-        contextVersion: selection.contextVersion,
-        request,
-      },
-      selection,
-      claimClasses: ["verified-fact", "assumption", "decision", "unknown", "result"],
-      requiredResultEvidence: ["acceptance-criterion", "implementation-boundary", "verification-command", "outcome"],
-      sources,
-    };
+    const selection = await resolveContext(request, { ...flags, stack, scope });
+    const bundle = await buildContextBundle({ request, selection, binding: selection.binding });
+    const runId = bundle.runId;
     const destination = outArg
       ? (isAbsolute(outArg) ? outArg : resolve(root, outArg))
       : join(root, ".context-runs", runId, "bundle.json");
@@ -107,7 +96,7 @@ export async function handleCli(argv = process.argv.slice(2)) {
           throw new Error(`immutable bundle conflict at ${destination}`);
         }
       });
-    output({ runId, path: destination, sourceCount: sources.length });
+    output({ runId, path: destination, sourceCount: bundle.sources.length });
     return 0;
   }
 
@@ -174,17 +163,40 @@ export async function handleCli(argv = process.argv.slice(2)) {
     const model = modelIndex >= 0 ? rawArgs[modelIndex + 1] : "mock-v1";
     const schemaIndex = rawArgs.indexOf("--schema");
     const schema = schemaIndex >= 0 ? rawArgs[schemaIndex + 1] : null;
+    const stackIndex = rawArgs.indexOf("--stack");
+    const stack = stackIndex >= 0 ? rawArgs[stackIndex + 1] : flags.stack;
+    const scopeIndex = rawArgs.indexOf("--scope");
+    const scope = scopeIndex >= 0 ? rawArgs[scopeIndex + 1] : flags.scope;
+    const requireBinding = Boolean(
+      flags["require-binding"] || flags.strict || flags.requireBinding ||
+      rawArgs.includes("--require-binding") || rawArgs.includes("--strict")
+    );
+
+    const indicesToSkip = new Set([
+      ...(providerIndex >= 0 ? [providerIndex, providerIndex + 1] : []),
+      ...(modelIndex >= 0 ? [modelIndex, modelIndex + 1] : []),
+      ...(schemaIndex >= 0 ? [schemaIndex, schemaIndex + 1] : []),
+      ...(stackIndex >= 0 ? [stackIndex, stackIndex + 1] : []),
+      ...(scopeIndex >= 0 ? [scopeIndex, scopeIndex + 1] : []),
+    ]);
 
     const requestTokens = rawArgs.filter((arg, idx) => {
-      if (providerIndex >= 0 && (idx === providerIndex || idx === providerIndex + 1)) return false;
-      if (modelIndex >= 0 && (idx === modelIndex || idx === modelIndex + 1)) return false;
-      if (schemaIndex >= 0 && (idx === schemaIndex || idx === schemaIndex + 1)) return false;
+      if (indicesToSkip.has(idx)) return false;
+      if (arg === "--require-binding" || arg === "--strict") return false;
       return true;
     });
     const request = requestTokens.join(" ").trim();
     if (!request) throw new Error("run requires a request prompt");
 
-    const result = await executeRun({ request, provider, model, schema });
+    const result = await executeRun({
+      request,
+      provider,
+      model,
+      schema,
+      stack,
+      scope,
+      requireBinding,
+    });
     output(result);
     return result.status === "error" ? 1 : 0;
   }
