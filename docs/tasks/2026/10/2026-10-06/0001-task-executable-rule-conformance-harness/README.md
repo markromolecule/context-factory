@@ -167,7 +167,7 @@ No product-policy blocker remains. Exact host tool commands are discovered per r
 - [x] `phase-01-contract-foundation/phase.md` — schemas, validator support, descriptor parser, and pilot rules.
 - [x] `phase-02-binding-and-prompt/phase.md` — binding, plan checks, and prompt compilation.
 - [x] `phase-03-typescript-enforcement/phase.md` — evidence gate, TypeScript adapter, and CLI.
-- [ ] `phase-04-lifecycle-and-bridges/phase.md` — lifecycle contracts, bridges, and adversarial evaluations.
+- [x] `phase-04-lifecycle-and-bridges/phase.md` — lifecycle contracts, bridges, and adversarial evaluations.
 - [ ] `phase-05-typescript-catalog/phase.md` — TypeScript catalog migration and hard checkpoint.
 - [ ] `phase-06-laravel-expansion/phase.md` — Laravel adapter/catalog and final release.
 
@@ -178,7 +178,7 @@ No product-policy blocker remains. Exact host tool commands are discovered per r
 | Phase 01 | `task/0001/phase-01-integration` | task base | schema/parser tests + `/review` | merged |
 | Phase 02 | `task/0001/phase-02-integration` | task base | resolver/plan/prompt tests | merged |
 | Phase 03 | `task/0001/phase-03-integration` | task base | TypeScript adapter/CLI tests | merged |
-| Phase 04 | `task/0001/phase-04-integration` | task base | lifecycle/bridge/adversarial evals | pending |
+| Phase 04 | `task/0001/phase-04-integration` | task base | lifecycle/bridge/adversarial evals | merged |
 | Phase 05 | `task/0001/phase-05-integration` | task base | TypeScript catalog audit + doctor | pending; hard developer checkpoint |
 | Phase 06 | `task/0001/phase-06-integration` | task base | Laravel adapter/catalog + doctor | pending |
 | Final | task base | `master` | all ACs, evals, doctor, lock check | pending |
