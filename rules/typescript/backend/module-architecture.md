@@ -1,7 +1,11 @@
 ---
+ruleId: cf-rule-ts-module-architecture
 name: module-architecture
 description: Organize backend capabilities as vertical modules with explicit DTO, controller, service, and data boundaries.
 scope: Backend modules, DTOs, routes, controllers, services, data access, and their tests.
+stack: typescript
+appliesTo: ["src/modules/**/*.ts", "src/features/**/*.ts"]
+layers: ["controllers", "services", "data"]
 alwaysApply: true
 ---
 
@@ -36,20 +40,19 @@ Add only layers an operation actually needs, but never collapse business rules o
 
 `routes → controllers → services → data`
 
-- Routes compose middleware and map paths to controllers.
-- Controllers validate transport input, invoke one use case, and map results or typed errors to HTTP.
-- Services own business policy, orchestration, authorization-sensitive decisions, transactions, and side-effect ordering.
-- Data functions own persistence or remote-source mechanics and return domain-oriented values.
-- DTO schemas are the single input-validation source at the transport boundary. Do not use DTOs as database models.
-- A lower layer must not import a higher layer, and one module must use another module through an explicit public contract rather than its internals.
+- [directive:ts.module.routes-compose-only][mode:evidence-blocking][verifier:human-evidence] Routes compose middleware and map paths to controllers.
+- [directive:ts.module.controllers-thin][mode:evidence-blocking][verifier:human-evidence] Controllers validate transport input, invoke one use case, and map results or typed errors to HTTP.
+- [directive:ts.module.services-own-policy][mode:evidence-blocking][verifier:human-evidence] Services own business policy, orchestration, authorization-sensitive decisions, transactions, and side-effect ordering.
+- [directive:ts.module.data-owns-persistence][mode:evidence-blocking][verifier:human-evidence] Data functions own persistence or remote-source mechanics and return domain-oriented values.
+- [directive:ts.module.dto-single-source][mode:automated-blocking][verifier:test] DTO schemas are the single input-validation source at the transport boundary. Do not use DTOs as database models.
+- [directive:ts.module.no-upward-imports][mode:automated-blocking][verifier:linter] A lower layer must not import a higher layer, and one module must use another module through an explicit public contract rather than its internals.
 
 ## Naming
 
-- Every layer file ends with exactly `.dto.ts`, `.routes.ts`, `.controller.ts`, `.service.ts`, or `.data.ts`.
-- Name a single-record operation with a singular feature: `delete-sample.service.ts`.
-- Name a genuinely multi-record operation with a plural feature: `delete-samples.service.ts`. Apply the same plurality to its controller and data file.
-- Use action-first filenames and exported symbols, such as `updateSampleService` and `deleteSamplesController`.
-- Do not use generic filenames such as `handler.ts`, `helpers.ts`, or `manager.ts` inside a feature module.
+- [directive:ts.module.file-suffix-convention][mode:automated-blocking][verifier:linter] Every layer file ends with exactly `.dto.ts`, `.routes.ts`, `.controller.ts`, `.service.ts`, or `.data.ts`.
+- [directive:ts.module.singular-plural-naming][mode:advisory][verifier:none] Name a single-record operation with a singular feature: `delete-sample.service.ts`. Name a genuinely multi-record operation with a plural feature: `delete-samples.service.ts`.
+- [directive:ts.module.action-first-naming][mode:advisory][verifier:none] Use action-first filenames and exported symbols, such as `updateSampleService` and `deleteSamplesController`.
+- [directive:ts.module.no-generic-filenames][mode:automated-blocking][verifier:linter] Do not use generic filenames such as `handler.ts`, `helpers.ts`, or `manager.ts` inside a feature module.
 
 ## Verification
 

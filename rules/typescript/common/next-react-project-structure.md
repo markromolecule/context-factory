@@ -1,7 +1,11 @@
 ---
+ruleId: cf-rule-ts-next-react-project-structure
 name: next-react-project-structure
 description: Structure React, Next.js, Vite, and Astro applications using feature slices, standardized subfolder conventions, and strict rendering boundaries.
 scope: Frontend application directories, feature modules, hooks organization, routes, and framework configuration.
+stack: typescript
+appliesTo: ["src/**/*.ts", "src/**/*.tsx", "app/**/*.ts", "app/**/*.tsx"]
+layers: ["ui", "common"]
 alwaysApply: false
 ---
 
@@ -62,7 +66,7 @@ Within `hooks/` directories (both in `src/features/<feature>/hooks/` and `src/ho
 
 - **Next.js:**
   - Route-private modules live under `app/**/_components`, `_actions`, or `_lib`.
-  - Default to React Server Components (RSC); push `'use client'` down to the smallest leaf interactive boundary.
+  - [directive:ts.structure.rsc-default][mode:evidence-blocking][verifier:human-evidence] Default to React Server Components (RSC); push `'use client'` down to the smallest leaf interactive boundary.
   - Colocate server actions (`*.actions.ts`) with clear Zod boundary validation.
 - **Vite React:**
   - Compose routes and pages through the chosen router (`pages/` or `routes/`).
@@ -70,4 +74,6 @@ Within `hooks/` directories (both in `src/features/<feature>/hooks/` and `src/ho
 - **Astro:**
   - Prefer `.astro` server-rendered composition; hydrate client framework islands (`client:load`, `client:visible`) only when interaction requires it.
 
-Avoid pinning architecture rules to exact library versions. Follow the repository lockfile and migration plan. Verify route loading, server/client boundaries, and production builds after structural changes.
+- [directive:ts.structure.no-version-pin][mode:advisory][verifier:none] Avoid pinning architecture rules to exact library versions. Follow the repository lockfile and migration plan. Verify route loading, server/client boundaries, and production builds after structural changes.
+- [directive:ts.structure.feature-public-barrier][mode:evidence-blocking][verifier:human-evidence] Each feature slice must export only through its `index.ts`; no deep imports from outside the feature are permitted.
+- [directive:ts.structure.no-framework-crossover][mode:advisory][verifier:none] Do not impose one framework's folder conventions (e.g. `app/`, `pages/`) on a project using a different framework.
