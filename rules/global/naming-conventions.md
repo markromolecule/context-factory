@@ -4,7 +4,9 @@ name: naming-conventions
 description: Apply predictable TypeScript, file, route, database, and test names while respecting framework conventions.
 scope: All authored source, configuration, test, and documentation files.
 stack: global
-alwaysApply: true
+appliesTo: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs", "**/*.php", "**/*.dart"]
+layers: ["domain", "services", "controllers", "components", "tests"]
+alwaysApply: false
 ---
 
 # Naming Conventions

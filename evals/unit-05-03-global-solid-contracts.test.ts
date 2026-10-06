@@ -17,6 +17,8 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { parseRuleCatalog } from "../orchestrator/rules/descriptor-parser.mjs";
+import { compileRuleBinding } from "../orchestrator/rules/binding-compiler.mjs";
 
 const REPO_ROOT = new URL("../", import.meta.url).pathname.replace(/\/$/, "");
 const SCOPED_DIRS = [
@@ -170,6 +172,17 @@ describe("Unit 05.03 — Global and SOLID Directive Migration", () => {
           `${f} must have alwaysApply: false to avoid universal prompt bloat`
         );
       }
+    });
+
+    it("does not bind global or SOLID directives when only catalog Markdown changes", async () => {
+      const { descriptors } = await parseRuleCatalog(join(REPO_ROOT, "rules"));
+      const { binding } = compileRuleBinding({
+        stack: "typescript",
+        affectedScope: ["rules/solid/single-responsibility.md"],
+        descriptors,
+      });
+
+      assert.deepEqual(binding.directives, []);
     });
   });
 });

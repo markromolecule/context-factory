@@ -4,6 +4,8 @@ name: git-commit
 description: Create focused, reviewable Conventional Commits and ship repository changes without modifying unrelated user work.
 scope: Git commits, commit messages, git push, repository shipping, and change-set preparation.
 stack: global
+appliesTo: [".git/COMMIT_EDITMSG"]
+layers: ["delivery"]
 alwaysApply: false
 ---
 

@@ -4,7 +4,9 @@ name: security-guardrails
 description: Apply secure defaults for input, identity, secrets, data access, outbound requests, logging, and dependencies.
 scope: Application code, APIs, jobs, integrations, configuration, infrastructure, tests, and generated templates.
 stack: global
-alwaysApply: true
+appliesTo: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs", "**/*.php", "**/*.dart"]
+layers: ["controllers", "services", "data", "infrastructure"]
+alwaysApply: false
 ---
 
 # Security Guardrails

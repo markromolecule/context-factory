@@ -4,6 +4,8 @@ name: 1-3-1-rule
 description: Compare one problem statement, three viable approaches, and one recommendation for material technical decisions.
 scope: Architecture choices, risky tradeoffs, and ambiguous technical problems.
 stack: global
+appliesTo: ["docs/**/*.md", "docs/**/*.mdx"]
+layers: ["documentation", "architecture"]
 alwaysApply: false
 ---
 

@@ -4,7 +4,9 @@ name: evidence-and-claims
 description: Ground factual, implementation, verification, and completion claims in inspectable evidence and expose uncertainty instead of filling gaps.
 scope: Planning, implementation, review, research, documentation, tool use, and final reports.
 stack: global
-alwaysApply: true
+appliesTo: ["docs/**/*.md", "docs/**/*.mdx", "docs/**/*.json"]
+layers: ["documentation", "planning", "review"]
+alwaysApply: false
 ---
 
 # Evidence and Claims

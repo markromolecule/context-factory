@@ -4,7 +4,9 @@ name: architecture-conformance
 description: Preserve system boundaries, dependency direction, and decisions.
 scope: Code structure, contracts, and module boundaries.
 stack: global
-alwaysApply: true
+appliesTo: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs", "**/*.php", "**/*.dart"]
+layers: ["architecture", "domain", "services", "controllers", "components"]
+alwaysApply: false
 ---
 
 # Architecture Conformance
