@@ -5,7 +5,7 @@ parent: "phase-05-typescript-catalog"
 unit: "05.03"
 branch: "task/0001/phase-05/global-solid-contracts"
 worktree: ".worktrees/0001/phase-05/global-solid-contracts"
-status: planned
+status: merged
 created: "2026-10-06"
 tags: [task, unit, global, solid, rules]
 depends_on: ["05.00"]
@@ -54,6 +54,7 @@ Classify global and SOLID rules as cross-stack contracts with precise applicabil
 - **Migration tests:** unique IDs and complete mode/evidence metadata.
 - **Resolver contract tests:** action, documentation, and code scopes demonstrate narrow selection, including a SOLID-only scope that excludes unrelated Git, security, and naming directives.
 - Commands: scoped catalog audit; focused binding tests. Repository-wide `npm run lint` is deferred to Unit 05.04 because this unit intentionally does not own `context-lock.json`.
+- **Execution evidence (2026-10-06):** `node --test evals/unit-05-03-global-solid-contracts.test.ts` passed 88/88 tests. Scope fence and `git diff --check` passed. Conformance receipt `report-binding-adhoc-00-00-07ed42dd4e8b-1791277309508` returned PASS (Binding Hash: `sha256:07ed42dd4e8bbb3b67f677f7067db719b9a20e2ae6908642cc1533418ffd1316`; Diff Hash: `sha256:2886eb6b7b3e1e27744412a305be27370dfac12d70c95c1d65d8af7a2b416d74`). Developer-approved early integration commit: `8d547eb`.
 
 ## Rollback
 
@@ -61,7 +62,7 @@ Revert metadata only; legacy alwaysApply selection returns but must be reported 
 
 ## Definition of done
 
-- [ ] AC-02 over-selection regression is covered.
-- [ ] Global/SOLID AC-11 coverage is honest.
-- [ ] No cross-stack directive is universally bound without scope evidence.
-- [ ] Unit passes `/review`.
+- [x] AC-02 over-selection regression is covered.
+- [x] Global/SOLID AC-11 coverage is honest.
+- [x] No cross-stack directive is universally bound without scope evidence.
+- [x] Unit passes `/review`.
