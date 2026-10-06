@@ -5,7 +5,7 @@ parent: "phase-03-typescript-enforcement"
 unit: "03.02"
 branch: "task/0001/phase-03/typescript-adapter"
 worktree: ".worktrees/0001/phase-03/typescript-adapter"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, typescript, adapter]
 depends_on: ["03.01"]
@@ -63,7 +63,7 @@ Unregister/remove the adapter and fixtures; generic contracts remain intact.
 
 ## Definition of done
 
-- [ ] AC-07 passes for all four violation classes.
-- [ ] TOOL_UNAVAILABLE/timeout cannot be counted as enforced.
-- [ ] Command execution is bounded and injection-safe.
-- [ ] Unit passes `/review`.
+- [x] AC-07 passes for all four violation classes.
+- [x] TOOL_UNAVAILABLE/timeout cannot be counted as enforced.
+- [x] Command execution is bounded and injection-safe.
+- [x] Unit passes `/review`.

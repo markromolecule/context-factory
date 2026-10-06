@@ -41,6 +41,9 @@ export function evaluateDirectiveEvidence(result) {
         }
         return { satisfied: true };
       }
+      if (status === "NOT_AUTOMATABLE") {
+        return { satisfied: false, reason: "evidence-blocking directive requires named human evidence", isBlocked: true };
+      }
       return { satisfied: false, reason: `evidence-blocking directive evaluated with failing status: ${status}` };
 
     case "advisory":
