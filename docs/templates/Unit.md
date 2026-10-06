@@ -30,8 +30,8 @@ Copied in, not referenced — this is what lets the unit run without the master 
 - Any decisions from the plan's ledger that constrain this unit
 
 <language_rules>
-- Rule 1: Concrete checkable directive (e.g. "no implicit any", "FormRequest validation required")
-- Rule 2: Concrete checkable directive
+- [directive:ts.type-safety.ban-any][mode:automated-blocking] rules/typescript/common/type-safety.md
+- [directive:ts.runtime-validation.zero-trust-boundaries][mode:automated-blocking] rules/typescript/common/runtime-validation.md
 </language_rules>
 
 > **Precedence Invariant:** If a step in this unit contradicts an applicable language rule, the language rule strictly takes precedence.
@@ -52,9 +52,13 @@ Copied in, not referenced — this is what lets the unit run without the master 
 
 ## Verification
 
-- Test type(s): unit / integration / architecture / contract / migration / other — one line justifying each, per the criteria in the `plan` skill.
-- Cases: specific scenarios, not "add tests"
-- Commands: how to run them
+- **Automated Tests:**
+  - Test type(s): unit / integration / architecture / contract / migration / other — one line justifying each, per the criteria in the `plan` skill.
+  - Cases: specific scenarios, not "add tests"
+  - Commands: how to run them
+- **Conformance Gate:**
+  - Command: `context-cli conform --scope <modified-files> --out .context-runs/<report-id>/conformance-report.json`
+  - Conformance Report: `[report.id]` (Verdict: PASS | Diff Hash: `sha256:...` | Binding Hash: `sha256:...`)
 
 ## Rollback
 
@@ -67,3 +71,4 @@ How to revert this unit alone.
 - [ ] Changes committed cleanly to unit branch
 - [ ] Zero scope leaks confirmed via `/review`
 - [ ] All listed verification passes
+- [ ] Conformance report passes (PASS) with zero blocking violations

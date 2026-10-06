@@ -61,6 +61,14 @@ If an implementation step in a plan and an applicable language rule (`<language_
 - Worktree isolation is mandatory whenever more than one agent from `agents/` is dispatched concurrently (managed via `scripts/worktree.mjs`).
 - Session state lifecycle is governed by `scripts/session-core.mjs`: snapshot machine state to `.context/sessions/<id>.json` and generate ultra-compact cold-start briefings to `.tmp/SESSION_RESUME.md` (<1,500 tokens) whenever context reaches ~60% saturation.
 
+### Executable Rule Conformance & Verification Receipts (ADR 0029, AC-08)
+
+- **Preflight & Rule Binding Receipts:** Material code changes require a deterministic Rule Binding receipt (`binding.id`, `bindingHash`) compiled before execution (`context-cli preflight`).
+- **Conformance Evaluation Gate:** Code changes must evaluate against the active stack conformance adapter (`context-cli conform`). Successful execution requires a valid `PASS` ConformanceReport (`report.id`, `diffHash`, `bindingHash`).
+- **Fail-Closed Stop Conditions:** Reports with status `FAIL` or `BLOCKED` (e.g. missing required human evidence for `evidence-blocking` rules, or `TOOL_UNAVAILABLE`) halt progression immediately. No unit or phase may claim completion or merge without a clean `PASS` report receipt.
+- **No Self-Attestation:** LLM prose claims or self-attestation cannot substitute for persisted machine receipts. Completion claims require verified report artifacts.
+- **Governed Human Waivers:** Waivers require human maintainer authorization (`authorizedBy`), active date bounds (`authorizedAt`, `expiresAt`), explicit target scopes (no wildcards), and compensating evidence. Agent or self-authorized waivers are strictly rejected.
+
 ## Context maintenance
 
 When changing the factory, follow the `context-maintenance` workflow:

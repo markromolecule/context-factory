@@ -66,7 +66,7 @@ The plan must pre-document this topology across all artifacts (`README.md`, `pha
 
 - **Master Plan Artifact:** `README.md` (or `<type>-<id>-<feature>.md`) using `docs/templates/Task.md` — outcome, criteria, scope, decision ledger, the phase/unit dependency graph, phase index, explicit `base_branch` and `target_branch`, a dedicated `## Worktree & Branch Topology` mapping table, and `## Finalization & Merge Ledger`.
 - **Phase Overview Artifacts:** `phase-01-<feature>/phase.md`, `phase-02-<feature>/phase.md`, etc. using `docs/templates/Phase.md` — the goal shared by that phase's units, context common to all of them, the unit index with dependency and parallelizable flags, `phase_branch` declaration, and phase-level rollback.
-- **Unit Artifacts:** `phase-01-<feature>/unit-01-<slug>.md`, `unit-02-<slug>.md`, etc. using `docs/templates/Unit.md` (see below). Each unit must be self-contained: declare its `branch` and `worktree` in frontmatter and status block, declare strict scope fences (`**In scope:**`, `**Out of scope:**`), bind the unit-scoped language rule subset (typically 2–4 rules matching touched files) into `<language_rules>` with concrete checkable directives, document how the implementation satisfies each rule, and provide a fresh session with everything needed to execute cold.
+- **Unit Artifacts:** `phase-01-<feature>/unit-01-<slug>.md`, `unit-02-<slug>.md`, etc. using `docs/templates/Unit.md` (see below). Each unit must be self-contained: declare its `branch` and `worktree` in frontmatter and status block, declare strict scope fences (`**In scope:**`, `**Out of scope:**`), bind the unit-scoped language rule subset into `<language_rules>` using stable directive IDs (e.g. `[directive:id][mode:automated-blocking] path`), explicit modes, and rule paths, document how the implementation satisfies each directive, cite any active human waivers if applicable, and provide a fresh session with everything needed to execute cold.
 
 ## Plan requirements
 
@@ -81,7 +81,7 @@ Include:
 - worktree and branch topology mapping every phase and unit to isolated git paths;
 - merge and finalization lifecycle from unit to phase to task to target branch;
 - modular unit breakdowns with concrete files, functions, and checklists, each carrying its own standalone context packet;
-- unit-scoped language rule binding (`<language_rules>`) with checkable directives and explicit rule-satisfaction mapping in unit steps;
+- unit-scoped language rule binding (`<language_rules>`) carrying stable directive IDs, explicit enforcement modes (`automated-blocking`, `evidence-blocking`, `advisory`), content hashes, and explicit rule-satisfaction mapping in unit steps;
 - a test plan per unit, typed (unit/integration/architecture/contract/migration/etc.) and justified by what the unit actually changes;
 - migration, environment, security, observability, and rollback impact when relevant — at the unit level where the impact is unit-scoped, at the phase level where it isn't;
 - dependencies and blockers;
@@ -98,7 +98,7 @@ Validate that:
 - every unit specifies a concrete, non-colliding branch name and worktree path;
 - the branch finalization path from unit branch to phase branch to task branch to main is clearly documented;
 - every acceptance criterion maps to a unit and to a test that verifies it;
-- every unit contains a populated `<language_rules>` block matching its touched files;
+- every unit contains a populated `<language_rules>` block carrying concrete directive IDs, modes, and rule paths matching its touched files, verifiable via `node scripts/context.mjs plan:check <task-dir>`;
 - no open decision is disguised as an implementation step;
 - each unit's context packet is genuinely sufficient for a cold-start session — if executing it would require re-reading the master plan or this conversation, fold the missing piece into the unit instead of assuming it will be available.
 

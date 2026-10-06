@@ -33,13 +33,14 @@ Always follow the shared orchestration contract, naming, code-quality, and 1-3-1
 2. Classify the change as clarification, new behavior, replacement, rename, or removal; identify overlap and conflicts.
 3. Update the canonical source with the smallest complete contract and progressive-disclosure boundaries.
 4. Update inventory, maps, architecture, knowledge, links, templates, schemas, evaluations, and decisions in the same change.
-5. Update validator coverage when a new context type or invariant is introduced.
+5. Update validator coverage, rule descriptor schemas, and conformance test fixtures when a new context type, rule directive, or invariant is introduced.
 6. Regenerate the context lock and run the context doctor; inspect diffs for unrelated or duplicated behavior.
 7. Report context version, lock digest, inventory counts, evaluation result, compatibility impact, and validation evidence.
 
 ## Quality gates
 
-- Rules state enforceable constraints and scope; skills state triggered specialized procedures; workflows state lifecycle sequencing and gates.
+- Rules state enforceable constraints and scope with valid directive markers (`id`, `mode`, `verifier`); skills state triggered specialized procedures; workflows state lifecycle sequencing and gates.
+- Rule descriptors validate cleanly against `rule-descriptor.schema.json` with zero duplicate IDs or malformed markers.
 - Model adapters remain thin and shared behavior remains model-neutral.
 - Inventory matches disk, maps link every entry, Wiki authority/provenance validate, and the lock matches canonical content.
 - Behavioral evaluations cover new selection or completion behavior and all cases pass.

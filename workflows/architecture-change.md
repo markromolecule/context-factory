@@ -45,7 +45,7 @@ Apply evidence-and-claims, architecture-conformance, code-quality, security, and
 3. Define the architecture problem, qualities, constraints, assumptions, non-goals, and authority.
 4. Compare exactly three viable approaches and record the accepted decision.
 5. Design compatibility, incremental migration, observability, rollback, and exception handling.
-6. Implement the smallest end-to-end boundary slice and conformance tests.
+6. Implement the smallest end-to-end boundary slice, compile deterministic rule bindings, and execute conformance checks (`context-cli conform`).
 7. Migrate consumers in dependency order without parallel sources of business policy.
 8. Verify contracts, dependency rules, behavior, operations, documentation, and removal of temporary bridges.
 
@@ -53,7 +53,7 @@ Apply evidence-and-claims, architecture-conformance, code-quality, security, and
 
 - Current and target boundaries are supported by inspected evidence.
 - Decision authority, tradeoffs, consumers, compatibility, and recovery are explicit.
-- Automated conformance checks protect the new boundary where practical.
+- Conformance checks execute via `context-cli conform` with deterministic report receipts (`verdict: PASS`); evidence-blocking directives carry named human evidence.
 - No undocumented circular dependency, parallel policy source, or permanent compatibility shim remains.
 
 ## Stop and escalation conditions
@@ -62,4 +62,4 @@ Stop when decision authority is missing, consumers are unknown for a breaking co
 
 ## Artifacts and completion
 
-Maintain an implementation task and accepted ADR. Completion requires migrated consumers, passing conformance and behavior checks, synchronized diagrams/contracts/runbooks, removed or owned exceptions, and an evidence-backed handoff.
+Maintain an implementation task and accepted ADR. Completion requires migrated consumers, passing conformance reports (`context-cli conform`) with zero blocking violations, synchronized diagrams/contracts/runbooks, removed or owned exceptions, and an evidence-backed handoff.

@@ -35,7 +35,7 @@ feature: "{{feature_name}}"
 ## 3. Technical & Architectural Context
 
 - **Affected Domains / Layers:** Frontend (`web/`), Backend (`api/`), Database, Mobile (`mobile/`).
-- **Language Stack & Rules:** Active project stack (e.g. `typescript`, `laravel`, `flutter`) and resolved rule set (e.g. `rules/typescript/*`) governing this feature.
+- **Language Stack & Rules:** Active project stack (e.g. `typescript`, `laravel`, `flutter`) and candidate directive IDs (e.g. `ts.type-safety.ban-any`), modes (`automated-blocking`, `evidence-blocking`, `advisory`), and key architectural constraints governing this feature.
 - **Existing Files & Reference Symbols:** List files, components, API endpoints, or database tables to inspect or modify.
 - **Data Model & Schema Changes:** Mention new tables, schema migrations, or DTO contracts if applicable.
 - **Security & Authorization:** Auth requirements, RBAC roles, data isolation, input sanitization.

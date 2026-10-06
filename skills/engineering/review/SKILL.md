@@ -63,19 +63,26 @@ Audit newly written or modified classes and modules against Context Factory SOLI
 5. **Dependency Inversion (DIP):**
    - Do high-level domain modules depend on abstractions/interfaces rather than concrete low-level infrastructure or transport mechanisms?
 
-### Gate 4: Language Rules Conformance Audit
+### Gate 4: Executable Rule Conformance & Directive Audit
 
-Audit the worktree diff against the unit's declared `<language_rules>` block:
-
-1. **Rule Directives Adherence:**
+1. **Executable Conformance Verification:**
+   - Execute the authoritative conformance command:
+     ```bash
+     context-cli conform --scope <modified-files> [--waiver <path>] [--human-evidence "<evidence>"]
+     ```
+   - Assert that the returned Conformance Report has `verdict: PASS` (exit code 0).
+   - If the verdict is `FAIL` (exit code 1) or `BLOCKED` (exit code 2), mark **FAIL: Conformance Violation** and reject checkpoint advancement.
+   - For `evidence-blocking` directives, verify that valid named human evidence is provided; reject missing or empty human evidence.
+   - For any active waivers, verify that authorization is by a human maintainer (`authorizedBy`), within active date bounds, and explicitly scoped. Agent self-waivers or wildcards must be strictly rejected.
+2. **Rule Directives Adherence:**
    - Verify line-by-line that newly written or modified code complies with each checkable directive listed in the unit's `<language_rules>`.
    - Naming Conventions: Verify variable, class, and method casings conform to stack conventions (e.g. `camelCase`, `snake_case`, `PascalCase`).
    - Type Safety & Anti-Slop Safeguards: Ensure zero loose types (`any`), missing schemas, or unvalidated HTTP/database payloads. If `any`, loose `as` casts, or omitted discriminated union exhaustiveness are found, mark **FAIL: Type Slop Detected** and instruct the agent to execute `/types` (`skills/engineering/types/SKILL.md`) before checkpointing.
    - Query & Performance Boundaries: Ensure database queries adhere to ESR indexing and batching. If unindexed queries, ORM N+1 loops, unbounded `Promise.all` waterfalls, or ESR violations are found, mark **FAIL: Performance Bottleneck Detected** and instruct the agent to execute `/perf` (`skills/engineering/perf/SKILL.md`) before checkpointing.
    - Framework Idiomaticity: Ensure standard framework boundaries are respected (e.g., thin controllers, FormRequest validation, DTO usage, Eloquent best practices).
-2. **Precedence Verification:**
+3. **Precedence Verification:**
    - Confirm that if any plan instruction was ambiguous or contradicted a language rule, the language rule was prioritized.
-3. If any violation is found, mark **FAIL: Language Rule Violation** with exact file and line number.
+4. If any violation is found, mark **FAIL: Language Rule Violation** with exact file and line number.
 
 ### Gate 5: Definition of Done & Evidence Audit
 
@@ -84,7 +91,7 @@ Audit the worktree diff against the unit's declared `<language_rules>` block:
    - Reject unverified assumptions (e.g., claiming "All tests pass" when test output was not captured).
 2. Check unit metadata:
    - Unit frontmatter status should be `verified`.
-   - Execution command and runtime duration logged in `## Verification`.
+   - Execution command, runtime duration, and Conformance Report receipt logged in `## Verification`.
 
 ---
 
@@ -106,7 +113,7 @@ Produce a structured Pre-Screening Report before the human checkpoint:
 | Gate 1 | Scope Fence | PASS / FAIL | N files modified, 0 out-of-scope leaks |
 | Gate 2 | Test Completeness | PASS / FAIL | All verification cases present & green |
 | Gate 3 | SOLID Principles | PASS / FAIL | SRP, OCP, DIP confirmed |
-| Gate 4 | Language Rules Conformance | PASS / FAIL | Adheres strictly to declared <language_rules> |
+| Gate 4 | Executable Conformance | PASS / FAIL | Report [id] (PASS, diffHash: sha256:...) |
 | Gate 5 | Definition of Done | PASS / FAIL | All DoD checkboxes backed by evidence |
 
 ## Diff Inspection Highlights

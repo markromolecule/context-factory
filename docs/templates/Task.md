@@ -23,7 +23,13 @@ Link the canonical glossary; do not duplicate implementation details here.
 ### Language stack and applicable rules
 
 - **Declared Stack:** e.g. `typescript`, `laravel`, `flutter`
-- **Applicable Rules:** List rule paths (e.g. `rules/typescript/common/type-safety.md`, `rules/typescript/backend/service-layer.md`) to be bound across units.
+- **Rule Binding ID & Hash:** `binding-{{task_id}}` (`sha256:...`) compiled via `context-cli preflight`
+- **Active Directives:**
+
+| Directive ID | Mode | Rule Path | Verifier |
+|---|---|---|---|
+| `ts.type-safety.ban-any` | automated-blocking | `rules/typescript/common/type-safety.md` | `ts-type-checker` |
+
 - **Precedence Invariant:** Applicable language rules strictly supersede contradictory procedural plan steps.
 
 ### Scenario coverage
@@ -68,9 +74,9 @@ Record the command or inspection, outcome, and the acceptance criterion it suppo
 
 ## Finalization & Merge Ledger
 
-| Stage | Source Branch | Target Branch | Merge Commit SHA | Worktree Cleaned | Verification Command |
-|---|---|---|---|---|---|
-| Phase 01 Integration | `task/{{task_id}}/phase-01` | `task/{{task_id}}-{{task_slug}}` | pending | [ ] | `npm test` |
-| Task Base Finalization | `task/{{task_id}}-{{task_slug}}` | `main` | pending | [ ] | `node scripts/context.mjs doctor` |
+| Stage | Source Branch | Target Branch | Merge Commit SHA | Worktree Cleaned | Conformance Report | Verification Command |
+|---|---|---|---|---|---|---|
+| Phase 01 Integration | `task/{{task_id}}/phase-01` | `task/{{task_id}}-{{task_slug}}` | pending | [ ] | PASS | `npm test` |
+| Task Base Finalization | `task/{{task_id}}-{{task_slug}}` | `main` | pending | [ ] | PASS | `node scripts/context.mjs doctor` |
 
 ## Result

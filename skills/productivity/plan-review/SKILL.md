@@ -29,6 +29,7 @@ Verify:
 
 - **Acyclic Dependency Graph:** Topological sort succeeds with zero cycles in `depends_on` relationships.
 - **Disjoint Parallel Scopes:** All units that share a phase and are marked as parallelizable (or have no directed dependency between them) have completely disjoint declared `**In scope:**` file boundaries.
+- **Preflight & Rule Binding Check:** `node scripts/context.mjs plan:check <task-dir>` validates that rule bindings compile deterministically and `<language_rules>` blocks contain valid directive IDs, modes, and hashes.
 - **Artifact Existence:** Every phase directory contains a valid `phase.md` and atomic `unit-*.md` files.
 
 If Gate 1 fails, **HALT** with status `CHANGES REQUIRED`. Report the offending cycles and file collisions. Do not proceed to subjective checks until the graph and scopes are mathematically valid.
@@ -55,7 +56,7 @@ Inspect every individual unit file (`phase-*/unit-*.md`):
    - `**Out of scope:**` explicitly fences adjacent systems and avoids scope creep.
 4. **Actionable Steps:** Step-by-step instructions are concrete and testable, not vague directives like "handle errors properly" or "write clean code".
 5. **Explicit Rollback:** Reversible rollback strategy documented for every unit.
-6. **Language Rule Binding & Precedence:** The unit's Context Packet must contain a non-empty `<language_rules>` block positioned immediately before `## Steps`. Ensure the rules match the touched file scope (not a generic blank block or bloated catalog dump) with checkable directives, and confirm that no planned step contradicts those language rules.
+6. **Language Rule Binding & Precedence:** The unit's Context Packet must contain a non-empty `<language_rules>` block positioned immediately before `## Steps`. Ensure the rules match the touched file scope with stable directive IDs (e.g. `[directive:id][mode:mode] path`), modes, and content hashes (never a generic blank block or bloated catalog dump). Confirm that no planned step contradicts those language rules. If an active human waiver is cited, verify it has a valid human authority (`authorizedBy`), active date bounds, and exact matching scope (no wildcards or self-approval).
 
 ### Gate 4: Test Justification & Type Audit
 
