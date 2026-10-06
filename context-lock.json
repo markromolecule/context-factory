@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.15.1",
-  "digest": "sha256:7e47d1a2c8c5d170044332e7400b0474f281dbb6f1667f8077f4797c314bed22",
+  "digest": "sha256:81031ea72f14fa1dfdbe4de0de943fa63a9459904f3ffa7c89097413e455c9de",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:5426f779e008ffdbceddce1c8348121bc254692f45b378c3c15d6b116db967df",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:3b45bd51df6f8dfc5d4e818ec95adf3b8413e8b6b4851d253f87abfb0f79f689",
+    "context-manifest.json": "sha256:b0730dd75a4ec77d771052d6c89ec6e8609edbbb387625f05ca54dc73eed8ad5",
     "docs/ARCHITECTURE.md": "sha256:02c83104623444a1d979b50f9a49f028f0e6ecdad62fb9064343ac5329343b1e",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
@@ -90,6 +90,7 @@
     "docs/templates/Report.md": "sha256:09b662b37c313df1d59abbccb78833bde72874d7ab3750de08bd7150e92da9cf",
     "docs/templates/Task.md": "sha256:7f563b14db95592cde1ca58d43e04644f3c36c05f45aafaddd7ce5d2da1fde6e",
     "docs/templates/Unit.md": "sha256:282db4ee401ae400dfbf75d34fdf3c153fd44aee44bb592896d12a5f63610a7b",
+    "evals/bridge-conformance.test.mjs": "sha256:9775577dcadd15c9d6c4a56ac279c0dd2186c3d0f6860a06d4f7c2850cbd89b5",
     "evals/cases/agent-architect.json": "sha256:9aae446e9e2c1548a9ef454d11c7e5defcc235c5468681113815c82cb293bd81",
     "evals/cases/agent-data.json": "sha256:045792c8e0fb60de5f9eefdb7fd6fb95fd846bd8cbdad8ca8e10aebe8105ec0d",
     "evals/cases/agent-threat.json": "sha256:4f3fb8352834c91b23f0796a54009ff71446da0ab2ca4335ba571de4e71b336a",

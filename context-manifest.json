@@ -210,6 +210,7 @@
     "docs/decisions/0029-executable-rule-conformance-harness.md"
   ],
   "tools": [
+    "evals/bridge-conformance.test.mjs",
     "evals/conformance-cli.test.mjs",
     "evals/conformance-gate.test.mjs",
     "evals/plan-check.test.mjs",

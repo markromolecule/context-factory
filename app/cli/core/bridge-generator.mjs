@@ -350,6 +350,67 @@ export function normalizeIdeProfiles(input = ["all"]) {
 }
 
 /**
+ * Standardized shared enforcement instruction fragment (AC-09, SC-07).
+ * Removes policy duplication across all editor profiles while preserving platform-specific formats.
+ */
+export function buildSharedEnforcementDirectives({
+  normalizedFactoryPath = ".",
+  scriptPrefix = null,
+  cliPrefix = null,
+  format = "numbered",
+} = {}) {
+  const normFactory = normalizedFactoryPath.startsWith(".") ? normalizedFactoryPath : `./${normalizedFactoryPath}`;
+  const scriptCmd = scriptPrefix || (normFactory === "." ? "node scripts/context.mjs" : `node ${normFactory}/scripts/context.mjs`);
+  const cliCmd = cliPrefix || (normFactory === "." ? "node app/cli/bin/context-cli.mjs" : `node ${normFactory}/app/cli/bin/context-cli.mjs`);
+
+  const directives = [
+    {
+      key: "shared-contract",
+      title: "Shared Contract",
+      text: `Read the shared orchestration contract in \`${normFactory}/orchestrator/SHARED.md\` before executing tasks.`,
+    },
+    {
+      key: "context-resolution",
+      title: "Context Resolution & Binding",
+      text: `Deterministically resolve required context before non-trivial changes:\n   \`${scriptCmd} resolve "<task description>"\``,
+    },
+    {
+      key: "preflight-verification",
+      title: "Preflight Verification",
+      text: `Validate directive bindings before generating code:\n   \`${cliCmd} preflight "<task description>" --stack <stack> --scope <files>\``,
+    },
+    {
+      key: "authoritative-conformance",
+      title: "Authoritative Conformance",
+      text: `Evaluate generated code against executable rule contracts after every change:\n   \`${cliCmd} conform "<task description>" --stack <stack> --scope <files>\``,
+    },
+    {
+      key: "fail-closed",
+      title: "Fail-Closed Gate",
+      text: `Halt execution immediately on FAIL or BLOCKED status. LLM self-attestation is strictly prohibited; waivers require human authorization.`,
+    },
+  ];
+
+  if (format === "bullet") {
+    return directives.map((d) => `- **${d.title}:** ${d.text}`).join("\n");
+  }
+
+  if (format === "table") {
+    return [
+      "| Command | Action | Execution |",
+      "| :--- | :--- | :--- |",
+      `| \`/plan\`, \`[PLAN]\` | Scaffold phased plan in \`./docs/tasks/\` | \`${scriptCmd} task:new "<title>"\` |`,
+      `| \`/resolve\` | Resolve matching context rules & skills | \`${scriptCmd} resolve "<prompt>"\` |`,
+      `| \`/preflight\` | Verify descriptor and rule bindings | \`${cliCmd} preflight "<prompt>"\` |`,
+      `| \`/conform\` | Execute stack conformance evaluation | \`${cliCmd} conform "<prompt>"\` |`,
+      `| \`/doctor\` | Verify context and lock health | \`${scriptCmd} doctor\` |`,
+    ].join("\n");
+  }
+
+  return directives.map((d, i) => `${i + 1}. **${d.title}:** ${d.text}`).join("\n");
+}
+
+/**
  * Generates bridge files and .agents symlinks for connecting context-factory to a host / consumer repository.
  */
 export async function generateBridge({
@@ -423,27 +484,21 @@ This repository uses **Context Factory** (located at \`${normalizedFactoryPath}\
 
 ## Mandatory Directives & Agent Execution Contract
 
-1. **Shared Contract:** Read the shared orchestration contract in \`${normalizedFactoryPath}/orchestrator/SHARED.md\` before executing tasks.
-2. **Context Resolution:** Deterministically resolve required context before non-trivial changes:
-   \`${scriptPrefix} resolve "<task description>"\`
-3. **Universal Standards:** Follow rules in \`${normalizedFactoryPath}/rules/\`, workflows in \`${normalizedFactoryPath}/workflows/\`, and skills in \`${normalizedFactoryPath}/skills/\`.
-4. **Project Specifics:** Combine universal factory rules with project-specific rules in \`./rules/\` or \`./.agents/rules/\`.
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "numbered" })}
+6. **Universal Standards:** Follow rules in \`${normalizedFactoryPath}/rules/\`, workflows in \`${normalizedFactoryPath}/workflows/\`, and skills in \`${normalizedFactoryPath}/skills/\`.
+7. **Project Specifics:** Combine universal factory rules with project-specific rules in \`./rules/\` or \`./.agents/rules/\`.
 
 ## Generated Documentation Scoping Contract
 
 - **Task Plans & Breakdowns:** All implementation plans, phase breakdowns, and task files MUST be written to \`./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/\` in **this host repository**, NEVER inside \`${normalizedFactoryPath}\`.
 - **Architecture Decisions (ADRs):** All architectural decision records MUST be saved to \`./docs/decisions/\` in **this host repository**.
-- **Templates:** Always load templates from \`${normalizedFactoryPath}/docs/templates/Task.md\`, \`Phase.md\`, and \`Decision.md\`.
+- **Templates:** Always load templates from \`${normalizedFactoryPath}/docs/templates/Task.md\`, \`Phase.md\`, \`Unit.md\`, and \`Decision.md\`.
 
 ## Session Slash Commands & Quick Actions
 
-| Command | Action | Execution |
-| :--- | :--- | :--- |
-| \`/plan\`, \`[PLAN]\` | Scaffold phased plan in \`./docs/tasks/\` | \`${scriptPrefix} task:new "<title>"\` |
-| \`/resolve\` | Resolve matching context rules & skills | \`${scriptPrefix} resolve "<prompt>"\` |
-| \`/doctor\` | Verify context and lock health | \`${scriptPrefix} doctor\` |
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "table" })}
 `;
-  filesToGenerate.push({ path: join(targetDir, "AGENTS.md"), content: agentsMdContent, id: "AGENTS.md", category: "contract" });
+    filesToGenerate.push({ path: join(targetDir, "AGENTS.md"), content: agentsMdContent, id: "AGENTS.md", category: "contract" });
 
   // 2. GEMINI.md (Antigravity & Gemini Entry Point)
   if (isAll || activeIdes.includes("gemini") || activeIdes.includes("antigravity")) {
@@ -451,12 +506,15 @@ This repository uses **Context Factory** (located at \`${normalizedFactoryPath}\
 
 This repository is bridged to **Context Factory** at \`${normalizedFactoryPath}\`.
 
-## Mandatory Directives
+## Mandatory Directives & Conformance Gates
 
-- Consult \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for the authoritative orchestration contract.
-- Resolve context via \`${scriptPrefix} resolve "<request>"\`.
-- Write task plans to host \`./docs/tasks/\` and architecture decisions to host \`./docs/decisions/\`.
-- Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
+- **Documentation Scoping:** Write task plans to host \`./docs/tasks/\` and architecture decisions to host \`./docs/decisions/\`.
+- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
+
+## Quick Actions
+
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "table" })}
 `;
     filesToGenerate.push({ path: join(targetDir, "GEMINI.md"), content: geminiMdContent, id: "GEMINI.md", category: "contract" });
   }
@@ -467,11 +525,15 @@ This repository is bridged to **Context Factory** at \`${normalizedFactoryPath}\
 
 This project uses **Context Factory** at \`${normalizedFactoryPath}\` for engineering workflows and standards.
 
-## Execution Rules
-- Review \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for orchestrator directives.
-- Context resolution: \`${scriptPrefix} resolve "<prompt>"\`.
-- Write task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\` in this repository.
-- Verify work using \`${scriptPrefix} doctor\`.
+## Execution Rules & Conformance Gates
+
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
+- **Documentation Scoping:** Write task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\` in this repository.
+- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
+
+## Quick Commands
+
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "table" })}
 `;
     filesToGenerate.push({ path: join(targetDir, "CLAUDE.md"), content: claudeMdContent, id: "CLAUDE.md", category: "contract" });
   }
@@ -481,11 +543,16 @@ This project uses **Context Factory** at \`${normalizedFactoryPath}\` for engine
     const codexMdContent = `# Codex Host Project Instructions
 
 Context Factory integration: \`${normalizedFactoryPath}\`.
-Authoritative contract: \`${normalizedFactoryPath}/orchestrator/SHARED.md\`.
 
-## Commands
-- Resolve context: \`${scriptPrefix} resolve "<prompt>"\`
-- Run health check: \`${scriptPrefix} doctor\`
+## Mandatory Directives & Conformance Gates
+
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
+- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+- **Universal Standards:** Follow rules in \`${normalizedFactoryPath}/rules/\`.
+
+## Authoritative Commands
+
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "table" })}
 `;
     filesToGenerate.push({ path: join(targetDir, "CODEX.md"), content: codexMdContent, id: "CODEX.md", category: "contract" });
   }
@@ -494,9 +561,9 @@ Authoritative contract: \`${normalizedFactoryPath}/orchestrator/SHARED.md\`.
   if (isAll || activeIdes.includes("cursor")) {
     const cursorRulesContent = `# Cursor Rules - Context Factory Bridge
 
-- Refer to \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for shared orchestration directives.
-- Use \`${scriptPrefix} resolve "<prompt>"\` to determine relevant rules and skills.
-- Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
+- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({ path: join(targetDir, ".cursorrules"), content: cursorRulesContent, id: ".cursorrules", category: "contract" });
 
@@ -507,10 +574,9 @@ alwaysApply: true
 
 # Cursor Rules - Context Factory Bridge
 
-- Refer to \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for shared orchestration directives.
-- Use \`${scriptPrefix} resolve "<prompt>"\` to determine relevant rules and skills.
-- Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
-- Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
+- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({
       path: join(targetDir, ".cursor", "rules", "context-factory.mdc"),
@@ -524,9 +590,9 @@ alwaysApply: true
   if (isAll || activeIdes.includes("windsurf")) {
     const windsurfRulesContent = `# Windsurf Rules - Context Factory Bridge
 
-- Refer to \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for shared orchestration directives.
-- Use \`${scriptPrefix} resolve "<prompt>"\` to determine relevant rules and skills.
-- Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
+- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({ path: join(targetDir, ".windsurfrules"), content: windsurfRulesContent, id: ".windsurfrules", category: "contract" });
   }
@@ -537,11 +603,11 @@ alwaysApply: true
 
 This repository connects to **Context Factory** at \`${normalizedFactoryPath}\` for engineering standards, workflows, and subagent orchestration contracts.
 
-## Mandatory Guidelines for Trae AI
-- Consult \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for the authoritative orchestration contract.
-- Resolve context before non-trivial tasks: \`${scriptPrefix} resolve "<prompt>"\`.
-- Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
-- Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
+## Mandatory Guidelines & Conformance Gates
+
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
+- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({
       path: join(targetDir, ".trae", "rules", "project_rules.md"),
@@ -556,9 +622,12 @@ This repository connects to **Context Factory** at \`${normalizedFactoryPath}\` 
     const copilotContent = `# GitHub Copilot Instructions - Context Factory Bridge
 
 This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
-- Read \`${normalizedFactoryPath}/orchestrator/SHARED.md\` for architecture contracts.
-- Resolve context: \`${scriptPrefix} resolve "<prompt>"\`.
-- Write task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+
+## Mandatory Directives & Conformance Gates
+
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
+- **Documentation Scoping:** Write task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
+- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({ path: join(targetDir, ".github", "copilot-instructions.md"), content: copilotContent, id: ".github/copilot-instructions.md", category: "contract" });
   }

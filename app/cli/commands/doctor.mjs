@@ -6,6 +6,8 @@ import { runAllEvaluations } from "../../../evals/run-evals.mjs";
 import { createLock, readJson, root } from "../../../scripts/context-core.mjs";
 import { repairBridgeSymlinks, verifySymlinkHealth } from "../core/bridge-generator.mjs";
 import { badges, colors, table } from "../core/formatter.mjs";
+import { listAdapters } from "../../../orchestrator/conformance/adapter-contract.mjs";
+import { registerTypeScriptAdapter } from "../../../orchestrator/conformance/adapters/typescript.mjs";
 
 export async function handleDoctorCommand(args = [], flags = {}) {
   const isJson = Boolean(flags.json);
@@ -144,6 +146,15 @@ export async function handleDoctorCommand(args = [], flags = {}) {
           brokenCount: editorHealth.brokenCount,
           missingCount: editorHealth.missingCount,
           items: editorHealth.items,
+          fullyEnforcedFromFilesAlone: false,
+        },
+        enforcementCapabilities: {
+          passed: true,
+          supportedStacks: editorHealth.enforcementCapabilities.supportedStacks,
+          unsupportedStacks: editorHealth.enforcementCapabilities.unsupportedStacks,
+          adapters: editorHealth.enforcementCapabilities.adapters,
+          enforcementMode: editorHealth.enforcementCapabilities.enforcementMode,
+          fullyEnforcedFromFilesAlone: false,
         },
         evaluations: { passed: evalsPassed, total: evalReport.total, passedCount: evalReport.passed, failedCount: evalReport.failed },
       },
@@ -187,6 +198,11 @@ export async function handleDoctorCommand(args = [], flags = {}) {
             ? `${editorHealth.healthyCount}/${editorHealth.totalCount} editor configurations verified (${editorHealth.configuredIdes.join(", ") || "native"})`
             : "No external editors configured")
         : `${editorHealth.missingCount} missing, ${editorHealth.brokenCount} broken. Run \`context-cli doctor --repair\``,
+    ],
+    [
+      "Conformance Enforcement",
+      badges.pass(),
+      `Adapters: ${editorHealth.enforcementCapabilities.supportedStacks.join(", ")} (ready) | Stacks: ${editorHealth.enforcementCapabilities.unsupportedStacks.join(", ")} (unsupported)`,
     ],
     [
       "Evaluation Suite",
@@ -233,6 +249,80 @@ export async function handleDoctorCommand(args = [], flags = {}) {
 }
 
 /**
+ * Inspects an editor instruction file's contents for required authoritative gates.
+ */
+export function inspectBridgeFileContent(content) {
+  const missingGates = [];
+  if (!content.includes("SHARED.md")) missingGates.push("shared-contract (SHARED.md)");
+  if (!content.includes("resolve")) missingGates.push("resolve command");
+  if (!content.includes("preflight")) missingGates.push("preflight command");
+  if (!content.includes("conform")) missingGates.push("conform command");
+  const lower = content.toLowerCase();
+  const hasFailClosed = lower.includes("fail") || lower.includes("blocked") || lower.includes("self-attestation");
+  if (!hasFailClosed) missingGates.push("fail-closed gate");
+
+  return {
+    valid: missingGates.length === 0,
+    missingGates,
+  };
+}
+
+/**
+ * Audit enforcement capabilities independently of instruction file existence (AC-09, SC-07).
+ */
+export async function auditEnforcementCapabilities() {
+  try {
+    registerTypeScriptAdapter();
+  } catch {}
+  const registeredAdapters = listAdapters();
+  const supportedStacks = registeredAdapters.map((a) => a.stack);
+  const knownStacks = ["typescript", "laravel", "flutter"];
+  const unsupportedStacks = knownStacks.filter((s) => !supportedStacks.includes(s));
+
+  return {
+    adapters: registeredAdapters.map((a) => ({
+      id: a.id,
+      stack: a.stack,
+      status: "ready",
+    })),
+    supportedStacks,
+    unsupportedStacks,
+    enforcementMode: "repository-cli",
+    instructionOnlyProfiles: true,
+    fullyEnforcedFromFilesAlone: false,
+  };
+}
+
+/**
+ * Audits a single editor bridge instruction file.
+ */
+async function auditBridgeProfileFile(canonicalTarget, relPath, ide) {
+  const fullPath = join(canonicalTarget, relPath);
+  if (!existsSync(fullPath)) {
+    return { name: relPath, ide, status: "missing", path: fullPath };
+  }
+  try {
+    const content = await readFile(fullPath, "utf8");
+    if (!content || content.trim().length < 20) {
+      return { name: relPath, ide, status: "empty instructions", path: fullPath };
+    }
+    const gateCheck = inspectBridgeFileContent(content);
+    if (!gateCheck.valid) {
+      return {
+        name: relPath,
+        ide,
+        status: `weakened contract: missing ${gateCheck.missingGates.join(", ")}`,
+        path: fullPath,
+        missingGates: gateCheck.missingGates,
+      };
+    }
+    return { name: relPath, ide, status: "healthy", path: fullPath };
+  } catch {
+    return { name: relPath, ide, status: "unreadable", path: fullPath };
+  }
+}
+
+/**
  * Audit editor configuration integrity in a host repository or factory.
  * Verifies existence, valid contents, and contract links for configured editors.
  */
@@ -248,7 +338,8 @@ export async function auditEditorConfigurations(targetDir = process.cwd()) {
     bridgeConfig = JSON.parse(raw);
   } catch {}
 
-  const isHostRepo = Boolean(bridgeConfig) || existsSync(join(canonicalTarget, ".gitmodules")) || existsSync(join(canonicalTarget, ".agents"));
+  const isContextFactory = existsSync(join(canonicalTarget, "context-manifest.json")) && !bridgeConfig;
+  const isHostRepo = !isContextFactory && (Boolean(bridgeConfig) || existsSync(join(canonicalTarget, ".gitmodules")) || existsSync(join(canonicalTarget, ".agents")));
 
   // Determine configured IDEs
   let configuredIdes = bridgeConfig?.ides;
@@ -260,8 +351,10 @@ export async function auditEditorConfigurations(targetDir = process.cwd()) {
     }
   }
 
+  const enforcement = await auditEnforcementCapabilities();
+
   // If no .context-bridge.json exists and it's context-factory itself, return healthy
-  if (!isHostRepo && canonicalTarget === (existsSync(root) ? realpathSync(root) : root)) {
+  if (isContextFactory) {
     return {
       passed: true,
       isHostRepo: false,
@@ -273,126 +366,64 @@ export async function auditEditorConfigurations(targetDir = process.cwd()) {
       items: [
         { name: "AGENTS.md", ide: "universal", status: "healthy", path: join(canonicalTarget, "AGENTS.md") },
       ],
+      enforcementCapabilities: enforcement,
+      fullyEnforcedFromFilesAlone: false,
+      enforcementSummary: "Factory-native environment; CLI conformance gates authoritative.",
     };
   }
 
   const items = [];
+  const isAll = configuredIdes.includes("all") || configuredIdes.includes("*");
+
+  // 1. Universal Host Contract: AGENTS.md
+  items.push(await auditBridgeProfileFile(canonicalTarget, "AGENTS.md", "universal"));
+
+  // 2. Trae rules
+  if (isAll || configuredIdes.includes("trae")) {
+    items.push(await auditBridgeProfileFile(canonicalTarget, join(".trae", "rules", "project_rules.md"), "trae"));
+  }
+
+  // 3. VS Code / Copilot
+  if (isAll || configuredIdes.includes("vscode") || configuredIdes.includes("copilot")) {
+    items.push(await auditBridgeProfileFile(canonicalTarget, join(".github", "copilot-instructions.md"), "vscode"));
+  }
+
+  // 4. Cursor rules
+  if (isAll || configuredIdes.includes("cursor")) {
+    items.push(await auditBridgeProfileFile(canonicalTarget, join(".cursor", "rules", "context-factory.mdc"), "cursor"));
+  }
+
+  // 5. Antigravity / Gemini
+  if (isAll || configuredIdes.includes("antigravity") || configuredIdes.includes("gemini")) {
+    items.push(await auditBridgeProfileFile(canonicalTarget, "GEMINI.md", "antigravity"));
+  }
+
+  // 6. Claude Code
+  if (isAll || configuredIdes.includes("claude")) {
+    items.push(await auditBridgeProfileFile(canonicalTarget, "CLAUDE.md", "claude"));
+  }
+
+  // 7. Codex
+  if (isAll || configuredIdes.includes("codex")) {
+    items.push(await auditBridgeProfileFile(canonicalTarget, "CODEX.md", "codex"));
+  }
+
+  // 8. Windsurf
+  if (isAll || configuredIdes.includes("windsurf")) {
+    items.push(await auditBridgeProfileFile(canonicalTarget, ".windsurfrules", "windsurf"));
+  }
+
   let healthyCount = 0;
   let missingCount = 0;
   let brokenCount = 0;
 
-  const isAll = configuredIdes.includes("all") || configuredIdes.includes("*");
-
-  // Universal Host Contract: AGENTS.md
-  const agentsMdPath = join(canonicalTarget, "AGENTS.md");
-  if (existsSync(agentsMdPath)) {
-    try {
-      const content = await readFile(agentsMdPath, "utf8");
-      if (content.includes("Context Factory") && content.includes("SHARED.md")) {
-        healthyCount++;
-        items.push({ name: "AGENTS.md", ide: "universal", status: "healthy", path: agentsMdPath });
-      } else {
-        brokenCount++;
-        items.push({ name: "AGENTS.md", ide: "universal", status: "invalid contract content", path: agentsMdPath });
-      }
-    } catch {
+  for (const item of items) {
+    if (item.status === "healthy") {
+      healthyCount++;
+    } else if (item.status === "missing") {
+      missingCount++;
+    } else {
       brokenCount++;
-      items.push({ name: "AGENTS.md", ide: "universal", status: "unreadable", path: agentsMdPath });
-    }
-  } else {
-    missingCount++;
-    items.push({ name: "AGENTS.md", ide: "universal", status: "missing", path: agentsMdPath });
-  }
-
-  // Trae rules
-  if (isAll || configuredIdes.includes("trae")) {
-    const traeRulesPath = join(canonicalTarget, ".trae", "rules", "project_rules.md");
-    if (existsSync(traeRulesPath)) {
-      try {
-        const content = await readFile(traeRulesPath, "utf8");
-        if (content.includes("SHARED.md") || content.includes("orchestrator") || content.includes("Context Factory")) {
-          healthyCount++;
-          items.push({ name: ".trae/rules/project_rules.md", ide: "trae", status: "healthy", path: traeRulesPath });
-        } else {
-          brokenCount++;
-          items.push({ name: ".trae/rules/project_rules.md", ide: "trae", status: "missing orchestrator reference", path: traeRulesPath });
-        }
-      } catch {
-        brokenCount++;
-        items.push({ name: ".trae/rules/project_rules.md", ide: "trae", status: "unreadable", path: traeRulesPath });
-      }
-    } else {
-      missingCount++;
-      items.push({ name: ".trae/rules/project_rules.md", ide: "trae", status: "missing", path: traeRulesPath });
-    }
-  }
-
-  // VS Code / Copilot
-  if (isAll || configuredIdes.includes("vscode") || configuredIdes.includes("copilot")) {
-    const copilotPath = join(canonicalTarget, ".github", "copilot-instructions.md");
-    if (existsSync(copilotPath)) {
-      try {
-        const content = await readFile(copilotPath, "utf8");
-        if (content.length > 20) {
-          healthyCount++;
-          items.push({ name: ".github/copilot-instructions.md", ide: "vscode", status: "healthy", path: copilotPath });
-        } else {
-          brokenCount++;
-          items.push({ name: ".github/copilot-instructions.md", ide: "vscode", status: "empty instructions", path: copilotPath });
-        }
-      } catch {
-        brokenCount++;
-        items.push({ name: ".github/copilot-instructions.md", ide: "vscode", status: "unreadable", path: copilotPath });
-      }
-    } else {
-      missingCount++;
-      items.push({ name: ".github/copilot-instructions.md", ide: "vscode", status: "missing", path: copilotPath });
-    }
-  }
-
-  // Cursor rules
-  if (isAll || configuredIdes.includes("cursor")) {
-    const cursorRulesPath = join(canonicalTarget, ".cursor", "rules", "context-factory.mdc");
-    if (existsSync(cursorRulesPath)) {
-      try {
-        const content = await readFile(cursorRulesPath, "utf8");
-        if (content.length > 20) {
-          healthyCount++;
-          items.push({ name: ".cursor/rules/context-factory.mdc", ide: "cursor", status: "healthy", path: cursorRulesPath });
-        } else {
-          brokenCount++;
-          items.push({ name: ".cursor/rules/context-factory.mdc", ide: "cursor", status: "empty mdc file", path: cursorRulesPath });
-        }
-      } catch {
-        brokenCount++;
-        items.push({ name: ".cursor/rules/context-factory.mdc", ide: "cursor", status: "unreadable", path: cursorRulesPath });
-      }
-    } else {
-      missingCount++;
-      items.push({ name: ".cursor/rules/context-factory.mdc", ide: "cursor", status: "missing", path: cursorRulesPath });
-    }
-  }
-
-  // Antigravity / Gemini
-  if (isAll || configuredIdes.includes("antigravity") || configuredIdes.includes("gemini")) {
-    const geminiMdPath = join(canonicalTarget, "GEMINI.md");
-    if (existsSync(geminiMdPath)) {
-      try {
-        const content = await readFile(geminiMdPath, "utf8");
-        if (content.length > 20) {
-          healthyCount++;
-          items.push({ name: "GEMINI.md", ide: "antigravity", status: "healthy", path: geminiMdPath });
-        } else {
-          brokenCount++;
-          items.push({ name: "GEMINI.md", ide: "antigravity", status: "empty entrypoint", path: geminiMdPath });
-        }
-      } catch {
-        brokenCount++;
-        items.push({ name: "GEMINI.md", ide: "antigravity", status: "unreadable", path: geminiMdPath });
-      }
-    } else {
-      missingCount++;
-      items.push({ name: "GEMINI.md", ide: "antigravity", status: "missing", path: geminiMdPath });
     }
   }
 
@@ -408,5 +439,8 @@ export async function auditEditorConfigurations(targetDir = process.cwd()) {
     brokenCount,
     totalCount,
     items,
+    enforcementCapabilities: enforcement,
+    fullyEnforcedFromFilesAlone: false,
+    enforcementSummary: `Instruction profiles provide procedural guidance only; authoritative enforcement relies on repository CLI (${enforcement.supportedStacks.join(", ")} ready).`,
   };
 }

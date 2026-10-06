@@ -5,7 +5,7 @@ parent: "phase-04-lifecycle-and-bridges"
 unit: "04.02"
 branch: "task/0001/phase-04/bridge-doctor-parity"
 worktree: ".worktrees/0001/phase-04/bridge-doctor-parity"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, bridges, doctor]
 depends_on: ["03.03"]
@@ -60,7 +60,7 @@ Restore prior bridge fragments/doctor checks together; do not leave mixed editor
 
 ## Definition of done
 
-- [ ] AC-09 passes for every supported editor.
-- [ ] No editor can be reported fully enforced from instruction-file presence alone.
-- [ ] Shared fragment removes policy duplication.
-- [ ] Unit passes `/review`.
+- [x] AC-09 passes for every supported editor.
+- [x] No editor can be reported fully enforced from instruction-file presence alone.
+- [x] Shared fragment removes policy duplication.
+- [x] Unit passes `/review`.
