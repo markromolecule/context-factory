@@ -5,7 +5,7 @@ parent: "phase-04-lifecycle-and-bridges"
 unit: "04.01"
 branch: "task/0001/phase-04/lifecycle-contracts"
 worktree: ".worktrees/0001/phase-04/lifecycle-contracts"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, skills, workflows, templates]
 depends_on: ["03.03"]
@@ -61,7 +61,7 @@ Revert lifecycle/template text as one unit; executable CLI remains available but
 
 ## Definition of done
 
-- [ ] AC-08 lifecycle contracts are explicit.
-- [ ] No skill can claim completion without report evidence.
-- [ ] ADR 0027 proximity requirement remains intact.
-- [ ] Unit passes `/review`.
+- [x] AC-08 lifecycle contracts are explicit.
+- [x] No skill can claim completion without report evidence.
+- [x] ADR 0027 proximity requirement remains intact.
+- [x] Unit passes `/review`.

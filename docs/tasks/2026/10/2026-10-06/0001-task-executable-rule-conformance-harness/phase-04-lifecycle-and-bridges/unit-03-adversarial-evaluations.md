@@ -5,7 +5,7 @@ parent: "phase-04-lifecycle-and-bridges"
 unit: "04.03"
 branch: "task/0001/phase-04/adversarial-evaluations"
 worktree: ".worktrees/0001/phase-04/adversarial-evaluations"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, evals, adversarial]
 depends_on: ["04.01", "04.02"]
@@ -60,7 +60,7 @@ Remove new adversarial cases/assertions without changing core behavior; never re
 
 ## Definition of done
 
-- [ ] AC-08 and AC-10 pass.
-- [ ] At least one deterministic case proves each guardrail can reject bad output.
-- [ ] Existing routing evaluations remain green.
-- [ ] Unit passes `/review`.
+- [x] AC-08 and AC-10 pass.
+- [x] At least one deterministic case proves each guardrail can reject bad output.
+- [x] Existing routing evaluations remain green.
+- [x] Unit passes `/review`.
