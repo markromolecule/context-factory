@@ -5,7 +5,7 @@ parent: "phase-01-contract-foundation"
 unit: "01.02"
 branch: "task/0001/phase-01/descriptor-parser-pilot"
 worktree: ".worktrees/0001/phase-01/descriptor-parser-pilot"
-status: verified
+status: merged
 created: "2026-10-06"
 tags: [task, unit, parser, rules]
 depends_on: ["01.01"]
