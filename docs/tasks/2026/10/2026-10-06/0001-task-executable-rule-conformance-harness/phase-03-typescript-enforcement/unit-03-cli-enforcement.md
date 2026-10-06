@@ -5,7 +5,7 @@ parent: "phase-03-typescript-enforcement"
 unit: "03.03"
 branch: "task/0001/phase-03/cli-enforcement"
 worktree: ".worktrees/0001/phase-03/cli-enforcement"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, cli, enforcement]
 depends_on: ["03.02"]
@@ -62,7 +62,7 @@ Remove new commands and restore `run` compatibility mode; preserve already-writt
 
 ## Definition of done
 
-- [ ] AC-08 CLI portion passes.
-- [ ] Human and JSON outputs derive from one result object.
-- [ ] Failed blocking results return non-zero.
-- [ ] Unit passes `/review` and leaves no generated artifacts tracked.
+- [x] AC-08 CLI portion passes.
+- [x] Human and JSON outputs derive from one result object.
+- [x] Failed blocking results return non-zero.
+- [x] Unit passes `/review` and leaves no generated artifacts tracked.
