@@ -1,8 +1,12 @@
 ---
+ruleId: cf-rule-solid-liskov-substitution
 name: liskov-substitution
 description: Guarantee that subclasses, implementations, and test doubles are completely substitutable for their base types without breaking behavioral invariants.
 scope: Interface implementations, class inheritance, repository fakes, mock adapters, and TypeScript type contracts.
-alwaysApply: true
+stack: global
+appliesTo: ["**/*.ts", "**/*.tsx", "**/*.php", "**/*.dart"]
+layers: ["architecture", "domain", "services", "components"]
+alwaysApply: false
 ---
 
 # Liskov Substitution Principle (LSP)
@@ -11,11 +15,11 @@ Subtypes and interface implementors must be **substitutable for their base types
 
 ## Mandatory Directives
 
-- **MUST:** Ensure all implementations of an interface honor identical precondition, postcondition, and invariant semantics.
-- **MUST:** Guarantee that test doubles and in-memory fakes replicate the exact error responses, sorting, and edge-case behaviors of real infrastructure implementations.
-- **MUST NOT:** Throw `NotSupportedError`, `UnimplementedError`, or return unhandled `null`/`undefined` for methods declared on an implemented interface.
-- **MUST NOT:** Use type-sniffing (`instanceof`, constructor checking, or casting) in consumer code to alter control flow based on the concrete subtype.
-- **MUST NOT:** Strengthen preconditions (e.g. requiring stricter arguments or hidden initialization steps) in a subtype that the base interface does not require.
+- [directive:cf.solid.lsp-identical-invariants][mode:evidence-blocking][verifier:human-evidence] **MUST:** Ensure all implementations of an interface honor identical precondition, postcondition, and invariant semantics.
+- [directive:cf.solid.lsp-fakes-replicate-behavior][mode:automated-blocking][verifier:test] **MUST:** Guarantee that test doubles and in-memory fakes replicate the exact error responses, sorting, and edge-case behaviors of real infrastructure implementations.
+- [directive:cf.solid.lsp-no-unsupported-methods][mode:automated-blocking][verifier:typechecker] **MUST NOT:** Throw `NotSupportedError`, `UnimplementedError`, or return unhandled `null`/`undefined` for methods declared on an implemented interface.
+- [directive:cf.solid.lsp-no-type-sniffing][mode:automated-blocking][verifier:linter] **MUST NOT:** Use type-sniffing (`instanceof`, constructor checking, or casting) in consumer code to alter control flow based on the concrete subtype.
+- [directive:cf.solid.lsp-no-stricter-preconditions][mode:evidence-blocking][verifier:human-evidence] **MUST NOT:** Strengthen preconditions (e.g. requiring stricter arguments or hidden initialization steps) in a subtype that the base interface does not require.
 
 ## Backend & Domain Patterns
 

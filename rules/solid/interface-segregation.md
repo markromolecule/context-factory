@@ -1,8 +1,12 @@
 ---
+ruleId: cf-rule-solid-interface-segregation
 name: interface-segregation
 description: Keep interfaces, types, and component prop definitions fine-grained, cohesive, and client-specific.
 scope: TypeScript interfaces, type definitions, service ports, component props, and API contracts.
-alwaysApply: true
+stack: global
+appliesTo: ["**/*.ts", "**/*.tsx", "**/*.php", "**/*.dart"]
+layers: ["architecture", "domain", "services", "components"]
+alwaysApply: false
 ---
 
 # Interface Segregation Principle (ISP)
@@ -11,11 +15,11 @@ Clients must **never be forced to depend on methods, properties, or type definit
 
 ## Mandatory Directives
 
-- **MUST:** Design interfaces from the perspective of the *consumer*, containing only the methods and properties required for that consumer's use case.
-- **MUST:** Narrow React component props to the minimum necessary fields (or use TypeScript utility types like `Pick<T, K>`) rather than passing full domain models.
-- **MUST:** Decompose fat backend service interfaces into fine-grained role interfaces (e.g. `UserFinder`, `UserModifier`, `PasswordResetter`).
-- **MUST NOT:** Create monolithic "God Interfaces" (e.g., a single 25-method `IDataService`) that force implementors to write dummy or empty methods.
-- **MUST NOT:** Pass complete database entities or bulky API response objects into leaf UI components that only need 1 or 2 fields.
+- [directive:cf.solid.isp-consumer-centric-interfaces][mode:evidence-blocking][verifier:human-evidence] **MUST:** Design interfaces from the perspective of the *consumer*, containing only the methods and properties required for that consumer's use case.
+- [directive:cf.solid.isp-narrow-component-props][mode:evidence-blocking][verifier:human-evidence] **MUST:** Narrow React component props to the minimum necessary fields (or use TypeScript utility types like `Pick<T, K>`) rather than passing full domain models.
+- [directive:cf.solid.isp-fine-grained-role-interfaces][mode:evidence-blocking][verifier:human-evidence] **MUST:** Decompose fat backend service interfaces into fine-grained role interfaces (e.g. `UserFinder`, `UserModifier`, `PasswordResetter`).
+- [directive:cf.solid.isp-no-god-interfaces][mode:evidence-blocking][verifier:human-evidence] **MUST NOT:** Create monolithic "God Interfaces" (e.g., a single 25-method `IDataService`) that force implementors to write dummy or empty methods.
+- [directive:cf.solid.isp-no-entity-dump-in-leaf-ui][mode:evidence-blocking][verifier:human-evidence] **MUST NOT:** Pass complete database entities or bulky API response objects into leaf UI components that only need 1 or 2 fields.
 
 ## Backend & Domain Patterns
 

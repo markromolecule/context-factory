@@ -1,8 +1,12 @@
 ---
+ruleId: cf-rule-solid-open-closed
 name: open-closed
 description: Design software entities to be open for extension without requiring modification of existing, tested source code.
 scope: System architecture, polymorphic handlers, strategy registries, plugin mechanisms, and React component composition.
-alwaysApply: true
+stack: global
+appliesTo: ["**/*.ts", "**/*.tsx", "**/*.php", "**/*.dart"]
+layers: ["architecture", "domain", "services", "components"]
+alwaysApply: false
 ---
 
 # Open/Closed Principle (OCP)
@@ -11,11 +15,11 @@ Software entities (classes, modules, functions, components) must be **open for e
 
 ## Mandatory Directives
 
-- **MUST:** Use polymorphism, strategy patterns, or registry lookups instead of sprawling `switch (type)` or `if-else` cascades when handling variable business variants.
-- **MUST:** Leverage React component composition (`children`, slot props, compound components) to extend container layouts rather than adding excessive boolean variant props.
-- **MUST:** Define stable interfaces for extension points (e.g. `NotificationProvider`, `PaymentGateway`, `ExportStrategy`).
-- **MUST NOT:** Modify core domain workflows to accommodate a new external provider or payment channel; register a new strategy implementor instead.
-- **MUST NOT:** Add cascading conditional checks (`if (type === 'NEW_TYPE')`) scattered across multiple application layers when a single polymorphic interface suffices.
+- [directive:cf.solid.ocp-polymorphic-strategies][mode:evidence-blocking][verifier:human-evidence] **MUST:** Use polymorphism, strategy patterns, or registry lookups instead of sprawling `switch (type)` or `if-else` cascades when handling variable business variants.
+- [directive:cf.solid.ocp-component-composition][mode:evidence-blocking][verifier:human-evidence] **MUST:** Leverage React component composition (`children`, slot props, compound components) to extend container layouts rather than adding excessive boolean variant props.
+- [directive:cf.solid.ocp-stable-extension-interfaces][mode:evidence-blocking][verifier:human-evidence] **MUST:** Define stable interfaces for extension points (e.g. `NotificationProvider`, `PaymentGateway`, `ExportStrategy`).
+- [directive:cf.solid.ocp-closed-core-workflows][mode:evidence-blocking][verifier:human-evidence] **MUST NOT:** Modify core domain workflows to accommodate a new external provider or payment channel; register a new strategy implementor instead.
+- [directive:cf.solid.ocp-no-scattered-type-checks][mode:evidence-blocking][verifier:human-evidence] **MUST NOT:** Add cascading conditional checks (`if (type === 'NEW_TYPE')`) scattered across multiple application layers when a single polymorphic interface suffices.
 
 ## Backend & Domain Patterns
 

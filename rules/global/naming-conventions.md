@@ -1,7 +1,9 @@
 ---
+ruleId: cf-rule-global-naming-conventions
 name: naming-conventions
 description: Apply predictable TypeScript, file, route, database, and test names while respecting framework conventions.
 scope: All authored source, configuration, test, and documentation files.
+stack: global
 alwaysApply: true
 ---
 
@@ -20,9 +22,9 @@ Prefer names that describe domain intent over implementation mechanics.
 | REST paths                     | lowercase kebab-case nouns               | `/api/user-profiles`   |
 | Database identifiers           | snake_case unless ORM convention differs | `created_at`           |
 
-- Follow required framework filenames such as `page.tsx`, `layout.tsx`, and `route.ts`.
-- Use singular names for entity types and plural names only for collections.
-- Name booleans as predicates (`is`, `has`, `can`, `should`).
-- Name async commands with the domain action, not `handle` unless it is an event handler.
-- Avoid one-letter names outside tight mathematical/index scopes.
-- Preserve a codebase's established convention when migration is outside task scope; document deliberate exceptions.
+- [directive:cf.naming.framework-file-conventions][mode:automated-blocking][verifier:linter] Follow required framework filenames such as `page.tsx`, `layout.tsx`, and `route.ts`.
+- [directive:cf.naming.singular-entities-plural-collections][mode:automated-blocking][verifier:linter] Use singular names for entity types and plural names only for collections.
+- [directive:cf.naming.predicate-booleans][mode:automated-blocking][verifier:linter] Name booleans as predicates (`is`, `has`, `can`, `should`).
+- [directive:cf.naming.domain-action-async-commands][mode:evidence-blocking][verifier:human-evidence] Name async commands with the domain action, not `handle` unless it is an event handler.
+- [directive:cf.naming.no-single-letter-names][mode:automated-blocking][verifier:linter] Avoid one-letter names outside tight mathematical/index scopes.
+- [directive:cf.naming.preserve-established-conventions][mode:advisory][verifier:none] Preserve a codebase's established convention when migration is outside task scope; document deliberate exceptions.

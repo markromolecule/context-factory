@@ -1,8 +1,12 @@
 ---
+ruleId: cf-rule-solid-single-responsibility
 name: single-responsibility
 description: Ensure each module, class, service, and React component/hook has a single, cohesive reason to change.
 scope: System architecture, backend modules, services, controllers, repositories, frontend components, and custom hooks.
-alwaysApply: true
+stack: global
+appliesTo: ["**/*.ts", "**/*.tsx", "**/*.php", "**/*.dart"]
+layers: ["architecture", "domain", "services", "controllers", "components"]
+alwaysApply: false
 ---
 
 # Single Responsibility Principle (SRP)
@@ -11,12 +15,12 @@ Every module, class, service, function, and UI component must have **one, and on
 
 ## Mandatory Directives
 
-- **MUST:** Restrict every class, service, or module to a single business capability or actor boundary.
-- **MUST:** Separate transport parsing (controllers), business validation (services), data persistence (repositories), and presentation (UI components) into distinct files.
-- **MUST:** Extract asynchronous state management, caching, and data fetching out of React UI components into dedicated custom hooks (`use*`).
-- **MUST NOT:** Execute direct database queries, ORM calls, or raw network requests inside UI components or transport controllers.
-- **MUST NOT:** Combine unrelated business domain logic (e.g., authentication tokens and invoice generation) in a single service or "god object".
-- **MUST NOT:** Create omnibus "helpers.ts" or "utils.ts" files containing mixed, unbounded responsibilities.
+- [directive:cf.solid.srp-single-actor-boundary][mode:evidence-blocking][verifier:human-evidence] **MUST:** Restrict every class, service, or module to a single business capability or actor boundary.
+- [directive:cf.solid.srp-layer-separation][mode:evidence-blocking][verifier:human-evidence] **MUST:** Separate transport parsing (controllers), business validation (services), data persistence (repositories), and presentation (UI components) into distinct files.
+- [directive:cf.solid.srp-extract-async-hooks][mode:evidence-blocking][verifier:human-evidence] **MUST:** Extract asynchronous state management, caching, and data fetching out of React UI components into dedicated custom hooks (`use*`).
+- [directive:cf.solid.srp-no-db-in-ui-or-controllers][mode:automated-blocking][verifier:linter] **MUST NOT:** Execute direct database queries, ORM calls, or raw network requests inside UI components or transport controllers.
+- [directive:cf.solid.srp-no-god-objects][mode:evidence-blocking][verifier:human-evidence] **MUST NOT:** Combine unrelated business domain logic (e.g., authentication tokens and invoice generation) in a single service or "god object".
+- [directive:cf.solid.srp-no-omnibus-helpers][mode:automated-blocking][verifier:linter] **MUST NOT:** Create omnibus "helpers.ts" or "utils.ts" files containing mixed, unbounded responsibilities.
 
 ## Backend & Domain Patterns
 

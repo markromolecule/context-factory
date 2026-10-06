@@ -1,7 +1,9 @@
 ---
+ruleId: cf-rule-global-evidence-and-claims
 name: evidence-and-claims
 description: Ground factual, implementation, verification, and completion claims in inspectable evidence and expose uncertainty instead of filling gaps.
 scope: Planning, implementation, review, research, documentation, tool use, and final reports.
+stack: global
 alwaysApply: true
 ---
 
@@ -21,11 +23,11 @@ alwaysApply: true
 
 | Directive | Constraint & Invariant |
 | :--- | :--- |
-| **Grounding** | Inspect source files before asserting symbols, conventions, or defects exist; never hallucinate paths, APIs, or commands. |
-| **Integrity** | Surface contradictions and stale artifacts immediately; do not silently pick convenient sources. |
-| **Verification** | Record exact command output and exit codes before claiming passing status. Do not imply unrun checks passed. |
-| **Completion** | A task is complete only when required outcomes exist, required checks pass, and unresolved items are reported. |
-| **Scope Fencing** | Mark proposed components as new; never present planned code as existing. |
+| **Grounding** | [directive:cf.evidence.grounding][mode:evidence-blocking][verifier:human-evidence] Inspect source files before asserting symbols, conventions, or defects exist; never hallucinate paths, APIs, or commands. |
+| **Integrity** | [directive:cf.evidence.integrity][mode:evidence-blocking][verifier:human-evidence] Surface contradictions and stale artifacts immediately; do not silently pick convenient sources. |
+| **Verification** | [directive:cf.evidence.verification][mode:automated-blocking][verifier:test] Record exact command output and exit codes before claiming passing status. Do not imply unrun checks passed. |
+| **Completion** | [directive:cf.evidence.completion][mode:evidence-blocking][verifier:human-evidence] A task is complete only when required outcomes exist, required checks pass, and unresolved items are reported. |
+| **Scope Fencing** | [directive:cf.evidence.scope-fencing][mode:evidence-blocking][verifier:human-evidence] Mark proposed components as new; never present planned code as existing. |
 
 ## Stop Conditions
 

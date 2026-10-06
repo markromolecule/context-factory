@@ -1,8 +1,12 @@
 ---
+ruleId: cf-rule-solid-dependency-inversion
 name: dependency-inversion
 description: Enforce inward-pointing dependencies where high-level policy depends on abstractions rather than low-level concrete implementations.
 scope: System architecture, backend service dependencies, repository interfaces, external integrations, and React dependency injection.
-alwaysApply: true
+stack: global
+appliesTo: ["**/*.ts", "**/*.tsx", "**/*.php", "**/*.dart"]
+layers: ["architecture", "domain", "services", "components"]
+alwaysApply: false
 ---
 
 # Dependency Inversion Principle (DIP)
@@ -11,11 +15,11 @@ High-level business policies and domain services **must not depend on low-level 
 
 ## Mandatory Directives
 
-- **MUST:** Define domain repository and adapter interfaces in the domain/service layer, and implement concrete adapters in the infrastructure layer (inverting the dependency).
-- **MUST:** Inject dependencies explicitly via constructor parameters, factory function arguments, or React Context providers.
-- **MUST:** Keep all direct third-party SDK calls (Stripe, SendGrid, AWS S3, Prisma, Kysely) isolated within infrastructure adapters behind domain interfaces.
-- **MUST NOT:** Directly instantiate concrete database clients or third-party service classes inside domain services (`const db = new PrismaClient()`).
-- **MUST NOT:** Import low-level infrastructure modules or database driver types into high-level business entities or domain rules.
+- [directive:cf.solid.dip-domain-ports-infrastructure-adapters][mode:evidence-blocking][verifier:human-evidence] **MUST:** Define domain repository and adapter interfaces in the domain/service layer, and implement concrete adapters in the infrastructure layer (inverting the dependency).
+- [directive:cf.solid.dip-explicit-dependency-injection][mode:evidence-blocking][verifier:human-evidence] **MUST:** Inject dependencies explicitly via constructor parameters, factory function arguments, or React Context providers.
+- [directive:cf.solid.dip-isolate-third-party-sdks][mode:evidence-blocking][verifier:human-evidence] **MUST:** Keep all direct third-party SDK calls (Stripe, SendGrid, AWS S3, Prisma, Kysely) isolated within infrastructure adapters behind domain interfaces.
+- [directive:cf.solid.dip-no-direct-client-instantiation][mode:automated-blocking][verifier:linter] **MUST NOT:** Directly instantiate concrete database clients or third-party service classes inside domain services (`const db = new PrismaClient()`).
+- [directive:cf.solid.dip-no-infrastructure-in-domain][mode:automated-blocking][verifier:linter] **MUST NOT:** Import low-level infrastructure modules or database driver types into high-level business entities or domain rules.
 
 ## Backend & Hexagonal Architecture Patterns
 
