@@ -35,6 +35,11 @@ Dependency units are verified and their phase checkpoints accepted. Recheck targ
 
 **In scope:**
 - docs/decisions/0031-skill-lifecycle-handoffs-and-task-git-policy.md
+- docs/decisions/README.md
+- context-manifest.json
+- context-lock.json
+- docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/README.md
+- docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy/phase-01-discovery-and-scenarios/unit-01-discovery-and-scenarios.md
 
 **Out of scope:** Do not edit prior accepted ADRs, skills, scripts, or production files.
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.15.1",
-  "digest": "sha256:586355c624ab32ea2256572675c1e4962d59b38ac6fa8f4fb9a9b10574d002a6",
+  "digest": "sha256:3f2905c500a4fb160787b80f6fbf386f5305a17f55b15c7833f788be3c33b906",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:5426f779e008ffdbceddce1c8348121bc254692f45b378c3c15d6b116db967df",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:aeb953fd17aef1811071507c0bc6edccaae45e986a44e6e461e56e07dcce89de",
+    "context-manifest.json": "sha256:480a9eda0bd066fe000f12ba543296266f92fb602ce3b898768b136d48e0bf57",
     "docs/ARCHITECTURE.md": "sha256:02c83104623444a1d979b50f9a49f028f0e6ecdad62fb9064343ac5329343b1e",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
@@ -75,7 +75,8 @@
     "docs/decisions/0027-language-rule-lifecycle-binding-and-verification.md": "sha256:98f2dce3c13ffb28f1ca0b40283ba015b0e82bfd539c3b87b7ea9fcef5be4a6e",
     "docs/decisions/0028-cli-ux-modernization-and-code-health-skills.md": "sha256:4f66dfc5a2bd369483573e2b3f0b9b4fd12baf38015baefe8cdcbcea93f36396",
     "docs/decisions/0029-executable-rule-conformance-harness.md": "sha256:44c59d520725e0458cd6038418c65ea4d73c57dab25da16ee824eee19ce6df54",
-    "docs/decisions/README.md": "sha256:78f60b00dd7d41100fbf4e878aa59f0f7ea528b7bc52d0c814f4052a97a109c4",
+    "docs/decisions/0031-skill-lifecycle-handoffs-and-task-git-policy.md": "sha256:77eb6b8933957d7341cab71718f1827d49c55b2dc233ba189486f9586347077b",
+    "docs/decisions/README.md": "sha256:48e16e25ef2fda1a8cef3a973ff704e1d3553ce637a29ad650fe610d4722d38a",
     "docs/guide/README.md": "sha256:d94360ea22bde81983ffc65f7c31f65d2b68940ec93fa767c7b8a54fc663188e",
     "docs/guide/cross-workspace-integration.md": "sha256:5a7092fdda752499ecd99a0f9706f663f345d3f0e2b726dae180c093c56f158b",
     "docs/guide/rules-and-workflows.md": "sha256:ba73cb2f4fb2c557d97271be8991306bbc15315b328a969b8c0bf06673da2270",

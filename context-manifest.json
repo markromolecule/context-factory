@@ -207,7 +207,8 @@
     "docs/decisions/0026-submodule-first-ide-onboarding-flow.md",
     "docs/decisions/0027-language-rule-lifecycle-binding-and-verification.md",
     "docs/decisions/0028-cli-ux-modernization-and-code-health-skills.md",
-    "docs/decisions/0029-executable-rule-conformance-harness.md"
+    "docs/decisions/0029-executable-rule-conformance-harness.md",
+    "docs/decisions/0031-skill-lifecycle-handoffs-and-task-git-policy.md"
   ],
   "tools": [
     "evals/bridge-conformance.test.mjs",

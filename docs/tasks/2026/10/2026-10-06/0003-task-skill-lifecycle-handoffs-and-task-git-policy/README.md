@@ -64,7 +64,7 @@ Markdown plus Node.js ESM and Git. `rules/global/evidence-and-claims.md` governs
 | ID | Criterion and pass condition | Unit(s) | Verification |
 |---|---|---|---|
 | AC-01 | Context/grill/grounding contracts capture evidence, challenge assumptions, stop on blockers, and release exactly one `grill` brief | 01.02 | `node --test evals/discovery-handoff.test.mjs` and `git diff --check` exit 0 |
-| AC-02 | New ADR names owners, handoffs, tradeoffs, and supersedes incompatible portions of ADRs 0014/0024 without rewriting them | 01.01 | ADR link/precedence inspection passes; `node scripts/context.mjs doctor` and `git diff --check` exit 0 |
+| AC-02 | New ADR names owners, handoffs, tradeoffs, and supersedes incompatible portions of ADRs 0014/0024 without rewriting them | 01.01 | ADR link/precedence inspection, `node scripts/context.mjs doctor`, and `git diff --check` exit 0 |
 | AC-03 | Two concurrent ID requests cannot claim the same `PLN-NNNN`; new filename/branch mirror, old plans list | 02.01 | `node --test evals/task-scaffold.test.mjs evals/plan-id-reservation.test.mjs` and `git diff --check` exit 0 |
 | AC-04 | Plan records one branch and justified checkout mode; done-check rejects missing AC mapping, blocker, risk, or invalid topology | 02.02 | `node --test evals/plan-check.test.mjs` and `node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-06/0003-task-skill-lifecycle-handoffs-and-task-git-policy` exit 0 |
 | AC-05 | Access declarations and lint reject forbidden positive reads across lifecycle and downstream skills but accept negated examples | 03.01 | `node --test evals/skill-access-check.test.mjs` exits 0; the forbidden-read fixture exits nonzero with a skill/path/line diagnostic |

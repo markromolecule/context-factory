@@ -37,3 +37,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0027-language-rule-lifecycle-binding-and-verification|Language Rule Lifecycle Binding, Precedence, and Verification]]
 - [[docs/decisions/0028-cli-ux-modernization-and-code-health-skills|CLI UX Modernization, Mascot Graphics Engine, and Code Health Skills (perf, types)]]
 - [[docs/decisions/0029-executable-rule-conformance-harness|Executable Rule Conformance Harness]]
+- [[docs/decisions/0031-skill-lifecycle-handoffs-and-task-git-policy|Skill Lifecycle Handoffs and Task Git Policy]]
