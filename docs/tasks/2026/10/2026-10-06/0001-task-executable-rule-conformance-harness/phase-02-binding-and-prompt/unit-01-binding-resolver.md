@@ -5,7 +5,7 @@ parent: "phase-02-binding-and-prompt"
 unit: "02.01"
 branch: "task/0001/phase-02/binding-resolver"
 worktree: ".worktrees/0001/phase-02/binding-resolver"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, resolver, binding]
 depends_on: ["01.02"]
@@ -54,7 +54,8 @@ Compile deterministic bindings from declared stack, workflow, exact planned/chan
 
 - **Unit tests:** deterministic ordering, normalization, inclusion/exclusion reasons, stale waiver rejection, and no broad fallback binding.
 - **Contract tests:** output conforms to binding schema.
-- Command: `node --test evals/rule-binding.test.mjs`.
+- Command: `node --test evals/rule-binding.test.mjs` (8/8 passing).
+- Doctor & Sync: `npm run sync && node scripts/context.mjs doctor` (healthy).
 
 ## Rollback
 
@@ -62,7 +63,7 @@ Remove binding output/integration while retaining descriptor parser and legacy s
 
 ## Definition of done
 
-- [ ] AC-02 passes for focused, ambiguous, wrong-stack, and repeat-run cases.
-- [ ] No stack-specific conditional is added to the generic compiler.
-- [ ] Legacy callers remain compatible but cannot mislabel selection as enforcement.
-- [ ] Scope and tests pass `/review`.
+- [x] AC-02 passes for focused, ambiguous, wrong-stack, and repeat-run cases.
+- [x] No stack-specific conditional is added to the generic compiler.
+- [x] Legacy callers remain compatible but cannot mislabel selection as enforcement.
+- [x] Scope and tests pass `/review`.

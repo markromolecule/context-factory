@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
-import { dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
+import { dirname, extname, isAbsolute, join, relative, resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
+import { compileRuleBinding } from "../orchestrator/rules/binding-compiler.mjs";
+import { parseRuleCatalog } from "../orchestrator/rules/descriptor-parser.mjs";
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -562,6 +564,34 @@ export async function resolveContext(request, options = {}) {
       : null,
   };
 
+  // Enforceable material rule binding compilation (requires explicit stack and non-empty affected scope)
+  let binding = null;
+  let bindingCompilation = null;
+  const rawScope = options.scope || options.affectedScope || options.paths || null;
+  const rawScopeArr = Array.isArray(rawScope)
+    ? rawScope
+    : (typeof rawScope === "string" && rawScope.trim() ? [rawScope.trim()] : []);
+  const explicitStack = (typeof options.stack === "string" && options.stack.trim())
+    ? options.stack.trim().toLowerCase()
+    : (Array.isArray(options.stacks) && options.stacks.length === 1 ? options.stacks[0].trim().toLowerCase() : null);
+
+  if (rawScopeArr.length > 0 && explicitStack) {
+    const catalogResult = await parseRuleCatalog(join(root, "rules"));
+    const workflowName = options.workflow
+      || (selectedWorkflow?.path ? basename(selectedWorkflow.path, ".md") : "feature-delivery");
+    bindingCompilation = compileRuleBinding({
+      taskId: options.taskId || "adhoc",
+      phase: options.phase || "00",
+      unit: options.unit || "00",
+      stack: explicitStack,
+      workflow: workflowName,
+      affectedScope: rawScopeArr,
+      descriptors: catalogResult.descriptors,
+      waivers: options.waivers || [],
+    });
+    binding = bindingCompilation.binding;
+  }
+
   return {
     schemaVersion: 1,
     contextVersion: manifest.contextVersion,
@@ -584,6 +614,8 @@ export async function resolveContext(request, options = {}) {
     taste: [],
     selectedPaths,
     budget,
+    binding,
+    bindingCompilation,
   };
 }
 

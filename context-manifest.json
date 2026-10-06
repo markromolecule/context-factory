@@ -211,6 +211,7 @@
   ],
   "tools": [
     "evals/plan-check.test.mjs",
+    "evals/rule-binding.test.mjs",
     "evals/rule-contract-schema.test.mjs",
     "evals/rule-density.test.mjs",
     "evals/rule-descriptor-parser.test.mjs",
@@ -218,6 +219,7 @@
     "evals/session-checkpoint.test.mjs",
     "evals/session-contract.test.mjs",
     "evals/task-scaffold.test.mjs",
+    "orchestrator/rules/binding-compiler.mjs",
     "orchestrator/rules/descriptor-parser.mjs",
     "orchestrator/runner.mjs",
     "orchestrator/validator.mjs",
