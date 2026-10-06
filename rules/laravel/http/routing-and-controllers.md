@@ -1,7 +1,7 @@
 ---
 ruleId: cf-rule-laravel-http-routing-and-controllers
 name: routing-and-controllers
-description: Keep Laravel controllers skinny, RESTful, and transport-focused; enforce Route Model Binding and API Resources.
+description: Keep Laravel HTTP endpoints and controllers skinny, RESTful, and transport-focused; enforce Route Model Binding and API Resources.
 scope: Routes (web.php, api.php), controllers, and API resource transformers.
 stack: laravel
 appliesTo: ["app/Http/Controllers/**/*.php", "app/Modules/**/Controllers/**/*.php", "routes/**/*.php"]
