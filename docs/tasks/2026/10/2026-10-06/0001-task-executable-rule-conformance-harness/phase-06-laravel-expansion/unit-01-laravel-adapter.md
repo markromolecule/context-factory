@@ -5,7 +5,7 @@ parent: "phase-06-laravel-expansion"
 unit: "06.01"
 branch: "task/0001/phase-06/laravel-adapter"
 worktree: ".worktrees/0001/phase-06/laravel-adapter"
-status: planned
+status: verified
 created: "2026-10-06"
 tags: [task, unit, laravel, adapter]
 depends_on: ["05.04"]
@@ -55,13 +55,21 @@ Implement Laravel verifier registration and tool discovery through the unchanged
 - **Security tests:** no shell interpolation or environment leakage.
 - Command: `node --test evals/laravel-adapter.test.mjs`.
 
+### Execution evidence (2026-10-06)
+
+- Red: `node --test evals/laravel-adapter.test.mjs` failed with `ERR_MODULE_NOT_FOUND` for `orchestrator/conformance/adapters/laravel.mjs` before implementation.
+- Green: `node --test evals/laravel-adapter.test.mjs evals/bridge-conformance.test.mjs` passed 14/14 tests, including fixture violations, `TOOL_UNAVAILABLE`, evidence-blocking semantics, core-boundary isolation, argv-only process execution, and doctor capability parity.
+- Regression: `npm test` passed 31/31 evaluations.
+- Conformance: `report-binding-adhoc-00-00-8df69748fa2b` — PASS; binding `sha256:8df69748fa2baeab448e826ba4213ef379aaff7c82feeb66223d50884a562de3`; diff `sha256:117f469d9a1c470e9ac7a2047c200f04ad3a7bc488f563b4f61efd7f20f4f693`. The adversarial PHP fixtures are intentionally excluded from this production-source receipt because one deliberately violates validation, authorization, and ORM rules; their detection is covered by the focused adapter test.
+- Deferred release check: `npm run lint` remains non-zero because the new adapter/test are not yet added to `context-manifest.json` and `context-lock.json`; both are explicitly owned by Unit 06.04 final release gate.
+
 ## Rollback
 
 Remove Laravel registration/adapter/fixtures; TypeScript enforcement remains complete.
 
 ## Definition of done
 
-- [ ] AC-12 adapter portion passes.
-- [ ] Shared schemas and statuses remain unchanged or any change is escalated for ADR review.
-- [ ] Missing PHP tooling is honest TOOL_UNAVAILABLE.
-- [ ] Unit passes `/review`.
+- [x] AC-12 adapter portion passes.
+- [x] Shared schemas and statuses remain unchanged; no ADR escalation required.
+- [x] Missing PHP tooling is honest TOOL_UNAVAILABLE.
+- [x] Unit passes `/review`.

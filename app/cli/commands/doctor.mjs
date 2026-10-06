@@ -8,6 +8,7 @@ import { repairBridgeSymlinks, verifySymlinkHealth } from "../core/bridge-genera
 import { badges, colors, table } from "../core/formatter.mjs";
 import { listAdapters } from "../../../orchestrator/conformance/adapter-contract.mjs";
 import { registerTypeScriptAdapter } from "../../../orchestrator/conformance/adapters/typescript.mjs";
+import { registerLaravelAdapter } from "../../../orchestrator/conformance/adapters/laravel.mjs";
 
 export async function handleDoctorCommand(args = [], flags = {}) {
   const isJson = Boolean(flags.json);
@@ -273,6 +274,7 @@ export function inspectBridgeFileContent(content) {
 export async function auditEnforcementCapabilities() {
   try {
     registerTypeScriptAdapter();
+    registerLaravelAdapter();
   } catch {}
   const registeredAdapters = listAdapters();
   const supportedStacks = registeredAdapters.map((a) => a.stack);

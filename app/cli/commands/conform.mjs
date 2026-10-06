@@ -3,13 +3,15 @@ import { isAbsolute, join, resolve } from "node:path";
 import { resolveContext, root, sha256 } from "../../../scripts/context-core.mjs";
 import { evaluateConformance } from "../../../orchestrator/conformance/conformance-orchestrator.mjs";
 import { registerTypeScriptAdapter } from "../../../orchestrator/conformance/adapters/typescript.mjs";
+import { registerLaravelAdapter } from "../../../orchestrator/conformance/adapters/laravel.mjs";
 import { validateWaiver } from "../../../orchestrator/conformance/waiver-policy.mjs";
 import { badges, colors } from "../core/formatter.mjs";
 import { normalizeScope } from "../core/options.mjs";
 
 export async function handleConformCommand(args = [], flags = {}) {
-  // Ensure TypeScript adapter is registered at composition root
+  // Ensure stack adapters are registered at the composition root.
   registerTypeScriptAdapter();
+  registerLaravelAdapter();
 
   const isJson = Boolean(flags.json);
   const stack = flags.stack || flags.stacks || "typescript";
