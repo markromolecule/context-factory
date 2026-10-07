@@ -25,6 +25,7 @@
 ## Unit Execution Entries
 
 ### Baseline Checkpoint: 2026-10-07
+
 - **Command:** `node scripts/context.mjs handoff:verify-packet docs/execution/PLN-0004/packet.json`
 - **Result:** `PASS` (`valid: true`)
 - **Command:** `node scripts/context.mjs doctor`
@@ -34,6 +35,7 @@
 ---
 
 ### Unit 01.01: Host state and actionable status
+
 - **Objective:** Derive host setup, factory health, and code-conformance visibility as separate states with one actionable next command.
 - **Criteria Verified:** AC-04, AC-06.
 - **Preflight:**
@@ -63,6 +65,7 @@
 ---
 
 ### Unit 01.02: Text-first help and output
+
 - **Objective:** Replace the mascot-heavy first screen with a compact text hierarchy that exposes setup and quality commands accessibly.
 - **Criteria Verified:** AC-05.
 - **Focused Test Suite:**
@@ -88,4 +91,37 @@
   - `evals/tests/cli/host-status.test.mjs` (updated)
   - `context-manifest.json` (synchronized)
   - `context-lock.json` (synchronized)
-- **Status:** Complete, ready for review commit.
+- **Status:** Complete.
+
+---
+
+### Unit 02.01: Non-clobbering local hook
+
+- **Objective:** Provide atomic, opt-in, non-clobbering local git hook installation supporting standard repos, worktrees, and submodules.
+- **Criteria Verified:** AC-02.
+- **Preflight:**
+  - Command: `node app/cli/bin/context-cli.mjs preflight "Non-clobbering local hook" --stack typescript --scope "app/cli/commands/hook.mjs" --json`
+  - Result: `PASS`
+- **Focused Test Suite:**
+  - Command: `node --test evals/tests/cli/hook-safety.test.mjs`
+  - Result: `PASS` (9 tests passed, 0 failed)
+- **Combined Test Suite:**
+  - Command: `node --test evals/tests/cli/host-status.test.mjs evals/tests/cli/help-output.test.mjs evals/tests/cli/hook-safety.test.mjs`
+  - Result: `PASS` (20 tests passed, 0 failed)
+- **Diagnostic Conformance Gate:**
+  - Command: `node app/cli/bin/context-cli.mjs conform "Verify unit 02.01 safe-hook" --stack typescript --scope "app/cli/commands/hook.mjs,evals/tests/cli/hook-safety.test.mjs" --human-evidence "Joseph: Verified safe git hooks resolution in hook.mjs supporting worktrees and submodules, non-clobbering conflict prevention, exclusive wx creation, zero external deps, and 9/9 passing unit tests." --out .context-runs/PLN-0004/02.01/conformance-report.json --json`
+  - Exit Code: `0`
+  - Verdict: `PASS` (47/47 passed, 0 failed, 0 blocked)
+  - Report ID: `report-binding-adhoc-00-00-c428fba1adc9-1791341483236`
+  - Binding Hash: `sha256:c428fba1adc9f139c4d527b8c51382d908d8ee51184ac3a794e201a28ae70eb3`
+  - Diff Hash: `sha256:575961ae1463441e65f094d39dcd70982a6d3902c168583e47ac848705585d67`
+  - Output Path: `.context-runs/PLN-0004/02.01/conformance-report.json`
+  - Named Human Evidence: `"Joseph: Verified safe git hooks resolution in hook.mjs supporting worktrees and submodules, non-clobbering conflict prevention, exclusive wx creation, zero external deps, and 9/9 passing unit tests."`
+- **Files Modified / Added:**
+  - `app/cli/commands/hook.mjs` (modified)
+  - `evals/tests/cli/hook-safety.test.mjs` (new)
+  - `docs/Skills.md` (synchronized)
+  - `context-manifest.json` (synchronized)
+  - `context-lock.json` (synchronized)
+- **Status:** Complete, ready for commit.
+

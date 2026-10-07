@@ -215,6 +215,7 @@
     "evals/run-evals.mjs",
     "evals/tests/bridge/bridge-conformance.test.mjs",
     "evals/tests/cli/help-output.test.mjs",
+    "evals/tests/cli/hook-safety.test.mjs",
     "evals/tests/cli/host-status.test.mjs",
     "evals/tests/conformance/conformance-cli.test.mjs",
     "evals/tests/conformance/conformance-gate.test.mjs",
