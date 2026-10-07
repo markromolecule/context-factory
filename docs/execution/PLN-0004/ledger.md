@@ -16,8 +16,8 @@
 | Phase | Title | Units | Status |
 | :--- | :--- | :--- | :--- |
 | **Phase 01** | Host interface and accessible CLI | 01.01, 01.02 | **COMPLETED** |
-| **Phase 02** | Safe opt-in host setup | 02.01, 02.02 | **COMPLETED** (ready for phase checkpoint) |
-| **Phase 03** | Content-bound conformance receipts | 03.01, 03.02 | pending |
+| **Phase 02** | Safe opt-in host setup | 02.01, 02.02 | **COMPLETED** |
+| **Phase 03** | Content-bound conformance receipts | 03.01, 03.02 | **COMPLETED** (ready for phase checkpoint) |
 | **Phase 04** | GitHub Actions integration and release guidance | 04.01, 04.02 | pending |
 
 ---
@@ -189,7 +189,39 @@
   - `evals/tests/conformance/receipt-identity.test.mjs` (new)
   - `context-manifest.json` (synchronized)
   - `context-lock.json` (synchronized)
+- **Status:** Complete.
+
+---
+
+### Unit 03.02: Conformance CLI verification commands and fatal out handling
+
+- **Objective:** Add `context-cli conform verify <reportPath>` command to audit reports against current checkout identity, and make `--out` persistence errors fatal.
+- **Criteria Verified:** AC-07, AC-08, AC-09.
+- **Preflight:**
+  - Command: `node app/cli/bin/context-cli.mjs preflight "Conformance CLI verification commands and fatal out handling" --stack typescript --scope "app/cli/commands/conform.mjs" --json`
+  - Result: `PASS`
+- **Focused Test Suite:**
+  - Command: `node --test evals/tests/conformance/conformance-cli-verify.test.mjs`
+  - Result: `PASS` (6 tests passed, 0 failed)
+- **Combined Conformance Test Suite:**
+  - Command: `node --test evals/tests/conformance/receipt-identity.test.mjs evals/tests/conformance/conformance-cli-verify.test.mjs evals/tests/conformance/conformance-cli.test.mjs evals/tests/conformance/conformance-gate.test.mjs`
+  - Result: `PASS` (38 tests passed, 0 failed)
+- **Diagnostic Conformance Gate:**
+  - Command: `node app/cli/bin/context-cli.mjs conform "Verify unit 03.02 conform-verify" --stack typescript --scope "app/cli/commands/conform.mjs,evals/tests/conformance/conformance-cli-verify.test.mjs" --human-evidence "Joseph: Verified conform verify CLI command with receipt validation, fatal --out persistence handling, absent evidence blocking with exit code 2, zero external deps, and 6/6 passing unit tests." --out .context-runs/PLN-0004/03.02/conformance-report.json --json`
+  - Exit Code: `0`
+  - Verdict: `PASS` (47/47 passed, 0 failed, 0 blocked)
+  - Report ID: `report-binding-adhoc-00-00-64fb88a1703d-1791342417359`
+  - Binding Hash: `sha256:64fb88a1703d00c1c08391b85d33dec357b94635cd4120407151c0f8140937ec`
+  - Diff Hash: `sha256:2d7e8e927462c72a070aafb8456372e4c2eecfa4ca2e3c2d6362488d33019762`
+  - Output Path: `.context-runs/PLN-0004/03.02/conformance-report.json`
+  - Named Human Evidence: `"Joseph: Verified conform verify CLI command with receipt validation, fatal --out persistence handling, absent evidence blocking with exit code 2, zero external deps, and 6/6 passing unit tests."`
+- **Files Modified / Added:**
+  - `app/cli/commands/conform.mjs` (modified)
+  - `evals/tests/conformance/conformance-cli-verify.test.mjs` (new)
+  - `context-manifest.json` (synchronized)
+  - `context-lock.json` (synchronized)
 - **Status:** Complete, ready for commit.
+
 
 
 

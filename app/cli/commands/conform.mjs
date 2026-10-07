@@ -5,6 +5,7 @@ import { evaluateConformance } from "../../../orchestrator/conformance/conforman
 import { registerTypeScriptAdapter } from "../../../orchestrator/conformance/adapters/typescript.mjs";
 import { registerLaravelAdapter } from "../../../orchestrator/conformance/adapters/laravel.mjs";
 import { validateWaiver } from "../../../orchestrator/conformance/waiver-policy.mjs";
+import { verifyConformanceReport } from "../../../orchestrator/conformance/report-verifier.mjs";
 import { badges, colors } from "../core/formatter.mjs";
 import { normalizeScope } from "../core/options.mjs";
 
@@ -19,6 +20,39 @@ export async function handleConformCommand(args = [], flags = {}) {
   const waiverPath = flags.waiver || null;
   const humanEvidence = flags["human-evidence"] || flags.humanEvidence || flags.evidence || null;
   const outPath = flags.out || flags.output || null;
+
+  // Subcommand 'verify': context-cli conform verify <reportPath> (AC-07, AC-08)
+  const isVerify = args[0] === "verify" || Boolean(flags.verify);
+  if (isVerify) {
+    const reportTarget = args[0] === "verify" ? (args[1] || flags.report) : (flags.verify === true ? (args[0] || flags.report) : flags.verify);
+    const expectedBindingHash = flags.binding || flags.bindingHash || null;
+    const expectedScope = scope.length > 0 ? scope : null;
+    const cwd = flags.target ? resolve(process.cwd(), flags.target) : process.cwd();
+
+    const verification = await verifyConformanceReport({
+      reportPath: reportTarget,
+      expectedBindingHash,
+      expectedScope,
+      cwd,
+    });
+
+    if (isJson) {
+      console.log(JSON.stringify(verification, null, 2));
+      return verification.valid ? 0 : 1;
+    }
+
+    if (verification.valid) {
+      console.log(`\n${badges.pass("CONFORMANCE RECEIPT VALID")} Report: ${colors.cyan(verification.reportId)}\n`);
+      console.log(`  ${colors.bold("Verdict:")}      ${colors.green("PASS")}`);
+      console.log(`  ${colors.bold("Binding Hash:")} ${colors.dim(verification.bindingHash)}`);
+      console.log(`  ${colors.bold("Diff Hash:")}    ${colors.dim(verification.diffHash)}\n`);
+      return 0;
+    }
+
+    console.error(`\n${badges.fail("CONFORMANCE RECEIPT REJECTED")} ${colors.bold(colors.red(verification.error))}\n`);
+    console.error(`  ${colors.bold("Rejection Reason:")} ${colors.yellow(verification.reason)}\n`);
+    return 1;
+  }
 
   const request = args.join(" ").trim() || (scope.length > 0 ? `Verify conformance for ${scope.join(", ")}` : "");
   if (!request && !scope) {
@@ -55,7 +89,7 @@ export async function handleConformCommand(args = [], flags = {}) {
       },
     });
 
-    // Persist report artifact
+    // Persist report artifact (AC-08: Fatal persistence if --out or strict is requested)
     const destination = outPath
       ? (isAbsolute(outPath) ? outPath : resolve(process.cwd(), outPath))
       : join(root, ".context-runs", report.id, "conformance-report.json");
@@ -63,8 +97,10 @@ export async function handleConformCommand(args = [], flags = {}) {
     try {
       await mkdir(resolve(destination, ".."), { recursive: true });
       await writeFile(destination, `${JSON.stringify(report, null, 2)}\n`, "utf8");
-    } catch {
-      // Non-fatal if filesystem persistence fails
+    } catch (writeError) {
+      if (outPath || flags.strict) {
+        throw new Error(`Failed to persist conformance report to "${destination}": ${writeError.message}`);
+      }
     }
 
     if (isJson) {
