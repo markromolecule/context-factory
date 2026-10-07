@@ -15,8 +15,8 @@
 
 | Phase | Title | Units | Status |
 | :--- | :--- | :--- | :--- |
-| **Phase 01** | Host interface and accessible CLI | 01.01, 01.02 | **COMPLETED** (ready for phase checkpoint) |
-| **Phase 02** | Safe opt-in host setup | 02.01, 02.02 | pending |
+| **Phase 01** | Host interface and accessible CLI | 01.01, 01.02 | **COMPLETED** |
+| **Phase 02** | Safe opt-in host setup | 02.01, 02.02 | **COMPLETED** (ready for phase checkpoint) |
 | **Phase 03** | Content-bound conformance receipts | 03.01, 03.02 | pending |
 | **Phase 04** | GitHub Actions integration and release guidance | 04.01, 04.02 | pending |
 
@@ -123,5 +123,39 @@
   - `docs/Skills.md` (synchronized)
   - `context-manifest.json` (synchronized)
   - `context-lock.json` (synchronized)
+- **Status:** Complete.
+
+---
+
+### Unit 02.02: Explicit init choices and preview
+
+- **Objective:** Build per-target action preview, remove implicit `--ide all` fallback, require explicit `--ide` in non-interactive/no-editor environments, and separate hook opt-ins.
+- **Criteria Verified:** AC-01, AC-02, AC-03.
+- **Preflight:**
+  - Command: `node app/cli/bin/context-cli.mjs preflight "Explicit init choices and preview" --stack typescript --scope "app/cli/commands/init.mjs,app/cli/commands/bridge.mjs,app/cli/core/bridge-generator.mjs" --json`
+  - Result: `PASS`
+- **Focused Test Suite:**
+  - Command: `node --test evals/tests/cli/init-preview.test.mjs`
+  - Result: `PASS` (8 tests passed, 0 failed)
+- **Combined Test Suite:**
+  - Command: `node --test evals/tests/cli/host-status.test.mjs evals/tests/cli/help-output.test.mjs evals/tests/cli/hook-safety.test.mjs evals/tests/cli/init-preview.test.mjs`
+  - Result: `PASS` (28 tests passed, 0 failed)
+- **Diagnostic Conformance Gate:**
+  - Command: `node app/cli/bin/context-cli.mjs conform "Verify unit 02.02 init-preview" --stack typescript --scope "app/cli/commands/init.mjs,app/cli/commands/bridge.mjs,app/cli/core/bridge-generator.mjs,evals/tests/cli/init-preview.test.mjs" --human-evidence "Joseph: Verified explicit editor selection in init, removal of implicit --ide all fallback, non-interactive validation, preview fidelity, opt-in hook gate, and 8/8 passing unit tests." --out .context-runs/PLN-0004/02.02/conformance-report.json --json`
+  - Exit Code: `0`
+  - Verdict: `PASS` (47/47 passed, 0 failed, 0 blocked)
+  - Report ID: `report-binding-adhoc-00-00-ca98e3b6e2ed-1791341844855`
+  - Binding Hash: `sha256:ca98e3b6e2ed533ee93f7fbec43c41ff614d237a2447c31c924338fdb5b41344`
+  - Diff Hash: `sha256:d383a7b8cff1fbcb9801e70c3bdd307c55eb5c25678b0f15ad18debbea178d6d`
+  - Output Path: `.context-runs/PLN-0004/02.02/conformance-report.json`
+  - Named Human Evidence: `"Joseph: Verified explicit editor selection in init, removal of implicit --ide all fallback, non-interactive validation, preview fidelity, opt-in hook gate, and 8/8 passing unit tests."`
+- **Files Modified / Added:**
+  - `app/cli/commands/init.mjs` (modified)
+  - `app/cli/commands/bridge.mjs` (modified)
+  - `app/cli/core/bridge-generator.mjs` (modified)
+  - `evals/tests/cli/init-preview.test.mjs` (new)
+  - `context-manifest.json` (synchronized)
+  - `context-lock.json` (synchronized)
 - **Status:** Complete, ready for commit.
+
 

@@ -1,7 +1,7 @@
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
-import { existsSync } from "node:fs";
-import { isAbsolute, resolve } from "node:path";
+import { existsSync, readdirSync } from "node:fs";
+import { isAbsolute, join, resolve } from "node:path";
 import { badges, colors } from "../core/formatter.mjs";
 import {
   checkHostSubmoduleStatus,
@@ -11,6 +11,7 @@ import {
   parseIdeChoices,
 } from "../core/bridge-generator.mjs";
 import { handleBridgeCommand } from "./bridge.mjs";
+import { installHook } from "./hook.mjs";
 
 /**
  * Handles interactive and flag-based initialization for a host project.
@@ -20,13 +21,17 @@ export async function handleInitCommand(args = [], flags = {}) {
   let method = flags.method || null;
   let ide = flags.ide || flags.agents || null;
   let pm = flags.pm || flags.packageManager || null;
-  const dryRun = Boolean(flags.dryRun);
+  const isPreview = Boolean(flags.preview || flags.dryRun || flags["dry-run"]);
+  const dryRun = isPreview;
   const force = Boolean(flags.force);
+  let installHookFlag = Boolean(flags.hook);
+  const isJson = Boolean(flags.json);
 
   const submodCtx = detectSubmoduleContext(process.cwd());
   const defaultTarget = submodCtx.isInsideSubmodule ? submodCtx.hostDir : ".";
+  const resolvedTarget = resolve(process.cwd(), target || defaultTarget);
 
-  const isInteractive = input.isTTY && !flags.quiet && !flags.json && !flags.nonInteractive;
+  const isInteractive = input.isTTY && !flags.quiet && !flags.json && !flags.nonInteractive && !flags["non-interactive"];
 
   if (!flags.json) {
     console.log(`\n${badges.init("INIT")} ${colors.bold(colors.cyan("Initialize Context Factory in Project"))}\n`);
@@ -34,6 +39,29 @@ export async function handleInitCommand(args = [], flags = {}) {
       console.log(`  ${badges.info("SUBMODULE")} ${colors.dim("Detected execution from inside submodule")} ${colors.cyan(submodCtx.submoduleDirName)} ${colors.dim("-> host target:")} ${colors.cyan(defaultTarget)}\n`);
     }
   }
+
+  // Check missing submodule guidance in host (AC-04)
+  const hostSubmodStatus = checkHostSubmoduleStatus(resolvedTarget);
+  if (hostSubmodStatus.hasGitModules && hostSubmodStatus.isContextFactorySubmoduled) {
+    const expectedSubmoduleDir = join(resolvedTarget, hostSubmodStatus.submodulePath || ".context-factory");
+    const isMissingOrEmpty = !existsSync(expectedSubmoduleDir) || (existsSync(expectedSubmoduleDir) && readdirSync(expectedSubmoduleDir).length === 0);
+    if (isMissingOrEmpty && !submodCtx.isInsideSubmodule) {
+      const recoveryCommand = "git submodule update --init --recursive";
+      if (isJson) {
+        console.log(JSON.stringify({
+          success: false,
+          error: "Submodule registered but not initialized.",
+          recoveryCommand,
+        }, null, 2));
+        return 1;
+      }
+      console.error(`\n${badges.fail()} ${colors.bold(colors.red("Context Factory submodule registered in .gitmodules but not initialized."))}`);
+      console.error(`  ${colors.bold("Recovery:")} Run ${colors.cyan(recoveryCommand)} in the host project root.\n`);
+      return 1;
+    }
+  }
+
+  const detectedIdes = detectInstalledIdes(resolvedTarget);
 
   if (isInteractive && (!target || !method || !ide)) {
     const rl = createInterface({ input, output });
@@ -61,10 +89,7 @@ export async function handleInitCommand(args = [], flags = {}) {
 
       // 2b. Hybrid Submodule Assistant
       if (method === "submodule") {
-        const resolvedTarget = resolve(process.cwd(), target || defaultTarget);
         const isGitRepo = existsSync(resolve(resolvedTarget, ".git"));
-        const hostSubmodStatus = checkHostSubmoduleStatus(resolvedTarget);
-
         if (isGitRepo && !hostSubmodStatus.isContextFactorySubmoduled && !submodCtx.isInsideSubmodule) {
           console.log(`\n  ${badges.warn("NOTICE")} ${colors.yellow("Context Factory is not yet registered as a git submodule in this project.")}`);
           const addAnswer = await rl.question(`  ${colors.bold("Add submodule now into .context-factory? [Y/n]")} `);
@@ -90,9 +115,6 @@ export async function handleInitCommand(args = [], flags = {}) {
 
       // 3. IDE profile prompt with smart folder detection and multi-select
       if (!ide) {
-        const resolvedTarget = resolve(process.cwd(), target || defaultTarget);
-        const detectedIdes = detectInstalledIdes(resolvedTarget);
-
         console.log(`\n  ${colors.bold("Select Target Code Editors:")}`);
         if (detectedIdes.length > 0) {
           console.log(`  ${badges.info("DETECTED")} ${colors.dim("Existing editor configurations found:")} ${colors.cyan(detectedIdes.join(", "))}`);
@@ -108,9 +130,15 @@ export async function handleInitCommand(args = [], flags = {}) {
         ide = parseIdeChoices(answer, detectedIdes);
       }
 
-      // 4. Package manager prompt
+      // 4. Hook opt-in prompt
+      if (!flags.hook) {
+        const hookAnswer = await rl.question(`\n  ${colors.bold("Install local git pre-commit quality hook? [y/N]")}: `);
+        installHookFlag = hookAnswer.trim().toLowerCase() === "y" || hookAnswer.trim().toLowerCase() === "yes";
+      }
+
+      // 5. Package manager prompt
       if (!pm) {
-        const detected = detectPackageManager(resolve(process.cwd(), target || "."));
+        const detected = detectPackageManager(resolvedTarget);
         console.log(`\n  ${colors.bold("Select Package Manager:")}`);
         console.log(`    ${colors.cyan("1)")} Auto-detect (${detected})`);
         console.log(`    ${colors.cyan("2)")} pnpm`);
@@ -130,20 +158,48 @@ export async function handleInitCommand(args = [], flags = {}) {
     }
   }
 
-  // Fallbacks for non-interactive mode
+  // Non-interactive editor resolution (AC-03)
+  if (ide) {
+    ide = parseIdeChoices(typeof ide === "string" ? ide : (Array.isArray(ide) ? ide.join(",") : "all"));
+  } else if (detectedIdes.length > 0) {
+    ide = detectedIdes;
+  } else {
+    // AC-03: No detected editor requires an interactive choice or explicit --ide in automation
+    const err = `No code editor configurations detected in "${resolvedTarget}". Please specify an editor with --ide <vscode|cursor|trae|antigravity|all> (or run interactively).`;
+    if (isJson) {
+      console.log(JSON.stringify({ success: false, error: err }, null, 2));
+      return 1;
+    }
+    console.error(`\n${badges.fail()} ${colors.bold(colors.red(err))}\n`);
+    return 1;
+  }
+
   target = target || (submodCtx.isInsideSubmodule ? submodCtx.hostDir : process.cwd());
   method = method || (existsSync(resolve(target, ".git")) ? "submodule" : "linked");
-  ide = ide || "all";
-  pm = pm || detectPackageManager(resolve(process.cwd(), target));
+  pm = pm || detectPackageManager(resolvedTarget);
+
+  // If hook was opted into, install hook
+  if (installHookFlag) {
+    const hookResult = await installHook({
+      targetDir: resolvedTarget,
+      dryRun,
+      force,
+      preview: dryRun,
+    });
+    if (!hookResult.success && !isJson) {
+      console.warn(`  ${badges.warn("HOOK")} ${hookResult.error}`);
+    }
+  }
 
   // Delegate directly to bridge command with resolved options
   return handleBridgeCommand(args, {
     ...flags,
-    target,
+    target: resolvedTarget,
     method,
     ide,
     pm,
     dryRun,
     force,
+    preview: dryRun,
   });
 }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.16.0",
-  "digest": "sha256:a04f304169ac08865915a4fd4c19606b2eb4e9027ec3a9191f058d333dcbbdcc",
+  "digest": "sha256:c76e2b615a92aced4168d273346205ea34539707dd458df07c5ab183c977cf08",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:5426f779e008ffdbceddce1c8348121bc254692f45b378c3c15d6b116db967df",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:86ec3de51923bd3fc948eedcdc6743a5d32d6499614a7feeddb086f5231c45f6",
+    "context-manifest.json": "sha256:9cb942177e58a57a0abf1311d1792f33f1c059a2966c3f2fa13524aac3621c30",
     "docs/ARCHITECTURE.md": "sha256:2fe5799c75fe53f8b096715cdea201f282a69bcf52f6a28f9d76ef7dde4f7574",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
@@ -128,6 +128,7 @@
     "evals/tests/cli/help-output.test.mjs": "sha256:814d38b7563970d37a79e317b4ec126a0f856b76d9aa276e54efee0e34be8b5e",
     "evals/tests/cli/hook-safety.test.mjs": "sha256:2149ce4bdb63469bbd6470c3db8e718352fcdc91bbd225193cdf8657c96767af",
     "evals/tests/cli/host-status.test.mjs": "sha256:e1fb66b7189a933f06f1ccc4d0ae3a3731fadf77d340f3721c01c9d8ff567283",
+    "evals/tests/cli/init-preview.test.mjs": "sha256:2e2ba4f5d8c7de40b82dff10d3799eac17dbc30cd70b05111ec4607a579c9b15",
     "evals/tests/conformance/conformance-cli.test.mjs": "sha256:8d90ac61f8c7619e457311721b605e3950964fa8e7aa34fe3a16d6b991efae73",
     "evals/tests/conformance/conformance-gate.test.mjs": "sha256:66bc5dded959acbc0802743802703979dc7ea3778a62265d42e8c887b7c4dcfc",
     "evals/tests/conformance/laravel-adapter.test.mjs": "sha256:66ddbbca89863ab392c3973399f8f16274b3423614e0aa9849453fb54d538cb1",

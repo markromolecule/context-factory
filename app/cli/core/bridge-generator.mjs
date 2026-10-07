@@ -768,6 +768,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
       integrationMethod: method,
       packageManager: activePm,
       ides: activeIdes,
+      installedIdes: activeIdes,
       stacks: stacks || (stack ? [stack] : ["typescript"]),
       createdAt: new Date().toISOString(),
       scoping: {

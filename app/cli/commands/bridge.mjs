@@ -6,7 +6,7 @@ export async function handleBridgeCommand(args = [], flags = {}) {
   const factoryPath = flags.factoryPath || flags.factory || null;
   const method = flags.method || "submodule";
   const pm = flags.pm || flags.packageManager || null;
-  const dryRun = Boolean(flags.dryRun);
+  const dryRun = Boolean(flags.dryRun || flags["dry-run"] || flags.preview);
   const force = Boolean(flags.force || flags.repair);
   const addNpmScripts = flags.npm !== false;
 
@@ -71,15 +71,9 @@ export async function handleBridgeCommand(args = [], flags = {}) {
     console.log(`  ${badges.done()} Injected Context Factory helper scripts into host ${colors.cyan("package.json")}`);
   }
 
-  console.log(`\n${colors.bold(colors.green("Bridge generation complete!"))}`);
-  console.log(`\n${colors.bold("Next steps in your host repository:")}`);
-  console.log(`  1. Open the host repository root in your preferred AI IDE (VS Code, Antigravity, Cursor, or Trae).`);
-  console.log(`  2. If using Antigravity, native skills & rules are indexed automatically from ${colors.cyan(".agents/")}.`);
-  console.log(`  3. If using Cursor, modern rules in ${colors.cyan(".cursor/rules/context-factory.mdc")} are active.`);
-  console.log(`  4. If using Trae, project rules in ${colors.cyan(".trae/rules/project_rules.md")} guide the AI agent.`);
-  console.log(`  5. If using VS Code, Copilot instructions and workspace settings are configured.`);
-  console.log(`  6. Run ${colors.bold(colors.yellow(`npm run context:resolve "<task description>"`))} to verify rule matching.`);
-  console.log(`  7. Scaffolds for ${colors.cyan("docs/tasks/")} and ${colors.cyan("docs/decisions/")} are ready for generated artifacts.\n`);
+  console.log(`\n${colors.bold(colors.green(dryRun ? "Bridge preview generated successfully." : "Bridge generation complete!"))}`);
+  console.log(`\n${colors.bold("Next step in your host repository:")}`);
+  console.log(`  Run ${colors.bold(colors.cyan("context-cli status"))} to verify host readiness and next actions.\n`);
 
   return 0;
 }
