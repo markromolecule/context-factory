@@ -311,3 +311,12 @@ All 8 units across all 4 phases of **PLN-0004** have completed and passed all ve
 - **Diff Hash:** `sha256:b018a124966f886eef7addfdd6b484b924ee80bfff38969ee24d7426a469756b`.
 - **Receipt verification:** `PASS` (`CONFORMANCE RECEIPT VALID`).
 - **Status:** Ready for target-branch integration.
+
+### Target Integration: 2026-10-07
+
+- **Target branch:** `master`.
+- **Integration:** Fast-forwarded from `d7df428` to verified task commit `71ab0ce`.
+- **Pre-merge preservation:** Saved the byte-identical approved baseline as `stash@{0}` (`da5e240c82ac5ddeffbf8e455a9c4e975ca2bc1c`, `PLN-0004 pre-merge baseline backup`).
+- **Post-merge doctor:** `PASS` (healthy; 31/31 evaluations).
+- **Post-merge receipt verification:** `PASS` (`report-binding-adhoc-00-00-25df4080626a-1791344071787`).
+- **Status:** Complete on local `master`.
