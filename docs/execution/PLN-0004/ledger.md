@@ -156,6 +156,40 @@
   - `evals/tests/cli/init-preview.test.mjs` (new)
   - `context-manifest.json` (synchronized)
   - `context-lock.json` (synchronized)
+- **Status:** Complete.
+
+---
+
+### Unit 03.01: Content-bound changed-code SHA-256 identity and strict verifier
+
+- **Objective:** Compute deterministic content-bound SHA-256 change digests over file bytes (catching same-path byte edits) and provide fail-closed verifier for CI gate acceptance.
+- **Criteria Verified:** AC-07, AC-08.
+- **Preflight:**
+  - Command: `node app/cli/bin/context-cli.mjs preflight "Content-bound changed-code SHA-256 identity and strict verifier" --stack typescript --scope "orchestrator/conformance/change-identity.mjs,orchestrator/conformance/report-verifier.mjs,orchestrator/conformance/conformance-orchestrator.mjs,schemas/conformance-report.schema.json" --json`
+  - Result: `PASS`
+- **Focused Test Suite:**
+  - Command: `node --test evals/tests/conformance/receipt-identity.test.mjs`
+  - Result: `PASS` (8 tests passed, 0 failed)
+- **Combined Conformance Test Suite:**
+  - Command: `node --test evals/tests/conformance/receipt-identity.test.mjs evals/tests/conformance/conformance-cli.test.mjs evals/tests/conformance/conformance-gate.test.mjs`
+  - Result: `PASS` (32 tests passed, 0 failed)
+- **Diagnostic Conformance Gate:**
+  - Command: `node app/cli/bin/context-cli.mjs conform "Verify unit 03.01 receipt-identity" --stack typescript --scope "orchestrator/conformance/change-identity.mjs,orchestrator/conformance/report-verifier.mjs,orchestrator/conformance/conformance-orchestrator.mjs,schemas/conformance-report.schema.json,evals/tests/conformance/receipt-identity.test.mjs" --human-evidence "Joseph: Verified content-bound change identity in change-identity.mjs, strict fail-closed verifier in report-verifier.mjs, rejection of same-path byte edits, zero external runtime deps, and 8/8 passing unit tests." --out .context-runs/PLN-0004/03.01/conformance-report.json --json`
+  - Exit Code: `0`
+  - Verdict: `PASS` (47/47 passed, 0 failed, 0 blocked)
+  - Report ID: `report-binding-adhoc-00-00-f9090f7bb5d4-1791342251277`
+  - Binding Hash: `sha256:f9090f7bb5d42581306ee7efce1711134940706ae9a75b779f0edc216e5b5132`
+  - Diff Hash: `sha256:82ccbec4e86ac9a9e928bc63d6e498ece1317c2d1e4d010a4b5cab779d4ad08e`
+  - Output Path: `.context-runs/PLN-0004/03.01/conformance-report.json`
+  - Named Human Evidence: `"Joseph: Verified content-bound change identity in change-identity.mjs, strict fail-closed verifier in report-verifier.mjs, rejection of same-path byte edits, zero external runtime deps, and 8/8 passing unit tests."`
+- **Files Modified / Added:**
+  - `orchestrator/conformance/change-identity.mjs` (new)
+  - `orchestrator/conformance/report-verifier.mjs` (new)
+  - `orchestrator/conformance/conformance-orchestrator.mjs` (modified)
+  - `evals/tests/conformance/receipt-identity.test.mjs` (new)
+  - `context-manifest.json` (synchronized)
+  - `context-lock.json` (synchronized)
 - **Status:** Complete, ready for commit.
+
 
 

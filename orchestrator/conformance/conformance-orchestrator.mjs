@@ -1,5 +1,6 @@
 import { sha256 } from "../../scripts/context-core.mjs";
 import { getAdapter } from "./adapter-contract.mjs";
+import { computeChangeIdentity } from "./change-identity.mjs";
 import { aggregateConformanceResults } from "./evidence-gate.mjs";
 import { applyWaiverToResult, findActiveWaiver } from "./waiver-policy.mjs";
 
@@ -32,10 +33,19 @@ export async function evaluateConformance({
     throw new Error("evaluateConformance failed: binding is missing id, bindingHash, or stack.");
   }
 
-  // Deterministic diffHash calculation if not provided
-  const effectiveDiffHash = normalizeSha256(
-    diffHash || sha256(JSON.stringify({ changedScope: changedScope.slice().sort() }))
-  );
+  // Deterministic, content-bound diffHash calculation if not provided (AC-08)
+  let effectiveDiffHash = diffHash ? normalizeSha256(diffHash) : null;
+  if (!effectiveDiffHash) {
+    if (changedScope && changedScope.length > 0) {
+      const changeId = await computeChangeIdentity({
+        files: changedScope,
+        cwd: options.cwd || process.cwd(),
+      });
+      effectiveDiffHash = changeId.diffHash;
+    } else {
+      effectiveDiffHash = normalizeSha256(sha256(JSON.stringify({ empty: true })));
+    }
+  }
   const normalizedBindingHash = normalizeSha256(binding.bindingHash);
 
   const adapter = getAdapter(binding);
