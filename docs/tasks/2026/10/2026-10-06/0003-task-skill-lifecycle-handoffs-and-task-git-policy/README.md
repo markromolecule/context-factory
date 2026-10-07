@@ -1,7 +1,7 @@
 ---
 title: "Skill Lifecycle Handoffs and Task Git Policy"
 type: task
-status: in_progress
+status: completed
 created: "2026-10-06"
 tags: [task, skills, workflow]
 plan_id: "PLN-0003"
@@ -147,10 +147,10 @@ Planning-only checks: `node scripts/context.mjs plan:check <this directory>` and
 
 | Stage | Evidence | Status |
 |---|---|---|
-| Phase 01–04 checkpoints | Unit tests, conformance receipts, reviewer packet/ledger checks | pending |
+| Phase 01–04 checkpoints | Unit tests, conformance receipts, reviewer packet/ledger checks | complete |
 | Bootstrap reviewed plan package | Context specification and complete task directory; `plan:check` and cached diff check passed | `0ac8b0f` (`docs(PLN-0003): bootstrap reviewed plan package`) |
-| Task branch review and merge to `master` | AC-01–AC-08 evidence and diff review | pending |
-| Worktree cleanup, if one was needed | Clean checkout and normal `git worktree remove` | pending |
+| Task branch review and merge to `master` | AC-01–AC-08 evidence and diff review | `c475fa4` |
+| Worktree cleanup, if one was needed | Temporary clean merge worktree removed and pruned | complete |
 
 ## Result
 

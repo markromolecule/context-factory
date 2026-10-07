@@ -4,7 +4,7 @@ type: phase
 parent: "0003-task-skill-lifecycle-handoffs-and-task-git-policy"
 phase: "03"
 task_branch: "feat/PLN-0003-skill-lifecycle-handoffs"
-status: in_progress
+status: verified
 created: "2026-10-06"
 tags: [task, phase]
 ---
@@ -33,9 +33,9 @@ Boundary lint, freshness contract, reviewer and executor skills. Exact file scop
 
 ## Implementation Tasks
 
-- [ ] 03.01 Lint skill access declarations
-- [ ] 03.02 Verify discovery briefs and execution packets
-- [ ] 03.03 Consume reviewed packets and preserve worktrees
+- [x] 03.01 Lint skill access declarations
+- [x] 03.02 Verify discovery briefs and execution packets
+- [x] 03.03 Consume reviewed packets and preserve worktrees
 
 ## Verification & Testing
 
