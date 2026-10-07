@@ -66,4 +66,3 @@ node scripts/context.mjs doctor
 ```
 
 `context-manifest.json` is the canonical inventory and `context-lock.json` pins its exact content. Update the manifest and affected maps, regenerate the lock, and pass validation plus behavioral evaluations whenever canonical context changes.
-

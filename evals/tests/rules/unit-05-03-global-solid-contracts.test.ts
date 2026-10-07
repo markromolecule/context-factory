@@ -17,10 +17,15 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { parseRuleCatalog } from "../../../orchestrator/rules/descriptor-parser.mjs";
-import { compileRuleBinding } from "../../../orchestrator/rules/binding-compiler.mjs";
+import { pathToFileURL } from "node:url";
 
 const REPO_ROOT = process.cwd();
+const { parseRuleCatalog } = await import(
+  pathToFileURL(join(REPO_ROOT, "orchestrator/rules/descriptor-parser.mjs")).href
+);
+const { compileRuleBinding } = await import(
+  pathToFileURL(join(REPO_ROOT, "orchestrator/rules/binding-compiler.mjs")).href
+);
 const SCOPED_DIRS = [
   join(REPO_ROOT, "rules/global"),
   join(REPO_ROOT, "rules/solid"),

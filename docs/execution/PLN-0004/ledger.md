@@ -1,13 +1,13 @@
 # Execution Ledger: PLN-0004 (Task-Focused Submodule CLI UX)
 
-> **Task ID:** PLN-0004  
-> **Target Branch:** `master`  
-> **Task Base Branch:** `feat/PLN-0004-task-focused-submodule-cli-ux`  
-> **Checkout Path:** `.worktrees/PLN-0004/task-base`  
-> **Baseline Commit:** `8197e1d`  
-> **Execution Packet:** `docs/execution/PLN-0004/packet.json` (SHA-256: `dca613bc28f13ee8be4b85e79214e37871ed0a1bf95b17290f3a46b721d71c8a`)  
-> **Review Reference:** `docs/reviews/2026-10-07-PLN-0004-plan-review.md`  
-> **Approval Reference:** `user-approved:2026-10-07-interactive-modal`  
+> **Task ID:** PLN-0004
+> **Target Branch:** `master`
+> **Task Base Branch:** `feat/PLN-0004-task-focused-submodule-cli-ux`
+> **Checkout Path:** `.worktrees/PLN-0004/task-base`
+> **Baseline Commit:** `8197e1d`
+> **Execution Packet:** `docs/execution/PLN-0004/packet.json` (SHA-256: `dca613bc28f13ee8be4b85e79214e37871ed0a1bf95b17290f3a46b721d71c8a`)
+> **Review Reference:** `docs/reviews/2026-10-07-PLN-0004-plan-review.md`
+> **Approval Reference:** `user-approved:2026-10-07-interactive-modal`
 
 ---
 
@@ -292,3 +292,22 @@
 ## Final Verification & Sign-Off
 
 All 8 units across all 4 phases of **PLN-0004** have completed and passed all verification and conformance gates in the isolated task worktree `.worktrees/PLN-0004/task-base` on branch `feat/PLN-0004-task-focused-submodule-cli-ux`. Zero runtime dependencies were introduced, doctor remains 31/31 passing, and all 10 acceptance criteria (AC-01 through AC-10) are proven by automated tests and authoritative conformance receipts.
+
+### Task Finalization Gate: 2026-10-07
+
+- **Approved action:** The developer requested immediate task finalization after the resumed checkpoint audit.
+- **Dirty target reconciliation:** The `master` working tree was compared path-by-path with approved baseline commit `8197e1d`; all changed and untracked paths matched exactly (`MISMATCHES=0`).
+- **Initial integrated conformance:** `FAIL` (123/131 passed). Moving `evals/unit-05-03-global-solid-contracts.test.ts` into `evals/tests/rules/` had introduced two forbidden upward relative imports that unit-scoped receipts did not cover.
+- **Remediation:** Replaced those imports with repository-root file URL imports, preserving the test contract without crossing the static module boundary. Refreshed `context-lock.json`.
+- **Focused CLI and receipt tests:** `PASS` (53/53).
+- **Relocated TypeScript rule test:** `PASS` (88/88).
+- **Full evaluation suite:** `PASS` (31/31).
+- **Doctor:** `PASS` (healthy; 31/31 evaluations).
+- **Lock check:** `PASS` (`sha256:13c87278d7db6313529493ba11bbc93bab1dea29f58e310589241d49c65dfcb2`).
+- **Whitespace check:** `PASS` (`git diff --check master`).
+- **Final integrated conformance:** `PASS` (131/131 passed, 0 failed, 0 blocked).
+- **Report ID:** `report-binding-adhoc-00-00-25df4080626a-1791344071787`.
+- **Binding Hash:** `sha256:25df4080626a4501cc3fedc36aefcba274cbeccd261cc7f84dd5a94cc3278698`.
+- **Diff Hash:** `sha256:b018a124966f886eef7addfdd6b484b924ee80bfff38969ee24d7426a469756b`.
+- **Receipt verification:** `PASS` (`CONFORMANCE RECEIPT VALID`).
+- **Status:** Ready for target-branch integration.
