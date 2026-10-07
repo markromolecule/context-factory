@@ -219,7 +219,7 @@ export function renderMascotHeader(title, subtitle, options = {}) {
     `\x1b[1m\x1b[38;2;255;107;53m${title}\x1b[0m`,
     `\x1b[2m\x1b[38;2;148;163;184m${subtitle}\x1b[0m`,
     "",
-    `\x1b[38;2;56;189;248mVersion:\x1b[0m  v3.15.0`,
+    `\x1b[38;2;56;189;248mVersion:\x1b[0m  v3.16.0`,
     `\x1b[38;2;56;189;248mEngine:\x1b[0m   Pure Node.js ESM (zero external deps)`,
     `\x1b[38;2;56;189;248mMascot:\x1b[0m   Octo-Agent (\x1b[38;2;255;107;53m>_\x1b[0m)`,
     "",
