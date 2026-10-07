@@ -120,7 +120,7 @@ export async function probeHostState(options = {}) {
         installedIdes: [],
       };
     }
-  } else if (setupState.status !== "missing_submodule" && hostDir === factoryDir) {
+  } else if (setupState.status !== "missing_submodule" && hostDir === factoryDir && existsSync(join(factoryDir, "context-manifest.json"))) {
     setupState = {
       status: "factory_native",
       reason: "Operating directly inside Context Factory root",

@@ -15,7 +15,7 @@
 
 | Phase | Title | Units | Status |
 | :--- | :--- | :--- | :--- |
-| **Phase 01** | Host interface and accessible CLI | 01.01, 01.02 | in-progress (01.01 ready) |
+| **Phase 01** | Host interface and accessible CLI | 01.01, 01.02 | **COMPLETED** (ready for phase checkpoint) |
 | **Phase 02** | Safe opt-in host setup | 02.01, 02.02 | pending |
 | **Phase 03** | Content-bound conformance receipts | 03.01, 03.02 | pending |
 | **Phase 04** | GitHub Actions integration and release guidance | 04.01, 04.02 | pending |
@@ -41,7 +41,7 @@
   - Result: `PASS`
 - **Focused Test Suite:**
   - Command: `node --test evals/tests/cli/host-status.test.mjs`
-  - Result: `PASS` (6 tests passed, 0 failed)
+  - Result: `PASS` (7 tests passed, 0 failed)
 - **Diagnostic Conformance Gate:**
   - Command: `node app/cli/bin/context-cli.mjs conform "Verify unit 01.01 host-state" --stack typescript --scope "app/cli/core/host-state.mjs,app/cli/commands/status.mjs,evals/tests/cli/host-status.test.mjs" --human-evidence "Joseph: Verified pure probe boundary in host-state.mjs isolated from CLI formatting, zero external runtime deps, and 6/6 unit tests passing." --out .context-runs/PLN-0004/01.01/conformance-report.json --json`
   - Exit Code: `0`
@@ -55,6 +55,37 @@
   - `app/cli/core/host-state.mjs` (new)
   - `app/cli/commands/status.mjs` (modified)
   - `evals/tests/cli/host-status.test.mjs` (new)
+  - `context-manifest.json` (synchronized)
+  - `context-lock.json` (synchronized)
+- **Commit:** `5663c30` `feat(cli): host state and actionable status (unit 01.01)`
+- **Status:** Complete.
+
+---
+
+### Unit 01.02: Text-first help and output
+- **Objective:** Replace the mascot-heavy first screen with a compact text hierarchy that exposes setup and quality commands accessibly.
+- **Criteria Verified:** AC-05.
+- **Focused Test Suite:**
+  - Command: `node --test evals/tests/cli/help-output.test.mjs`
+  - Result: `PASS` (4 tests passed, 0 failed)
+- **Combined Phase Suite:**
+  - Command: `node --test evals/tests/cli/host-status.test.mjs evals/tests/cli/help-output.test.mjs`
+  - Result: `PASS` (11 tests passed, 0 failed)
+- **Diagnostic Conformance Gate:**
+  - Command: `node app/cli/bin/context-cli.mjs conform "Verify unit 01.02 text-help" --stack typescript --scope "app/cli/bin/context-cli.mjs,app/cli/core/formatter.mjs,evals/tests/cli/help-output.test.mjs" --human-evidence "Joseph: Verified text-first help presentation, mascot removal, zero external deps, and 4/4 passing CLI contract tests." --out .context-runs/PLN-0004/01.02/conformance-report.json --json`
+  - Exit Code: `0`
+  - Verdict: `PASS` (47/47 passed, 0 failed, 0 blocked)
+  - Report ID: `report-binding-adhoc-00-00-d144410256cc-1791341144472`
+  - Binding Hash: `sha256:d144410256cc07e29b5362304c5587b7e144b39d9066f8e7acfcfc5618f2b0b6`
+  - Diff Hash: `sha256:e7293cf5c1bb903f98b8afae3a2edaf692258adabc3a65950699e1427d61154d`
+  - Output Path: `.context-runs/PLN-0004/01.02/conformance-report.json`
+  - Named Human Evidence: `"Joseph: Verified text-first help presentation, mascot removal, zero external deps, and 4/4 passing CLI contract tests."`
+- **Files Modified / Added / Deleted:**
+  - `app/cli/bin/context-cli.mjs` (modified)
+  - `app/cli/core/formatter.mjs` (modified)
+  - `app/cli/core/mascot.mjs` (deleted)
+  - `evals/tests/cli/help-output.test.mjs` (new)
+  - `evals/tests/cli/host-status.test.mjs` (updated)
   - `context-manifest.json` (synchronized)
   - `context-lock.json` (synchronized)
 - **Status:** Complete, ready for review commit.

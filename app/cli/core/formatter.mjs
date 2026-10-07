@@ -4,9 +4,7 @@
  * with automatic color suppression when NO_COLOR is set or when stdout is not a TTY.
  */
 
-import { getTerminalCapabilities, renderMascotHeader } from "./mascot.mjs";
-
-const isColorSupported = (() => {
+export function checkColorSupport() {
   if (process.env.NO_COLOR !== undefined || process.argv.includes("--no-color")) {
     return false;
   }
@@ -14,10 +12,10 @@ const isColorSupported = (() => {
     return true;
   }
   return Boolean(process.stdout && process.stdout.isTTY);
-})();
+}
 
 function wrap(start, end) {
-  return (text) => (isColorSupported ? `\x1b[${start}m${text}\x1b[${end}m` : String(text));
+  return (text) => (checkColorSupport() ? `\x1b[${start}m${text}\x1b[${end}m` : String(text));
 }
 
 export const colors = {
@@ -61,7 +59,7 @@ export const badges = {
 };
 
 export function banner(title = "CONTEXT FACTORY CLI", subtitle = "Deterministic context engineering & agent orchestration") {
-  return renderMascotHeader(title, subtitle);
+  return `${colors.bold(colors.cyan(title))} - ${colors.dim(subtitle)}`;
 }
 
 export function box(content, { title, borderColor = "cyan", padding = 1 } = {}) {

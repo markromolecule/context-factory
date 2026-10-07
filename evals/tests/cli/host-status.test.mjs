@@ -10,7 +10,7 @@ describe("Unit 01.01: Host state and actionable status (AC-04, AC-06)", () => {
   it("probes unconfigured host when no bridge is present", async () => {
     const tempDir = await mkdtemp(join(tmpdir(), "cf-test-host-unconfigured-"));
     try {
-      const state = await probeHostState({ hostDir: tempDir, factoryDir: process.cwd() });
+      const state = await probeHostState({ hostDir: tempDir, factoryDir: tempDir });
       assert.equal(state.setup.status, "unconfigured");
       assert.match(state.setup.reason, /not bridged|unconfigured/i);
       assert.match(state.nextCommand, /context-cli init/);
@@ -49,7 +49,7 @@ describe("Unit 01.01: Host state and actionable status (AC-04, AC-06)", () => {
         "utf8"
       );
 
-      const state = await probeHostState({ hostDir: tempDir, factoryDir: process.cwd() });
+      const state = await probeHostState({ hostDir: tempDir, factoryDir: tempDir });
       assert.equal(state.setup.status, "configured");
       assert.equal(state.setup.method, "submodule");
     } finally {
@@ -58,17 +58,38 @@ describe("Unit 01.01: Host state and actionable status (AC-04, AC-06)", () => {
   });
 
   it("maintains distinct states for host setup, factory health, and code conformance (AC-06)", async () => {
-    const state = await probeHostState({ hostDir: process.cwd(), factoryDir: process.cwd() });
+    const tempDir = await mkdtemp(join(tmpdir(), "cf-test-host-distinct-"));
+    try {
+      const state = await probeHostState({ hostDir: tempDir, factoryDir: tempDir });
 
-    // Distinct objects with independent statuses
-    assert.ok(state.setup, "has setup state");
-    assert.ok(state.health, "has factory health state");
-    assert.ok(state.conformance, "has code conformance state");
+      // Distinct objects with independent statuses
+      assert.ok(state.setup, "has setup state");
+      assert.ok(state.health, "has factory health state");
+      assert.ok(state.conformance, "has code conformance state");
 
-    // Conformance is distinct and never inferred as PASS from setup or editor presence
-    assert.notEqual(state.conformance.status, "PASS", "conformance cannot default to PASS without valid report receipt");
-    assert.ok(["no_report", "unconfigured", "pending"].includes(state.conformance.status));
-    assert.ok(state.nextCommand, "provides a single next command");
+      // Conformance is distinct and never inferred as PASS without valid report receipt
+      assert.equal(state.conformance.status, "no_report");
+      assert.ok(state.nextCommand, "provides a single next command");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("reflects PASS conformance verdict when report receipt is present", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "cf-test-host-report-"));
+    try {
+      const runsDir = join(tempDir, ".context-runs", "run-1");
+      await mkdir(runsDir, { recursive: true });
+      await writeFile(
+        join(runsDir, "conformance-report.json"),
+        JSON.stringify({ reportId: "rep-1", verdict: "PASS" }, null, 2),
+        "utf8"
+      );
+      const state = await probeHostState({ hostDir: tempDir, factoryDir: tempDir });
+      assert.equal(state.conformance.status, "PASS");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
   });
 
   it("handleStatusCommand returns structured JSON with backward compatibility and host state", async () => {

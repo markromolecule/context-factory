@@ -25,96 +25,124 @@ import { handleValidateCommand } from "../commands/validate.mjs";
 import { banner, colors, commandCard, quickStartCard } from "../core/formatter.mjs";
 import { parseArgs } from "../core/options.mjs";
 
-export function showHelp() {
-  console.log(banner("CONTEXT FACTORY CLI", "Maintain, validate, evaluate, and bridge context-factory"));
+export function showHelp(options = {}) {
+  const isDetail = Boolean(options.detail || options.all);
+
+  console.log(banner("Context Factory CLI", "Deterministic context engineering & agent orchestration"));
   console.log();
 
-  console.log(quickStartCard([
-    ["1. Bridge", "context-cli init", "Interactive setup to bridge Context Factory into your repo"],
-    ["2. Validate", "context-cli doctor", "Run full diagnostic health check across rules & skills"],
-    ["3. Sync", "context-cli sync", "Auto-discover context files, refresh manifest and lockfile"],
-    ["4. Plan", "context-cli task new", "Scaffold phased task, milestones, and unit execution files"],
-    ["5. Checkpoint", "context-cli session save", "Save state before context window reaches saturation (>60%)"],
-  ]));
-  console.log();
+  if (isDetail) {
+    console.log(quickStartCard([
+      ["1. Bridge", "context-cli init", "Interactive setup to bridge Context Factory into your repo"],
+      ["2. Validate", "context-cli doctor", "Run full diagnostic health check across rules & skills"],
+      ["3. Preflight", "context-cli preflight", "Compile and verify rule bindings before making edits"],
+      ["4. Conform", "context-cli conform", "Evaluate code changes against active rule bindings"],
+      ["5. Sync", "context-cli sync", "Auto-discover context files, refresh manifest and lockfile"],
+      ["6. Plan", "context-cli task new", "Scaffold phased task, milestones, and unit execution files"],
+      ["7. Checkpoint", "context-cli session save", "Save state before context window reaches saturation (>60%)"],
+    ]));
+    console.log();
 
-  console.log(`${colors.bold("USAGE:")}
+    console.log(`${colors.bold("USAGE:")}
   ${colors.cyan("context-cli")} <command> [options]
 `);
 
-  console.log(commandCard("PROJECT BRIDGING & SETUP", [
-    ["init", "Interactive setup to bridge Context Factory into a project"],
-    ["bridge", "Bridge context-factory into host repository", "(--ide, --method, --pm)"],
-    ["repair", "Auto-repair broken symlinks, bridges, and editor rules", "([target])"],
-    ["pull", "Pull latest updates & auto-heal symlinks", "(submodule or git repo)"],
-    ["hook", "Install or manage zero-drift git pre-commit hook", "(hook install)"],
-  ], { icon: "📦", badgeColor: "cyan" }));
-  console.log();
+    console.log(commandCard("PROJECT BRIDGING & SETUP", [
+      ["init", "Interactive setup to bridge Context Factory into a project"],
+      ["bridge", "Bridge context-factory into host repository", "(--ide, --method, --pm)"],
+      ["repair", "Auto-repair broken symlinks, bridges, and editor rules", "([target])"],
+      ["pull", "Pull latest updates & auto-heal symlinks", "(submodule or git repo)"],
+      ["hook", "Install or manage non-clobbering git pre-commit hook", "(hook install)"],
+    ], { icon: "📦", badgeColor: "cyan" }));
+    console.log();
 
-  console.log(commandCard("CORE MAINTENANCE & HEALTH", [
-    ["doctor", "Run full diagnostic health check", "(--repair to auto-fix)"],
-    ["sync", "Auto-discover files, update manifest and lockfile"],
-    ["diff", "Detect drift and differences against context-lock.json"],
-    ["lock", "Generate or verify context-lock.json checksums"],
-    ["lint", "Validate manifest, frontmatter, schemas, and links"],
-    ["build", "Compile all rules, skills, and workflows to bundle"],
-    ["eval", "Run unit and golden dataset evaluation test suites", "(--unit)"],
-    ["status", "Display factory overview, lock status, and task stats"],
-    ["export", "Export distribution packages"],
-  ], { icon: "🛠️", badgeColor: "blue" }));
-  console.log();
+    console.log(commandCard("CORE MAINTENANCE & HEALTH", [
+      ["doctor", "Run full diagnostic health check", "(--repair to auto-fix)"],
+      ["sync", "Auto-discover files, update manifest and lockfile"],
+      ["diff", "Detect drift and differences against context-lock.json"],
+      ["lock", "Generate or verify context-lock.json checksums"],
+      ["lint", "Validate manifest, frontmatter, schemas, and links"],
+      ["build", "Compile all rules, skills, and workflows to bundle"],
+      ["eval", "Run unit and golden dataset evaluation test suites", "(--unit)"],
+      ["status", "Display host setup, lock status, and task stats", "(--detail)"],
+      ["export", "Export distribution packages"],
+    ], { icon: "🛠️", badgeColor: "blue" }));
+    console.log();
 
-  console.log(commandCard("AGENT ORCHESTRATION & EXECUTION", [
-    ["resolve", "Resolve matching context rules & skills for a prompt"],
-    ["run", "Execute 3-stage LLM context run", "(mock/openai/anthropic/gemini)"],
-    ["task new", "Scaffold new phased task and milestone files", '"<title>"'],
-    ["task list", "List active task plans in docs/tasks/"],
-    ["validate", "Validate JSON file against registered schema"],
-  ], { icon: "🤖", badgeColor: "green" }));
-  console.log();
+    console.log(commandCard("QUALITY GATES & CONFORMANCE", [
+      ["preflight", "Verify descriptor and rule bindings for prompt/scope", '"<prompt>" --scope <files>'],
+      ["conform", "Evaluate changes against active rule bindings and persist report", '"<task>" --scope <files>'],
+    ], { icon: "⚖️", badgeColor: "magenta" }));
+    console.log();
 
-  console.log(commandCard("SESSION CHECKPOINTS & RESUME (LHG)", [
-    ["session save", "Save compact checkpoint to .context/sessions/ and .tmp/"],
-    ["session resume", "Load and output cold-start prompt for saved session"],
-    ["session status", "List all saved session checkpoints", "(alias: session list)"],
-    ["session clear", "Delete saved session checkpoints", "(--all to clear all)"],
-  ], { icon: "⏱️", badgeColor: "yellow" }));
-  console.log();
+    console.log(commandCard("AGENT ORCHESTRATION & EXECUTION", [
+      ["resolve", "Resolve matching context rules & skills for a prompt"],
+      ["run", "Execute 3-stage LLM context run", "(mock/openai/anthropic/gemini)"],
+      ["task new", "Scaffold new phased task and milestone files", '"<title>"'],
+      ["task list", "List active task plans in docs/tasks/"],
+      ["validate", "Validate JSON file against registered schema"],
+    ], { icon: "🤖", badgeColor: "green" }));
+    console.log();
+
+    console.log(commandCard("SESSION CHECKPOINTS & RESUME (LHG)", [
+      ["session save", "Save compact checkpoint to .context/sessions/ and .tmp/"],
+      ["session resume", "Load and output cold-start prompt for saved session"],
+      ["session status", "List all saved session checkpoints", "(alias: session list)"],
+      ["session clear", "Delete saved session checkpoints", "(--all to clear all)"],
+    ], { icon: "⏱️", badgeColor: "yellow" }));
+    console.log();
+  } else {
+    console.log(`${colors.bold("USAGE:")}
+  ${colors.cyan("context-cli")} <command> [options]
+`);
+
+    console.log(`${colors.bold("PRIMARY COMMANDS:")}
+  ${colors.bold(colors.green("init"))}            Initialize and bridge Context Factory into host repository
+  ${colors.bold(colors.green("status"))}          Display host integration, factory health, and conformance
+  ${colors.bold(colors.green("doctor"))}          Run full diagnostic health check across rules & skills
+  ${colors.bold(colors.green("preflight"))}       Compile and verify rule bindings before code generation
+  ${colors.bold(colors.green("conform"))}         Evaluate code changes against active rule bindings
+  ${colors.bold(colors.green("hook"))}            Install non-clobbering git pre-commit quality gate
+  ${colors.bold(colors.green("sync"))}            Auto-discover files, refresh manifest and lockfile
+  ${colors.bold(colors.green("task new"))}        Scaffold phased task plan and milestone units
+  ${colors.bold(colors.green("session save"))}    Save lightweight checkpoint before context saturation
+  ${colors.bold(colors.green("session resume"))}  Resume task execution with clean context headroom
+`);
+  }
 
   console.log(`${colors.bold("COMMON OPTIONS:")}
   ${colors.yellow("--json")}          Output machine-readable JSON
   ${colors.yellow("--quiet")}         Suppress non-error output
   ${colors.yellow("--no-color")}      Disable ANSI terminal colors
+  ${colors.yellow("--detail")}        Display full categorized command catalog
   ${colors.yellow("-h, --help")}      Show this help message
   ${colors.yellow("-v, --version")}   Show version information
 `);
 
   console.log(`${colors.bold("EXAMPLES:")}
-  ${colors.dim("# Bridge context-factory into your target repository")}
-  ${colors.white("context-cli bridge --target ../my-app --method submodule")}
+  ${colors.dim("# Initialize and bridge into host repository")}
+  ${colors.white("context-cli init")}
 
-  ${colors.dim("# Pull latest updates for submodule in host repository")}
-  ${colors.white("context-cli pull")}
+  ${colors.dim("# Compile preflight rule bindings before making code changes")}
+  ${colors.white('context-cli preflight "implement stripe webhook" --stack typescript --scope "src/webhook.ts"')}
 
-  ${colors.dim("# Run doctor diagnostics")}
-  ${colors.white("context-cli doctor")}
+  ${colors.dim("# Evaluate changed files against active rule bindings")}
+  ${colors.white('context-cli conform "verify stripe webhook" --stack typescript --scope "src/webhook.ts"')}
 
-  ${colors.dim("# Resolve rules for a prompt")}
-  ${colors.white('context-cli resolve "implement stripe webhook endpoint"')}
-
-  ${colors.dim("# Save session checkpoint before context saturation (>60%)")}
-  ${colors.white('context-cli session save --name task-0001-phase-1')}
-
-  ${colors.dim("# Resume latest session in fresh context window")}
-  ${colors.white("context-cli session resume")}
+  ${colors.dim("# Check host setup, factory health, and code conformance status")}
+  ${colors.white("context-cli status")}
 `);
+
+  if (!isDetail) {
+    console.log(`${colors.dim("Run context-cli --help --detail to view the full command catalog.")}\n`);
+  }
 }
 
 export async function main(argv = process.argv.slice(2)) {
   const { command, args, flags } = parseArgs(argv);
 
   if (flags.help || flags.h || (!command && !flags.version && !flags.v)) {
-    showHelp();
+    showHelp({ detail: Boolean(flags.detail || flags.all) });
     return 0;
   }
 

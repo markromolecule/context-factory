@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.16.0",
-  "digest": "sha256:82ebfb43e346ca1990f61bea81eb4b7d65f23ec9bc46d113684b5fc8c3428e77",
+  "digest": "sha256:c9a75e626a6a3875e50e3cf812f665e865430bb4df2ac04ac66cfd0e2f83deee",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:5426f779e008ffdbceddce1c8348121bc254692f45b378c3c15d6b116db967df",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:34e753e12b2e8fdca9754c71b23337d1414cb42113d53a3043988e1b7784e51a",
+    "context-manifest.json": "sha256:6ad5cb0139194deebd72032b491d27579ae01c3e3a4fd36b70c0b37ae203b8ec",
     "docs/ARCHITECTURE.md": "sha256:2fe5799c75fe53f8b096715cdea201f282a69bcf52f6a28f9d76ef7dde4f7574",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
@@ -125,7 +125,8 @@
     "evals/datasets/refactors/architecture-change.json": "sha256:a09dfaf98ea783e66b090ae9e7f77fb9e5e0ea12753a9e1db90c1e3e7bedece8",
     "evals/run-evals.mjs": "sha256:479bb3d30712aeecf55201af1bd61a6c1a3de175238b6cf7a73a3bb7c19b8dc6",
     "evals/tests/bridge/bridge-conformance.test.mjs": "sha256:42eb97232923bc6bc4901d0174ae2d54126e7ac19f997362e1c0b6c627e40668",
-    "evals/tests/cli/host-status.test.mjs": "sha256:d10c149372c6814d77ca91647db9a10b88ebc44c7dad6323429649736fdccead",
+    "evals/tests/cli/help-output.test.mjs": "sha256:814d38b7563970d37a79e317b4ec126a0f856b76d9aa276e54efee0e34be8b5e",
+    "evals/tests/cli/host-status.test.mjs": "sha256:e1fb66b7189a933f06f1ccc4d0ae3a3731fadf77d340f3721c01c9d8ff567283",
     "evals/tests/conformance/conformance-cli.test.mjs": "sha256:8d90ac61f8c7619e457311721b605e3950964fa8e7aa34fe3a16d6b991efae73",
     "evals/tests/conformance/conformance-gate.test.mjs": "sha256:66bc5dded959acbc0802743802703979dc7ea3778a62265d42e8c887b7c4dcfc",
     "evals/tests/conformance/laravel-adapter.test.mjs": "sha256:66ddbbca89863ab392c3973399f8f16274b3423614e0aa9849453fb54d538cb1",
