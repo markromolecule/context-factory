@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "kind": "execution-packet",
+  "owner": "plan-review",
+  "status": "approved",
+  "reviewReference": "docs/reviews/2026-10-07-PLN-0004-plan-review.md",
+  "approvalReference": "user-approved:2026-10-07-interactive-modal",
+  "source": {
+    "path": "docs/tasks/2026/10/2026-10-07/feat-PLN-0004-task-focused-submodule-cli-ux/README.md",
+    "sha256": "sha256:dca613bc28f13ee8be4b85e79214e37871ed0a1bf95b17290f3a46b721d71c8a"
+  }
+}

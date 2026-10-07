@@ -29,7 +29,7 @@ The factory separates stable project knowledge from task-specific context so age
 | Session State Engine    | `scripts/session-core.mjs`, `schemas/session-state.schema.json` | Dual-layer checkpointing (`.context/sessions/<id>.json` + `.tmp/SESSION_RESUME.md`) & budget fencing |
 | Harness CLI             | `scripts/harness-cli.mjs`, `scripts/context.mjs` | Unified CLI interface, context resolution, bundling, execution, locking, and diagnostics        |
 | Automation              | `.github/workflows/context-factory.yml`          | Cross-platform health enforcement on pushes and pull requests                                   |
-| Evaluation Suites       | `evals/run-evals.mjs`, `evals/{cases,datasets}/` | Multi-tier unit resolution cases and golden workflow regression suites                          |
+| Evaluation Suites       | `evals/run-evals.mjs`, `evals/{cases,datasets,tests}/` | Routing cases, golden workflow datasets, and grouped regression tests                           |
 
 ## Context flow
 
