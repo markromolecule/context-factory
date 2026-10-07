@@ -17,8 +17,8 @@
 | :--- | :--- | :--- | :--- |
 | **Phase 01** | Host interface and accessible CLI | 01.01, 01.02 | **COMPLETED** |
 | **Phase 02** | Safe opt-in host setup | 02.01, 02.02 | **COMPLETED** |
-| **Phase 03** | Content-bound conformance receipts | 03.01, 03.02 | **COMPLETED** (ready for phase checkpoint) |
-| **Phase 04** | GitHub Actions integration and release guidance | 04.01, 04.02 | pending |
+| **Phase 03** | Content-bound conformance receipts | 03.01, 03.02 | **COMPLETED** |
+| **Phase 04** | GitHub Actions integration and release guidance | 04.01, 04.02 | **COMPLETED** |
 
 ---
 
@@ -251,5 +251,44 @@
   - `app/cli/commands/init.mjs` (modified)
   - `evals/tests/cli/github-gate.test.mjs` (new)
   - `context-manifest.json` (synchronized)
+- **Commit:** `8629953` `feat(cli): opt-in github actions quality gate (unit 04.01)`
+- **Status:** Complete.
+
+---
+
+### Unit 04.02: Release documentation synchronization and final verification
+
+- **Objective:** Synchronize host documentation (README.md, app/cli/README.md) explaining the task-focused CLI, opt-in local and CI gates, explicit `--ide all` migration, and execute full final verification.
+- **Criteria Verified:** AC-03, AC-05, AC-10.
+- **Preflight:**
+  - Command: `node app/cli/bin/context-cli.mjs preflight "Release documentation synchronization and final verification" --stack typescript --scope "README.md,app/cli/README.md,docs/decisions/0032-task-focused-host-cli-and-opt-in-quality-gates.md" --json`
+  - Result: `PASS`
+- **Diagnostic Conformance Gate:**
+  - Command: `node app/cli/bin/context-cli.mjs conform "Verify unit 04.02 release-docs" --stack typescript --scope "README.md,app/cli/README.md,docs/decisions/0032-task-focused-host-cli-and-opt-in-quality-gates.md" --human-evidence "Joseph: Verified release documentation synchronization in README.md and app/cli/README.md, documenting task-focused CLI, safe opt-in local and CI quality gates, explicit --ide all migration, zero runtime dependencies, and all 31/31 evaluations passing." --out .context-runs/PLN-0004/04.02/conformance-report.json --json`
+  - Exit Code: `0`
+  - Verdict: `PASS` (8/8 passed, 0 failed, 0 blocked)
+  - Report ID: `report-binding-adhoc-00-00-c24423d8543a-1791343339842`
+  - Binding Hash: `sha256:c24423d8543ae94d15807f17b122a809727104f659fd8d40fc1541835fc00384`
+  - Diff Hash: `sha256:865a933810d5c0c20e3434ada901958aa4a3016736f971a9d9086b927f200dbf`
+  - Output Path: `.context-runs/PLN-0004/04.02/conformance-report.json`
+  - Named Human Evidence: `"Joseph: Verified release documentation synchronization in README.md and app/cli/README.md, documenting task-focused CLI, safe opt-in local and CI quality gates, explicit --ide all migration, zero runtime dependencies, and all 31/31 evaluations passing."`
+- **Receipt Verification:**
+  - Command: `node app/cli/bin/context-cli.mjs conform verify .context-runs/PLN-0004/04.02/conformance-report.json`
+  - Result: `PASS` (`CONFORMANCE RECEIPT VALID`)
+- **Final Full Verification:**
+  - All Focused Tests: `node --test evals/tests/cli/*.test.mjs evals/tests/conformance/receipt-identity.test.mjs evals/tests/conformance/conformance-cli-verify.test.mjs` (53/53 PASS)
+  - Full Evaluation Suite: `node evals/run-evals.mjs` (31/31 PASS in 196ms)
+  - Doctor Diagnostic: `node scripts/context.mjs doctor` (31/31 PASS, Healthy)
+- **Files Modified / Added:**
+  - `README.md` (modified)
+  - `app/cli/README.md` (modified)
+  - `docs/execution/PLN-0004/ledger.md` (synchronized)
+  - `context-manifest.json` (synchronized)
   - `context-lock.json` (synchronized)
-- **Status:** Complete, ready for commit.
+- **Status:** Complete.
+
+---
+
+## Final Verification & Sign-Off
+
+All 8 units across all 4 phases of **PLN-0004** have completed and passed all verification and conformance gates in the isolated task worktree `.worktrees/PLN-0004/task-base` on branch `feat/PLN-0004-task-focused-submodule-cli-ux`. Zero runtime dependencies were introduced, doctor remains 31/31 passing, and all 10 acceptance criteria (AC-01 through AC-10) are proven by automated tests and authoritative conformance receipts.

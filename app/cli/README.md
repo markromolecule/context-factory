@@ -42,7 +42,7 @@ npm run diff
 ## Command Reference
 
 ### 1. Interactive Project Initialization (`init`)
-Launches the streamlined 3-step setup wizard to onboard and bridge Context Factory into any host repository:
+Launches the streamlined setup wizard to onboard and bridge Context Factory into any host repository:
 
 1. **Submodule Integration:** Embed Context Factory into `.context-factory` via `git submodule add <url> .context-factory`. If run before submoduling, `init` detects the host environment and offers a hybrid assistant to automatically run or display the command.
 2. **Auto-Detection:** Automatically detects whether it is running from within the submodule or from the host root, resolving target directories and relative paths seamlessly.
@@ -52,15 +52,20 @@ Launches the streamlined 3-step setup wizard to onboard and bridge Context Facto
    - `[3] Cursor` — Scaffolds modern `.cursor/rules/context-factory.mdc` (with `alwaysApply: true`) alongside `.cursorrules` and `AGENTS.md`.
    - `[4] Trae` — Scaffolds `.trae/rules/project_rules.md` and `AGENTS.md`.
    - `[5] All IDEs` — Bridges all supported editors for mixed-editor teams.
+4. **Local Hook Opt-In:** Optionally installs an atomic, non-clobbering git pre-commit hook.
+5. **CI Quality Gate Opt-In:** Optionally installs a GitHub Actions workflow (`.github/workflows/context-factory-gate.yml`) with recursive submodule checkout, health check, and conformance verification.
 
-Supports single digits (`1`), comma/space-separated digits (`1, 4` or `1 3`), or direct names (`vscode,trae`).
+> **Migration Note for CI & Automation:** When running non-interactively in repositories without detected editor folders, `init` requires an explicit `--ide <profile>` (e.g. `--ide vscode`, `--ide cursor`, or `--ide all`). The previous silent fallback to all IDEs has been removed to prevent accidental file scaffolding. Existing automation should pass `--ide all` explicitly.
 
 ```sh
 # Interactive guided setup (smart scanner & multi-select menu)
 context-cli init
 
+# Preview changes without modifying files on disk
+context-cli init --preview
+
 # Non-interactive initialization with explicit flags
-context-cli init --target ../my-app --ide vscode,trae --method submodule
+context-cli init --target ../my-app --ide vscode,trae --method submodule --hook --ci github
 ```
 
 ---
@@ -236,9 +241,58 @@ context-cli task list
 
 ---
 
-### 12. Status Overview (`status`)
-Displays high-level metrics, inventory counts, and lockfile state.
+### 12. Host & Factory Status (`status`)
+Reports three independent dimensions of project health with an actionable next command:
+- **Host Setup:** Validates submodule presence, configured editor profiles, and local git pre-commit hook.
+- **Factory Health:** Checks manifest synchronization, lockfile integrity, and evaluation status.
+- **Code Conformance:** Reports current conformance verification state.
 
 ```sh
+# Display host and factory status overview
 context-cli status
+
+# Display full categorized inventory metrics
+context-cli status --detail
+
+# Machine-readable JSON output
+context-cli status --json
+```
+
+---
+
+### 13. Git Hook Quality Gate (`hook`)
+Installs and manages an atomic, non-clobbering pre-commit quality gate in `.git/hooks/pre-commit`:
+- Automatically supports standard git repositories, git submodules, and git worktrees.
+- Performs non-clobbering checks to prevent overwriting existing unrelated hooks without `--force`.
+- Executes `context-cli doctor` before commits to ensure zero-drift manifest and lockfile integrity.
+
+```sh
+# Install pre-commit hook in current repo
+context-cli hook install
+
+# Check hook installation status
+context-cli hook status
+
+# Preview hook installation script without writing
+context-cli hook preview
+```
+
+---
+
+### 14. Quality Gates & Conformance (`preflight`, `conform`)
+Enforces executable architectural and coding rule compliance across changed scopes:
+
+- **Preflight:** Compiles and binds applicable rules for a prompt and target scope before code modifications.
+- **Conform:** Evaluates changes against active rule bindings and writes authoritative conformance reports.
+- **Conform Verify:** Fail-closed independent verification of conformance report receipts against the current checkout, ensuring PASS verdict, binding hash match, and content-bound SHA-256 byte digest equivalence.
+
+```sh
+# Preflight rule binding verification
+context-cli preflight "Implement payments webhook" --stack typescript --scope "src/webhook.ts"
+
+# Evaluate changes and generate conformance receipt
+context-cli conform "Verify payments webhook" --stack typescript --scope "src/webhook.ts" --out .context-runs/report.json
+
+# Independently verify conformance report receipt against current checkout
+context-cli conform verify .context-runs/report.json
 ```

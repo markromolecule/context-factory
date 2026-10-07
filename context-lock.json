@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.16.0",
-  "digest": "sha256:e1599312d175e49b8a06d663de2c145a4876f173787bf520bbe4ed5f7d2bc80c",
+  "digest": "sha256:11a995dec288e2aa696da77cc5469423a47b4b38f4835356deb7025454eababe",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -12,7 +12,7 @@
     "CLAUDE.md": "sha256:9807a502d39c2cfadc3d6afab596f5ea11bbdcd506b3d07e31646f47c4e6614f",
     "CODEX.md": "sha256:262d5dc5c150c21c80c737a4f7ba556cfe5d13ffc3153bdf9debf421e2bea6ec",
     "GEMINI.md": "sha256:cca16fa665d661b2874d2ef9a2be5336cb3b31041086c8b2a15bb7b52e890242",
-    "README.md": "sha256:466453891a59d70fb44397e0d3341197043b3e52b0d4f31bd0a82bf2be56a8ee",
+    "README.md": "sha256:aac22d5ed1ec17fae8aa48e8cb1bfa8da9543792fb2b28e07df0b74509c3fc3e",
     "agents/README.md": "sha256:a561178dced06bc941779bb808caec0885760c07b90b6bc5ecf043705c3f322f",
     "agents/architect-agent/AGENT.md": "sha256:f3d6003f618eb6b10ec6966ff441d151c20b7c7722d94af724d6d79261432e2b",
     "agents/architect-agent/prompts/subagent-invocation.md": "sha256:56b61708ee7101864f731b894644bc9baac89fccaa813a93d6abe95f7a4441f9",
