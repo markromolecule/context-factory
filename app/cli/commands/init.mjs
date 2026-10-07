@@ -12,6 +12,10 @@ import {
 } from "../core/bridge-generator.mjs";
 import { handleBridgeCommand } from "./bridge.mjs";
 import { installHook } from "./hook.mjs";
+import {
+  installGitHubWorkflow,
+  getUnsupportedCiGuidance,
+} from "../core/github-gate-generator.mjs";
 
 /**
  * Handles interactive and flag-based initialization for a host project.
@@ -136,7 +140,19 @@ export async function handleInitCommand(args = [], flags = {}) {
         installHookFlag = hookAnswer.trim().toLowerCase() === "y" || hookAnswer.trim().toLowerCase() === "yes";
       }
 
-      // 5. Package manager prompt
+      // 5. CI quality gate prompt
+      if (flags.ci === undefined) {
+        console.log(`\n  ${colors.bold("Select CI Quality Gate:")}`);
+        console.log(`    ${colors.cyan("1)")} None ${colors.dim("(Default)")}`);
+        console.log(`    ${colors.cyan("2)")} GitHub Actions ${colors.dim("(.github/workflows/context-factory-gate.yml)")}`);
+        const ciAnswer = await rl.question(`  ${colors.bold("Choice")} ${colors.dim("[1-2, default: 1]")}: `);
+        const ciChoice = ciAnswer.trim();
+        if (ciChoice === "2" || ciChoice.toLowerCase() === "github" || ciChoice.toLowerCase() === "gh") {
+          flags.ci = "github";
+        }
+      }
+
+      // 6. Package manager prompt
       if (!pm) {
         const detected = detectPackageManager(resolvedTarget);
         console.log(`\n  ${colors.bold("Select Package Manager:")}`);
@@ -188,6 +204,54 @@ export async function handleInitCommand(args = [], flags = {}) {
     });
     if (!hookResult.success && !isJson) {
       console.warn(`  ${badges.warn("HOOK")} ${hookResult.error}`);
+    }
+  }
+
+  // If CI gate was opted into, install or guide CI gate
+  if (flags.ci) {
+    const ciProvider = String(flags.ci).toLowerCase().trim();
+    if (ciProvider === "github" || ciProvider === "true" || ciProvider === "gh") {
+      const ciResult = await installGitHubWorkflow({
+        targetDir: resolvedTarget,
+        submodulePath: hostSubmodStatus.submodulePath || (submodCtx.isInsideSubmodule ? submodCtx.submoduleDirName : ".context-factory"),
+        packageManager: pm,
+        testCommand: flags.testCommand || flags["test-command"] || null,
+        lintCommand: flags.lintCommand || flags["lint-command"] || null,
+        dryRun,
+        force,
+        preview: dryRun,
+      });
+
+      if (!ciResult.success) {
+        if (isJson) {
+          console.log(JSON.stringify(ciResult, null, 2));
+          return 1;
+        }
+        console.error(`\n${badges.fail()} ${colors.bold(colors.red(ciResult.error))}\n`);
+        return 1;
+      }
+
+      if (!isJson) {
+        if (ciResult.action === "preview") {
+          console.log(`  ${badges.info("CI PREVIEW")} Proposed GitHub Actions quality gate at ${colors.cyan(ciResult.workflowPath)}`);
+        } else if (ciResult.action === "already_installed") {
+          console.log(`  ${badges.info("CI")} GitHub Actions quality gate already installed at ${colors.cyan(ciResult.workflowPath)}`);
+        } else {
+          console.log(`  ${badges.done("CI")} GitHub Actions quality gate installed at ${colors.cyan(ciResult.workflowPath)}`);
+        }
+      }
+    } else {
+      const guidance = getUnsupportedCiGuidance(ciProvider, {
+        submodulePath: hostSubmodStatus.submodulePath || (submodCtx.isInsideSubmodule ? submodCtx.submoduleDirName : ".context-factory"),
+      });
+
+      if (!isJson) {
+        console.log(`\n  ${badges.info("CI")} ${colors.bold(guidance.explanation)}`);
+        for (const cmd of guidance.commands) {
+          console.log(`    ${colors.cyan(cmd)}`);
+        }
+        console.log();
+      }
     }
   }
 

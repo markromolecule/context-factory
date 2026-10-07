@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "3.16.0",
-  "digest": "sha256:75491ee7b7819fab941e880b4fd5869ed6f89b2249732e16aedf652654554eb1",
+  "digest": "sha256:e1599312d175e49b8a06d663de2c145a4876f173787bf520bbe4ed5f7d2bc80c",
   "files": {
     ".cursorrules": "sha256:0cc720b5cdab78bdfc6ad77262875fec6fd6c21e4e78fd42fe4484d6643aad33",
     ".github/copilot-instructions.md": "sha256:806382f2c8d50797028fa89af6313f7ecd6beb5707d73a421eb00f76dd47c730",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:5426f779e008ffdbceddce1c8348121bc254692f45b378c3c15d6b116db967df",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:f2d599c9e8bd5004849f17ff3d9d1a9e07cf3efea7e22f6d52440bf0ebe5ace5",
+    "context-manifest.json": "sha256:59631ea3bec0621e26484878d60fa1abb54f53ed18c711289a0b680e4070658d",
     "docs/ARCHITECTURE.md": "sha256:2fe5799c75fe53f8b096715cdea201f282a69bcf52f6a28f9d76ef7dde4f7574",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
@@ -125,6 +125,7 @@
     "evals/datasets/refactors/architecture-change.json": "sha256:a09dfaf98ea783e66b090ae9e7f77fb9e5e0ea12753a9e1db90c1e3e7bedece8",
     "evals/run-evals.mjs": "sha256:479bb3d30712aeecf55201af1bd61a6c1a3de175238b6cf7a73a3bb7c19b8dc6",
     "evals/tests/bridge/bridge-conformance.test.mjs": "sha256:42eb97232923bc6bc4901d0174ae2d54126e7ac19f997362e1c0b6c627e40668",
+    "evals/tests/cli/github-gate.test.mjs": "sha256:540bcbcce6651f16c2fcafaaa33924c1dca4fccd33401ffb324a19566403a149",
     "evals/tests/cli/help-output.test.mjs": "sha256:814d38b7563970d37a79e317b4ec126a0f856b76d9aa276e54efee0e34be8b5e",
     "evals/tests/cli/hook-safety.test.mjs": "sha256:2149ce4bdb63469bbd6470c3db8e718352fcdc91bbd225193cdf8657c96767af",
     "evals/tests/cli/host-status.test.mjs": "sha256:e1fb66b7189a933f06f1ccc4d0ae3a3731fadf77d340f3721c01c9d8ff567283",

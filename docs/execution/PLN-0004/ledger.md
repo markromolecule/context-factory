@@ -220,8 +220,36 @@
   - `evals/tests/conformance/conformance-cli-verify.test.mjs` (new)
   - `context-manifest.json` (synchronized)
   - `context-lock.json` (synchronized)
+- **Status:** Complete.
+
+---
+
+### Unit 04.01: Opt-in GitHub Actions quality gate generator
+
+- **Objective:** Generate strict, opt-in GitHub Actions quality gate workflow enforcing submodule checkout, health check, conformance execution, and report verification, with safe conflict prevention and unsupported CI guidance.
+- **Criteria Verified:** AC-02, AC-04, AC-07, AC-08, AC-09, AC-10.
+- **Preflight:**
+  - Command: `node app/cli/bin/context-cli.mjs preflight "Opt-in GitHub Actions quality gate generator" --stack typescript --scope "app/cli/core/github-gate-generator.mjs,app/cli/commands/init.mjs" --json`
+  - Result: `PASS`
+- **Focused Test Suite:**
+  - Command: `node --test evals/tests/cli/github-gate.test.mjs`
+  - Result: `PASS` (11 tests passed, 0 failed)
+- **Combined CLI & Conformance Test Suite:**
+  - Command: `node --test evals/tests/cli/*.test.mjs evals/tests/conformance/receipt-identity.test.mjs evals/tests/conformance/conformance-cli-verify.test.mjs`
+  - Result: `PASS` (53 tests passed, 0 failed)
+- **Diagnostic Conformance Gate:**
+  - Command: `node app/cli/bin/context-cli.mjs conform "Verify unit 04.01 github-gate" --stack typescript --scope "app/cli/core/github-gate-generator.mjs,app/cli/commands/init.mjs,evals/tests/cli/github-gate.test.mjs" --human-evidence "Joseph: Verified opt-in GitHub Actions quality gate generator in github-gate-generator.mjs, idempotence, safe exclusive creation without clobbering existing workflows, copyable commands for unsupported CI providers, zero runtime dependencies, and 11/11 passing tests." --out .context-runs/PLN-0004/04.01/conformance-report.json --json`
+  - Exit Code: `0`
+  - Verdict: `PASS` (47/47 passed, 0 failed, 0 blocked)
+  - Report ID: `report-binding-adhoc-00-00-41d25e071e83-1791343104880`
+  - Binding Hash: `sha256:41d25e071e83f6b792fb3b137f26966f43bda86ac1c4c9ba729b8a284c3d2030`
+  - Diff Hash: `sha256:cf6a40a916cf74b8cb3f96295644805d4d03a1db67213b72ee933002e3d781b2`
+  - Output Path: `.context-runs/PLN-0004/04.01/conformance-report.json`
+  - Named Human Evidence: `"Joseph: Verified opt-in GitHub Actions quality gate generator in github-gate-generator.mjs, idempotence, safe exclusive creation without clobbering existing workflows, copyable commands for unsupported CI providers, zero runtime dependencies, and 11/11 passing tests."`
+- **Files Modified / Added:**
+  - `app/cli/core/github-gate-generator.mjs` (new)
+  - `app/cli/commands/init.mjs` (modified)
+  - `evals/tests/cli/github-gate.test.mjs` (new)
+  - `context-manifest.json` (synchronized)
+  - `context-lock.json` (synchronized)
 - **Status:** Complete, ready for commit.
-
-
-
-
