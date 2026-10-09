@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "contextVersion": "4.1.0",
-  "digest": "sha256:c256100d06439d2b21a8a99240541a7f1eff14e93483bcd79def5d03242dd8b3",
+  "contextVersion": "5.0.0",
+  "digest": "sha256:a3ff348df08a6727574665b753bdef31893d2e705a4bbb27d59683d999dd43da",
   "files": {
     ".cursorrules": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
     ".github/copilot-instructions.md": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:e0aa7a561369c0839dd6c7f1e25f8ba0bee33d3c046abb17ac5576b6b36f8e51",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:6f965866af336f90699844aaf1ae2ae7e515dffef4ce7a44b1c417ec9b493b08",
+    "context-manifest.json": "sha256:a61a62f16e5edfcecd361a117138bebee681bcb45022fd01185c28eec2c20bae",
     "docs/ARCHITECTURE.md": "sha256:ca6145eb2b6e41e098d124b1f1884a86c8d680e3cbd7125d254ddf7bb29356a3",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",

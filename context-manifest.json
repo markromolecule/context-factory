@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "4.1.0",
+  "contextVersion": "5.0.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
