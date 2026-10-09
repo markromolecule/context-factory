@@ -29,8 +29,8 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0019-loop-engineering-primitives|Loop Engineering Primitives Integration]]
 - [[docs/decisions/0020-categorical-skill-grouping-and-group-indexes|Categorical Skill Grouping and Group Index Invariants]]
 - [[docs/decisions/0021-explicit-language-stack-selection|Explicit Language Stack Selection for Context Rules]]
-- [[docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards|Pragmatic Laravel Rule Taxonomy, Anti-Overengineering Architecture, and Dynamic Multi-Language Alignment]]
-- [[docs/decisions/0023-laravel-modular-domain-architecture-and-unified-conventions|Laravel Modular Domain Architecture, Route Co-location, and Unified Naming Conventions]]
+- [[docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards|Pragmatic Laravel Rule Taxonomy, Anti-Overengineering Architecture, and Dynamic Multi-Language Alignment]] *(Superseded by 0036)*
+- [[docs/decisions/0023-laravel-modular-domain-architecture-and-unified-conventions|Laravel Modular Domain Architecture, Route Co-location, and Unified Naming Conventions]] *(Superseded by 0036)*
 - [[docs/decisions/0024-unit-execution-review-and-testing-skills|Unit Lifecycle Primitives: Plan Review, Test-Driven Execution, and Diff Review]]
 - [[docs/decisions/0025-lhg-minimal-input-and-session-state-primitives|LHG Architecture: Minimal Input and Session State Checkpoint Primitives]]
 - [[docs/decisions/0026-submodule-first-ide-onboarding-flow|Submodule-First Flow & Multi-Editor Bridging Architecture (VS Code, Antigravity, Cursor, Trae)]]
@@ -42,3 +42,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0033-branch-only-task-lifecycle|Branch-Only Task Lifecycle]]
 - [[docs/decisions/0034-framework-scoped-typescript-rules|Framework-scoped TypeScript rules]]
 - [[docs/decisions/0035-host-conformance-receipts-and-fixture-modes|Host Conformance Receipts and Offline Fixture Modes]]
+- [[docs/decisions/0036-decommission-laravel-php-stack-focus-typescript|Decommission Laravel / PHP Stack and Dedicate Context Factory to TypeScript Ecosystem]]

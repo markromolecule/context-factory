@@ -1,7 +1,8 @@
 ---
 title: "Pragmatic Laravel Rule Taxonomy, Anti-Overengineering Architecture, and Dynamic Multi-Language Alignment"
 type: decision
-status: accepted
+status: superseded
+superseded_by: "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md"
 created: "2026-09-18"
 tags: [adr, rules, laravel, php, architecture, anti-overengineering, dynamic-workflows]
 ---

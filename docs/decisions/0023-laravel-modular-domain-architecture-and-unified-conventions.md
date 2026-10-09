@@ -1,7 +1,8 @@
 ---
 title: "Laravel Modular Domain Architecture, Route Co-location, and Unified Naming Conventions"
 type: decision
-status: accepted
+status: superseded
+superseded_by: "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md"
 created: "2026-09-27"
 tags: [adr, rules, laravel, php, modular-architecture, naming-conventions]
 ---
