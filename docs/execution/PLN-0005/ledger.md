@@ -17,7 +17,7 @@
 | **Phase 01** | Discovery, Scenarios, and Boundary Analysis | 01.01 | **COMPLETED** |
 | **Phase 02** | Architecture, Contracts, and Data Modeling | 02.01 | **COMPLETED** |
 | **Phase 03** | Incremental Implementation and Tests | 03.01 | **COMPLETED** |
-| **Phase 04** | Verification, Quality Gates, and Release | 04.01 | **PLANNED** |
+| **Phase 04** | Verification, Quality Gates, and Release | 04.01 | **COMPLETED** |
 
 ---
 
@@ -89,6 +89,26 @@
   - `npm run lint` $\rightarrow$ `PASS` (62 rules, 18 skills, 12 workflows, 477 Markdown files)
   - `node scripts/context.mjs doctor` $\rightarrow$ `PASS` (`HEALTHY`, 32/32 evaluations passed)
 - **Status:** `COMPLETED`
+
+### Unit 04.01: Verification, Quality Gates, and Release
+
+- **Phase:** 04 (Verification, Quality Gates, and Release)
+- **Unit ID:** `04.01`
+- **Timestamp:** 2026-10-09
+- **Scope & Deliverables:**
+  - Synchronized repository manifest and lockfile with all added test artifacts and adapter modifications.
+  - Executed full release verification suite across behavior, contract, syntax, and doctor diagnostics:
+    - 32/32 evaluations passed in 223ms.
+    - 89/89 conformance test assertions passed across 33 suites.
+    - Syntax and manifest lint passed across all 62 rules, 18 skills, 12 workflows, and 477 Markdown files.
+    - Doctor diagnostic passed 100% (HEALTHY).
+- **Verification Commands & Results:**
+  - `npm test` $\rightarrow$ `PASS` (32/32 evaluations passed)
+  - `node --test evals/tests/conformance/*.test.mjs` $\rightarrow$ `PASS` (89/89 passed)
+  - `npm run lint` $\rightarrow$ `PASS` (62 rules, 18 skills, 12 workflows, 477 Markdown files)
+  - `node scripts/context.mjs doctor` $\rightarrow$ `PASS` (`HEALTHY`, 32/32 evaluations passed)
+- **Status:** `COMPLETED`
+
 
 
 
