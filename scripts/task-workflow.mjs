@@ -1,6 +1,7 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { execFileSync } from "node:child_process";
 import { frontmatter, readText, root } from "./context-core.mjs";
 import {
   createPlanBranchName,
@@ -86,7 +87,7 @@ export async function findNextTaskId(year, month, dayStr, targetDir = process.cw
   return String(maxId + 1).padStart(4, "0");
 }
 
-export async function scaffoldTask({ title, type = "feature", customPhases = null, dryRun = false, includeUnits = true, targetDir = process.cwd() }) {
+export async function scaffoldTask({ title, type = "feature", customPhases = null, dryRun = false, includeUnits = true, targetDir = process.cwd(), targetBranch }) {
   if (!title) throw new Error("Task title is required");
   const { branchType, phaseProfile } = resolveScaffoldType(type);
   const now = new Date();
@@ -100,6 +101,23 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
   const reservation = dryRun ? null : await reserveNextPlanId({ repository: targetDir });
   const taskId = reservation?.id ?? await previewNextPlanId({ repository: targetDir });
   const baseBranch = createPlanBranchName({ type: branchType, id: taskId, slug: taskSlug });
+  if (!dryRun) {
+    try {
+      if (!targetBranch) throw new Error("Specify the intended target base with --base before creating a plan.");
+      const current = execFileSync("git", ["symbolic-ref", "--quiet", "--short", "HEAD"], { cwd: targetDir, encoding: "utf8" }).trim();
+      if (current !== baseBranch) throw new Error(`Expected task branch ${baseBranch}; current branch is ${current}.`);
+      const dirty = execFileSync("git", ["status", "--porcelain"], { cwd: targetDir, encoding: "utf8" }).trim();
+      if (dirty) throw new Error(`Plan checkout contains uncommitted changes:\n${dirty}`);
+      const base = execFileSync("git", ["rev-parse", targetBranch], { cwd: targetDir, encoding: "utf8" }).trim();
+      const head = execFileSync("git", ["rev-parse", "HEAD"], { cwd: targetDir, encoding: "utf8" }).trim();
+      if (base !== head) throw new Error(`Task branch does not start at target base ${targetBranch} (${base}).`);
+    } catch (error) {
+      if (reservation) await releasePlanIdReservation({ repository: targetDir, id: reservation.id, owner: reservation.owner });
+      throw error;
+    }
+  }
+  let baseCommit = "pending";
+  try { baseCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: targetDir, encoding: "utf8" }).trim(); } catch { /* dry-run may target a fixture */ }
   const planFilename = planFilenameForBranch(baseBranch);
   const taskFolderName = planFilename.replace(/\.md$/, "");
   const taskRelativeDir = join("docs/tasks", year, month, dateStr, taskFolderName).replaceAll("\\", "/");
@@ -130,31 +148,16 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
     })
     .join("\n");
 
-  const topologyRows = phases
-    .map((p, idx) => {
-      const pNum = String(idx + 1).padStart(2, "0");
-      const unitSlug = `unit-01-${p.slug}`;
-      return `| phase-${pNum} | ${pNum}.01 | ${p.title} Starter | \`${baseBranch}\` | branch | planned |`;
-    })
-    .join("\n");
-
-  const ledgerRows = [
-    ...phases.map((p, idx) => {
-      const pNum = String(idx + 1).padStart(2, "0");
-      return `| Phase ${pNum} Integration | \`task/${taskId}/phase-${pNum}/integration\` | \`task/${taskId}-${taskSlug}\` | pending | [ ] | \`npm test\` |`;
-    }),
-    `| Task Base Finalization | \`task/${taskId}-${taskSlug}\` | \`master\` | pending | [ ] | \`node scripts/context.mjs doctor\` |`,
-  ].join("\n");
-
   const renderedTask = taskTemplate
     .replaceAll("{{title}}", title)
     .replaceAll("{{date}}", dateStr)
     .replaceAll("{{task_id}}", taskId)
     .replaceAll("{{task_slug}}", taskSlug)
+    .replaceAll("{{task_branch}}", baseBranch)
+    .replaceAll("{{base_commit}}", baseCommit)
+    .replaceAll("{{target_branch}}", targetBranch || "main")
     .replaceAll(`task/${taskId}-${taskSlug}`, baseBranch)
-    .replace(/- \[ \] `phase-01-<feature>\.md`[\s\S]*?- \[ \] `phase-02-<feature>\.md`[^\n]*/, phaseListMarkdown)
-    .replace(/\| phase-01 \| 01\.01 \|[\s\S]*?\| planned \|/, topologyRows)
-    .replace(/\| Phase 01 Integration \|[\s\S]*?\| `node scripts\/context\.mjs doctor` \|/, ledgerRows);
+    .replace(/- \[ \] `phase-01-<feature>\.md`[\s\S]*?- \[ \] `phase-02-<feature>\.md`[^\n]*/, phaseListMarkdown);
 
   const filesToWrite = [
     {
@@ -181,9 +184,7 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
       .replaceAll("{{phase_number}}", pNum)
       .replaceAll("{{phase_slug}}", p.slug)
       .replaceAll("{{task_branch}}", baseBranch)
-      .replaceAll("{{checkout_mode}}", "branch")
-      .replaceAll("{{checkout_reason}}", "Clean serial work uses the task branch.")
-      .replaceAll("{{checkout_path}}", "")
+      .replaceAll("{{base_commit}}", baseCommit)
       .replaceAll("{{unit_title}}", unitTitle)
       .replaceAll("{{unit_filename}}", unitFilename)
       .replaceAll("{{date}}", dateStr);
@@ -202,9 +203,7 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
         .replaceAll("{{unit_id}}", `${pNum}.01`)
         .replaceAll("{{slug}}", p.slug)
         .replaceAll("{{task_branch}}", baseBranch)
-        .replaceAll("{{checkout_mode}}", "branch")
-        .replaceAll("{{checkout_reason}}", "Clean serial work uses the task branch.")
-        .replaceAll("{{checkout_path}}", "")
+        .replaceAll("{{base_commit}}", baseCommit)
         .replaceAll("{{depends_on}}", "none")
         .replaceAll("{{parallelizable_with}}", "none")
         .replaceAll("{{date}}", dateStr);
@@ -218,7 +217,6 @@ export async function scaffoldTask({ title, type = "feature", customPhases = nul
         id: `${pNum}.01`,
         path: unitPath,
         branch: baseBranch,
-        worktree: null,
         title: unitTitle,
       });
     }

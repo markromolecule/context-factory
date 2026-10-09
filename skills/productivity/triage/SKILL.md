@@ -7,7 +7,7 @@ description: Scan recent repository activity, CI failures, issues, and anomalies
 
 ## Procedure
 
-1. Scan recent repository activity: recent git commits, CI/CD run statuses, opened issues, and unverified worktree branches.
+1. Scan recent repository activity: recent git commits, CI/CD run statuses, opened issues, and unverified task branches.
 2. Run [[skills/engineering/explore/SKILL|explore]] to map affected component boundaries, module dependencies, and touched test paths.
 3. Run [[skills/productivity/grounding/SKILL|grounding]] to reconcile relevant canonical documentation, active rules, and architectural decisions.
 4. Classify each discovery item by category (`defect`, `security`, `maintenance`, `drift`, or `feature-opportunity`) and assess severity (`critical`, `high`, `medium`, `low`).

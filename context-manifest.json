@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "contextVersion": "3.17.0",
+  "contextVersion": "4.0.0",
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
@@ -209,7 +209,8 @@
     "docs/decisions/0028-cli-ux-modernization-and-code-health-skills.md",
     "docs/decisions/0029-executable-rule-conformance-harness.md",
     "docs/decisions/0031-skill-lifecycle-handoffs-and-task-git-policy.md",
-    "docs/decisions/0032-task-focused-host-cli-and-opt-in-quality-gates.md"
+    "docs/decisions/0032-task-focused-host-cli-and-opt-in-quality-gates.md",
+    "docs/decisions/0033-branch-only-task-lifecycle.md"
   ],
   "tools": [
     "evals/run-evals.mjs",

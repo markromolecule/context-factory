@@ -386,5 +386,24 @@ checkout_path:
         await rm(tempDir, { recursive: true, force: true });
       }
     });
+    it("rejects legacy checkout fields in a new branch-only plan", async () => {
+      const tempDir = await mkdtemp(join(tmpdir(), "cf-plan-v3-"));
+      try {
+        await writeVersionTwoPlan(tempDir);
+        const planPath = join(tempDir, "feat-PLN-0042-oauth-login.md");
+        const unitPath = join(tempDir, "phase-01", "unit-01.md");
+        for (const path of [planPath, unitPath]) {
+          const source = await (await import("node:fs/promises")).readFile(path, "utf8");
+          await writeFile(path, source.replace("plan_contract_version: 2", "plan_contract_version: 3").replace("checkout_mode: branch\ncheckout_reason: Clean serial work uses the task branch.\ncheckout_path:\n", "base_commit: a123456789012345678901234567890123456789\n"));
+        }
+        const { stdout } = await execFileAsync("node", [contextCliPath, "plan:check", tempDir]);
+        assert.match(stdout, /Done Check:\s+Complete/);
+        const source = await (await import("node:fs/promises")).readFile(unitPath, "utf8");
+        await writeFile(unitPath, source.replace("base_commit: a123456789012345678901234567890123456789", "base_commit: a123456789012345678901234567890123456789\ncheckout_mode: worktree"));
+        await assert.rejects(execFileAsync("node", [contextCliPath, "plan:check", tempDir]), (error) => /CHECKOUT/i.test(`${error.stdout || ""} ${error.stderr || ""}`));
+      } finally {
+        await rm(tempDir, { recursive: true, force: true });
+      }
+    });
   });
 });

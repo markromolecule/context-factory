@@ -9,7 +9,7 @@ Use the approved execution packet and `docs/execution/PLN-NNNN/ledger.md` as the
 
 ## Procedure
 
-1. Read the requested outcome, acceptance criteria, task record, and deviations.
+1. Verify `git symbolic-ref --quiet --short HEAD` exactly matches the approved packet's task branch before changing verification artifacts. Stop and report a detached HEAD or mismatch. Read the requested outcome, acceptance criteria, task record, and deviations.
 2. Inspect the actual change set and map each criterion to its implementation boundary.
 3. Re-run the narrowest authoritative checks when safe and available.
 4. Verify that all modified units have authoritative Conformance Report receipts (`report.id`, `verdict: PASS`, `bindingHash`, `diffHash`) generated via `context-cli conform`.

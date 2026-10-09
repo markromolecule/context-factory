@@ -14,11 +14,11 @@ export async function handleTaskCommand(args = [], flags = {}) {
     const title = titleArgs.join(" ").trim();
 
     if (!title) {
-      throw new Error("Usage: context-cli task new \"<task title>\" [--type <feature|defect|refactor|migration>] [--no-units] [--dry-run]");
+      throw new Error("Usage: context-cli task new \"<task title>\" [--type <feature|defect|refactor|migration>] --base <target-branch> [--no-units] [--dry-run]");
     }
 
     const targetDir = flags.target ? resolve(process.cwd(), flags.target) : process.cwd();
-    const result = await scaffoldTask({ title, type, dryRun, includeUnits, targetDir });
+    const result = await scaffoldTask({ title, type, dryRun, includeUnits, targetDir, targetBranch: flags.base });
 
     if (flags.json) {
       console.log(JSON.stringify(result, null, 2));
@@ -32,12 +32,11 @@ export async function handleTaskCommand(args = [], flags = {}) {
       console.log(`  ${colors.bold("Directory:")}   ${colors.cyan(result.taskDirectory)}`);
       console.log(`  ${colors.bold("Base Branch:")} ${colors.yellow(baseBranch)}`);
       if (result.units && result.units.length > 0) {
-        console.log(`\n  ${colors.bold("Worktree Topology:")}`);
-        const headers = ["Unit", "Branch", "Worktree"];
+        console.log(`\n  ${colors.bold("Unit Branches:")}`);
+        const headers = ["Unit", "Branch"];
         const rows = result.units.map((u) => [
           colors.bold(u.id),
           colors.yellow(u.branch),
-          colors.cyan(u.worktree),
         ]);
         console.log(table(headers, rows));
       }
@@ -47,12 +46,11 @@ export async function handleTaskCommand(args = [], flags = {}) {
       console.log(`  ${colors.bold("Directory:")}   ${colors.cyan(result.taskDirectory)}`);
       console.log(`  ${colors.bold("Base Branch:")} ${colors.yellow(baseBranch)}`);
       if (result.units && result.units.length > 0) {
-        console.log(`\n  ${colors.bold("Worktree Topology:")}`);
-        const headers = ["Unit", "Branch", "Worktree"];
+        console.log(`\n  ${colors.bold("Unit Branches:")}`);
+        const headers = ["Unit", "Branch"];
         const rows = result.units.map((u) => [
           colors.bold(u.id),
           colors.yellow(u.branch),
-          colors.cyan(u.worktree),
         ]);
         console.log(table(headers, rows));
       }

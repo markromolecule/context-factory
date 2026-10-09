@@ -1,36 +1,36 @@
 ---
 name: review
-description: Independent diff review of a unit worktree against its unit file to check for out-of-scope file edits, missing tests, SOLID violations, and unmet definitions of done before developer checkpoints (/review, [REVIEW]).
+description: Independent diff review of a unit on its task branch against its unit file to check for out-of-scope file edits, missing tests, SOLID violations, and unmet definitions of done before developer checkpoints (/review, [REVIEW]).
 ---
 
-# Unit Diff Review: Worktree Pre-Screening Protocol
+# Unit Diff Review: Branch Pre-Screening Protocol
 
 ## Execution handoff
 
 Consume the approved execution packet, unit evidence, and execution ledger. Do not read the full task plan or context specification directly.
 
-Perform an independent white-box code and diff audit of an active unit git worktree against its unit specification artifact (`unit-*.md`) *before developer inspection checkpoints*.
+Perform an independent white-box code and diff audit of an active unit on its recorded task branch against its unit specification artifact (`unit-*.md`) *before developer inspection checkpoints*.
 
 ## Why Diff Review Exists (review vs verify)
 
 A common failure mode in multi-agent execution is presenting unvetted, messy diffs to the human developer at batch checkpoints. If an agent modified files outside its declared boundaries, skipped critical contract tests, or violated architectural boundaries, the human reviewer is forced to act as a linter and compiler.
 
 `review` acts as an automated pre-screener:
-- **`review` (White-Box, Unit-Level):** Evaluates the active worktree diff against the unit's declared scope fence, verifies test completeness, checks SOLID principles, audits language rules conformance (`<language_rules>`), and verifies Definition of Done checkboxes.
+- **`review` (White-Box, Unit-Level):** Evaluates the active branch diff against the unit's declared scope fence, verifies test completeness, checks SOLID principles, audits language rules conformance (`<language_rules>`), and verifies Definition of Done checkboxes.
 - **`verify` (Black-Box, System-Level):** Evaluates the integrated task across the entire repository for acceptance criteria fulfillment, cross-service contracts, operations, and release readiness.
 
 ---
 
 ## The Five-Gate Diff Review Procedure
 
-Run this review inside the unit's active git worktree before declaring the unit verified:
+Run this review on the recorded task branch before declaring the unit verified. Verify `git symbolic-ref --quiet --short HEAD` exactly matches the packet's branch; stop and report a detached HEAD or mismatch before changing review artifacts.
 
 ### Gate 1: Scope Fence Audit
 
 1. Inspect the unit specification's `## Scope` section:
    - Identify all file paths listed under `**In scope:**`.
    - Identify all explicit exclusions listed under `**Out of scope:**`.
-2. Inspect the actual modified files in the worktree:
+2. Inspect the actual modified files on the task branch:
    ```bash
    git diff --name-only HEAD~1
    # or diff against base integration branch
@@ -106,8 +106,7 @@ Produce a structured Pre-Screening Report before the human checkpoint:
 ```markdown
 # Unit Diff Review: [Unit ID] - [Unit Title]
 
-- **Worktree:** `.worktrees/...`
-- **Branch:** `task/...`
+- **Branch:** `<type>/PLN-NNNN-<slug>`
 - **Pre-Screen Verdict:** [READY FOR DEVELOPER REVIEW / REMEDIATION REQUIRED]
 
 ## Gate Findings

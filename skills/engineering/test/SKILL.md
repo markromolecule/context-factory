@@ -8,6 +8,7 @@ description: Turn a unit's Verification section into real tests, written test-fi
 ## Execution handoff
 
 Consume the approved execution packet and its ledger entry for active-unit scope and verification. Do not read the full task plan or context specification directly.
+Before writing tests, verify `git symbolic-ref --quiet --short HEAD` exactly matches the packet's task branch. Stop and report a detached HEAD or mismatch.
 
 Turn an active task unit's `## Verification` requirements into concrete automated tests *before* writing functional code.
 

@@ -2,15 +2,13 @@
 title: "{{title}}"
 type: task
 status: draft
-plan_contract_version: 2
+plan_contract_version: 3
 plan_id: "{{task_id}}"
 created: "{{date}}"
 tags: [task]
-target_branch: main
-task_branch: "task/{{task_id}}-{{task_slug}}"
-checkout_mode: branch
-checkout_reason: "Clean serial work uses the task branch."
-checkout_path:
+target_branch: "{{target_branch}}"
+task_branch: "{{task_branch}}"
+base_commit: "{{base_commit}}"
 ---
 
 # {{title}}
@@ -68,15 +66,13 @@ Link the canonical glossary; do not duplicate implementation details here.
 |---|---|---|
 | | | |
 
-## Checkout decision
+## Task branch
 
 | Field | Recorded decision |
 |---|---|
-| Target branch | `main` |
-| Task branch | `task/{{task_id}}-{{task_slug}}` |
-| Checkout mode | `branch` or `worktree` |
-| Reason | State the clean-serial, dirty-checkout, concurrent-work, or long-running-isolation condition. |
-| Checkout path | Required only for `worktree`. |
+| Target branch | `{{target_branch}}` |
+| Task branch | `{{task_branch}}` |
+| Base commit | `{{base_commit}}` |
 
 ## Phases
 
@@ -94,13 +90,13 @@ Record the command or inspection, outcome, and the acceptance criterion it suppo
 - [ ] Acceptance criteria map to units and verification.
 - [ ] Blockers are resolved or absent.
 - [ ] Risks and dependencies are recorded.
-- [ ] Checkout decision is justified.
+- [ ] Task branch and target base are verified.
 
 ## Finalization & Merge Ledger
 
-| Stage | Source Branch | Target Branch | Merge Commit SHA | Worktree Cleaned | Conformance Report | Verification Command |
-|---|---|---|---|---|---|---|
-| Phase 01 Integration | `task/{{task_id}}/phase-01` | `task/{{task_id}}-{{task_slug}}` | pending | [ ] | PASS | `npm test` |
-| Task Base Finalization | `task/{{task_id}}-{{task_slug}}` | `main` | pending | [ ] | PASS | `node scripts/context.mjs doctor` |
+| Stage | Branch or merge | Commit SHA | Conformance Report | Verification Command |
+|---|---|---|---|---|
+| Phase 01 Verification | `{{task_branch}}` | pending | pending | `npm test` |
+| Task Finalization | `{{task_branch}}` to `{{target_branch}}` | pending | pending | `node scripts/context.mjs doctor` |
 
 ## Result

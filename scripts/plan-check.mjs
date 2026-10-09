@@ -724,17 +724,17 @@ function hasResolvedBlockers(blockerSection) {
 
 function hasDoneCheck(content) {
   const section = sectionContent(content, "Plan done-check");
-  const required = ["acceptance", "blocker", "risk", "checkout"];
+  const required = ["acceptance", "blocker", "risk", "(?:checkout|branch)"];
   return required.every((term) => new RegExp(`- \\[x\\][^\\n]*${term}`, "i").test(section));
 }
 
 /**
- * Validates the prospective v2 task-plan contract. Plans without the explicit
+ * Validates the prospective v2/v3 task-plan contract. Plans without the explicit
  * version remain readable as recorded historical artifacts.
  */
 export async function validatePlanDoneCheck(taskDirPath, units, graph) {
   const master = await findTaskMaster(taskDirPath);
-  if (!master || Number(master.meta.plan_contract_version) !== 2) {
+  if (!master || ![2, 3].includes(Number(master.meta.plan_contract_version))) {
     return { applicable: false, valid: true, diagnostics: [] };
   }
 
@@ -743,21 +743,28 @@ export async function validatePlanDoneCheck(taskDirPath, units, graph) {
   const branchTypes = "feat|fix|refactor|chore|docs|test|perf|build|ci|migration";
   const branchPattern = new RegExp(`^(${branchTypes})/(PLN-\\d{4})-([a-z0-9]+(?:-[a-z0-9]+)*)$`);
   const branchMatch = String(meta.task_branch || "").match(branchPattern);
+  const contractVersion = Number(meta.plan_contract_version);
   const checkoutMode = meta.checkout_mode;
 
   if (!meta.plan_id || !meta.target_branch || !branchMatch || branchMatch[2] !== meta.plan_id) {
     diagnostics.push(planDoneDiagnostic("checkout", "New plan must declare matching plan_id, target_branch, and task_branch.", "Set plan_id to PLN-NNNN and task_branch to <type>/PLN-NNNN-<slug>."));
   }
-  if (!["branch", "worktree"].includes(checkoutMode)) {
+  if (contractVersion === 3 && (checkoutMode !== undefined || meta.checkout_path !== undefined)) {
+    diagnostics.push(planDoneDiagnostic("checkout", "New plans must not declare checkout mode or path.", "Remove legacy checkout fields."));
+  }
+  if (contractVersion === 3 && !/^[0-9a-f]{40}$/.test(String(meta.base_commit || ""))) {
+    diagnostics.push(planDoneDiagnostic("checkout", "New plan must record its verified base commit.", "Record the target base commit SHA before planning."));
+  }
+  if (contractVersion === 2 && !["branch", "worktree"].includes(checkoutMode)) {
     diagnostics.push(planDoneDiagnostic("checkout", `Invalid checkout_mode "${checkoutMode ?? "missing"}".`, "Use branch or worktree."));
   }
-  if (!String(meta.checkout_reason || "").trim()) {
+  if (contractVersion === 2 && !String(meta.checkout_reason || "").trim()) {
     diagnostics.push(planDoneDiagnostic("checkout", "Plan is missing checkout_reason.", "Record why branch or worktree is required for this task."));
   }
-  if (checkoutMode === "branch" && meta.checkout_path) {
+  if (contractVersion === 2 && checkoutMode === "branch" && meta.checkout_path) {
     diagnostics.push(planDoneDiagnostic("checkout", "branch checkout_mode must not declare checkout_path.", "Remove checkout_path or select worktree."));
   }
-  if (checkoutMode === "worktree" && !/^\.worktrees\//.test(String(meta.checkout_path || ""))) {
+  if (contractVersion === 2 && checkoutMode === "worktree" && !/^\.worktrees\//.test(String(meta.checkout_path || ""))) {
     diagnostics.push(planDoneDiagnostic("checkout", "worktree checkout_mode requires a .worktrees/ checkout_path.", "Record the task worktree path."));
   }
 
@@ -778,17 +785,21 @@ export async function validatePlanDoneCheck(taskDirPath, units, graph) {
   }
 
   for (const unit of units) {
-    if (unit.meta.task_branch !== meta.task_branch || unit.meta.checkout_mode !== checkoutMode) {
+    if (contractVersion === 3 && (unit.meta.task_branch !== meta.task_branch || unit.meta.base_commit !== meta.base_commit || unit.meta.checkout_mode !== undefined || unit.meta.checkout_path !== undefined)) {
+      diagnostics.push(planDoneDiagnostic("checkout", `Unit ${unit.id} does not inherit the task branch and base commit.`, "Align unit task_branch and base_commit with the master plan and remove legacy checkout fields."));
+      continue;
+    }
+    if (contractVersion === 2 && (unit.meta.task_branch !== meta.task_branch || unit.meta.checkout_mode !== checkoutMode)) {
       diagnostics.push(planDoneDiagnostic("checkout", `Unit ${unit.id} does not inherit the task branch and checkout mode.`, "Align unit task_branch and checkout_mode with the master plan."));
       continue;
     }
-    if (checkoutMode === "worktree" && !String(unit.meta.checkout_path || "").trim()) {
+    if (contractVersion === 2 && checkoutMode === "worktree" && !String(unit.meta.checkout_path || "").trim()) {
       diagnostics.push(planDoneDiagnostic("checkout", `Unit ${unit.id} is missing the recorded task worktree path.`, "Copy checkout_path from the master plan."));
     }
   }
 
   const parallelPairs = findParallelUnitPairs(units, graph);
-  if (parallelPairs.length > 0 && checkoutMode !== "worktree") {
+  if (contractVersion === 2 && parallelPairs.length > 0 && checkoutMode !== "worktree") {
     diagnostics.push(planDoneDiagnostic("checkout", "Concurrent units require worktree checkout_mode.", "Use a task worktree and record the concurrent-unit merge order."));
   }
 

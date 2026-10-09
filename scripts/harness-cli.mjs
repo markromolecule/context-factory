@@ -34,7 +34,7 @@ Usage:
   node scripts/harness-cli.mjs session:resume [<id>]
   node scripts/harness-cli.mjs session:status
   node scripts/harness-cli.mjs session:clear [<id>|--all]
-  node scripts/harness-cli.mjs task:new <title> [--type <feature|defect|refactor|migration>] [--no-units] [--dry-run]
+  node scripts/harness-cli.mjs task:new <title> [--type <feature|defect|refactor|migration>] --base <target-branch> [--no-units] [--dry-run]
   node scripts/harness-cli.mjs task:list [--json]
   node scripts/harness-cli.mjs plan:check <task-dir> [--json]
   node scripts/harness-cli.mjs skill:access-check <skill-path> [...]

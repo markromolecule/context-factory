@@ -17,14 +17,15 @@ Do not hand the context specification directly to `plan`, `plan-review`, `execut
 
 ## Overview & Mental Model
 
-The `context` skill transforms raw product concepts, user requests, or bug reports into unambiguous, high-fidelity context specifications under `docs/context/`. It embeds the `grill` discovery methodology to interrogate requirements, scenarios, and constraints *before* handing off to `plan`.
+The `context` skill transforms raw product concepts, user requests, or bug reports into unambiguous, high-fidelity context specifications under `docs/context/`. It embeds the `grill` discovery methodology to interrogate requirements, scenarios, and constraints *before* grounding and brief release.
 
 ```mermaid
 graph LR
     A[Raw Idea / Brief] -->|/context Skill| B[Embedded Grilling<br/>One question at a time]
     B -->|Explore Codebase| C[Structured Context Spec<br/>docs/context/... status: ready]
-    C -->|Handoff to /plan| D[Implementation Plan<br/>docs/tasks/YYYY/MM/...]
-    D -->|Approved Execution| E[Vertical Slice Code]
+    C -->|Grounding and grill release brief| D[Plan-ready Brief<br/>docs/discovery/...]
+    D -->|/plan creates task branch| E[Implementation Plan<br/>docs/tasks/YYYY/MM/...]
+    E -->|Approved Execution| F[Vertical Slice Code]
 ```
 
 ## Session Procedure
@@ -79,10 +80,11 @@ Do not mark the context specification as `ready` until:
 
 Do not mark the context `ready` while a material unknown or blocker remains.
 
-### 5. Synchronization & Handoff to `/plan`
+### 5. Synchronization & Handoff to `grounding` / `grill`
 
 - Once audited and confirmed, update the frontmatter to `status: ready`.
 - Supply the ready context specification only to `grounding` and `grill`. `grounding` returns provenance-labeled claims to `grill`; `grill` challenges the evidence and releases the sole plan-facing brief.
+- Do not create or switch a task branch. Branch creation belongs to `plan` after the brief is released and before plan artifacts are written.
 - Stop without writing production code.
 
 ## Completion

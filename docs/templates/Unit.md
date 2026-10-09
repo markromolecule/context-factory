@@ -4,9 +4,7 @@ type: unit
 parent: "{{parent_phase}}"
 unit: "{{unit_id}}"
 task_branch: "{{task_branch}}"
-checkout_mode: "{{checkout_mode}}"
-checkout_reason: "{{checkout_reason}}"
-checkout_path: "{{checkout_path}}"
+base_commit: "{{base_commit}}"
 status: planned
 created: "{{date}}"
 tags: [task, unit]
@@ -17,7 +15,7 @@ parallelizable_with: []
 # Unit {{unit_id}}: {{title}}
 
 > Phase: {{parent_phase}} · Depends on: {{depends_on}} · Parallelizable with: {{parallelizable_with}}
-> Task branch: {{task_branch}} · Checkout: {{checkout_mode}} · Path: {{checkout_path}}
+> Task branch: {{task_branch}} · Base commit: {{base_commit}}
 
 ## Objective
 
@@ -40,7 +38,7 @@ Copied in, not referenced — this is what lets the unit run without the master 
 
 ## Preconditions
 
-- The task checkout decision remains valid; recheck Git state before changing it.
+- `git symbolic-ref --quiet --short HEAD` exactly matches `{{task_branch}}`; stop if detached or mismatched.
 - What must already exist or be true, including outputs of dependency units.
 
 ## Scope
@@ -69,8 +67,8 @@ How to revert this unit alone.
 ## Definition of done
 
 - [ ] Maps to acceptance criteria: <ids>
-- [ ] Executed inside dedicated worktree without touching main workspace
-- [ ] Changes committed cleanly to unit branch
+- [ ] Executed on the recorded task branch
+- [ ] Changes committed cleanly to the task branch
 - [ ] Zero scope leaks confirmed via `/review`
 - [ ] All listed verification passes
 - [ ] Conformance report passes (PASS) with zero blocking violations

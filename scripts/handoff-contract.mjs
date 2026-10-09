@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
-import { root, sha256 } from "./context-core.mjs";
+import { frontmatter, root, sha256 } from "./context-core.mjs";
 
 const VERSION = 1;
 
@@ -24,7 +24,9 @@ export async function releaseDiscoveryBrief({ sourcePath, briefPath, owner = "gr
 export async function issueExecutionPacket({ planPath, packetPath, reviewReference, approvalReference, owner = "plan-review" }) {
   if (owner !== "plan-review") throw new Error("Only plan-review may issue an execution packet.");
   if (!reviewReference || !approvalReference) throw new Error("Execution packet requires review and human approval references.");
-  return writeArtifact(packetPath, { version: VERSION, kind: "execution-packet", owner, status: "approved", reviewReference, approvalReference, source: await fingerprint(planPath) });
+  const plan = frontmatter(await readFile(resolve(process.cwd(), planPath), "utf8"));
+  if (!plan?.task_branch || !plan?.target_branch) throw new Error("Execution packet requires the plan's task_branch and target_branch.");
+  return writeArtifact(packetPath, { version: VERSION, kind: "execution-packet", owner, status: "approved", reviewReference, approvalReference, taskBranch: plan.task_branch, targetBranch: plan.target_branch, baseCommit: plan.base_commit || null, source: await fingerprint(planPath) });
 }
 
 export async function verifyHandoff({ artifactPath, kind, owner, requiredStatus }) {
@@ -37,10 +39,19 @@ export async function verifyHandoff({ artifactPath, kind, owner, requiredStatus 
   if (kind === "execution-packet" && (!artifact.reviewReference || !artifact.approvalReference)) {
     return { valid: false, message: "Execution packet lacks review or human approval reference; obtain approval and reissue it." };
   }
+  if (kind === "execution-packet" && (!artifact.taskBranch || !artifact.targetBranch)) {
+    return { valid: false, message: "Execution packet lacks task branch or target base; reissue it." };
+  }
   let current;
   try { current = await fingerprint(resolve(root, artifact.source.path)); } catch { return { valid: false, message: `Source ${artifact.source.path} is unavailable; reissue the handoff.` }; }
   if (current.sha256 !== artifact.source.sha256) {
     return { valid: false, message: `Source hash mismatch for ${artifact.source.path}; reissue the ${kind}.` };
+  }
+  if (kind === "execution-packet") {
+    const plan = frontmatter(await readFile(resolve(root, artifact.source.path), "utf8"));
+    if (plan?.task_branch !== artifact.taskBranch || plan?.target_branch !== artifact.targetBranch || (plan?.base_commit || null) !== artifact.baseCommit) {
+      return { valid: false, message: "Execution packet branch identity differs from its plan; reissue it." };
+    }
   }
   return { valid: true, artifact };
 }

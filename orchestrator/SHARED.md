@@ -38,8 +38,8 @@ Software delivery lifecycles are orchestrated across specialized subagent person
 - **PM Agent (`agents/pm-agent` / Delivery coordinator):** inspect constraints, create dependency-ordered phased task breakdowns under `docs/tasks/` using `plan`, audit plans with `plan-review` (`node scripts/context.mjs plan:check`), manage milestone progress, and enforce stops before coding (`/pm`, `[PM]`, `[PLAN]`, `/plan-review`, `[PLAN_REVIEW]`).
 - **UX & Design System Specialist (`agents/ux-agent` / Frontend lead):** compose accessible UI components (WCAG 2.1 AA), design token systems, interaction feedback states, and encapsulate client state in custom hooks/stores (`/ux`, `[UX]`).
 - **Security & Threat Specialist (`agents/threat-agent` / Trust verification):** execute STRIDE threat modeling, audit trust boundaries, verify authentication/authorization policies, timing safety, and secrets hygiene (`/threat`, `[THREAT]`).
-- **Developer (`skills/execute`, `skills/test`, `skills/refactor`):** author failing tests first using `test`, execute only approved review packets, and use one task branch by default. Use an isolated worktree for concurrent work, conflicting uncommitted work, or long-running isolation; preserve strict phase stops and synchronized evidence (`/exec`, `[EXEC]`, `/test`, `[TEST]`, `/refactor`, `[REFACTOR]`).
-- **Reviewer / QA (`skills/verify`, `skills/review`, `workflows/code-review-and-optimization`):** audit code quality, intra-worktree diff scope fences, and SOLID compliance using `review`, evaluate ESR query performance, test outcomes, verify acceptance criteria against reproducible evidence, and identify regressions or risks (`/verify`, `[VERIFY]`, `/review`, `[REVIEW]`, `/optimize`, `[OPTIMIZE]`).
+- **Developer (`skills/execute`, `skills/test`, `skills/refactor`):** author failing tests first using `test`, execute only approved review packets on the verified task branch, and preserve strict phase stops and synchronized evidence (`/exec`, `[EXEC]`, `/test`, `[TEST]`, `/refactor`, `[REFACTOR]`).
+- **Reviewer / QA (`skills/verify`, `skills/review`, `workflows/code-review-and-optimization`):** audit code quality, task-branch diff scope fences, and SOLID compliance using `review`, evaluate ESR query performance, test outcomes, verify acceptance criteria against reproducible evidence, and identify regressions or risks (`/verify`, `[VERIFY]`, `/review`, `[REVIEW]`, `/optimize`, `[OPTIMIZE]`).
 - **DevOps Agent (`agents/devops-agent` / Infrastructure specialist):** automate CI/CD workflows, configure container environments (Docker, Compose), maintain secrets hygiene (`.env.example`), and verify pre-flight release readiness (`/devops`, `[DEVOPS]`, `/release`, `[RELEASE]`).
 
 Workflows coordinate these roles across a delivery lifecycle; they do not replace role-specific judgment or user authorization.
@@ -58,7 +58,7 @@ If an implementation step in a plan and an applicable language rule (`<language_
   2. `onPromptPrepare`: assemble context bundle, system prompt, and schemas.
   3. `afterResponseValidate`: validate structured outputs against `/schemas` via `orchestrator/validator.mjs`.
 - Default to deterministic `mock` provider in CI/CD and offline evaluations; live runs use native `fetch` provider adapters (`openai`, `anthropic`, `gemini`).
-- Worktree isolation is mandatory whenever more than one agent from `agents/` is dispatched concurrently (managed via `scripts/worktree.mjs`).
+- Changes to the same checkout run serially. `plan` alone creates the task branch after discovery release; downstream skills verify that branch before making changes.
 - Session state lifecycle is governed by `scripts/session-core.mjs`: snapshot machine state to `.context/sessions/<id>.json` and generate ultra-compact cold-start briefings to `.tmp/SESSION_RESUME.md` (<1,500 tokens) whenever context reaches ~60% saturation.
 
 ### Executable Rule Conformance & Verification Receipts (ADR 0029, AC-08)

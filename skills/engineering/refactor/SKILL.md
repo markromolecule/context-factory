@@ -6,6 +6,7 @@ description: Refactor and modularize lengthy, multi-responsibility code into mai
 # Modular Code Refactoring
 
 Refactor code to improve modularity, maintainability, readability, and scalability without changing external behavior or breaking existing contracts.
+For active plan work, verify `git symbolic-ref --quiet --short HEAD` exactly matches the approved packet's task branch before changing files. Stop and report a detached HEAD or mismatch.
 
 ## Overview & Invocation Modes
 

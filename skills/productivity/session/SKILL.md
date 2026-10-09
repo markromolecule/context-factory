@@ -28,7 +28,7 @@ graph LR
 
 | Slash Command | CLI Subcommand | Purpose |
 | :--- | :--- | :--- |
-| `/session save` | `node scripts/context.mjs session:save` | Snapshot active task, phase, unit, worktree, and git status |
+| `/session save` | `node scripts/context.mjs session:save` | Snapshot active task, phase, unit, branch, and git status |
 | `/session resume` | `node scripts/context.mjs session:resume [id]` | Load checkpoint and regenerate `.tmp/SESSION_RESUME.md` |
 | `/session status` | `node scripts/context.mjs session:status` | Display table of persisted sessions and active state |
 | `/session clear` | `node scripts/context.mjs session:clear [id]` | Safely remove session state and clean `.tmp/SESSION_RESUME.md` |
@@ -39,7 +39,7 @@ graph LR
 
 Execute before reaching high context saturation or pausing multi-unit tasks:
 
-1. Identify active task directory (`docs/tasks/...`), current phase, active unit, and assigned worktrees.
+1. Identify active task directory (`docs/tasks/...`), current phase, active unit, and recorded task branch. Verify `git symbolic-ref --quiet --short HEAD` matches that branch before writing the checkpoint; stop and report a detached HEAD or mismatch.
 2. Run the session save command:
    ```bash
    node scripts/context.mjs session:save --task "0001" --phase "03" --unit "03.01" --status "in_progress"
@@ -61,18 +61,18 @@ When beginning a new session or resuming after a context reset:
 2. Inspect the returned briefing:
    - Verify task identity, goal, and branch.
    - Review the immediate next actions and unblocked units.
-   - Validate active worktree paths and git commit SHAs.
+   - Validate the active branch and git commit SHA against the checkpoint. Stop and report a mismatch before resuming changes.
 3. Resume execution immediately without re-reading extensive conversation history or raw past transcripts.
 
 ### 3. Inspecting Status (`/session status`)
 
-To audit active sessions across branches or worktrees:
+To audit active sessions across branches:
 
 ```bash
 node scripts/context.mjs session:status
 ```
 
-Outputs a structured table listing Session ID, Task ID, Phase, Unit, Git Branch, Worktree, and Last Updated timestamp.
+Outputs a structured table listing Session ID, Task ID, Phase, Unit, Git Branch, and Last Updated timestamp. Historical checkpoints may carry additional checkout metadata.
 
 ### 4. Clearing Sessions (`/session clear`)
 
@@ -90,4 +90,4 @@ node scripts/context.mjs session:clear --all
 
 - **Zero Secrets:** Never serialize passwords, API keys, or raw tokens into `.context/sessions/`.
 - **Lightweight Briefings:** Keep `.tmp/SESSION_RESUME.md` under 1,500 tokens. Never dump large source files into session state.
-- **Atomic Worktree Alignment:** Ensure recorded worktrees match active `git worktree list` entries.
+- **Exact Branch Alignment:** Before saving or resuming active plan work, verify the recorded task branch matches the current branch.

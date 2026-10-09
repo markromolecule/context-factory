@@ -12,7 +12,7 @@ const execFileAsync = promisify(execFile);
 const contextCliPath = join(process.cwd(), "scripts/context.mjs");
 
 describe("Evaluation Suite: Task Scaffolding & Plan Check Integration", () => {
-  it("Case 1 & 2: scaffolds nested phases and starter units with resolved branch and worktree metadata", async () => {
+  it("Case 1 & 2: scaffolds nested phases and starter units with one task branch", async () => {
     const res = await scaffoldTask({
       title: "Payment Processing Service",
       type: "feature",
@@ -36,10 +36,10 @@ describe("Evaluation Suite: Task Scaffolding & Plan Check Integration", () => {
       );
     }
 
-    // Verify starter units inherit the one task branch and need no worktree.
+    // Verify starter units inherit the one task branch.
     for (const u of res.units) {
       assert.equal(u.branch, res.baseBranch);
-      assert.equal(u.worktree, null);
+      assert.equal("worktree" in u, false);
     }
   });
 
@@ -113,7 +113,15 @@ describe("Evaluation Suite: Task Scaffolding & Plan Check Integration", () => {
       const legacyPath = join(temporary, "docs/tasks/2026/01/2026-01-01/0001-task-legacy/README.md");
       await mkdir(dirname(legacyPath), { recursive: true });
       await writeFile(legacyPath, "---\ntitle: Legacy\ntype: task\nstatus: planned\ncreated: 2026-01-01\n---\n");
-      await scaffoldTask({ title: "Named Plan", targetDir: temporary });
+      await execFileAsync("git", ["-C", temporary, "add", "."]);
+      await execFileAsync("git", ["-C", temporary, "commit", "--quiet", "-m", "legacy plan"]);
+      const { stdout: targetBase } = await execFileAsync("git", ["-C", temporary, "symbolic-ref", "--short", "HEAD"]);
+      const preview = await scaffoldTask({ title: "Named Plan", targetDir: temporary, dryRun: true });
+      await execFileAsync("git", ["-C", temporary, "switch", "-c", preview.baseBranch]);
+      await scaffoldTask({ title: "Named Plan", targetDir: temporary, targetBranch: targetBase.trim() });
+      const planContent = await (await import("node:fs/promises")).readFile(join(temporary, preview.planPath), "utf8");
+      assert.ok(planContent.includes(`target_branch: "${targetBase.trim()}"`));
+      assert.ok(planContent.includes(`| Target branch | \`${targetBase.trim()}\` |`));
 
       const tasks = await listTasks(temporary);
       assert.equal(tasks.length, 2);
@@ -138,10 +146,33 @@ describe("Evaluation Suite: Task Scaffolding & Plan Check Integration", () => {
       const preview = await scaffoldTask({ title: "Recovery Plan", targetDir: temporary, dryRun: true });
       await mkdir(join(temporary, preview.planPath), { recursive: true });
 
-      await assert.rejects(scaffoldTask({ title: "Recovery Plan", targetDir: temporary }));
+      await assert.rejects(scaffoldTask({ title: "Recovery Plan", targetDir: temporary, targetBranch: "master" }));
       const reservation = await reserveNextPlanId({ repository: temporary });
       assert.equal(reservation.id, "PLN-0001");
       await releasePlanIdReservation({ repository: temporary, id: reservation.id, owner: reservation.owner });
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
+  });
+  it("Case 7: refuses wrong branch, dirty checkout, and detached HEAD before writing", async () => {
+    const temporary = await mkdtemp(join(tmpdir(), "cf-task-branch-gate-"));
+    try {
+      await execFileAsync("git", ["init", "--quiet", temporary]);
+      await execFileAsync("git", ["-C", temporary, "config", "user.email", "test@example.com"]);
+      await execFileAsync("git", ["-C", temporary, "config", "user.name", "Test User"]);
+      await writeFile(join(temporary, "README.md"), "fixture\n");
+      await execFileAsync("git", ["-C", temporary, "add", "README.md"]);
+      await execFileAsync("git", ["-C", temporary, "commit", "--quiet", "-m", "fixture"]);
+      const { stdout: targetBase } = await execFileAsync("git", ["-C", temporary, "symbolic-ref", "--short", "HEAD"]);
+      const base = targetBase.trim();
+      const preview = await scaffoldTask({ title: "Branch Gate", targetDir: temporary, dryRun: true });
+      await assert.rejects(scaffoldTask({ title: "Branch Gate", targetDir: temporary, targetBranch: base }), /Expected task branch/);
+      await execFileAsync("git", ["-C", temporary, "switch", "-c", preview.baseBranch]);
+      await writeFile(join(temporary, "dirty.txt"), "keep me\n");
+      await assert.rejects(scaffoldTask({ title: "Branch Gate", targetDir: temporary, targetBranch: base }), /uncommitted changes/);
+      await rm(join(temporary, "dirty.txt"));
+      await execFileAsync("git", ["-C", temporary, "switch", "--detach", "HEAD"]);
+      await assert.rejects(scaffoldTask({ title: "Branch Gate", targetDir: temporary, targetBranch: base }));
     } finally {
       await rm(temporary, { recursive: true, force: true });
     }

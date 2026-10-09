@@ -1,4 +1,4 @@
 interface:
   display_name: "Unit Diff Review"
-  short_description: "Audit unit worktree diffs for scope leaks and SOLID rules"
-  default_prompt: "Use $review to audit the active unit worktree diff against its unit file."
+  short_description: "Audit unit branch diffs for scope leaks and SOLID rules"
+  default_prompt: "Use $review to audit the active unit diff on its recorded task branch."

@@ -1,4 +1,4 @@
 interface:
   display_name: "Execute Plan"
-  short_description: "Execute implementation plans unit-by-unit in worktrees"
-  default_prompt: "Use $execute to execute the referenced plan's first ready batch unit by unit. Create worktrees, run verification, stop at batch boundaries for inspection."
+  short_description: "Execute reviewed units on the task branch"
+  default_prompt: "Use $execute to execute the approved packet's first ready batch on its verified task branch. Run verification and stop at batch boundaries for inspection."

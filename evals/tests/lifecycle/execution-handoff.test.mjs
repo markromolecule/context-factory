@@ -11,9 +11,10 @@ describe("reviewed execution handoff", () => {
     assert.match(execute, /Do not read `docs\/tasks\//);
     assert.doesNotMatch(execute, /worktree remove --force/);
   });
-  it("preserves dirty worktrees and retains checkpoints", async () => {
+  it("stops on a wrong branch and retains checkpoints", async () => {
     const execute = await read("skills/engineering/execute/SKILL.md");
-    assert.match(execute, /residual paths and stop/);
+    assert.match(execute, /git symbolic-ref --quiet --short HEAD/);
+    assert.match(execute, /mismatch stops work/);
     assert.match(execute, /Stop after every ready batch and phase/);
   });
   it("makes plan-review issue only approved packets", async () => {

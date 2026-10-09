@@ -15,6 +15,8 @@ Do not expose a context-derived claim directly to `plan`, `plan-review`, `execut
 
 ## Retrieval
 
+Begin when a `context` specification is `ready`. Validate its consequential claims against the current source, tests, configuration, and schemas before `grill` releases the plan-facing brief. Do not create or switch a branch.
+
 1. Filter knowledge by applicable scope, path, type, lifecycle status, and task terms.
 2. Prefer canonical and reviewed notes over drafts, examples, or archived task material.
 3. Follow directly relevant Wiki links one hop when they clarify ownership, a contract, or a superseding decision.
