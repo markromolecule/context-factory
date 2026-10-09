@@ -14,7 +14,7 @@
 
 | Phase | Title | Units | Status |
 | :--- | :--- | :--- | :--- |
-| **Phase 01** | Discovery, Scenarios, and Boundary Analysis | 01.01 | **PLANNED** |
+| **Phase 01** | Discovery, Scenarios, and Boundary Analysis | 01.01 | **COMPLETED** |
 | **Phase 02** | Architecture, Contracts, and Data Modeling | 02.01 | **PLANNED** |
 | **Phase 03** | Incremental Implementation and Tests | 03.01 | **PLANNED** |
 | **Phase 04** | Verification, Quality Gates, and Release | 04.01 | **PLANNED** |
@@ -30,3 +30,19 @@
 - **Command:** `node scripts/context.mjs doctor`
 - **Result:** `PASS` (32/32 evaluations, healthy)
 - **Active Task Branch:** `feat/PLN-0005-ts-conformance-receipts-fixtures` at `1ed301a`.
+
+### Unit 01.01: Discovery, Scenarios, and Boundary Analysis
+
+- **Phase:** 01 (Discovery, Scenarios, and Boundary Analysis)
+- **Unit ID:** `01.01`
+- **Timestamp:** 2026-10-09
+- **Scope & Deliverables:**
+  - Authored [docs/decisions/0035-host-conformance-receipts-and-fixture-modes.md](file:///Applications/XAMPP/xamppfiles/htdocs/context-factory/docs/decisions/0035-host-conformance-receipts-and-fixture-modes.md) establishing strict separation between host compiler runs and offline fixture modes.
+  - Indexed ADR 0035 in [docs/decisions/README.md](file:///Applications/XAMPP/xamppfiles/htdocs/context-factory/docs/decisions/README.md).
+  - Registered ADR 0035 in `context-manifest.json` under `decisions`.
+  - Regenerated [context-lock.json](file:///Applications/XAMPP/xamppfiles/htdocs/context-factory/context-lock.json) with updated manifest fingerprint.
+- **Verification Commands & Results:**
+  - `npm run lint` $\rightarrow$ `PASS` (62 rules, 18 skills, 12 workflows, 477 Markdown files)
+  - `node scripts/context.mjs doctor` $\rightarrow$ `PASS` (`HEALTHY`, 32/32 evaluations passed)
+- **Status:** `COMPLETED`
+

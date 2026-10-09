@@ -41,3 +41,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0032-task-focused-host-cli-and-opt-in-quality-gates|Task-Focused Host CLI and Opt-In Quality Gates]]
 - [[docs/decisions/0033-branch-only-task-lifecycle|Branch-Only Task Lifecycle]]
 - [[docs/decisions/0034-framework-scoped-typescript-rules|Framework-scoped TypeScript rules]]
+- [[docs/decisions/0035-host-conformance-receipts-and-fixture-modes|Host Conformance Receipts and Offline Fixture Modes]]
