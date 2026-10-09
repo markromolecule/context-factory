@@ -1,13 +1,24 @@
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { createRequire } from "node:module";
 import { registerAdapter } from "../adapter-contract.mjs";
 import { executeCommand } from "../process-runner.mjs";
 
-function toolResult(directive, status, verifierType, outputFragment, command, exitCode) {
-  return { directiveId: directive.id, mode: directive.mode || "automated-blocking", status,
-    evidence: { verifierType, outputFragment, ...(command ? { command } : {}),
-      ...(Number.isInteger(exitCode) ? { exitCode } : {}) }, evaluatedAt: new Date().toISOString() };
+function toolResult(directive, status, verifierType, outputFragment, command, exitCode, effectiveConfigDigest) {
+  return {
+    directiveId: directive.id,
+    mode: directive.mode || "automated-blocking",
+    status,
+    evidence: {
+      verifierType,
+      outputFragment,
+      ...(command ? { command } : {}),
+      ...(Number.isInteger(exitCode) ? { exitCode } : {}),
+      ...(effectiveConfigDigest ? { effectiveConfigDigest } : {}),
+    },
+    evaluatedAt: new Date().toISOString(),
+  };
 }
 
 const LINT_RULES = {
@@ -44,7 +55,12 @@ async function checkLint({ directive, changedScope, hostDir, readTextFn, command
     return toolResult(directive, failed ? "FAIL" : "PASS", "eslint", run.stdout, command, run.exitCode);
   }
 
-  // 2. Fallback static analysis for floating promises
+  // If not running in fixture mode, missing host tooling is fail-closed
+  if (!capabilities?.fixtureMode) {
+    return toolResult(directive, "TOOL_UNAVAILABLE", "eslint", "Host tool eslint is missing in host environment.");
+  }
+
+  // 2. Fallback static analysis for floating promises (offline fixture mode only)
   let filesRead = 0;
   const violations = [];
   for (const filePath of files) {
@@ -125,19 +141,25 @@ async function checkStrictCompiler({ directive, changedScope, hostDir, readTextF
       return toolResult(directive, "TOOL_UNAVAILABLE", "tsc", "Cannot read effective TypeScript configuration.", JSON.stringify([toolCmd, ...configArgs]), configRun.exitCode);
     }
     const settings = config.compilerOptions;
+    const effectiveConfigDigest = createHash("sha256").update(JSON.stringify(settings)).digest("hex");
     if (settings.strict !== true || settings.noUncheckedIndexedAccess !== true || settings.noImplicitAny === false || settings.strictNullChecks === false) {
-      return toolResult(directive, "FAIL", "tsc", "Effective config must enable strict and noUncheckedIndexedAccess without disabling noImplicitAny or strictNullChecks.", JSON.stringify([toolCmd, ...configArgs]), configRun.exitCode);
+      return toolResult(directive, "FAIL", "tsc", "Effective config must enable strict and noUncheckedIndexedAccess without disabling noImplicitAny or strictNullChecks.", JSON.stringify([toolCmd, ...configArgs]), configRun.exitCode, effectiveConfigDigest);
     }
-    if (files.some((file) => !config.files?.some((p) => resolve(hostDir, p) === resolve(hostDir, file)))) {
-      return toolResult(directive, "TOOL_UNAVAILABLE", "tsc", "The selected tsconfig does not cover every changed TypeScript file; run conformance from the affected package.");
+    if (Array.isArray(config.files) && config.files.length > 0 && files.some((file) => !config.files?.some((p) => resolve(hostDir, p) === resolve(hostDir, file)))) {
+      return toolResult(directive, "TOOL_UNAVAILABLE", "tsc", "The selected tsconfig does not cover every changed TypeScript file; run conformance from the affected package.", JSON.stringify([toolCmd, ...configArgs]), configRun.exitCode, effectiveConfigDigest);
     }
     const args = [...toolArgs, "--noEmit", "--project", project];
     const run = await commandRunner({ command: toolCmd, args, cwd: hostDir });
     const status = run.notFound || run.timedOut || !Number.isInteger(run.exitCode) ? "TOOL_UNAVAILABLE" : run.exitCode === 0 ? "PASS" : "FAIL";
-    return toolResult(directive, status, "tsc", run.stdout || run.stderr || "Effective strict configuration and included source checked.", JSON.stringify([toolCmd, ...args]), run.exitCode);
+    return toolResult(directive, status, "tsc", run.stdout || run.stderr || "Effective strict configuration and included source checked.", JSON.stringify([toolCmd, ...args]), run.exitCode, effectiveConfigDigest);
   }
 
-  // 2. Fallback static semantic check when host compiler tooling is absent
+  // If not running in fixture mode, missing host tooling is fail-closed
+  if (!capabilities?.fixtureMode) {
+    return toolResult(directive, "TOOL_UNAVAILABLE", "tsc", "Host tool tsc or tsconfig.json is missing in host environment.");
+  }
+
+  // 2. Fallback static semantic check when host compiler tooling is absent (offline fixture mode only)
   let filesRead = 0;
   const violations = [];
   for (const filePath of files) {
@@ -203,6 +225,7 @@ async function checkStrictCompiler({ directive, changedScope, hostDir, readTextF
  */
 export async function discoverTypeScriptCapabilities(hostDir = process.cwd(), { readTextFn = readFile } = {}) {
   const capabilities = {
+    fixtureMode: false,
     hasPackageJson: false,
     hasTsConfig: false,
     scripts: {},
@@ -551,7 +574,9 @@ export const typeScriptAdapter = {
     const hostDir = options.cwd || process.cwd();
     const readTextFn = options.readTextFn || readFile;
     const commandRunner = commandService || executeCommand;
-    const effectiveCaps = capabilities?.tools ? capabilities : await discoverTypeScriptCapabilities(hostDir, { readTextFn });
+    const isFixtureMode = Boolean(capabilities?.fixtureMode || options?.fixtureMode);
+    const baseCaps = capabilities?.tools ? capabilities : await discoverTypeScriptCapabilities(hostDir, { readTextFn });
+    const effectiveCaps = { ...baseCaps, fixtureMode: isFixtureMode };
 
     const results = [];
     const directives = binding.directives || [];

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "4.1.0",
-  "digest": "sha256:0654adcedc9e579d264396ef435010960617366fa4e563230fe50b2fd76c9a35",
+  "digest": "sha256:0a7fe9d22690df3f05d3f024deb3e204a615d4685eed46baf1a4ba08eca00a44",
   "files": {
     ".cursorrules": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
     ".github/copilot-instructions.md": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
@@ -140,7 +140,7 @@
     "evals/tests/conformance/laravel-adapter.test.mjs": "sha256:66ddbbca89863ab392c3973399f8f16274b3423614e0aa9849453fb54d538cb1",
     "evals/tests/conformance/lifecycle-conformance.test.mjs": "sha256:f02143b6ecea34182b379e8418d5dda68f2aa3cfff91a709296793d295e09090",
     "evals/tests/conformance/receipt-identity.test.mjs": "sha256:0784cb095ed30a6ace490aa1a1d137d2f62101d1a94511cb32c5f58fd7e4b46a",
-    "evals/tests/conformance/typescript-adapter.test.mjs": "sha256:0407713f3ae292fedfb0c54e534cc5e81bd84e63228bb0a9866a5a18db28b4f9",
+    "evals/tests/conformance/typescript-adapter.test.mjs": "sha256:7631986f17471b9f927caf82bfc97ddd5be70a18f9533763c714023b20bb6cd5",
     "evals/tests/lifecycle/discovery-handoff.test.mjs": "sha256:977b6d65c4b007ab3408fc3a057e8a64ffa0228cbf558e55d44b3a7c47be2a78",
     "evals/tests/lifecycle/execution-handoff.test.mjs": "sha256:d4fc685cc96ae6da0e692bdca1cfc080b3abc49bc4e75c0e3d31eaf94867a810",
     "evals/tests/lifecycle/handoff-contract.test.mjs": "sha256:0cf1a15f21218df42d91f83ce318cf609247f813453f08ad01b8264c273b0119",
@@ -172,7 +172,7 @@
     "orchestrator/SHARED.md": "sha256:64954e50b720f6bac23f84e7b070d8110d1fef1afe1f4a0bb234e67f6e6c1978",
     "orchestrator/conformance/adapter-contract.mjs": "sha256:33ab4bba485619be780cbbf3fa58dbf0d1771e50f8719d6017dd789dedce1a60",
     "orchestrator/conformance/adapters/laravel.mjs": "sha256:a6d029716c4b82f8aa508c26c42a1c7223d6346937a0aa865448b1091575d353",
-    "orchestrator/conformance/adapters/typescript.mjs": "sha256:ce61b9eff5249918c488deb9fa289eedc77bb0182d8fe6f57266e6f8128d0ad2",
+    "orchestrator/conformance/adapters/typescript.mjs": "sha256:2032ee74f8b6bc0e7f445844696013b1a77992efbcdbb348e0cab8ac779e2a47",
     "orchestrator/conformance/change-identity.mjs": "sha256:d973b4081a76121157059bc64868e9a52338697f6703cdd24ccde07a2ae6e439",
     "orchestrator/conformance/conformance-orchestrator.mjs": "sha256:782251dab27024cb2d5e34ec347104090341277b3c93f03645318b297974398d",
     "orchestrator/conformance/evidence-gate.mjs": "sha256:35d0375240fba5bfc4fd703180ddcd0ba57683960f07018764d3d177ffbd6983",

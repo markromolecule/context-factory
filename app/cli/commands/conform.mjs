@@ -80,12 +80,20 @@ export async function handleConformCommand(args = [], flags = {}) {
       throw new Error(`Conformance evaluation failed: no rule binding could be resolved for stack "${stack}". Declared scope required.`);
     }
 
+    const isFixtureMode = Boolean(
+      flags.fixtureMode ||
+      flags["fixture-mode"] ||
+      (changedScope.length > 0 && changedScope.every((p) => p.includes("fixtures/")))
+    );
+
     const report = await evaluateConformance({
       binding,
       changedScope,
       waivers,
+      capabilities: isFixtureMode ? { fixtureMode: true } : null,
       options: {
         humanEvidence,
+        fixtureMode: isFixtureMode,
       },
     });
 

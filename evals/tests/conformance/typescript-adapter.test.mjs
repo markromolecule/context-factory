@@ -226,3 +226,127 @@ describe("Unit 03.02: Architectural Inversion & Composition Root", () => {
     assert.equal(getAdapter("typescript"), typeScriptAdapter);
   });
 });
+
+describe("Unit 02.01: Host Mode Receipts & Offline Fixture Mode (ADR 0035 / AC-03 / AC-04)", () => {
+  beforeEach(() => {
+    clearAdapters();
+    registerTypeScriptAdapter();
+  });
+
+  it("in host mode without tsc or tsconfig, strict compiler returns TOOL_UNAVAILABLE with explicit diagnostic", async () => {
+    const [result] = await typeScriptAdapter.evaluate({
+      binding: { directives: [{ id: "ts.type-safety.strict-compiler-settings", mode: "automated-blocking" }] },
+      changedScope: ["src/app.ts"],
+      capabilities: { tools: { tsc: false, eslint: false }, hasTsConfig: false, fixtureMode: false },
+      options: { readTextFn: async () => 'export const n: number = "wrong";' },
+    });
+
+    assert.equal(result.status, "TOOL_UNAVAILABLE");
+    assert.equal(result.evidence.verifierType, "tsc");
+    assert.match(result.evidence.outputFragment, /Host tool tsc or tsconfig\.json is missing in host environment/);
+  });
+
+  it("in host mode without eslint, floating promises returns TOOL_UNAVAILABLE with explicit diagnostic", async () => {
+    const [result] = await typeScriptAdapter.evaluate({
+      binding: { directives: [{ id: "ts.async.no-floating-promises", mode: "automated-blocking" }] },
+      changedScope: ["src/app.ts"],
+      capabilities: { tools: { tsc: false, eslint: false }, fixtureMode: false },
+      options: { readTextFn: async () => 'fetch("/api/data");' },
+    });
+
+    assert.equal(result.status, "TOOL_UNAVAILABLE");
+    assert.equal(result.evidence.verifierType, "eslint");
+    assert.match(result.evidence.outputFragment, /Host tool eslint is missing in host environment/);
+  });
+
+  it("in fixture mode (fixtureMode: true), strict compiler uses static AST check without host tools", async () => {
+    // Failing case
+    const [failResult] = await typeScriptAdapter.evaluate({
+      binding: { directives: [{ id: "ts.type-safety.strict-compiler-settings", mode: "automated-blocking" }] },
+      changedScope: ["src/app.ts"],
+      capabilities: { fixtureMode: true, tools: {} },
+      options: { readTextFn: async () => 'export const n: number = "wrong";' },
+    });
+
+    assert.equal(failResult.status, "FAIL");
+    assert.equal(failResult.evidence.verifierType, "ts-type-checker");
+    assert.match(failResult.evidence.outputFragment, /Strict type mismatch detected/);
+
+    // Passing case
+    const [passResult] = await typeScriptAdapter.evaluate({
+      binding: { directives: [{ id: "ts.type-safety.strict-compiler-settings", mode: "automated-blocking" }] },
+      changedScope: ["src/app.ts"],
+      capabilities: { fixtureMode: true, tools: {} },
+      options: { readTextFn: async () => 'export const n: number = 42;' },
+    });
+
+    assert.equal(passResult.status, "PASS");
+    assert.equal(passResult.evidence.verifierType, "ts-type-checker");
+  });
+
+  it("in fixture mode (fixtureMode: true), floating promises uses static AST check without host tools", async () => {
+    // Failing case
+    const [failResult] = await typeScriptAdapter.evaluate({
+      binding: { directives: [{ id: "ts.async.no-floating-promises", mode: "automated-blocking" }] },
+      changedScope: ["src/app.ts"],
+      capabilities: { fixtureMode: true, tools: {} },
+      options: { readTextFn: async () => 'fetch("/api/data");' },
+    });
+
+    assert.equal(failResult.status, "FAIL");
+    assert.equal(failResult.evidence.verifierType, "async-promise-linter");
+    assert.match(failResult.evidence.outputFragment, /Floating promise detected/);
+
+    // Passing case
+    const [passResult] = await typeScriptAdapter.evaluate({
+      binding: { directives: [{ id: "ts.async.no-floating-promises", mode: "automated-blocking" }] },
+      changedScope: ["src/app.ts"],
+      capabilities: { fixtureMode: true, tools: {} },
+      options: { readTextFn: async () => 'await fetch("/api/data");' },
+    });
+
+    assert.equal(passResult.status, "PASS");
+    assert.equal(passResult.evidence.verifierType, "async-promise-linter");
+  });
+
+  it("in host mode with simulated tsc, captures effectiveConfigDigest and tool execution receipt", async () => {
+    const mockOptions = { strict: true, noUncheckedIndexedAccess: true };
+    const mockRunner = async ({ args }) => {
+      if (args.includes("--showConfig")) {
+        return {
+          exitCode: 0,
+          stdout: JSON.stringify({ compilerOptions: mockOptions }),
+          stderr: "",
+        };
+      }
+      if (args.includes("--noEmit")) {
+        return {
+          exitCode: 0,
+          stdout: "Compilation finished with 0 errors.",
+          stderr: "",
+        };
+      }
+      return { exitCode: 1, stdout: "", stderr: "Unknown args" };
+    };
+
+    const [result] = await typeScriptAdapter.evaluate({
+      binding: { directives: [{ id: "ts.type-safety.strict-compiler-settings", mode: "automated-blocking" }] },
+      changedScope: ["src/app.ts"],
+      capabilities: {
+        tools: { tsc: true },
+        hasTsConfig: true,
+        commands: { tsc: { command: "tsc", args: [] } },
+      },
+      commandService: mockRunner,
+      options: { readTextFn: async () => "export const n: number = 42;" },
+    });
+
+    assert.equal(result.status, "PASS");
+    assert.equal(result.evidence.verifierType, "tsc");
+    assert.equal(result.evidence.exitCode, 0);
+    assert.ok(result.evidence.command, "Must have command string");
+    assert.ok(typeof result.evidence.effectiveConfigDigest === "string", "Must have effectiveConfigDigest string");
+    assert.equal(result.evidence.effectiveConfigDigest.length, 64, "Must be SHA-256 64 hex characters");
+  });
+});
+

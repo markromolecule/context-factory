@@ -15,7 +15,7 @@
 | Phase | Title | Units | Status |
 | :--- | :--- | :--- | :--- |
 | **Phase 01** | Discovery, Scenarios, and Boundary Analysis | 01.01 | **COMPLETED** |
-| **Phase 02** | Architecture, Contracts, and Data Modeling | 02.01 | **PLANNED** |
+| **Phase 02** | Architecture, Contracts, and Data Modeling | 02.01 | **COMPLETED** |
 | **Phase 03** | Incremental Implementation and Tests | 03.01 | **PLANNED** |
 | **Phase 04** | Verification, Quality Gates, and Release | 04.01 | **PLANNED** |
 
@@ -45,4 +45,26 @@
   - `npm run lint` $\rightarrow$ `PASS` (62 rules, 18 skills, 12 workflows, 477 Markdown files)
   - `node scripts/context.mjs doctor` $\rightarrow$ `PASS` (`HEALTHY`, 32/32 evaluations passed)
 - **Status:** `COMPLETED`
+
+### Unit 02.01: Architecture, Contracts, and Data Modeling
+
+- **Phase:** 02 (Architecture, Contracts, and Data Modeling)
+- **Unit ID:** `02.01`
+- **Timestamp:** 2026-10-09
+- **Scope & Deliverables:**
+  - Extended [`orchestrator/conformance/adapters/typescript.mjs`](file:///Applications/XAMPP/xamppfiles/htdocs/context-factory/orchestrator/conformance/adapters/typescript.mjs):
+    - In host mode (`!capabilities?.fixtureMode`), missing `tsc` or `tsconfig.json` returns fail-closed `TOOL_UNAVAILABLE` with diagnostic `"Host tool tsc or tsconfig.json is missing in host environment."`.
+    - In host mode (`!capabilities?.fixtureMode`), missing `eslint` returns fail-closed `TOOL_UNAVAILABLE` with diagnostic `"Host tool eslint is missing in host environment."`.
+    - Captured compiler options from `tsc --showConfig` and computed 64-character SHA-256 `effectiveConfigDigest`. Attached tamper-evident tool receipts (`verifierType`, `command`, `exitCode`, `effectiveConfigDigest`, `outputFragment`) to `evidence`.
+    - In offline fixture mode (`capabilities.fixtureMode = true`), dispatched to fast static AST syntax checkers for isolated snippets without requiring global compiler tooling.
+  - Extended [`app/cli/commands/conform.mjs`](file:///Applications/XAMPP/xamppfiles/htdocs/context-factory/app/cli/commands/conform.mjs) to pass `fixtureMode` capabilities when evaluating fixture scopes or when `--fixture-mode` flag is supplied.
+  - Added test-first verification suite in [`evals/tests/conformance/typescript-adapter.test.mjs`](file:///Applications/XAMPP/xamppfiles/htdocs/context-factory/evals/tests/conformance/typescript-adapter.test.mjs).
+- **Verification Commands & Results:**
+  - `node --test evals/tests/conformance/typescript-adapter.test.mjs` $\rightarrow$ `PASS` (20/20 passed)
+  - `node --test evals/tests/conformance/*.test.mjs` $\rightarrow$ `PASS` (78/78 passed)
+  - `npm test` $\rightarrow$ `PASS` (32/32 evaluations passed)
+  - `npm run lint` $\rightarrow$ `PASS` (62 rules, 18 skills, 12 workflows, 477 Markdown files)
+  - `node scripts/context.mjs doctor` $\rightarrow$ `PASS` (`HEALTHY`, 32/32 evaluations passed)
+- **Status:** `COMPLETED`
+
 
