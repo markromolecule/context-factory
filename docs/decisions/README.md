@@ -40,3 +40,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0031-skill-lifecycle-handoffs-and-task-git-policy|Skill Lifecycle Handoffs and Task Git Policy]]
 - [[docs/decisions/0032-task-focused-host-cli-and-opt-in-quality-gates|Task-Focused Host CLI and Opt-In Quality Gates]]
 - [[docs/decisions/0033-branch-only-task-lifecycle|Branch-Only Task Lifecycle]]
+- [[docs/decisions/0034-framework-scoped-typescript-rules|Framework-scoped TypeScript rules]]

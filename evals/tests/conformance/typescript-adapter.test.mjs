@@ -12,6 +12,35 @@ import { evaluateConformance } from "../../../orchestrator/conformance/conforman
 
 const FIXTURES_DIR = resolve(process.cwd(), "evals/fixtures/typescript-conformance");
 
+describe("False PASS regressions", () => {
+  for (const [id, source] of [
+    ["ts.type-safety.strict-compiler-settings", 'export const n: number = "wrong";'],
+    ["ts.async.no-floating-promises", 'fetch("/api/save");'],
+    ["ts.runtime-validation.parse-boundary-data", 'export async function load() { return (await fetch("/api/user")).json(); }'],
+    ["ts.type-safety.ban-any", 'type Unsafe = any;'],
+  ]) {
+    it(`never passes ${id} without its verifier`, async () => {
+      const [result] = await typeScriptAdapter.evaluate({
+        binding: { directives: [{ id, mode: "automated-blocking" }] },
+        changedScope: ["src/example.ts"], capabilities: { tools: {} },
+        options: { readTextFn: async () => source, humanEvidence: "Test reviewer approved architecture only" },
+      });
+      assert.ok(["TOOL_UNAVAILABLE", "UNSUPPORTED", "FAIL"].includes(result.status), JSON.stringify(result));
+    });
+  }
+
+  it("does not pass unreadable or empty source scope", async () => {
+    for (const changedScope of [[], ["src/missing.ts"]]) {
+      const [result] = await typeScriptAdapter.evaluate({
+        binding: { directives: [{ id: "ts.type-safety.ban-any", mode: "automated-blocking" }] },
+        changedScope, capabilities: { tools: {} },
+        options: { readTextFn: async () => { throw new Error("unreadable"); } },
+      });
+      assert.notEqual(result.status, "PASS");
+    }
+  });
+});
+
 const baseBinding = {
   id: "bind-ts-pilot",
   bindingHash: "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",

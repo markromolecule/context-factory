@@ -2,7 +2,7 @@ Goal:
 
 - I want to improve the harness for this context-factory.
 
-You can say your thoughts about my idea, so, we are aligned together. 
+You can say your thoughts about my idea, so, we are aligned together.
 
 Context:
 
@@ -16,9 +16,9 @@ Implementation Plan:
 
 Idea:
 
-I want to include a 
+I want to include a
 
-[runner] file under the orhestrator that executes LLM calls & skill hooks. 
+[runner] file under the orhestrator that executes LLM calls & skill hooks.
 [validator] filer under the orchestrator that Validates output against /schemas
 
 [datasets] folder under the evals/ that consist of Golden inputs/outputs

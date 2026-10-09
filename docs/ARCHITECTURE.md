@@ -54,6 +54,9 @@ flowchart LR
 
 ## Invariants
 
+- TypeScript framework applicability comes from `frameworks` metadata and the affected file's nearest package dependencies, resolved by `scripts/framework-scope.mjs`. The descriptor parser and binding compiler preserve that restriction; Next.js implies React, while SolidJS is distinct from SOLID architecture. Known installed packages override prompt wording. Discovery in the factory itself may use explicit framework words as a fallback.
+- Rule bindings carry actual directive statements as well as IDs and hashes. Prompt integrity checks reject removal of bound statements. Recompile existing receipts after source rules change; old receipts do not prove new rules were applied.
+
 - The root directory is the Obsidian vault.
 - The manifest contains every orchestrator, rule, skill, skill resource, and index note.
 - Model adapters defer to one shared contract.
@@ -68,6 +71,8 @@ flowchart LR
 - Session checkpointing triggers at ~60% context saturation; generates dual-layer machine state and ultra-compact (<1,500 token) cold-start briefings.
 
 ## Decisions
+
+- [[docs/decisions/0034-framework-scoped-typescript-rules|Framework-scoped TypeScript rules]]
 
 - [[docs/decisions/0001-vertical-backend-modules|Vertical backend modules]]
 - [[docs/decisions/0002-task-appropriate-form-surfaces|Task-appropriate form surfaces]]

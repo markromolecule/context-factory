@@ -39,10 +39,9 @@ export function renderCompiledDirectives(binding) {
   }
 
   for (const dir of binding.directives) {
-    const title = dir.title || dir.id;
-    const stmt = dir.statement ? ` ${dir.statement}` : "";
+    const statement = dir.statement || dir.title || dir.id;
     lines.push(
-      `- [directive:${dir.id}][mode:${dir.mode}][rule:${dir.rulePath}][hash:${dir.contentHash}] ${title}.${stmt}`
+      `- [directive:${dir.id}][mode:${dir.mode}][rule:${dir.rulePath}][hash:${dir.contentHash}] ${statement}`
     );
   }
 
@@ -142,6 +141,9 @@ export function validatePromptIntegrity({ prompt = "", systemPrompt = "", bindin
       throw new Error(
         `Prompt integrity violation: mandatory directive ID "${dir.id}" was removed by custom hook.`
       );
+    }
+    if (dir.statement && !combined.includes(dir.statement)) {
+      throw new Error(`Prompt integrity violation: statement for directive "${dir.id}" was removed or changed.`);
     }
   }
 

@@ -4,7 +4,7 @@ name: interaction-feedback
 description: Make asynchronous UI state visible, local, recoverable, and proportionate to the user's action.
 scope: Loading, empty, success, error, optimistic, disabled, and retry states in interactive components.
 stack: typescript
-appliesTo: ["src/**/components/**/*.tsx", "src/**/ui/**/*.tsx", "app/**/*.tsx"]
+appliesTo: ["**/src/**/components/**/*.tsx", "**/src/**/ui/**/*.tsx", "**/app/**/*.tsx"]
 layers: ["ui", "components"]
 alwaysApply: false
 ---

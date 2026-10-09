@@ -108,6 +108,11 @@
           "applicability": {
             "type": "object",
             "properties": {
+              "frameworks": {
+                "type": "array",
+                "items": { "type": "string", "enum": ["react", "nextjs", "solidjs", "astro"] },
+                "minItems": 1
+              },
               "paths": {
                 "type": "array",
                 "items": { "type": "string" }

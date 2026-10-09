@@ -367,27 +367,42 @@ export function buildSharedEnforcementDirectives({
     {
       key: "shared-contract",
       title: "Shared Contract",
-      text: `Read the shared orchestration contract in \`${normFactory}/orchestrator/SHARED.md\` before executing tasks.`,
+      text: `For direct questions and trivial edits, use relevant files and skip the workflow below. For substantive changes, read \`${normFactory}/orchestrator/SHARED.md\`.`,
     },
     {
       key: "context-resolution",
-      title: "Context Resolution & Binding",
-      text: `Deterministically resolve required context before non-trivial changes:\n   \`${scriptCmd} resolve "<task description>"\``,
+      title: "Context Resolution",
+      text: `For substantive changes, run \`${scriptCmd} resolve "<task description>"\`; read relevant results, explicitly named files, and files being changed. Resolver output suggests context; it does not limit inspection.`,
+    },
+    {
+      key: "planning",
+      title: "Planning",
+      text: `Save plans in host \`docs/tasks/\` and ADRs in host \`docs/decisions/\`. The plan skill creates the task branch. Check plans with \`${scriptCmd} plan:check "<task-dir>"\`.`,
+    },
+    {
+      key: "code-review",
+      title: "Code Changes",
+      text: `When a plan exists, verify its task branch. Write a failing test first for behavior changes, review the diff against allowed files and tests, and run relevant checks.`,
     },
     {
       key: "preflight-verification",
       title: "Preflight Verification",
-      text: `Validate directive bindings before generating code:\n   \`${cliCmd} preflight "<task description>" --stack <stack> --scope <files>\``,
+      text: `For material code changes, run \`${cliCmd} preflight "<task description>" --stack <stack> --scope <files>\` before editing.`,
     },
     {
       key: "authoritative-conformance",
       title: "Authoritative Conformance",
-      text: `Evaluate generated code against executable rule contracts after every change:\n   \`${cliCmd} conform "<task description>" --stack <stack> --scope <files>\``,
+      text: `After material code changes, run \`${cliCmd} conform "<task description>" --stack <stack> --scope <files>\`.`,
     },
     {
       key: "fail-closed",
       title: "Fail-Closed Gate",
-      text: `Halt execution immediately on FAIL or BLOCKED status. LLM self-attestation is strictly prohibited; waivers require human authorization.`,
+      text: `Stop on FAIL or BLOCKED. Do not replace test or conformance evidence with self-attestation; waivers require human authorization.`,
+    },
+    {
+      key: "completion",
+      title: "Completion",
+      text: `Report passed, failed, and unrun checks. Run \`${scriptCmd} doctor\` after factory context changes; doctor checks factory health, not task completion.`,
     },
   ];
 
@@ -399,7 +414,7 @@ export function buildSharedEnforcementDirectives({
     return [
       "| Command | Action | Execution |",
       "| :--- | :--- | :--- |",
-      `| \`/plan\`, \`[PLAN]\` | Scaffold phased plan in \`./docs/tasks/\` | \`${scriptCmd} task:new "<title>"\` |`,
+      `| \`/plan\`, \`[PLAN]\` | Scaffold phased plan in \`./docs/tasks/\` | \`${scriptCmd} task:new "<title>" --base <target-branch>\` |`,
       `| \`/resolve\` | Resolve matching context rules & skills | \`${scriptCmd} resolve "<prompt>"\` |`,
       `| \`/preflight\` | Verify descriptor and rule bindings | \`${cliCmd} preflight "<prompt>"\` |`,
       `| \`/conform\` | Execute stack conformance evaluation | \`${cliCmd} conform "<prompt>"\` |`,
@@ -482,21 +497,11 @@ export async function generateBridge({
 
 This repository uses **Context Factory** (located at \`${normalizedFactoryPath}\`) for development standards, rules, workflows, subagents, and skills.
 
-## Mandatory Directives & Agent Execution Contract
+## Task Instructions
 
-${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "numbered" })}
-6. **Universal Standards:** Follow rules in \`${normalizedFactoryPath}/rules/\`, workflows in \`${normalizedFactoryPath}/workflows/\`, and skills in \`${normalizedFactoryPath}/skills/\`.
-7. **Project Specifics:** Combine universal factory rules with project-specific rules in \`./rules/\` or \`./.agents/rules/\`.
+${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
 
-## Generated Documentation Scoping Contract
-
-- **Task Plans & Breakdowns:** All implementation plans, phase breakdowns, and task files MUST be written to \`./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/\` in **this host repository**, NEVER inside \`${normalizedFactoryPath}\`.
-- **Architecture Decisions (ADRs):** All architectural decision records MUST be saved to \`./docs/decisions/\` in **this host repository**.
-- **Templates:** Always load templates from \`${normalizedFactoryPath}/docs/templates/Task.md\`, \`Phase.md\`, \`Unit.md\`, and \`Decision.md\`.
-
-## Session Slash Commands & Quick Actions
-
-${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "table" })}
+Use project rules in \`./rules/\` or \`./.agents/rules/\` where they apply. Use templates in \`${normalizedFactoryPath}/docs/templates/\` for plans and decisions.
 `;
     filesToGenerate.push({ path: join(targetDir, "AGENTS.md"), content: agentsMdContent, id: "AGENTS.md", category: "contract" });
 
@@ -506,15 +511,9 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
 
 This repository is bridged to **Context Factory** at \`${normalizedFactoryPath}\`.
 
-## Mandatory Directives & Conformance Gates
+## Task Instructions
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
-- **Documentation Scoping:** Write task plans to host \`./docs/tasks/\` and architecture decisions to host \`./docs/decisions/\`.
-- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
-
-## Quick Actions
-
-${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "table" })}
 `;
     filesToGenerate.push({ path: join(targetDir, "GEMINI.md"), content: geminiMdContent, id: "GEMINI.md", category: "contract" });
   }
@@ -525,15 +524,9 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
 
 This project uses **Context Factory** at \`${normalizedFactoryPath}\` for engineering workflows and standards.
 
-## Execution Rules & Conformance Gates
+## Task Instructions
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
-- **Documentation Scoping:** Write task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\` in this repository.
-- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
-
-## Quick Commands
-
-${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "table" })}
 `;
     filesToGenerate.push({ path: join(targetDir, "CLAUDE.md"), content: claudeMdContent, id: "CLAUDE.md", category: "contract" });
   }
@@ -544,15 +537,9 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
 
 Context Factory integration: \`${normalizedFactoryPath}\`.
 
-## Mandatory Directives & Conformance Gates
+## Task Instructions
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
-- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
-- **Universal Standards:** Follow rules in \`${normalizedFactoryPath}/rules/\`.
-
-## Authoritative Commands
-
-${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "table" })}
 `;
     filesToGenerate.push({ path: join(targetDir, "CODEX.md"), content: codexMdContent, id: "CODEX.md", category: "contract" });
   }
@@ -562,8 +549,6 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
     const cursorRulesContent = `# Cursor Rules - Context Factory Bridge
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
-- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
-- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({ path: join(targetDir, ".cursorrules"), content: cursorRulesContent, id: ".cursorrules", category: "contract" });
 
@@ -575,8 +560,6 @@ alwaysApply: true
 # Cursor Rules - Context Factory Bridge
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
-- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
-- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({
       path: join(targetDir, ".cursor", "rules", "context-factory.mdc"),
@@ -591,8 +574,6 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
     const windsurfRulesContent = `# Windsurf Rules - Context Factory Bridge
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
-- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
-- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({ path: join(targetDir, ".windsurfrules"), content: windsurfRulesContent, id: ".windsurfrules", category: "contract" });
   }
@@ -606,8 +587,6 @@ This repository connects to **Context Factory** at \`${normalizedFactoryPath}\` 
 ## Mandatory Guidelines & Conformance Gates
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
-- **Documentation Scoping:** Save task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
-- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({
       path: join(targetDir, ".trae", "rules", "project_rules.md"),
@@ -626,8 +605,6 @@ This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
 ## Mandatory Directives & Conformance Gates
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
-- **Documentation Scoping:** Write task plans to \`./docs/tasks/\` and ADRs to \`./docs/decisions/\`.
-- **Universal Standards:** Follow universal engineering rules from \`${normalizedFactoryPath}/rules/\`.
 `;
     filesToGenerate.push({ path: join(targetDir, ".github", "copilot-instructions.md"), content: copilotContent, id: ".github/copilot-instructions.md", category: "contract" });
   }

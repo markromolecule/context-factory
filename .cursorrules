@@ -1,5 +1,3 @@
-# Cursor Rules - Context Factory Bridge
+# Context Factory
 
-- Refer to `./orchestrator/SHARED.md` for shared orchestration directives.
-- Use `node scripts/context.mjs resolve "<prompt>"` to determine relevant rules and skills.
-- Save task plans to `./docs/tasks/` and ADRs to `./docs/decisions/`.
+Read `AGENTS.md` for task instructions and `orchestrator/SHARED.md` for the shared contract. Follow only the workflow, skills, and source files relevant to the current request.

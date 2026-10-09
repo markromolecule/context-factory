@@ -13,10 +13,12 @@ alwaysApply: true
 
 ## Strict typing standards
 
-- [directive:ts.type-safety.ban-any][mode:automated-blocking][verifier:typechecker] Ban `any`. Use `unknown` when incoming data types are indeterminate, and require narrowing via type guards, assertion functions, or schema parsing before consumption.
+- [directive:ts.type-safety.ban-any][mode:automated-blocking][verifier:linter] Ban `any` in authored code, including aliases and generic arguments. Use `unknown` and validate before consumption. Enforce explicit any and unsafe assignments, calls, member access, and returns with configured TypeScript-aware lint rules; strict tsc alone does not ban explicit any.
 - [directive:ts.type-safety.no-loose-objects][mode:automated-blocking][verifier:typechecker] Avoid loose `Object`, `object`, or `{}` types. Use `Record<string, unknown>` or explicit typed schemas.
 - [directive:ts.type-safety.strict-compiler-settings][mode:automated-blocking][verifier:typechecker] Enable and adhere to strict compiler settings (`strict: true`, `noImplicitAny: true`, `strictNullChecks: true`, `noUncheckedIndexedAccess: true`).
 - [directive:ts.type-safety.use-satisfies][mode:advisory][verifier:none] Use `satisfies` to validate that an expression matches a type contract without widening literal types or losing exact property inference.
+- [directive:ts.type-safety.optional-property-semantics][mode:advisory][verifier:none] Distinguish absent properties from explicit undefined when the contract requires it. Adopt exactOptionalPropertyTypes through a scoped migration; do not silently change compiler settings across unrelated packages.
+- [directive:ts.type-safety.no-silent-suppressions][mode:evidence-blocking][verifier:human-evidence] Do not silence errors with ts-ignore, ts-nocheck, double casts, or broad lint disables. A narrow ts-expect-error needs a documented reason and regression evidence; negative type tests may use it to assert an expected error.
 
 ## Discriminated unions and exhaustiveness
 

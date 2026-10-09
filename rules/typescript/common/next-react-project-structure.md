@@ -4,6 +4,7 @@ name: next-react-project-structure
 description: Structure React, Next.js, Vite, and Astro applications using feature slices, standardized subfolder conventions, and strict rendering boundaries.
 scope: Frontend application directories, feature modules, hooks organization, routes, and framework configuration.
 stack: typescript
+frameworks: ["react", "astro"]
 appliesTo: ["src/**/*.ts", "src/**/*.tsx", "app/**/*.ts", "app/**/*.tsx"]
 layers: ["ui", "common"]
 alwaysApply: false
@@ -66,8 +67,7 @@ Within `hooks/` directories (both in `src/features/<feature>/hooks/` and `src/ho
 
 - **Next.js:**
   - Route-private modules live under `app/**/_components`, `_actions`, or `_lib`.
-  - [directive:ts.structure.rsc-default][mode:evidence-blocking][verifier:human-evidence] Default to React Server Components (RSC); push `'use client'` down to the smallest leaf interactive boundary.
-  - Colocate server actions (`*.actions.ts`) with clear Zod boundary validation.
+  - Colocate server actions (`*.actions.ts`) with boundary validation using the installed schema library. Follow `rules/typescript/frameworks/nextjs.md` for App Router server/client boundaries.
 - **Vite React:**
   - Compose routes and pages through the chosen router (`pages/` or `routes/`).
   - Keep browser bootstrapping isolated in `main.tsx` / `App.tsx`.

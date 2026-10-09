@@ -4,7 +4,7 @@ name: frontend
 description: Enforce styling guidelines for typography, color, spacing, layout, responsiveness, and motion to eliminate generic LLM styling and ensure premium craftsmanship.
 scope: All frontend UI styling, typography, colors, layouts, and animations.
 stack: typescript
-appliesTo: ["src/**/components/**/*.tsx", "src/**/styles/**/*.css", "app/**/*.tsx", "app/**/*.css"]
+appliesTo: ["**/src/**/components/**/*.tsx", "**/src/**/styles/**/*.css", "**/app/**/*.tsx", "**/app/**/*.css"]
 layers: ["ui", "components"]
 alwaysApply: false
 ---

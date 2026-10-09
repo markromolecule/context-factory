@@ -4,7 +4,7 @@ name: forms-and-validation
 description: Design efficient, accessible forms that prevent mistakes, preserve user effort, and make recovery clear.
 scope: Forms, fields, validation schemas, form state, submission behavior, and form tests.
 stack: typescript
-appliesTo: ["src/**/components/**/*.tsx", "src/**/forms/**/*.tsx", "app/**/*.tsx"]
+appliesTo: ["**/src/**/components/**/*.tsx", "**/src/**/forms/**/*.tsx", "**/app/**/*.tsx"]
 layers: ["ui", "components"]
 alwaysApply: false
 ---

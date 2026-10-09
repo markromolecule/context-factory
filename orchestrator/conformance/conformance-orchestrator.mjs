@@ -22,7 +22,7 @@ export async function evaluateConformance({
   changedScope = [],
   diffHash = null,
   waivers = [],
-  capabilities = {},
+  capabilities = null,
   commandService = null,
   options = {},
 } = {}) {

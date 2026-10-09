@@ -4,6 +4,7 @@ name: zustand-store
 description: Use Zustand for minimal shared client state with selector-based subscriptions and deterministic reset behavior.
 scope: Zustand stores, middleware, selectors, persistence, and store tests.
 stack: typescript
+frameworks: ["react"]
 appliesTo: ["src/**/stores/**/*.ts", "src/**/store/**/*.ts", "**/*Store.ts", "**/*store.ts"]
 layers: ["hooks", "state"]
 alwaysApply: false

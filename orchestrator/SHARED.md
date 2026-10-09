@@ -4,8 +4,8 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 
 ## Load order
 
-1. Read `README.md` and `context-manifest.json`.
-2. Inspect the target repository before proposing changes.
+1. For direct questions and trivial edits, inspect the relevant files and skip the workflow below. For substantive changes, inspect the target repository and run `node scripts/context.mjs resolve "<request>"`; load relevant selections plus explicitly named and affected files.
+2. Read `README.md` and `context-manifest.json` when changing the factory or its inventory. Resolver output is a selection aid, not a limit on what evidence may be inspected.
 3. Load the single most-specific workflow when its trigger matches a multi-stage request; compose workflows only when the selected workflow explicitly requires it.
 4. Load global rules, then only the backend/frontend/typescript/solid rules relevant to the touched files.
 5. Load a skill only when its description matches the specialized task.
@@ -27,6 +27,7 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 - Enforce session checkpointing (`session`, `node scripts/context.mjs session:save`) whenever context window load approaches ~60% saturation; snapshot machine state to `.context/sessions/` and resume in a fresh session via `.tmp/SESSION_RESUME.md` to prevent reasoning degradation.
 - For a new system, product, or materially ambiguous feature, use `grill` as the first pre-planning skill (or `context` to author and grill context specifications). Resolve and persist goals, scenarios, language, boundaries, and unknowns before `plan`; do not begin production coding until the plan is approved.
 - Enforce active language rule binding across all task execution units. Code generation must adhere strictly to declared stack standards (`<language_rules>`); procedural checklists must not supersede framework rules.
+- Before TypeScript edits, inspect the affected package's dependencies and compiler settings, resolve rules with explicit stack and file scope, and read the selected rule text. Apply shared TypeScript rules plus only that package's framework rules; see `docs/Rules.md`. Do not invent APIs, introduce a library just because an example uses it, or report an unimplemented verifier as passing.
 
 ## Roles & Subagents
 
@@ -39,7 +40,7 @@ Software delivery lifecycles are orchestrated across specialized subagent person
 - **UX & Design System Specialist (`agents/ux-agent` / Frontend lead):** compose accessible UI components (WCAG 2.1 AA), design token systems, interaction feedback states, and encapsulate client state in custom hooks/stores (`/ux`, `[UX]`).
 - **Security & Threat Specialist (`agents/threat-agent` / Trust verification):** execute STRIDE threat modeling, audit trust boundaries, verify authentication/authorization policies, timing safety, and secrets hygiene (`/threat`, `[THREAT]`).
 - **Developer (`skills/execute`, `skills/test`, `skills/refactor`):** author failing tests first using `test`, execute only approved review packets on the verified task branch, and preserve strict phase stops and synchronized evidence (`/exec`, `[EXEC]`, `/test`, `[TEST]`, `/refactor`, `[REFACTOR]`).
-- **Reviewer / QA (`skills/verify`, `skills/review`, `workflows/code-review-and-optimization`):** audit code quality, task-branch diff scope fences, and SOLID compliance using `review`, evaluate ESR query performance, test outcomes, verify acceptance criteria against reproducible evidence, and identify regressions or risks (`/verify`, `[VERIFY]`, `/review`, `[REVIEW]`, `/optimize`, `[OPTIMIZE]`).
+- **Reviewer / QA (`skills/verify`, `skills/review`, `workflows/code-review-and-optimization`):** compare changed files on the task branch with each unit's allowed files, check code quality and architecture using `review`, assess query performance and tests, verify acceptance criteria against reproducible evidence, and identify regressions or risks (`/verify`, `[VERIFY]`, `/review`, `[REVIEW]`, `/optimize`, `[OPTIMIZE]`).
 - **DevOps Agent (`agents/devops-agent` / Infrastructure specialist):** automate CI/CD workflows, configure container environments (Docker, Compose), maintain secrets hygiene (`.env.example`), and verify pre-flight release readiness (`/devops`, `[DEVOPS]`, `/release`, `[RELEASE]`).
 
 Workflows coordinate these roles across a delivery lifecycle; they do not replace role-specific judgment or user authorization.

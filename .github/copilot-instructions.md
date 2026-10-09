@@ -1,6 +1,3 @@
-# GitHub Copilot Instructions - Context Factory Bridge
+# Context Factory
 
-This repository connects to Context Factory at `.`.
-- Read `./orchestrator/SHARED.md` for architecture contracts.
-- Resolve context: `node scripts/context.mjs resolve "<prompt>"`.
-- Write task plans to `./docs/tasks/` and ADRs to `./docs/decisions/`.
+Read `AGENTS.md` for task instructions and `orchestrator/SHARED.md` for the shared contract. Follow only the workflow, skills, and source files relevant to the current request.

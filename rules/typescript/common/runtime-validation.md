@@ -30,4 +30,4 @@ alwaysApply: true
 ## Transformations and sanitization
 
 - [directive:ts.runtime-validation.schema-transformations][mode:advisory][verifier:none] Use schema transformations (`.transform()`, `.trim()`, `.toLowerCase()`, coercion) at the boundary layer so that domain models receive normalized, pristine data.
-- [directive:ts.runtime-validation.explicit-coercion-boundaries][mode:automated-blocking][verifier:test] Coerce string inputs from query parameters or headers (e.g. `z.coerce.number()`, `z.coerce.boolean()`) explicitly with boundaries checked.
+- [directive:ts.runtime-validation.explicit-coercion-boundaries][mode:automated-blocking][verifier:test] Parse query/header values with explicit accepted representations and bounds. Do not use generic Boolean coercion for textual flags: the string "false" is truthy. Test false, zero, empty, missing, repeated, and malformed input where applicable.

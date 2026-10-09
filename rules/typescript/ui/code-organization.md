@@ -4,7 +4,7 @@ name: code-organization
 description: Organize frontend code by ownership, dependency direction, and stable public boundaries.
 scope: React, Next.js, Astro, and Vite source modules, features, components, hooks, and exports.
 stack: typescript
-appliesTo: ["src/**/components/**/*.tsx", "src/**/features/**/*.tsx", "src/**/ui/**/*.tsx", "app/**/*.tsx"]
+appliesTo: ["**/src/**/components/**/*.tsx", "**/src/**/features/**/*.tsx", "**/src/**/ui/**/*.tsx", "**/app/**/*.tsx"]
 layers: ["ui", "components"]
 alwaysApply: false
 ---

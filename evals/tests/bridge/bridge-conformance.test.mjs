@@ -36,8 +36,8 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.match(numbered, /node \.context-factory\/scripts\/context\.mjs resolve/);
     assert.match(numbered, /node \.context-factory\/app\/cli\/bin\/context-cli\.mjs preflight/);
     assert.match(numbered, /node \.context-factory\/app\/cli\/bin\/context-cli\.mjs conform/);
-    assert.match(numbered, /FAIL or BLOCKED status/);
-    assert.match(numbered, /LLM self-attestation is strictly prohibited/);
+    assert.match(numbered, /Stop on FAIL or BLOCKED/);
+    assert.match(numbered, /Do not replace test or conformance evidence with self-attestation/);
 
     const bullet = buildSharedEnforcementDirectives({
       normalizedFactoryPath: ".",
@@ -49,6 +49,8 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.match(bullet, /- \*\*Preflight Verification:\*\*/);
     assert.match(bullet, /- \*\*Authoritative Conformance:\*\*/);
     assert.match(bullet, /- \*\*Fail-Closed Gate:\*\*/);
+    assert.match(bullet, /doctor checks factory health, not task completion/);
+    assert.match(bullet, /plan:check/);
 
     const table = buildSharedEnforcementDirectives({
       normalizedFactoryPath: ".",
@@ -85,6 +87,21 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.ok(weakenedInspection.missingGates.includes("fail-closed gate"));
   });
 
+  await t.test("repository entry points route to current contracts without worktree instructions", async () => {
+    const entryPoints = [
+      "AGENTS.md", "CLAUDE.md", "CODEX.md", "GEMINI.md",
+      ".cursorrules", ".windsurfrules", ".github/copilot-instructions.md",
+      "orchestrator/AGENTS.md", "orchestrator/CLAUDE.md",
+      "orchestrator/CODEX.md", "orchestrator/GEMINI.md",
+    ];
+    for (const path of entryPoints) {
+      const content = await readFile(join(process.cwd(), path), "utf8");
+      assert.match(content, /orchestrator\/SHARED\.md/, `${path} must point to the shared contract`);
+      assert.doesNotMatch(content, /intra-worktree|isolated worktrees|skills\/(?:context|plan|execute|test|review)\/SKILL\.md/i,
+        `${path} must not use obsolete task terms or skill paths`);
+    }
+  });
+
   await t.test("generates all 8 supported editor profiles with complete authoritative gates (AC-09)", async () => {
     const allIdesHost = join(FIXTURES_DIR, "all-ides-host");
     await mkdir(allIdesHost, { recursive: true });
@@ -119,6 +136,8 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
       assert.match(content, /preflight/, `${profile.file} must require preflight verification`);
       assert.match(content, /conform/, `${profile.file} must require conformance evaluation`);
       assert.match(content, /fail|FAIL|BLOCKED|self-attestation/i, `${profile.file} must declare fail-closed policy`);
+      assert.match(content, /doctor checks factory health, not task completion/, `${profile.file} must distinguish factory health from task completion`);
+      assert.doesNotMatch(content, /intra-worktree|isolated worktrees/i, `${profile.file} must not instruct obsolete task checkout behavior`);
 
       const inspection = inspectBridgeFileContent(content);
       assert.strictEqual(inspection.valid, true, `${profile.file} must satisfy gate inspection`);

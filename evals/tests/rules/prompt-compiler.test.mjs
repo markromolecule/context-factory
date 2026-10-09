@@ -116,6 +116,7 @@ describe("Unit 02.03: AC-03 and Provider Dispatch Integration", () => {
     assert.ok(capturedPayload, "Provider must be invoked with prepared payload");
     assert.match(capturedPayload.systemPrompt, /<language_rules/);
     assert.match(capturedPayload.systemPrompt, /directive:ts\./);
+    assert.match(capturedPayload.systemPrompt, /Ban `any`/);
     assert.match(capturedPayload.systemPrompt, /hash="/);
     assert.ok(capturedPayload.binding, "Binding receipt must be passed to provider");
     assert.equal(capturedPayload.binding.stack, "typescript");
@@ -137,6 +138,16 @@ describe("Unit 02.03: AC-03 and Provider Dispatch Integration", () => {
 });
 
 describe("Unit 02.03: Fail-Closed Provider Invocation Gate", () => {
+  it("rejects a hook that retains IDs and hashes but removes the actual rule statement", async () => {
+    let dispatched = false;
+    const result = await executeRun({
+      request: "Implement TypeScript service", stack: "typescript", scope: "src/service.ts",
+      provider: async () => { dispatched = true; return {}; },
+      hooks: { onPromptPrepare: ({ systemPrompt }) => ({ systemPrompt: systemPrompt.replace(/Ban `any`[^\n]+/, "") }) },
+    });
+    assert.notEqual(result.status, "success");
+    assert.equal(dispatched, false);
+  });
   it("never invokes provider when mandatory binding compilation fails due to requireBinding: true without binding", async () => {
     let providerInvoked = false;
     const captureProvider = async () => {

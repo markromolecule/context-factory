@@ -1,28 +1,13 @@
-# Host Project AI Agent Instructions & Context Factory Bridge
+# Context Factory Agent Instructions
 
-This repository uses **Context Factory** (located at `.`) for development standards, rules, workflows, subagents, and skills.
+For direct questions and trivial edits, use the relevant files; skip the workflow below.
 
-## Mandatory Directives & Agent Execution Contract
+For changes to code, plans, or docs:
 
-1. **Shared Contract:** Read the shared orchestration contract in `./orchestrator/SHARED.md` before executing tasks.
-2. **Context Resolution:** Deterministically resolve required context before non-trivial changes:
-   `node scripts/context.mjs resolve "<task description>"`
-3. **Universal Standards:** Follow rules in `./rules/`, workflows in `./workflows/`, and skills in `./skills/`.
-4. **Project Specifics:** Combine universal factory rules with project-specific rules in `./rules/` or `./.agents/rules/`.
+1. Read `orchestrator/SHARED.md`. Run `node scripts/context.mjs resolve "<request>"`. Read relevant results, explicitly named files, and the files being changed. The resolver suggests context; it does not limit what you may inspect.
+2. Write plans under `docs/tasks/` and ADRs under `docs/decisions/`. The `plan` skill creates a task branch when a plan is needed. Run `node scripts/context.mjs plan:check "<task-dir>"` before presenting a plan.
+3. For code changes, verify the recorded task branch when a plan exists. Write a failing test first for behavior changes, review your diff against the task's allowed files and tests, and run relevant checks. Follow required `preflight` and `conform` gates in the shared contract; stop on `FAIL` or `BLOCKED`.
 
-## Generated Documentation Scoping Contract
+For changes to this factory's instructions, rules, skills, or workflows, update its inventory and lock, then run `node scripts/context.mjs doctor`.
 
-- **Task Plans & Breakdowns:** All implementation plans, phase breakdowns, and task files MUST be written to `./docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/` in **this host repository**, NEVER inside `.`.
-- **Architecture Decisions (ADRs):** All architectural decision records MUST be saved to `./docs/decisions/` in **this host repository**.
-- **Templates:** Always load templates from `./docs/templates/Task.md`, `Phase.md`, `Unit.md`, and `Decision.md`.
-
-## Session Slash Commands & Quick Actions
-
-| Command | Action | Execution |
-| :--- | :--- | :--- |
-| `/plan`, `[PLAN]` | Scaffold phased plan in `./docs/tasks/` | `node scripts/context.mjs task:new "<title>"` |
-| `/plan-review`, `[PLAN_REVIEW]` | Audit plan graph and scope fences | `node scripts/context.mjs plan:check "<task-dir>"` |
-| `/test`, `[TEST]` | Test-first execution of verification | Active skill: `skills/engineering/test/SKILL.md` |
-| `/review`, `[REVIEW]` | Intra-worktree diff and scope review | Active skill: `skills/engineering/review/SKILL.md` |
-| `/resolve` | Resolve matching context rules & skills | `node scripts/context.mjs resolve "<prompt>"` |
-| `/doctor` | Verify context and lock health | `node scripts/context.mjs doctor` |
+Report what passed, failed, or was not run. `doctor` checks factory health; task completion also requires evidence that the requested outcome works.

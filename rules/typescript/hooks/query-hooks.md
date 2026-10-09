@@ -4,6 +4,7 @@ name: query-hooks
 description: Build stable TanStack Query hooks with centralized keys, typed inputs, deliberate caching, and UI-independent data access.
 scope: Query keys, `useQuery` wrappers, prefetching, server hydration, and query tests.
 stack: typescript
+frameworks: ["react"]
 appliesTo: ["src/**/hooks/**/*.ts", "src/**/hooks/**/*.tsx", "**/use*Query*.ts", "**/use*Query*.tsx"]
 layers: ["hooks", "state"]
 alwaysApply: false

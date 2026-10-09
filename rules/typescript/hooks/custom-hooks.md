@@ -4,6 +4,7 @@ name: custom-hooks
 description: Build focused, composable custom React hooks with stable referential identities, clear lifecycle discipline, and strict separation of UI and state logic.
 scope: Custom React hooks, state composition, callback memoization, lifecycle effects, and hook tests.
 stack: typescript
+frameworks: ["react"]
 appliesTo: ["src/**/hooks/**/*.ts", "src/**/hooks/**/*.tsx", "**/use*.ts", "**/use*.tsx"]
 layers: ["hooks", "state"]
 alwaysApply: false

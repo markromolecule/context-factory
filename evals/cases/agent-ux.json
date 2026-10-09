@@ -1,6 +1,6 @@
 {
   "name": "ux alias resolves ux-agent and feature-delivery workflow",
-  "request": "/ux create accessible user profile modal and custom hook",
+  "request": "/ux create accessible React user profile modal and custom hook",
   "expected": {
     "agent": "ux-agent",
     "workflow": "workflows/feature-delivery.md",

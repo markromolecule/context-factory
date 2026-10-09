@@ -26,6 +26,26 @@ tags: [rules, engineering]
 
 ## TypeScript
 
+Load shared language rules and only the framework rules for the affected package. Package dependencies take precedence over framework words in a prompt. Next.js also loads React; SolidJS never loads React or Next.js rules merely because its files use TSX. `rules/solid/` describes SOLID design principles, not SolidJS.
+
+Before editing, run from the host repository (replace the CLI path with your installed factory location):
+
+```sh
+node app/cli/bin/context-cli.mjs preflight "<task>" --stack typescript --scope "<file1>,<file2>" --strict --json
+```
+
+Read the returned rule paths and inspect the local package, lockfile, and tsconfig. A preflight PASS means a binding was compiled; it is not proof of code conformance. Run the package's real typecheck, lint, tests, and relevant build, then the required conformance gate. Do not treat missing tools or generic heuristic PASS results as verification.
+
+For direct prompting: **“Follow Context Factory's TypeScript rules for the affected files and installed framework. Read the selected rules before coding; verify with the project's checks and report failures or unrun checks.”**
+
+### Frameworks
+
+- [[rules/typescript/frameworks/react|React: components, effects, and state]]
+- [[rules/typescript/frameworks/nextjs|Next.js: router, server boundaries, and caching]]
+- [[rules/typescript/frameworks/solidjs|SolidJS: reactivity and ownership]]
+
+Each rule set adds only framework-specific constraints. Hook/library examples apply only when the corresponding library is installed; none authorize adding dependencies. When no framework is found in a host package, framework-specific rules are excluded. Unscoped discovery cannot inspect child workspace packages: provide affected files for reliable selection.
+
 ### Common
 
 - [[rules/typescript/common/async-discipline|Async and Concurrency Discipline]]

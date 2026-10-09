@@ -2,8 +2,9 @@ import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
 import { dirname, extname, isAbsolute, join, relative, resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
-import { compileRuleBinding } from "../orchestrator/rules/binding-compiler.mjs";
+import { compileRuleBinding, matchesGlob } from "../orchestrator/rules/binding-compiler.mjs";
 import { parseRuleCatalog } from "../orchestrator/rules/descriptor-parser.mjs";
+import { discoverFrameworkScope } from "./framework-scope.mjs";
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -303,6 +304,17 @@ export async function resolveContext(request, options = {}) {
   const manifest = await readJson("context-manifest.json");
   const hostDir = options.hostDir || options.target || null;
   const effectiveHost = hostDir ? resolve(process.cwd(), hostDir) : (process.cwd() !== root ? process.cwd() : null);
+  const rawScope = options.scope || options.affectedScope || options.paths || [];
+  const rawScopeArr = (Array.isArray(rawScope) ? rawScope : [rawScope])
+    .flatMap((value) => typeof value === "string" ? value.split(",").map((p) => p.trim()).filter(Boolean) : []);
+  const frameworkScope = await discoverFrameworkScope({ hostDir: effectiveHost, scope: rawScopeArr, request });
+  const appliesToScope = (meta) => {
+    const paths = rawScopeArr.length ? rawScopeArr : [""];
+    return paths.some((path) =>
+      (!rawScopeArr.length || !meta.appliesTo?.length || meta.appliesTo.some((glob) => matchesGlob(path, glob)))
+      && (!meta.frameworks?.length || meta.frameworks.some((f) => frameworkScope.byPath[path.replaceAll("\\", "/").replace(/^\.\//, "")]?.includes(f)))
+    );
+  };
 
   // Stack determination:
   // 1. Explicit options.stacks (array) or options.stack (string)
@@ -360,6 +372,7 @@ export async function resolveContext(request, options = {}) {
   const workflowEntries = await entries(manifest.workflows);
   const agentPaths = [...new Set([...(manifest.agents ?? []), ...(await filesUnder("agents"))])].filter((p) => p.endsWith("/AGENT.md"));
   const agentEntries = await entries(agentPaths);
+  const allowedRulePaths = new Set(ruleEntries.filter((entry) => appliesToScope(entry.meta)).map((entry) => entry.path));
 
   // 1. Check for explicit agent invocation via aliases
   let selectedAgent = null;
@@ -380,16 +393,19 @@ export async function resolveContext(request, options = {}) {
   }
 
   // 2. Rule selection (scored + alwaysApply + agent declared rules, filtered by stack)
-  const candidateRuleEntries = ruleEntries.filter((entry) => isRuleAllowed(entry.path));
+  const candidateRuleEntries = ruleEntries.filter((entry) => isRuleAllowed(entry.path) && allowedRulePaths.has(entry.path));
   const selectedRules = candidateRuleEntries
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
     .filter((entry) => (
       entry.relevance.score >= 4
+      || (entry.meta.frameworks?.length && rawScopeArr.length)
       || (entry.meta.alwaysApply === true && (hasAction || entry.meta.name === "evidence-and-claims"))
     ))
     .map((entry) => ({
       path: entry.path,
-      reason: entry.meta.alwaysApply === true
+      reason: entry.meta.frameworks?.length && rawScopeArr.length
+        ? `matched framework and affected files: ${entry.meta.frameworks.join(", ")}`
+        : entry.meta.alwaysApply === true
         ? (entry.meta.name === "evidence-and-claims" ? "global evidence contract" : "alwaysApply within action scope")
         : `matched: ${entry.relevance.matches.join(", ")}`,
     }));
@@ -397,7 +413,7 @@ export async function resolveContext(request, options = {}) {
   if (selectedAgent && Array.isArray(selectedAgent.meta.rules)) {
     const selectedRulePaths = new Set(selectedRules.map((item) => item.path));
     for (const rulePath of selectedAgent.meta.rules) {
-      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath) && isRuleAllowed(rulePath)) {
+      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath) && isRuleAllowed(rulePath) && allowedRulePaths.has(rulePath)) {
         selectedRules.push({ path: rulePath, reason: `declared by agent ${selectedAgent.meta.name}` });
         selectedRulePaths.add(rulePath);
       }
@@ -473,7 +489,7 @@ export async function resolveContext(request, options = {}) {
     ]);
     const selectedRulePaths = new Set(selectedRules.map((item) => item.path));
     for (const rulePath of linkedRulePaths) {
-      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath) && isRuleAllowed(rulePath)) {
+      if (!selectedRulePaths.has(rulePath) && manifest.rules.includes(rulePath) && isRuleAllowed(rulePath) && allowedRulePaths.has(rulePath)) {
         selectedRules.push({ path: rulePath, reason: `required by ${selectedWorkflow.path}` });
         selectedRulePaths.add(rulePath);
       }
@@ -567,10 +583,6 @@ export async function resolveContext(request, options = {}) {
   // Enforceable material rule binding compilation (requires explicit stack and non-empty affected scope)
   let binding = null;
   let bindingCompilation = null;
-  const rawScope = options.scope || options.affectedScope || options.paths || null;
-  const rawScopeArr = Array.isArray(rawScope)
-    ? rawScope
-    : (typeof rawScope === "string" && rawScope.trim() ? [rawScope.trim()] : []);
   const explicitStack = (typeof options.stack === "string" && options.stack.trim())
     ? options.stack.trim().toLowerCase()
     : (Array.isArray(options.stacks) && options.stacks.length === 1 ? options.stacks[0].trim().toLowerCase() : null);
@@ -587,6 +599,7 @@ export async function resolveContext(request, options = {}) {
       workflow: workflowName,
       affectedScope: rawScopeArr,
       descriptors: catalogResult.descriptors,
+      frameworksByPath: frameworkScope.byPath,
       waivers: options.waivers || [],
     });
     binding = bindingCompilation.binding;
@@ -596,6 +609,7 @@ export async function resolveContext(request, options = {}) {
     schemaVersion: 1,
     contextVersion: manifest.contextVersion,
     stacks: declaredStacks,
+    frameworks: frameworkScope.frameworks,
     request,
     requestTerms,
     agent: selectedAgent ? {

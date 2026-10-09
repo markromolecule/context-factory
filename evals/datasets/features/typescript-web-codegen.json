@@ -1,0 +1,23 @@
+{
+  "id": "ds-feat-02",
+  "name": "TypeScript Web Code-Generation Evaluation",
+  "domain": "features",
+  "request": "Deliver accessible React web component feature with strict TypeScript typing and boundary validation",
+  "expected": {
+    "workflow": "workflows/feature-delivery.md",
+    "rules": [
+      "rules/global/architecture-conformance.md",
+      "rules/global/code-quality.md",
+      "rules/typescript/common/type-safety.md",
+      "rules/typescript/common/runtime-validation.md"
+    ],
+    "skills": [
+      "skills/engineering/explore/SKILL.md",
+      "skills/productivity/plan/SKILL.md"
+    ]
+  },
+  "goldenOutput": {
+    "workflow": "workflows/feature-delivery.md",
+    "status": "completed"
+  }
+}

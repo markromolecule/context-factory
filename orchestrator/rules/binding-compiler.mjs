@@ -8,7 +8,7 @@ function computeSha256(content) {
 /**
  * Pure dependency-free glob matcher for file path patterns.
  */
-function matchesGlob(filePath, pattern) {
+export function matchesGlob(filePath, pattern) {
   const normPath = filePath.replaceAll("\\", "/").replace(/^\.\//, "");
   const normPattern = pattern.replaceAll("\\", "/").replace(/^\.\//, "");
 
@@ -78,6 +78,7 @@ export function compileRuleBinding({
   workflow = "feature-delivery",
   affectedScope = [],
   descriptors = [],
+  frameworksByPath = {},
   waivers = [],
   options = {}
 } = {}) {
@@ -133,6 +134,15 @@ export function compileRuleBinding({
     for (const dir of descriptor.directives || []) {
       const applicability = dir.applicability || {};
 
+      if (applicability.frameworks?.length && !sortedScope.some((path) =>
+        matchesAnyGlob(path, applicability.paths)
+        && applicability.frameworks.some((framework) => frameworksByPath[path]?.includes(framework))
+      )) {
+        excluded.push({ directiveId: dir.id, rulePath: descriptor.rulePath,
+          reason: "framework-mismatch: no matching framework in the affected package" });
+        continue;
+      }
+
       // Workflow check
       if (Array.isArray(applicability.workflows) && applicability.workflows.length > 0) {
         if (!applicability.workflows.includes(workflow)) {
@@ -167,6 +177,7 @@ export function compileRuleBinding({
         rulePath: descriptor.rulePath,
         mode: dir.mode,
         contentHash: dir.contentHash,
+        statement: dir.statement,
         reason: `matched-scope: stack=${targetStack}, scope=${sortedScope.join(", ")}`
       });
     }
@@ -180,7 +191,8 @@ export function compileRuleBinding({
         id: item.directiveId,
         rulePath: item.rulePath,
         mode: item.mode,
-        contentHash: item.contentHash
+        contentHash: item.contentHash,
+        statement: item.statement
       });
     }
   }

@@ -3,6 +3,77 @@ import assert from "node:assert/strict";
 import { compileRuleBinding } from "../../../orchestrator/rules/binding-compiler.mjs";
 import { loadSchema, validateSchema } from "../../../orchestrator/validator.mjs";
 import { resolveContext } from "../../../scripts/context-core.mjs";
+import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { renderCompiledDirectives } from "../../../orchestrator/rules/prompt-compiler.mjs";
+
+describe("Framework-specific TypeScript rules", () => {
+  async function withHost(packages, run) {
+    const hostDir = await mkdtemp(join(tmpdir(), "cf-frameworks-"));
+    try {
+      for (const [folder, dependencies] of Object.entries(packages)) {
+        await mkdir(join(hostDir, folder), { recursive: true });
+        await writeFile(join(hostDir, folder, "package.json"), JSON.stringify({ dependencies }));
+      }
+      await run(hostDir);
+    } finally {
+      await rm(hostDir, { recursive: true, force: true });
+    }
+  }
+
+  it("uses installed SolidJS despite React wording and includes actual rule statements", async () => {
+    await withHost({ ".": { "solid-js": "1.9.0" } }, async (hostDir) => {
+      const result = await resolveContext("Fix component using a React-like pattern", {
+        hostDir, stack: "typescript", scope: ["src/components/Counter.tsx"],
+      });
+      const ids = result.binding.directives.map((d) => d.id);
+      assert.ok(ids.includes("ts.solidjs.preserve-reactivity"));
+      assert.ok(!ids.some((id) => id.startsWith("ts.react.") || id.startsWith("ts.nextjs.")));
+      assert.ok(!ids.includes("ts.structure.rsc-default"));
+      assert.ok(!result.rules.some((r) => /backend\/|database\/|next-react/.test(r.path)));
+      assert.match(renderCompiledDirectives(result.binding), /Read reactive props inside tracked expressions/);
+    });
+  });
+
+  it("loads React alone for React and React plus Next.js for Next.js", async () => {
+    for (const dependencies of [{ react: "19.0.0" }, { next: "15.0.0", react: "19.0.0" }]) {
+      await withHost({ ".": dependencies }, async (hostDir) => {
+        const result = await resolveContext("Update component", { hostDir, stack: "typescript", scope: ["src/components/Button.tsx"] });
+        const ids = result.binding.directives.map((d) => d.id);
+        assert.ok(ids.includes("ts.react.hooks-and-effects"));
+        assert.equal(ids.includes("ts.structure.rsc-default"), Boolean(dependencies.next));
+        assert.ok(!ids.some((id) => id.startsWith("ts.solidjs.")));
+      });
+    }
+  });
+
+  it("uses each monorepo package and never binds framework rules to another package's files", async () => {
+    await withHost({ ".": {}, "apps/web": { react: "19.0.0" }, "apps/dashboard": { "solid-js": "1.9.0" } }, async (hostDir) => {
+      const result = await resolveContext("Update component and shared utility", {
+        hostDir, stack: "typescript", scope: ["apps/web/src/utils.ts", "apps/dashboard/src/components/Counter.tsx"],
+      });
+      assert.ok(result.binding.directives.some((d) => d.id === "ts.solidjs.preserve-reactivity"));
+      assert.ok(!result.binding.directives.some((d) => d.id === "ts.react.hooks-and-effects"));
+      assert.ok(result.binding.directives.some((d) => d.id === "ts.forms.visible-labels-required"));
+    });
+  });
+
+  it("does not guess a host framework from the prompt when the package declares none", async () => {
+    await withHost({ ".": {} }, async (hostDir) => {
+      const result = await resolveContext("Use React or SolidJS for this change", { hostDir, stack: "typescript", scope: ["src/Component.tsx"] });
+      assert.deepEqual(result.frameworks, []);
+      assert.ok(!result.binding.directives.some((d) => /frameworks\//.test(d.rulePath)));
+    });
+  });
+
+  it("surfaces invalid package metadata instead of silently guessing framework rules", async () => {
+    await withHost({ ".": { react: "19.0.0" } }, async (hostDir) => {
+      await writeFile(join(hostDir, "package.json"), "{invalid");
+      await assert.rejects(resolveContext("Fix React component", { hostDir, stack: "typescript", scope: ["src/Component.tsx"] }), SyntaxError);
+    });
+  });
+});
 
 describe("Unit 02.01: Rule Binding Compiler and Artifact-Aware Resolver", () => {
   const sampleDescriptors = [

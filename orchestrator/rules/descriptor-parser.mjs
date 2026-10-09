@@ -224,6 +224,9 @@ export function parseRuleDescriptor(markdownContent, rulePath, options = {}) {
 
     // Applicability mapping from rule metadata or defaults
     const applicability = {};
+    if (Array.isArray(meta.frameworks) && meta.frameworks.length > 0) {
+      applicability.frameworks = meta.frameworks;
+    }
     if (Array.isArray(meta.appliesTo) && meta.appliesTo.length > 0) {
       applicability.paths = meta.appliesTo;
     }

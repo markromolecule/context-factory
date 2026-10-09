@@ -4,7 +4,7 @@ name: dialogs-and-overlays
 description: Choose and implement dialogs, sheets, popovers, and confirmations without trapping users in unnecessary interruption.
 scope: Modal and non-modal dialogs, drawers, sheets, popovers, confirmations, and forms rendered within overlays.
 stack: typescript
-appliesTo: ["src/**/components/**/*.tsx", "src/**/ui/**/*.tsx", "app/**/*.tsx"]
+appliesTo: ["**/src/**/components/**/*.tsx", "**/src/**/ui/**/*.tsx", "**/app/**/*.tsx"]
 layers: ["ui", "components"]
 alwaysApply: false
 ---

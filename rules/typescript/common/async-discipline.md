@@ -19,7 +19,7 @@ alwaysApply: true
 ## Waterfall elimination and parallel execution
 
 - [directive:ts.async.no-sequential-await-loop][mode:automated-blocking][verifier:linter] Prohibit sequential `await` inside loops (`for ... of { await ... }`) when loop iterations are independent.
-- [directive:ts.async.use-promise-all][mode:advisory][verifier:none] Use `Promise.all()` for strictly interdependent parallel operations where failure of one operation invalidates the entire batch.
+- [directive:ts.async.use-promise-all][mode:advisory][verifier:none] Use `Promise.all()` for independent operations whose results are all required. Await dependent operations in order. Promise.all rejects on a failure but does not cancel sibling work.
 - [directive:ts.async.use-promise-allsettled][mode:advisory][verifier:none] Use `Promise.allSettled()` for independent operations where individual task failures must not abort sibling operations (e.g., multi-channel notifications, audit trails).
 
 ## Concurrency pooling and database protection
@@ -30,7 +30,7 @@ alwaysApply: true
 ## Abort signals and cancellation
 
 - [directive:ts.async.accept-abort-signal][mode:evidence-blocking][verifier:human-evidence] Accept and propagate `AbortSignal` across all asynchronous I/O functions, network requests, long polling, and database queries.
-- [directive:ts.async.propagate-request-signal][mode:evidence-blocking][verifier:human-evidence] Pass incoming HTTP request `AbortSignal` down to database clients to immediately abort running SQL queries if the client disconnects before completion.
+- [directive:ts.async.propagate-request-signal][mode:evidence-blocking][verifier:human-evidence] Propagate request cancellation through documented driver APIs where supported. Do not invent AbortSignal parameters or claim a database query stopped merely because the HTTP request ended; use supported timeouts and suppress stale results when cancellation is unavailable.
 - [directive:ts.async.check-signal-aborted][mode:advisory][verifier:none] Check `signal.aborted` or listen to `signal.addEventListener("abort", ...)` before beginning expensive async work or between sequential batch iterations.
 - [directive:ts.async.timeout-signal][mode:advisory][verifier:none] Respect timeout signals (`AbortSignal.timeout(ms)`) for external HTTP calls and downstream RPC operations.
 

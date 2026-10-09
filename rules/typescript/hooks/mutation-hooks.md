@@ -4,6 +4,7 @@ name: mutation-hooks
 description: Implement TanStack Query mutations with typed variables, safe optimistic cache updates, deterministic error rollback, and narrow invalidation.
 scope: useMutation wrappers, optimistic updates, cache rollbacks, query invalidation, and mutation tests.
 stack: typescript
+frameworks: ["react"]
 appliesTo: ["src/**/hooks/**/*.ts", "src/**/hooks/**/*.tsx", "**/use*Mutation*.ts", "**/use*Mutation*.tsx"]
 layers: ["hooks", "state"]
 alwaysApply: false
