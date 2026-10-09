@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "kind": "execution-packet",
+  "owner": "plan-review",
+  "status": "approved",
+  "reviewReference": "docs/reviews/2026-10-09-PLN-0005-plan-review.md",
+  "approvalReference": "user-approved:2026-10-09-interactive-modal",
+  "taskBranch": "feat/PLN-0005-ts-conformance-receipts-fixtures",
+  "targetBranch": "master",
+  "baseCommit": "1ed301a6b0b33f6cb1b9645670ccfee7d1cbd422",
+  "source": {
+    "path": "docs/tasks/2026/10/2026-10-09/feat-PLN-0005-ts-conformance-receipts-fixtures.md",
+    "sha256": "sha256:06c66cc05a9165e6bd410f006b04a4d9a76e1fdc458de362d7883431f05363f7"
+  }
+}
