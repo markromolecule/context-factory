@@ -1,7 +1,7 @@
 ---
 unit: "01.01"
 title: "Wrong Stack Unit"
-stack: "typescript"
+stack: "flutter"
 depends_on: []
 ---
 # Unit 01.01: Wrong Stack Unit
@@ -10,7 +10,7 @@ depends_on: []
 **In scope:** `src/auth.ts`
 
 <language_rules>
-- `rules/laravel/common/project-structure.md`: Laravel project structure on TypeScript unit
+- `rules/typescript/common/runtime-validation.md`: TypeScript runtime validation on Flutter unit
 </language_rules>
 
 ## Steps

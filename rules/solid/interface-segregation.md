@@ -4,7 +4,7 @@ name: interface-segregation
 description: Keep interfaces, types, and component prop definitions fine-grained, cohesive, and client-specific.
 scope: TypeScript interfaces, type definitions, service ports, component props, and API contracts.
 stack: global
-appliesTo: ["**/*.ts", "**/*.tsx", "**/*.php", "**/*.dart"]
+appliesTo: ["**/*.ts", "**/*.tsx"]
 layers: ["architecture", "domain", "services", "components"]
 alwaysApply: false
 ---

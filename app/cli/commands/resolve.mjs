@@ -2,6 +2,18 @@ import { resolveContext } from "../../../scripts/context-core.mjs";
 import { badges, colors, table } from "../core/formatter.mjs";
 
 export async function handleResolveCommand(args = [], flags = {}) {
+  const stack = flags.stack || flags.stacks || undefined;
+  const normalizedStack = typeof stack === "string" ? stack.toLowerCase() : (Array.isArray(stack) ? stack[0]?.toLowerCase() : "");
+  if (normalizedStack === "laravel") {
+    const errorMsg = "Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem.";
+    if (flags.json) {
+      console.log(JSON.stringify({ status: "BLOCKED", error: errorMsg }, null, 2));
+      return 2;
+    }
+    console.error(`\n${badges.warn("BLOCKED")} ${errorMsg}\n`);
+    return 2;
+  }
+
   const request = args.join(" ").trim();
   if (!request) {
     throw new Error("Usage: context-cli resolve \"<task description or request prompt>\"");

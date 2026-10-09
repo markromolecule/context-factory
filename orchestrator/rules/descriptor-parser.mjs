@@ -68,13 +68,12 @@ function parseFrontmatter(markdown) {
 function inferStack(rulePath, frontmatterStack) {
   if (frontmatterStack && typeof frontmatterStack === "string") {
     const s = frontmatterStack.toLowerCase();
-    if (["typescript", "laravel", "global", "common", "solid", "flutter", "general"].includes(s)) {
+    if (["typescript", "global", "common", "solid", "flutter", "general"].includes(s)) {
       return s;
     }
   }
   const normalized = rulePath.replaceAll("\\", "/").toLowerCase();
   if (normalized.includes("/typescript/")) return "typescript";
-  if (normalized.includes("/laravel/")) return "laravel";
   if (normalized.includes("/solid/")) return "solid";
   if (normalized.includes("/global/")) return "global";
   if (normalized.includes("/flutter/")) return "flutter";

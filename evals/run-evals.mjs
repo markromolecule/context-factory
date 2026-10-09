@@ -95,7 +95,7 @@ export async function runDatasetEvaluations({ provider = "mock", model } = {}) {
             stack: dataset.stack,
             scope: dataset.scope,
           });
-          const binding = selection?.binding || {
+          const binding = (selection?.binding && selection.binding.directives?.length > 0) ? selection.binding : {
             id: `binding-${dataset.stack}`,
             bindingHash: "sha256:0000000000000000000000000000000000000000000000000000000000000000",
             stack: dataset.stack,

@@ -4,7 +4,7 @@ name: single-responsibility
 description: Ensure each module, class, service, and React component/hook has a single, cohesive reason to change.
 scope: System architecture, backend modules, services, controllers, repositories, frontend components, and custom hooks.
 stack: global
-appliesTo: ["**/*.ts", "**/*.tsx", "**/*.php", "**/*.dart"]
+appliesTo: ["**/*.ts", "**/*.tsx"]
 layers: ["architecture", "domain", "services", "controllers", "components"]
 alwaysApply: false
 ---

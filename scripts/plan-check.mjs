@@ -313,18 +313,10 @@ export function inferUnitStack(scope = [], meta = {}) {
     return meta.stack.trim().toLowerCase();
   }
   const tags = Array.isArray(meta?.tags) ? meta.tags.map((t) => String(t).toLowerCase()) : [];
-  if (tags.includes("laravel") || String(meta?.parent || "").includes("laravel")) {
-    return "laravel";
-  }
-  if (tags.includes("flutter") || String(meta?.parent || "").includes("flutter")) {
-    return "flutter";
-  }
   if (tags.includes("typescript") || String(meta?.parent || "").includes("typescript")) {
     return "typescript";
   }
   const scopeFiles = Array.isArray(scope) ? scope : [];
-  if (scopeFiles.some((f) => /\.(php)$/i.test(f))) return "laravel";
-  if (scopeFiles.some((f) => /\.(dart)$/i.test(f))) return "flutter";
   if (scopeFiles.some((f) => /\.(ts|tsx|js|mjs|jsx)$/i.test(f))) return "typescript";
   return "typescript";
 }

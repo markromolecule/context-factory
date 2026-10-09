@@ -111,8 +111,8 @@ feature: "laravel-common-and-artisan-standards"
 
 - [[docs/Rules|Rules Map]]
 - [[docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards|ADR 0022]]
-- [[rules/laravel/foundation/conventions|Laravel Conventions Rule]]
-- [[rules/laravel/application/business-logic-and-actions|Laravel Business Logic and Actions]]
+- `rules/laravel/foundation/conventions` (decommissioned in ADR 0036)
+- `rules/laravel/application/business-logic-and-actions` (decommissioned in ADR 0036)
 
 ## 7. Readiness Audit & Completion Gate
 

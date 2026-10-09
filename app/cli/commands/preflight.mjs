@@ -8,6 +8,16 @@ import { normalizeScope } from "../core/options.mjs";
 export async function handlePreflightCommand(args = [], flags = {}) {
   const isJson = Boolean(flags.json);
   const stack = flags.stack || flags.stacks || undefined;
+  const normalizedStack = typeof stack === "string" ? stack.toLowerCase() : (Array.isArray(stack) ? stack[0]?.toLowerCase() : "");
+  if (normalizedStack === "laravel") {
+    const errorMsg = "Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem.";
+    if (isJson) {
+      console.log(JSON.stringify({ status: "BLOCKED", error: errorMsg }, null, 2));
+      return 2;
+    }
+    console.error(`\n${badges.warn("BLOCKED")} ${errorMsg}\n`);
+    return 2;
+  }
   const scope = normalizeScope(flags.scope || flags.paths);
   const waiverPath = flags.waiver || null;
 

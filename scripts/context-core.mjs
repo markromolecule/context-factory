@@ -343,9 +343,6 @@ export async function resolveContext(request, options = {}) {
 
   if (!declaredStacks || declaredStacks.length === 0) {
     const inferred = [];
-    if (/\b(laravel|artisan|eloquent|blade|pint|pest)\b/i.test(request)) {
-      inferred.push("laravel");
-    }
     if (/\b(typescript|nextjs|react|zod|tailwind)\b/i.test(request)) {
       inferred.push("typescript");
     }
@@ -354,6 +351,10 @@ export async function resolveContext(request, options = {}) {
     } else {
       declaredStacks = ["typescript"];
     }
+  }
+
+  if (declaredStacks.includes("laravel")) {
+    throw new Error("Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem.");
   }
 
   const isRuleAllowed = (rulePath) => {

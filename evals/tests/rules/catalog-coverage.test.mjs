@@ -16,7 +16,7 @@ describe("TypeScript release catalog coverage", () => {
     for (const directive of directives) counts[directive.mode] += 1;
 
     assert.equal(catalogDiagnostics.length, 0);
-    assert.equal(coverage.unsupportedCount, 399, "unmigrated guidance remains visible outside the TypeScript/global release scope");
+    assert.equal(coverage.unsupportedCount, 20, "unmigrated guidance remains visible outside the TypeScript/global release scope");
     assert.equal(selected.length, 38);
     assert.equal(directives.length, 362);
     assert.equal(counts["automated-blocking"], 138);

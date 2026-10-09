@@ -54,9 +54,12 @@ export async function evaluateConformance({
   if (!adapter) {
     // No registered adapter for this stack: mark directives as TOOL_UNAVAILABLE or UNSUPPORTED
     const now = new Date().toISOString();
-    rawResults = (binding.directives || []).map((dir) => ({
+    const directives = (binding.directives && binding.directives.length > 0)
+      ? binding.directives
+      : [{ id: `${binding.stack}.adapter.missing`, mode: "automated-blocking" }];
+    rawResults = directives.map((dir) => ({
       directiveId: dir.id,
-      status: dir.mode === "unsupported" ? "UNSUPPORTED" : "TOOL_UNAVAILABLE",
+      status: dir.mode === "unsupported" ? "UNSUPPORTED" : "FAIL",
       mode: dir.mode,
       evidence: {
         verifierType: "no-adapter-registered",
