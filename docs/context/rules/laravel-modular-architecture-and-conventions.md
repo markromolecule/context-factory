@@ -94,8 +94,8 @@ feature: "laravel-modular-architecture-and-conventions"
 
 ## 7. References & External Context
 
-- [[rules/laravel/common/project-structure|Laravel Modular Project Structure]]
-- [[rules/laravel/common/naming-conventions|Laravel Naming Conventions]]
+- `rules/laravel/common/project-structure` (decommissioned in ADR 0036)
+- `rules/laravel/common/naming-conventions` (decommissioned in ADR 0036)
 - [[docs/decisions/0021-explicit-language-stack-selection|ADR 0021: Language Stack Selection]]
 - [[docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards|ADR 0022: Laravel Rule Taxonomy]]
 - [[docs/decisions/0023-laravel-modular-domain-architecture-and-unified-conventions|ADR 0023: Laravel Modular Domain Architecture]]

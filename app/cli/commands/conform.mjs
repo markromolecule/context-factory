@@ -3,7 +3,6 @@ import { isAbsolute, join, resolve } from "node:path";
 import { resolveContext, root, sha256 } from "../../../scripts/context-core.mjs";
 import { evaluateConformance } from "../../../orchestrator/conformance/conformance-orchestrator.mjs";
 import { registerTypeScriptAdapter } from "../../../orchestrator/conformance/adapters/typescript.mjs";
-import { registerLaravelAdapter } from "../../../orchestrator/conformance/adapters/laravel.mjs";
 import { validateWaiver } from "../../../orchestrator/conformance/waiver-policy.mjs";
 import { verifyConformanceReport } from "../../../orchestrator/conformance/report-verifier.mjs";
 import { badges, colors } from "../core/formatter.mjs";
@@ -12,10 +11,19 @@ import { normalizeScope } from "../core/options.mjs";
 export async function handleConformCommand(args = [], flags = {}) {
   // Ensure stack adapters are registered at the composition root.
   registerTypeScriptAdapter();
-  registerLaravelAdapter();
 
   const isJson = Boolean(flags.json);
   const stack = flags.stack || flags.stacks || "typescript";
+  const normalizedStack = typeof stack === "string" ? stack.toLowerCase() : (Array.isArray(stack) ? stack[0]?.toLowerCase() : "");
+  if (normalizedStack === "laravel") {
+    const errorMsg = "Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem.";
+    if (isJson) {
+      console.log(JSON.stringify({ verdict: "BLOCKED", status: "BLOCKED", error: errorMsg }, null, 2));
+      return 2;
+    }
+    console.error(`\n${badges.warn("BLOCKED")} ${errorMsg}\n`);
+    return 2;
+  }
   const scope = normalizeScope(flags.scope || flags.paths);
   const waiverPath = flags.waiver || null;
   const humanEvidence = flags["human-evidence"] || flags.humanEvidence || flags.evidence || null;

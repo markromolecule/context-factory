@@ -4,7 +4,7 @@ name: code-quality
 description: Keep production TypeScript explicit, testable, reviewable, and free from accidental complexity.
 scope: All authored TypeScript, JavaScript, tests, configuration, and generated starter code.
 stack: global
-appliesTo: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs", "**/*.php", "**/*.dart"]
+appliesTo: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs"]
 layers: ["domain", "services", "controllers", "components", "tests"]
 alwaysApply: false
 ---

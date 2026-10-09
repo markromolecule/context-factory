@@ -4,7 +4,7 @@ name: dependency-inversion
 description: Enforce inward-pointing dependencies where high-level policy depends on abstractions rather than low-level concrete implementations.
 scope: System architecture, backend service dependencies, repository interfaces, external integrations, and React dependency injection.
 stack: global
-appliesTo: ["**/*.ts", "**/*.tsx", "**/*.php", "**/*.dart"]
+appliesTo: ["**/*.ts", "**/*.tsx"]
 layers: ["architecture", "domain", "services", "components"]
 alwaysApply: false
 ---

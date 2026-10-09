@@ -574,7 +574,9 @@ export const typeScriptAdapter = {
     const hostDir = options.cwd || process.cwd();
     const readTextFn = options.readTextFn || readFile;
     const commandRunner = commandService || executeCommand;
-    const isFixtureMode = Boolean(capabilities?.fixtureMode || options?.fixtureMode);
+    const isFixtureMode = capabilities?.fixtureMode !== undefined
+      ? Boolean(capabilities.fixtureMode)
+      : Boolean(options?.fixtureMode || (!capabilities && options?.readTextFn));
     const baseCaps = capabilities?.tools ? capabilities : await discoverTypeScriptCapabilities(hostDir, { readTextFn });
     const effectiveCaps = { ...baseCaps, fixtureMode: isFixtureMode };
 

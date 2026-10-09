@@ -1,0 +1,14 @@
+{
+  "name": "typescript backend resolves typescript backend rules",
+  "request": "/feature create user registration endpoint with runtime validation schemas and controllers",
+  "options": {
+    "stacks": ["typescript"]
+  },
+  "expected": {
+    "workflow": "workflows/feature-delivery.md",
+    "rules": [
+      "rules/typescript/common/runtime-validation.md",
+      "rules/typescript/backend/controllers-and-routes.md"
+    ]
+  }
+}

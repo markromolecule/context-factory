@@ -189,9 +189,9 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.ok(capabilities);
     assert.ok(Array.isArray(capabilities.adapters));
     assert.ok(capabilities.adapters.some((a) => a.stack === "typescript" && a.status === "ready"));
-    assert.ok(capabilities.adapters.some((a) => a.stack === "laravel" && a.status === "ready"));
+    assert.strictEqual(capabilities.adapters.some((a) => a.stack === "laravel"), false);
     assert.ok(capabilities.supportedStacks.includes("typescript"));
-    assert.ok(capabilities.supportedStacks.includes("laravel"));
+    assert.strictEqual(capabilities.supportedStacks.includes("laravel"), false);
     assert.ok(capabilities.unsupportedStacks.includes("flutter"));
     assert.strictEqual(capabilities.fullyEnforcedFromFilesAlone, false);
     assert.strictEqual(capabilities.instructionOnlyProfiles, true);
@@ -222,7 +222,7 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.ok(capturedJson, "Doctor JSON output must be produced");
     assert.strictEqual(capturedJson.checks.editorIntegrity.fullyEnforcedFromFilesAlone, false);
     assert.ok(capturedJson.checks.enforcementCapabilities);
-    assert.deepStrictEqual(capturedJson.checks.enforcementCapabilities.supportedStacks, ["typescript", "laravel"]);
+    assert.deepStrictEqual(capturedJson.checks.enforcementCapabilities.supportedStacks, ["typescript"]);
     assert.ok(capturedJson.checks.enforcementCapabilities.unsupportedStacks.includes("flutter"));
     assert.strictEqual(capturedJson.checks.enforcementCapabilities.enforcementMode, "repository-cli");
   });

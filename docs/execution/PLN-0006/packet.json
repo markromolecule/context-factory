@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "kind": "execution-packet",
+  "owner": "plan-review",
+  "status": "approved",
+  "reviewReference": "docs/reviews/2026-10-09-PLN-0006-plan-review.md",
+  "approvalReference": "user-approved:2026-10-09-interactive-modal",
+  "taskBranch": "refactor/PLN-0006-decommission-laravel-and-php-stack",
+  "targetBranch": "master",
+  "baseCommit": "d0aa38c5a6474f3eb00b8f83f86510ba59bb4cb6",
+  "source": {
+    "path": "docs/tasks/2026/10/2026-10-09/refactor-PLN-0006-decommission-laravel-and-php-stack.md",
+    "sha256": "sha256:fc2802e7ac2d8a59157fceee1642ad66a399014be3729a1a1827632b6cbc2e11"
+  }
+}
