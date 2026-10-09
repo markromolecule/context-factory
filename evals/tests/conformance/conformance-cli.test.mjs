@@ -238,4 +238,19 @@ describe("Unit 03.03: AC-08 Authoritative Conformance CLI Command", () => {
       await rm(tempDir, { recursive: true, force: true });
     }
   });
+
+  it("exits 2 (BLOCKED) when host tooling is missing in host mode without fixtures (AC-06)", async () => {
+    const exitCode = await handleConformCommand(
+      [],
+      {
+        stack: "typescript",
+        scope: "src/services/auth.ts",
+        humanEvidence: "Architecture approved by staff lead.",
+        fixtureMode: false,
+        json: true,
+      }
+    );
+
+    assert.equal(exitCode, 2);
+  });
 });

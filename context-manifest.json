@@ -232,6 +232,7 @@
     "evals/tests/conformance/lifecycle-conformance.test.mjs",
     "evals/tests/conformance/receipt-identity.test.mjs",
     "evals/tests/conformance/typescript-adapter.test.mjs",
+    "evals/tests/conformance/typescript-fixtures.test.mjs",
     "evals/tests/lifecycle/discovery-handoff.test.mjs",
     "evals/tests/lifecycle/execution-handoff.test.mjs",
     "evals/tests/lifecycle/handoff-contract.test.mjs",

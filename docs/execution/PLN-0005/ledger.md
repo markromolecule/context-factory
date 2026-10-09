@@ -16,7 +16,7 @@
 | :--- | :--- | :--- | :--- |
 | **Phase 01** | Discovery, Scenarios, and Boundary Analysis | 01.01 | **COMPLETED** |
 | **Phase 02** | Architecture, Contracts, and Data Modeling | 02.01 | **COMPLETED** |
-| **Phase 03** | Incremental Implementation and Tests | 03.01 | **PLANNED** |
+| **Phase 03** | Incremental Implementation and Tests | 03.01 | **COMPLETED** |
 | **Phase 04** | Verification, Quality Gates, and Release | 04.01 | **PLANNED** |
 
 ---
@@ -66,5 +66,29 @@
   - `npm run lint` $\rightarrow$ `PASS` (62 rules, 18 skills, 12 workflows, 477 Markdown files)
   - `node scripts/context.mjs doctor` $\rightarrow$ `PASS` (`HEALTHY`, 32/32 evaluations passed)
 - **Status:** `COMPLETED`
+
+### Unit 03.01: Incremental Implementation and Tests
+
+- **Phase:** 03 (Incremental Implementation and Tests)
+- **Unit ID:** `03.01`
+- **Timestamp:** 2026-10-09
+- **Scope & Deliverables:**
+  - Authored paired positive and negative fixture matrix in `evals/fixtures/typescript/`:
+    - `evals/fixtures/typescript/good/ban-any.ts` & `bad/ban-any.ts` (Class 1: Type safety)
+    - `evals/fixtures/typescript/good/strict-compiler.ts` & `bad/strict-compiler.ts` (Class 2: Compiler settings)
+    - `evals/fixtures/typescript/good/floating-promises.ts` & `bad/floating-promises.ts` (Class 3: Async & promises)
+    - `evals/fixtures/typescript/good/boundary-validation.ts` & `bad/boundary-validation.ts` (Class 4: Boundary validation)
+  - Authored comprehensive automated test suite in [`evals/tests/conformance/typescript-fixtures.test.mjs`](file:///Applications/XAMPP/xamppfiles/htdocs/context-factory/evals/tests/conformance/typescript-fixtures.test.mjs) asserting 100% defect detection on bad fixtures and 0 false positives on good fixtures.
+  - Added host mode `TOOL_UNAVAILABLE` (exit code 2 `BLOCKED`) test in [`evals/tests/conformance/conformance-cli.test.mjs`](file:///Applications/XAMPP/xamppfiles/htdocs/context-factory/evals/tests/conformance/conformance-cli.test.mjs) satisfying AC-06.
+  - Registered `evals/tests/conformance/typescript-fixtures.test.mjs` in `context-manifest.json` under `tools` and pinned in `context-lock.json`.
+- **Verification Commands & Results:**
+  - `node --test evals/tests/conformance/typescript-fixtures.test.mjs` $\rightarrow$ `PASS` (10/10 passed)
+  - `node --test evals/tests/conformance/conformance-cli.test.mjs` $\rightarrow$ `PASS` (11/11 passed)
+  - `node --test evals/tests/conformance/*.test.mjs` $\rightarrow$ `PASS` (89/89 passed)
+  - `npm test` $\rightarrow$ `PASS` (32/32 evaluations passed)
+  - `npm run lint` $\rightarrow$ `PASS` (62 rules, 18 skills, 12 workflows, 477 Markdown files)
+  - `node scripts/context.mjs doctor` $\rightarrow$ `PASS` (`HEALTHY`, 32/32 evaluations passed)
+- **Status:** `COMPLETED`
+
 
 
