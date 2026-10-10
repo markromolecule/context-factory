@@ -424,4 +424,99 @@ describe("Representative Web Code-Generation Evaluation Suite", () => {
     const ambiguous = await resolveContext("Create a TypeScript backend order operation", { stack: "typescript" });
     assert.equal(ambiguous.binding, null, "A pathless request must not infer a host module convention");
   });
+
+  it("PLN-0008: evaluates representative pragmatic design guidance separately from rendered payload size", async () => {
+    const dataset = JSON.parse(await readFile(
+      join(process.cwd(), "evals/datasets/features/typescript-pragmatic-design.json"),
+      "utf8",
+    ));
+
+    for (const scenario of dataset.scenarios) {
+      const selection = await resolveContext(scenario.request, {
+        stack: "typescript",
+        scope: scenario.scope,
+      });
+      assert.ok(selection.binding, `${scenario.id} needs a material binding`);
+
+      const selectedIds = selection.binding.directives.map((directive) => directive.id);
+      for (const directiveId of scenario.expectedDirectiveIds) {
+        assert.ok(selectedIds.includes(directiveId), `${scenario.id} must select ${directiveId}`);
+      }
+      assert.ok(
+        !selectedIds.some((directiveId) => /^(ts\.(?:react|nextjs|solidjs)\.|ts\.structure\.rsc-default$)/.test(directiveId)),
+        `${scenario.id} must exclude unrelated UI and framework directives`,
+      );
+
+      const compiled = compilePrompt({
+        request: scenario.request,
+        systemPrompt: "You are a TypeScript backend engineer.",
+        selection,
+        binding: selection.binding,
+      });
+      const payload = buildOpenAIPayload({ prompt: compiled.prompt, systemPrompt: compiled.systemPrompt });
+      const renderedPayload = JSON.stringify(payload);
+      assert.equal(
+        Buffer.byteLength(renderedPayload, "utf8"),
+        scenario.payload.finalBytes,
+        `${scenario.id} rendered payload bytes must match recorded measurement`,
+      );
+      assert.equal(
+        scenario.payload.finalBytes - scenario.payload.baselineBytes,
+        scenario.payload.deltaBytes,
+        `${scenario.id} must record its payload delta without implying a target reduction`,
+      );
+
+      for (const directiveId of scenario.expectedDirectiveIds) {
+        const directive = selection.binding.directives.find((candidate) => candidate.id === directiveId);
+        assert.ok(renderedPayload.includes(directive.statement), `${scenario.id} must render ${directiveId}`);
+      }
+
+      for (const requiredPattern of scenario.quality.requiredPatterns) {
+        assert.match(scenario.representativeOutput, new RegExp(requiredPattern), `${scenario.id} quality check: ${requiredPattern}`);
+      }
+      for (const forbiddenPattern of scenario.quality.forbiddenPatterns) {
+        assert.doesNotMatch(scenario.representativeOutput, new RegExp(forbiddenPattern), `${scenario.id} quality check: ${forbiddenPattern}`);
+      }
+    }
+  });
+
+  it("PLN-0008: enforces honest conformance where missing evidence blocks subjective directives", async () => {
+    const selection = await resolveContext("Send notification with single provider", {
+      stack: "typescript",
+      scope: ["src/modules/notifications/send-notification/send-notification.service.ts"],
+    });
+    assert.ok(selection.binding, "Needs material binding");
+
+    // Negative case: No human evidence provided for evidence-blocking directive
+    const unverifiedConformance = await evaluateConformance({
+      binding: selection.binding,
+      changedScope: ["src/modules/notifications/send-notification/send-notification.service.ts"],
+      options: {
+        readTextFn: async () => "export function sendNotification() {}",
+      },
+    });
+
+    assert.equal(unverifiedConformance.verdict, "BLOCKED", "Missing evidence must yield BLOCKED verdict");
+    const yagniResult = unverifiedConformance.results.find((r) => r.directiveId === "ts.pragmatic.yagni-present-need");
+    assert.ok(yagniResult, "Must evaluate YAGNI directive");
+    assert.equal(yagniResult.status, "NOT_AUTOMATABLE", "Without evidence, subjective directive is NOT_AUTOMATABLE");
+    assert.equal(yagniResult.mode, "evidence-blocking");
+    assert.equal(yagniResult.evidence.verifierType, "human-judgment");
+
+    // Positive case: With named human evidence
+    const verifiedConformance = await evaluateConformance({
+      binding: selection.binding,
+      changedScope: ["src/modules/notifications/send-notification/send-notification.service.ts"],
+      options: {
+        readTextFn: async () => "export function sendNotification() {}",
+        humanEvidence: "Joseph verified single provider implementation conforms to present requirements.",
+      },
+    });
+
+    const verifiedYagni = verifiedConformance.results.find((r) => r.directiveId === "ts.pragmatic.yagni-present-need");
+    assert.ok(verifiedYagni);
+    assert.equal(verifiedYagni.status, "PASS", "Named evidence allows subjective directive to pass");
+    assert.equal(verifiedYagni.evidence.verifierType, "human-judgment");
+    assert.match(verifiedYagni.evidence.humanEvidence, /Joseph verified/);
+  });
 });

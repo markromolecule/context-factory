@@ -177,3 +177,35 @@
 - **Diff Hash:** `sha256:83e504902df1a9cad29ba6aa7bd3bfb564a2ed13483db0c8d6649db6dce2aa5c`
 - **Human Evidence:** "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
 - **Verdict:** **PASS** (47/47 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0008/unit-03-02-conformance-report.json --binding sha256:bbd03b47c1a91fbbd575ac39ac9861212c8c7e1d4d68cd2cfd691b8070eaa220`.
+
+---
+
+## Unit 04.01: TypeScript Selection, Enforcement, and Whole-Task Release
+
+### Changes
+
+- Added `evals/datasets/features/typescript-pragmatic-design.json` evaluation dataset testing single-implementation direct design, composition for real variants, and Demeter/tell-don't-ask DTO read exceptions with exact UTF-8 JSON payload measurements.
+- Updated `evals/datasets/features/typescript-backend-codegen.json` payload byte measurements reflecting the addition of the 4 pragmatic design directives across backend TypeScript scopes.
+- Updated `evals/tests/rules/catalog-coverage.test.mjs` to account for 41 rules, 381 directives (131 automated-blocking, 173 evidence-blocking, 77 advisory).
+- Extended `evals/tests/rules/rule-binding.test.mjs` with test suite `Pragmatic TypeScript design rules binding (PLN-0008)` asserting single binding per directive on `.ts`/`.tsx`, exact statement rendering in prompt/payload, and exclusion of plain JavaScript and other stacks.
+- Extended `evals/tests/rules/code-generation-evaluation.test.mjs` with representative pragmatic design evaluation and honest conformance assertions (verifying missing evidence produces BLOCKED / NOT_AUTOMATABLE, and named human evidence yields PASS with honest `human-judgment` verifierType).
+- Updated planning source hashes in `docs/tasks/2026/10/2026-10-10/feat-PLN-0008-typescript-pragmatic-design-rules/phase-03-implementation-and-tests/unit-01-implementation-and-tests.md` to ensure `node scripts/context.mjs plan:check` passes with zero diagnostics.
+- Synchronized `context-manifest.json` and regenerated `context-lock.json` (`sha256:bbb0913a4bdc6eb4dbd23c596c75fcee0beb4cebb0810507ca742066c6dac5c0`).
+
+### Verification
+
+- `node --test evals/tests/rules/pragmatic-backend-ui-alignment.test.mjs evals/tests/rules/backend-module-architecture.test.mjs evals/tests/rules/pragmatic-solid-alignment.test.mjs evals/tests/rules/pragmatic-design.test.mjs evals/tests/rules/catalog-coverage.test.mjs evals/tests/rules/code-generation-evaluation.test.mjs evals/tests/rules/rule-binding.test.mjs` → **PASS** (43/43 tests passed across 14 suites in 361ms).
+- `node evals/run-evals.mjs` → **PASS** (34/34 evaluations passed in 189ms).
+- `npm run lint` → **PASS** (41 rules, 18 skills, 12 workflows, 23 agent resources, 10 knowledge items, 20 evaluations, 506 Markdown files).
+- `node scripts/context.mjs doctor` → **PASS** (HEALTHY; 34/34 evaluations passed in 200ms).
+- `node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-10/feat-PLN-0008-typescript-pragmatic-design-rules --json` → **PASS** (`valid: true`, 5 units, 0 diagnostics).
+- `git diff --check` → **PASS**.
+
+### Conformance Receipt (Whole-Task)
+
+- **Report:** `docs/execution/PLN-0008/whole-task-conformance-report.json`
+- **Report ID:** `report-binding-adhoc-00-00-e86eaf0f89ab-1791645430021`
+- **Binding Hash:** `sha256:e86eaf0f89ab0cb75377dc7ff312b61f1ce2efd7d2c423b2598971ce6c250c72`
+- **Diff Hash:** `sha256:7acf94e3b01a23850b964a36f4ce77758f6ce48081f7ed1574d1086ba2cee752`
+- **Human Evidence:** "Joseph reviewed the complete PLN-0008 change set: canonical knowledge notes for YAGNI, KISS, composition over inheritance, and Law of Demeter / tell-don't-ask; shared pragmatic design rule with 4 evidence-blocking directives; reconciled OCP, SRP, DIP rules and notes; verified backend simple/tenant read boundaries; cohesive UI modules; TypeScript/TSX scoping with plain JavaScript exclusion; and honest conformance reporting."
+- **Verdict:** **PASS** (50/50 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0008/whole-task-conformance-report.json --binding sha256:e86eaf0f89ab0cb75377dc7ff312b61f1ce2efd7d2c423b2598971ce6c250c72`.

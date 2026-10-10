@@ -29,9 +29,9 @@ Make TypeScript OCP, SRP, and DIP guidance compatible with present-need YAGNI/KI
 <language_rules>
 - [directive:cf.evidence.scope-fencing][mode:evidence-blocking] rules/global/evidence-and-claims.md sourceHash:sha256:ed699151d7d034cb2ce4b00fbf10236fd8bf2b7f701761d4f6f17bc7486d88af
 - [directive:cf.arch.layers][mode:evidence-blocking] rules/global/architecture-conformance.md sourceHash:sha256:ebd1818f58e6c3421d803fae8905b2077036fe7eec8e228cc6130066cd95af92
-- [directive:cf.solid.ocp-stable-extension-interfaces][mode:evidence-blocking] rules/solid/open-closed.md sourceHash:sha256:c6491ca6266744363f4f7826fe7872b46798bb1b7a3623d3e12b143fb5a51770
-- [directive:cf.solid.srp-layer-separation][mode:evidence-blocking] rules/solid/single-responsibility.md sourceHash:sha256:37728363e83f920dde18f6c9b43c8a7cd4baeaa3bbb31ead290b86cd567ef6df
-- [directive:cf.solid.dip-domain-ports-infrastructure-adapters][mode:evidence-blocking] rules/solid/dependency-inversion.md sourceHash:sha256:a65bef63584384e354b7e460c00e416b6d6025bb4420ca4b19e1d22d94eaeeea
+- [directive:cf.solid.ocp-stable-extension-interfaces][mode:evidence-blocking] rules/solid/open-closed.md sourceHash:sha256:d787c43ff025a38814c74e31df006b35fcc5fedd69324986a4503e94d79ed492
+- [directive:cf.solid.srp-layer-separation][mode:evidence-blocking] rules/solid/single-responsibility.md sourceHash:sha256:b408d27a7e5e2a1aa3998bea3c45cc8c109a0506aa7fa4f9b37e745bca28d5ca
+- [directive:cf.solid.dip-domain-ports-infrastructure-adapters][mode:evidence-blocking] rules/solid/dependency-inversion.md sourceHash:sha256:ce25ec1b9b7206881c4402c379d510f2d30d5fa390f84e974e9447627f4d5c8f
 </language_rules>
 
 **Rule satisfaction:** Preserve actual transport/policy/persistence boundaries, use current-need examples, and retain stable IDs where semantics remain. A subjective “need” is judged with named human evidence, not a pretend linter.
