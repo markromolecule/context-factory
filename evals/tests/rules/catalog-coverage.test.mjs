@@ -18,10 +18,10 @@ describe("TypeScript release catalog coverage", () => {
     assert.equal(catalogDiagnostics.length, 0);
     assert.equal(coverage.unsupportedCount, 20, "unmigrated guidance remains visible outside the TypeScript/global release scope");
     assert.equal(selected.length, 38);
-    assert.equal(directives.length, 362);
-    assert.equal(counts["automated-blocking"], 138);
-    assert.equal(counts["evidence-blocking"], 147);
-    assert.equal(counts.advisory, 77);
+    assert.equal(directives.length, 366);
+    assert.equal(counts["automated-blocking"], 131);
+    assert.equal(counts["evidence-blocking"], 159);
+    assert.equal(counts.advisory, 76);
     assert.equal(counts.unsupported, 0);
     assert.equal(
       counts["automated-blocking"] + counts["evidence-blocking"] + counts.advisory,

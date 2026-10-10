@@ -43,3 +43,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0034-framework-scoped-typescript-rules|Framework-scoped TypeScript rules]]
 - [[docs/decisions/0035-host-conformance-receipts-and-fixture-modes|Host Conformance Receipts and Offline Fixture Modes]]
 - [[docs/decisions/0036-decommission-laravel-php-stack-focus-typescript|Decommission Laravel / PHP Stack and Dedicate Context Factory to TypeScript Ecosystem]]
+- [[docs/decisions/0037-operation-first-backend-modules|Operation-first Backend Modules]] *(Supersedes 0001's folder-layout decision)*

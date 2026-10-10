@@ -14,9 +14,10 @@ alwaysApply: true
 ## Boundaries
 
 - [directive:ts.controllers.transport-only][mode:evidence-blocking][verifier:human-evidence] Define routing, authentication/authorization gates, request parsing, and HTTP response mapping at the transport layer.
-- [directive:ts.controllers.single-schema-validation][mode:automated-blocking][verifier:test] Validate params, query, headers, and body at the boundary with one schema source.
-- [directive:ts.controllers.delegate-to-services][mode:evidence-blocking][verifier:human-evidence] Delegate business decisions to services and persistence to data-access functions.
-- [directive:ts.controllers.no-leak-internals][mode:automated-blocking][verifier:test] Do not leak ORM rows, internal errors, stack traces, or secrets in responses.
+- [directive:ts.controllers.single-schema-validation][mode:evidence-blocking][verifier:human-evidence] Validate params, query, headers, and body at the boundary with one schema source.
+- [directive:ts.controllers.delegate-to-services][mode:evidence-blocking][verifier:human-evidence] Delegate business decisions to services and persistence mechanics to data-access functions.
+- [directive:ts.controllers.direct-data-for-simple-read][mode:evidence-blocking][verifier:human-evidence] A controller may call data directly only for a simple read with no business policy, authorization-sensitive decision, or orchestration. A policy-bearing read uses a trusted service or policy boundary.
+- [directive:ts.controllers.no-leak-internals][mode:evidence-blocking][verifier:human-evidence] Do not leak ORM rows, internal errors, stack traces, or secrets in responses.
 
 ## Behavior
 

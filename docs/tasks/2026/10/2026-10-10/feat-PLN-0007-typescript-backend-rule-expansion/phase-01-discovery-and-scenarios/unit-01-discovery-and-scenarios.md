@@ -44,7 +44,7 @@ Give one authoritative operation-first backend module contract, including the si
 
 ## Scope
 
-**In scope:** `docs/decisions/0037-operation-first-backend-modules.md` (new), `docs/decisions/README.md`, `rules/typescript/backend/module-architecture.md`, `rules/typescript/backend/controllers-and-routes.md`, `rules/typescript/backend/service-layer.md`, `evals/tests/rules/backend-module-architecture.test.mjs` (new), `context-manifest.json`, `context-lock.json`.
+**In scope:** `docs/decisions/0037-operation-first-backend-modules.md` (new), `docs/decisions/README.md`, `rules/typescript/backend/module-architecture.md`, `rules/typescript/backend/controllers-and-routes.md`, `rules/typescript/backend/service-layer.md`, `evals/tests/rules/backend-module-architecture.test.mjs` (new), `evals/tests/rules/catalog-coverage.test.mjs`, `context-manifest.json`, `context-lock.json`.
 
 **Out of scope:** Application source under `src/`, DTO/serialization rule creation, backend-testing rule creation, conformance adapter changes, archived task text, host migrations.
 

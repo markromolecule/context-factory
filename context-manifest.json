@@ -192,7 +192,8 @@
     "docs/decisions/0033-branch-only-task-lifecycle.md",
     "docs/decisions/0034-framework-scoped-typescript-rules.md",
     "docs/decisions/0035-host-conformance-receipts-and-fixture-modes.md",
-    "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md"
+    "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md",
+    "docs/decisions/0037-operation-first-backend-modules.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
@@ -217,6 +218,7 @@
     "evals/tests/lifecycle/plan-id-reservation.test.mjs",
     "evals/tests/lifecycle/skill-access-check.test.mjs",
     "evals/tests/lifecycle/task-scaffold.test.mjs",
+    "evals/tests/rules/backend-module-architecture.test.mjs",
     "evals/tests/rules/catalog-coverage.test.mjs",
     "evals/tests/rules/code-generation-evaluation.test.mjs",
     "evals/tests/rules/prompt-compiler.test.mjs",
