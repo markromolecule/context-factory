@@ -49,6 +49,57 @@ const sampleBinding = {
   ],
 };
 
+describe("Fail-closed TypeScript adapter results", () => {
+  it("blocks an unimplemented automated directive instead of aggregating a heuristic pass", async () => {
+    const report = await aggregateConformanceResults({
+      bindingId: "test-bind",
+      bindingHash: HASH_64_A,
+      diffHash: HASH_64_B,
+      results: [{
+        directiveId: "ts.module.unverified-structural-rule",
+        status: "NOT_AUTOMATABLE",
+        mode: "automated-blocking",
+        evidence: { verifierType: "unimplemented-directive", outputFragment: "No verifier exists." },
+        evaluatedAt: new Date().toISOString(),
+      }],
+    });
+
+    assert.equal(report.verdict, "BLOCKED");
+    assert.equal(report.summary.notAutomatable, 1);
+  });
+
+  it("requires named evidence when human compensation resolves an unimplemented automated directive", async () => {
+    const missingEvidence = evaluateDirectiveEvidence({
+      directiveId: "ts.module.unverified-structural-rule",
+      status: "PASS",
+      mode: "automated-blocking",
+      evidence: { verifierType: "human-compensation", outputFragment: "Human compensation recorded." },
+      evaluatedAt: new Date().toISOString(),
+    });
+    assert.equal(missingEvidence.satisfied, false);
+    assert.equal(missingEvidence.isBlocked, true);
+
+    const compensatedReport = await aggregateConformanceResults({
+      bindingId: "test-bind",
+      bindingHash: HASH_64_A,
+      diffHash: HASH_64_B,
+      results: [{
+        directiveId: "ts.module.unverified-structural-rule",
+        status: "PASS",
+        mode: "automated-blocking",
+        evidence: {
+          verifierType: "human-compensation",
+          humanEvidence: "Joseph reviewed and accepted the named compensating evidence.",
+          outputFragment: "Human compensation recorded.",
+        },
+        evaluatedAt: new Date().toISOString(),
+      }],
+    });
+    assert.equal(compensatedReport.verdict, "PASS");
+    assert.equal(compensatedReport.summary.notAutomatable, 0);
+  });
+});
+
 const validHumanWaiver = {
   id: "waiver-001",
   directiveId: "ts.type-safety.ban-any",

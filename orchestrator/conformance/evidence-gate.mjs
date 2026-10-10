@@ -12,6 +12,11 @@ export function evaluateDirectiveEvidence(result) {
         if (!evidence || !evidence.verifierType) {
           return { satisfied: false, reason: "automated-blocking PASS requires valid verifierType evidence" };
         }
+        if (evidence.verifierType === "human-compensation") {
+          if (!evidence.humanEvidence || typeof evidence.humanEvidence !== "string" || !evidence.humanEvidence.trim()) {
+            return { satisfied: false, reason: "human-compensation PASS requires named humanEvidence", isBlocked: true };
+          }
+        }
         return { satisfied: true };
       }
       if (status === "WAIVED") {
@@ -24,10 +29,7 @@ export function evaluateDirectiveEvidence(result) {
         return { satisfied: false, reason: "Required tool is unavailable on host environment", isBlocked: true };
       }
       if (status === "NOT_AUTOMATABLE") {
-        if (evidence?.humanEvidence) {
-          return { satisfied: true };
-        }
-        return { satisfied: false, reason: "Automated check not automatable and lacks human compensating evidence", isBlocked: true };
+        return { satisfied: false, reason: "Automated check is not automatable; record named human compensation as a human-compensation PASS", isBlocked: true };
       }
       return { satisfied: false, reason: `Directive failed automated check (status: ${status})` };
 

@@ -15,6 +15,7 @@
 | --- | --- | --- | --- |
 | 01 | Operation-first architecture contract | 01.01 | READY FOR DEVELOPER INSPECTION |
 | 02 | DTO and backend-testing rule owners | 02.01 → 02.02 | READY FOR DEVELOPER INSPECTION |
+| 03 | Honest TypeScript conformance | 03.01 | READY FOR DEVELOPER INSPECTION |
 
 ## Packet and Branch Checkpoint: 2026-10-10
 
@@ -141,3 +142,42 @@ Phase 1 is ready for developer inspection. Its unit commit is the next recorded 
 | SOLID and boundary audit | PASS | Boundary-purpose ownership is isolated; database/network mechanics remain in the data-adapter rule. |
 | Conformance | PASS | Receipt `report-binding-adhoc-00-00-969ef4effb5f-1791596997788` validates against binding `sha256:969ef4effb5fb33f3fc4999d9bf29bf38b6ffe4ca67df85cb64e390b4b44cfbb`. |
 | Definition of done | PASS | Test-first evidence, map/inventory/lock synchronization, named human evidence, scope amendment, and checks are recorded; commit is next. |
+
+## Phase 3 Packet Review: 2026-10-10
+
+- Reissued packet: `PLN-0007-plan-review-2026-10-10-phase-03`, approved by `user-continue-phase-3-2026-10-10`.
+- Preflight passed for the exact adapter and gate scope with binding `binding-adhoc-00-00-29369b024648` and hash `sha256:29369b024648ddadd9f098a7a86559d27a92da7a3a0655882756546032091c72`.
+
+## Unit 03.01: Honest TypeScript Fallback
+
+### Changes
+
+- Removed the generic `heuristic-pass` fallback. An unimplemented automated directive now reports `NOT_AUTOMATABLE` and blocks aggregation unless named human compensation is supplied.
+- Made named compensation explicit as `PASS` with `verifierType: human-compensation`; the evidence gate rejects that status when named human evidence is absent.
+- Preserved the exact-ID compiler, lint, runtime-validation, and module-import verifier paths. Advisory directives now use `advisory-report`, which does not represent enforced conformance.
+- Kept backend architecture rules evidence-blocking: no new parser or import resolver was introduced, so this unit makes their unproved checks fail closed rather than claiming structural automation.
+
+### Verification
+
+- Initial focused regression exposed the false-PASS fallback. Current command `node --test evals/tests/conformance/typescript-adapter.test.mjs evals/tests/conformance/conformance-gate.test.mjs` → PASS (37/37).
+- `npm run lock` → PASS; lock digest `sha256:cfe88214895defe31a2eaa13ccf43e8661ba8e1f426773701e185c48c5cb27e6`.
+- `npm run lint` → PASS (40 rules).
+- `node evals/run-evals.mjs` → PASS (32/32).
+- `node scripts/context.mjs doctor` → PASS (HEALTHY; 32/32 evaluations).
+- `git diff --check` → PASS.
+
+### Conformance Receipt
+
+- Initial compensation report showed a concrete receipt mismatch: aggregation returned PASS while the independent receipt verifier rejected its 27 `NOT_AUTOMATABLE` results. The gate now requires a named `human-compensation` result for that resolved state.
+- Joseph confirmed the fallback, named compensation, known checks, scope, and rollback on 2026-10-10.
+- Current report: `docs/execution/PLN-0007/unit-03-01-conformance-report.json`; ID `report-binding-adhoc-00-00-29369b024648-1791597394553`; binding hash `sha256:29369b024648ddadd9f098a7a86559d27a92da7a3a0655882756546032091c72`; diff hash `sha256:8f563218e4ad69e219cb54db15106df084e1afe3fba72acf40267398ab159d37`; verdict **PASS** (47/47; 27 explicit `human-compensation` results).
+- `context-cli conform verify` accepted the persisted receipt against the same binding hash and exact four-file source scope. No waiver was created.
+
+### Pre-screen Review
+
+| Gate | Result | Evidence |
+| --- | --- | --- |
+| Scope fence | PASS | Source changes are limited to the adapter, the receipt-proven gate correction, their focused tests, and required lock/packet/ledger/receipt artifacts. |
+| Test completeness | PASS | Regression coverage proves unimplemented automated checks block, named compensation is required, and compensation produces a receipt-verifiable result. Existing exact-ID checks remain covered by the adapter suite. |
+| Conformance | PASS | Receipt `report-binding-adhoc-00-00-29369b024648-1791597394553` validates against its exact binding and changed-file hash. |
+| Definition of done | PASS | Failing-then-passing aggregate and adapter tests, fresh factory checks, named human evidence, and the validated receipt are recorded; commit is next. |

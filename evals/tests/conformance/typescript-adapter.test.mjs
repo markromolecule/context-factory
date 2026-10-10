@@ -13,6 +13,31 @@ import { evaluateConformance } from "../../../orchestrator/conformance/conforman
 const FIXTURES_DIR = resolve(process.cwd(), "evals/fixtures/typescript-conformance");
 
 describe("False PASS regressions", () => {
+  it("blocks an unhandled automated directive instead of returning heuristic-pass", async () => {
+    const [result] = await typeScriptAdapter.evaluate({
+      binding: { directives: [{ id: "ts.module.unverified-structural-rule", mode: "automated-blocking" }] },
+      changedScope: ["src/modules/orders/get-order/get-order.data.ts"],
+      capabilities: { tools: {}, fixtureMode: true },
+      options: { readTextFn: async () => "export const loadOrder = () => undefined;" },
+    });
+
+    assert.equal(result.status, "NOT_AUTOMATABLE");
+    assert.equal(result.evidence.verifierType, "unimplemented-directive");
+
+    const [compensated] = await typeScriptAdapter.evaluate({
+      binding: { directives: [{ id: "ts.module.unverified-structural-rule", mode: "automated-blocking" }] },
+      changedScope: ["src/modules/orders/get-order/get-order.data.ts"],
+      capabilities: { tools: {}, fixtureMode: true },
+      options: {
+        readTextFn: async () => "export const loadOrder = () => undefined;",
+        humanEvidence: "Joseph reviewed this unimplemented check and accepted the compensating evidence.",
+      },
+    });
+    assert.equal(compensated.status, "PASS");
+    assert.equal(compensated.evidence.verifierType, "human-compensation");
+    assert.match(compensated.evidence.humanEvidence, /Joseph reviewed/);
+  });
+
   for (const [id, source] of [
     ["ts.type-safety.strict-compiler-settings", 'export const n: number = "wrong";'],
     ["ts.async.no-floating-promises", 'fetch("/api/save");'],

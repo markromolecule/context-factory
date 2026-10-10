@@ -636,18 +636,33 @@ export const typeScriptAdapter = {
         continue;
       }
 
-      // Default advisory or heuristic pass
-      results.push({
-        directiveId: directive.id,
-        status: directive.mode === "unsupported" ? "UNSUPPORTED" : "PASS",
-        mode: directive.mode || "advisory",
-        evidence: {
-          verifierType: "heuristic-pass",
-          outputFragment: `Directive ${directive.id} passed advisory check.`,
-        },
-        durationMs: 1,
-        evaluatedAt: new Date().toISOString(),
-      });
+      if (directive.mode === "automated-blocking") {
+        const humanEvidence = typeof options.humanEvidence === "string" && options.humanEvidence.trim()
+          ? options.humanEvidence.trim()
+          : null;
+        const result = toolResult(
+          directive,
+          humanEvidence ? "PASS" : "NOT_AUTOMATABLE",
+          humanEvidence ? "human-compensation" : "unimplemented-directive",
+          humanEvidence
+            ? `No TypeScript verifier is implemented for automated directive ${directive.id}; named human compensation recorded.`
+            : `No TypeScript verifier is implemented for automated directive ${directive.id}.`,
+        );
+        if (humanEvidence) {
+          result.evidence.humanEvidence = humanEvidence;
+        }
+        results.push(result);
+        continue;
+      }
+
+      results.push(toolResult(
+        directive,
+        directive.mode === "unsupported" ? "UNSUPPORTED" : "PASS",
+        directive.mode === "unsupported" ? "unsupported-directive" : "advisory-report",
+        directive.mode === "unsupported"
+          ? `Directive ${directive.id} is unsupported.`
+          : `Directive ${directive.id} is advisory and does not provide enforced conformance.`,
+      ));
     }
 
     return results;
