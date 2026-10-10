@@ -5,7 +5,7 @@ parent: "feat-PLN-0007-typescript-backend-rule-expansion"
 phase: "01"
 task_branch: "feat/PLN-0007-typescript-backend-rule-expansion"
 base_commit: "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9"
-status: planned
+status: completed
 created: "2026-10-10"
 tags: [task, phase, architecture]
 ---
@@ -25,7 +25,7 @@ Record the superseding architecture decision and make backend module, controller
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | --- | --- | --- | --- | --- | --- |
-| 01.01 | Superseding ADR and module boundaries | `unit-01-discovery-and-scenarios.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | none | planned |
+| 01.01 | Superseding ADR and module boundaries | `unit-01-discovery-and-scenarios.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | none | verified |
 
 ## Impacted Files & Components
 
@@ -35,8 +35,8 @@ Record the superseding architecture decision and make backend module, controller
 
 ## Implementation Tasks
 
-- [ ] Execute Unit 01.01 test-first; preserve ADR 0001 as history and state its successor.
-- [ ] Prove a create operation, simple read, and policy-bearing read have non-contradictory boundaries.
+- [x] Execute Unit 01.01 test-first; preserve ADR 0001 as history and state its successor.
+- [x] Prove a create operation, simple read, and policy-bearing read have non-contradictory boundaries.
 
 ## Verification & Testing
 

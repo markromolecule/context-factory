@@ -5,7 +5,7 @@ parent: "phase-02-architecture-and-contracts"
 unit: "02.02"
 task_branch: "feat/PLN-0007-typescript-backend-rule-expansion"
 base_commit: "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9"
-status: planned
+status: verified
 created: "2026-10-10"
 tags: [task, unit, testing]
 depends_on: ["02.01"]
@@ -67,7 +67,7 @@ Revert the testing rule, data-rule applicability, module reference, test, map, m
 
 ## Definition of done
 
-- [ ] AC-06 and relevant AC-07 suffix selection cases pass after an initial failing test.
-- [ ] No duplicate data-adapter policy and no test required for a layer that is absent.
-- [ ] In-scope review, catalog sync, focused tests, lint, doctor, and fresh conformance PASS recorded.
-- [ ] Unit committed on the exact task branch after its gate.
+- [x] AC-06 and relevant AC-07 suffix selection cases pass after an initial failing test.
+- [x] No duplicate data-adapter policy and no test required for a layer that is absent.
+- [x] In-scope review, catalog sync, focused tests, lint, doctor, and fresh conformance PASS recorded.
+- [x] Unit committed on the exact task branch after its gate.

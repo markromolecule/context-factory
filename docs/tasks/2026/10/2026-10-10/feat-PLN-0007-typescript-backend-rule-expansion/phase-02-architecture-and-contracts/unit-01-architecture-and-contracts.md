@@ -5,7 +5,7 @@ parent: "phase-02-architecture-and-contracts"
 unit: "02.01"
 task_branch: "feat/PLN-0007-typescript-backend-rule-expansion"
 base_commit: "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9"
-status: planned
+status: verified
 created: "2026-10-10"
 tags: [task, unit, dto, serialization]
 depends_on: ["01.01"]
@@ -66,7 +66,7 @@ Revert the new rule, module-rule reference, focused test, map, manifest, and loc
 
 ## Definition of done
 
-- [ ] AC-03 and DTO portion of AC-04 have failing-then-passing contract and negative cases.
-- [ ] New directive IDs, modes, and owner references are unique; no duplicated common validation policy.
-- [ ] In-scope diff, catalog sync, focused tests, lint, doctor, `/review`, and fresh conformance PASS are recorded.
-- [ ] Unit committed on the exact task branch after its gate.
+- [x] AC-03 and DTO portion of AC-04 have failing-then-passing contract and negative cases.
+- [x] New directive IDs, modes, and owner references are unique; no duplicated common validation policy.
+- [x] In-scope diff, catalog sync, focused tests, lint, doctor, `/review`, and fresh conformance PASS are recorded.
+- [x] Unit committed on the exact task branch after its gate.

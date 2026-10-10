@@ -5,7 +5,7 @@ parent: "phase-04-verification-and-release"
 unit: "04.01"
 task_branch: "feat/PLN-0007-typescript-backend-rule-expansion"
 base_commit: "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9"
-status: planned
+status: verified
 created: "2026-10-10"
 tags: [task, unit, integration]
 depends_on: ["03.01"]
@@ -70,7 +70,7 @@ Revert this unit's selector/evaluation/catalog changes together. If an earlier r
 
 ## Definition of done
 
-- [ ] AC-07's default and compatibility cases pass, with rendered payload delta and code-quality observations recorded separately.
-- [ ] AC-08 and AC-01..06 are reconciled against the whole task diff, with no stale map, inventory, lock, or receipt.
-- [ ] Focused tests, lint, evaluations, doctor, `/review`, and whole-diff conformance PASS are recorded on the exact task branch.
-- [ ] Finalization ledger names the observed hashes, statuses, reviewer, and any remaining checkpoint; unit committed only after its gate.
+- [x] AC-07's default and compatibility cases pass, with rendered payload delta and code-quality observations recorded separately.
+- [x] AC-08 and AC-01..06 are reconciled against the whole task diff, with no stale map, inventory, lock, or receipt.
+- [x] Focused tests, lint, evaluations, doctor, `/review`, and whole-diff conformance PASS are recorded on the exact task branch.
+- [x] Finalization ledger names the observed hashes, statuses, reviewer, and any remaining checkpoint; unit committed only after its gate.

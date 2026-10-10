@@ -5,7 +5,7 @@ parent: "phase-01-discovery-and-scenarios"
 unit: "01.01"
 task_branch: "feat/PLN-0007-typescript-backend-rule-expansion"
 base_commit: "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9"
-status: planned
+status: verified
 created: "2026-10-10"
 tags: [task, unit, architecture]
 depends_on: []
@@ -70,7 +70,7 @@ Revert this unit's commit as one change, including ADR, linked map, rule text, t
 
 ## Definition of done
 
-- [ ] AC-01, AC-02, and architecture part of AC-04 have observable failing-then-passing cases.
-- [ ] Exact task branch and file fence verified; no unrelated edits.
-- [ ] ADR and rules agree; focused test, lint, doctor, `/review`, and fresh conformance PASS recorded.
-- [ ] Unit committed on the task branch only after the required evidence gate.
+- [x] AC-01, AC-02, and architecture part of AC-04 have observable failing-then-passing cases.
+- [x] Exact task branch and file fence verified; no unrelated edits.
+- [x] ADR and rules agree; focused test, lint, doctor, `/review`, and fresh conformance PASS recorded.
+- [x] Unit committed on the task branch only after the required evidence gate.

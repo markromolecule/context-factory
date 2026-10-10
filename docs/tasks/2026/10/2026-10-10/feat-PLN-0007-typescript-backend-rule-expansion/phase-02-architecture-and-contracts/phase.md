@@ -5,7 +5,7 @@ parent: "feat-PLN-0007-typescript-backend-rule-expansion"
 phase: "02"
 task_branch: "feat/PLN-0007-typescript-backend-rule-expansion"
 base_commit: "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9"
-status: planned
+status: completed
 created: "2026-10-10"
 tags: [task, phase, typescript]
 ---
@@ -25,8 +25,8 @@ Add two small backend rule owners for transport mapping and module testing while
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | --- | --- | --- | --- | --- | --- |
-| 02.01 | DTO and response serialization owner | `unit-01-architecture-and-contracts.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | 01.01 | planned |
-| 02.02 | Backend module testing owner | `unit-02-backend-testing.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | 02.01 | planned |
+| 02.01 | DTO and response serialization owner | `unit-01-architecture-and-contracts.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | 01.01 | verified |
+| 02.02 | Backend module testing owner | `unit-02-backend-testing.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | 02.01 | verified |
 
 ## Impacted Files & Components
 
@@ -36,9 +36,9 @@ Add two small backend rule owners for transport mapping and module testing while
 
 ## Implementation Tasks
 
-- [ ] Unit 02.01 writes the request/domain/persistence/output seam and failure cases, test first.
-- [ ] Unit 02.02 defines test-layer responsibilities and suffix compatibility, test first.
-- [ ] After each catalog-changing unit, synchronize inventory/lock and report focused tests plus doctor; phase completion requires both units' review/conformance receipts.
+- [x] Unit 02.01 writes the request/domain/persistence/output seam and failure cases, test first.
+- [x] Unit 02.02 defines test-layer responsibilities and suffix compatibility, test first.
+- [x] After each catalog-changing unit, synchronize inventory/lock and report focused tests plus doctor; phase completion requires both units' review/conformance receipts.
 
 ## Verification & Testing
 

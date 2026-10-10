@@ -13,10 +13,10 @@
 
 | Phase | Title | Units | Status |
 | --- | --- | --- | --- |
-| 01 | Operation-first architecture contract | 01.01 | READY FOR DEVELOPER INSPECTION |
-| 02 | DTO and backend-testing rule owners | 02.01 → 02.02 | READY FOR DEVELOPER INSPECTION |
-| 03 | Honest TypeScript conformance | 03.01 | READY FOR DEVELOPER INSPECTION |
-| 04 | Backend rule selection and whole-task release | 04.01 | READY FOR DEVELOPER INSPECTION |
+| 01 | Operation-first architecture contract | 01.01 | VERIFIED |
+| 02 | DTO and backend-testing rule owners | 02.01 → 02.02 | VERIFIED |
+| 03 | Honest TypeScript conformance | 03.01 | VERIFIED WITH RECORDED STRUCTURAL-VERIFIER DEFERRAL |
+| 04 | Backend rule selection and whole-task release | 04.01 | VERIFIED |
 
 ## Packet and Branch Checkpoint: 2026-10-10
 
@@ -236,3 +236,15 @@ Phase 1 is ready for developer inspection. Its unit commit is the next recorded 
 ### Checkpoint
 
 Unit 04.01 and the whole PLN-0007 task are ready for developer inspection.
+
+## Final reconciliation and local merge authorization: 2026-10-10
+
+- Joseph resolved the last layout conflict: operation-first folders are the default; an established host may retain layer-based folders with the same boundaries. The ADR, active rule, and a failing-then-passing regression assertion now agree.
+- Joseph explicitly chose to record the missing ID-specific structural import/path/name verifiers as deferred and merge PLN-0007. The affected directives remain `evidence-blocking` with named human review. No automated structural verifier or waiver is claimed.
+- The final scope contains 32 changed task files against `master`, excluding mutable execution receipts, packet, ledger, and the separate pragmatic-principles discovery files. The exact scope is preserved in `/private/tmp/pln-0007-final-scope.json` for receipt verification before merge.
+- Corrected rendered OpenAI JSON payload measurements are 52,742, 54,998, 57,903, and 55,066 UTF-8 bytes across the four fixed backend scenarios; the baseline values remain unchanged. The focused suite passed 69/69 tests after these measurements were refreshed.
+- `npm run lint` PASS (40 rules); `node evals/run-evals.mjs` PASS (33/33); `node scripts/context.mjs doctor` HEALTHY (33/33 evaluations); `node scripts/context.mjs plan:check <PLN-0007 task directory> --json` PASS (five units); `handoff:verify-brief` and `handoff:verify-packet` PASS; `git diff --check` PASS.
+- Reissued packet review `PLN-0007-final-plan-reconciliation-2026-10-10`, approval `user-record-deferral-and-merge-2026-10-10`, on the exact task branch. The plan and unit metadata now reflect verified work and the accepted deferral.
+- Fresh final preflight and conformance over the 32-file scope PASS (50/50 directives). Report `docs/execution/PLN-0007/whole-task-conformance-report.json`, ID `report-binding-adhoc-00-00-7afb1a09c117-1791636548819`, binding hash `sha256:7afb1a09c117356d9fcc039cc69528743aa7dada6552d41c5a6cf452c72dcfa0`, diff hash `sha256:9d3827c593ad979eada12c5fd6cbe9d8dbcdf94c05a98638b9a5abfefbbb37f5`. Independent `conform verify` with the binding hash and exact scope returned `valid: true`.
+- White-box scope review: rule, ADR, and architecture test changes belong to Unit 01.01; dataset changes belong to Unit 04.01; catalog lock and task/execution records are required lifecycle artifacts. No host application files changed. The remaining structural-verifier work is an explicit future task rather than a false completion claim.
+- Local `master` integration and post-merge Git/doctor verification follow this recorded checkpoint; no remote push is authorized or implied.

@@ -51,11 +51,13 @@ A controller may call a data function directly for a simple read only when no bu
 
 `src/features/<feature>/` remains an explicit established-host compatibility root. It follows the same operation and public-contract rules. No host migration is required by this decision.
 
+Layer-based folders remain allowed for an established host convention. They are not the default for a new capability, and they retain the same responsibility boundaries, public `index.ts` contract, and no-placeholder-file discipline. Existing hosts need not migrate their folder layout solely to adopt this rule.
+
 ## Consequences
 
 - Operation changes and tests are locally discoverable while transport, policy, and persistence retain separate responsibilities.
 - A cross-module consumer imports only through the feature `index.ts`; shared behavior is visible at the feature root instead of hidden by sideways imports.
-- Existing layer-folder examples are replaced in active TypeScript backend rules. Archived ADR 0001 is retained and linked as superseded history.
+- Operation-first is the default example in active TypeScript backend rules; a bounded layer-based alternative documents established-host compatibility. Archived ADR 0001 is retained and linked as superseded history.
 - Structural import and filename directives require named human evidence until a real verifier is delivered; they cannot claim linter enforcement by prose alone.
 
 ## Rollback

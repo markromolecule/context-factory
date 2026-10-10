@@ -27,7 +27,7 @@
         "ts.service.transaction-ownership",
         "ts.backend-testing.service-policy-cases"
       ],
-      "payload": { "baselineBytes": 48916, "finalBytes": 52611, "deltaBytes": 3695 },
+      "payload": { "baselineBytes": 48916, "finalBytes": 52742, "deltaBytes": 3826 },
       "representativeOutput": "export async function createOrder(input, deps) {\n  return deps.transaction(async (tx) => {\n    const order = await deps.orders.insert(input, tx);\n    await deps.audit.insert({ orderId: order.id }, tx);\n    return { id: order.id, total: order.total };\n  });\n}",
       "quality": {
         "requiredPatterns": ["transaction\\(async \\(tx\\)", "orders\\.insert\\(input, tx\\)", "audit\\.insert\\(\\{ orderId: order\\.id \\}, tx\\)"],
@@ -46,7 +46,7 @@
         "ts.dto.public-response-whitelist",
         "ts.backend-testing.controller-mapping-cases"
       ],
-      "payload": { "baselineBytes": 49129, "finalBytes": 54867, "deltaBytes": 5738 },
+      "payload": { "baselineBytes": 49129, "finalBytes": 54998, "deltaBytes": 5869 },
       "representativeOutput": "export async function getOrderController(request, orderData) {\n  const order = await orderData.findById(request.params.id);\n  return { id: order.id, total: order.total };\n}",
       "quality": {
         "requiredPatterns": ["orderData\\.findById\\(request\\.params\\.id\\)", "return \\{ id: order\\.id, total: order\\.total \\}"],
@@ -66,7 +66,7 @@
         "ts.service.policy-bearing-operations",
         "ts.backend-testing.service-policy-cases"
       ],
-      "payload": { "baselineBytes": 51593, "finalBytes": 57772, "deltaBytes": 6179 },
+      "payload": { "baselineBytes": 51593, "finalBytes": 57903, "deltaBytes": 6310 },
       "representativeOutput": "export async function getOrderController(request, deps) {\n  return getOrderForTenant({ orderId: request.params.id, tenantId: request.auth.tenantId }, deps);\n}\n\nexport async function getOrderForTenant(input, deps) {\n  return deps.orders.findForTenant(input.orderId, input.tenantId);\n}",
       "quality": {
         "requiredPatterns": ["getOrderForTenant\\(", "tenantId: request\\.auth\\.tenantId", "findForTenant\\(input\\.orderId, input\\.tenantId\\)"],
@@ -86,7 +86,7 @@
         "ts.controllers.no-leak-internals",
         "ts.backend-testing.public-contract-cases"
       ],
-      "payload": { "baselineBytes": 49197, "finalBytes": 54935, "deltaBytes": 5738 },
+      "payload": { "baselineBytes": 49197, "finalBytes": 55066, "deltaBytes": 5869 },
       "representativeOutput": "export function toOrderResponse(row) {\n  const persistenceRow = { id: row.id, email: row.email, passwordHash: row.passwordHash };\n  return { id: persistenceRow.id, email: persistenceRow.email };\n}",
       "quality": {
         "requiredPatterns": ["passwordHash: row\\.passwordHash", "return \\{ id: persistenceRow\\.id, email: persistenceRow\\.email \\}"],

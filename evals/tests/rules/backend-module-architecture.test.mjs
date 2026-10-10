@@ -38,6 +38,7 @@ describe("TypeScript backend operation-first module architecture", () => {
 
   it("makes operation folders the default while retaining explicit host compatibility", async () => {
     const { content, descriptor: rule } = await descriptor("rules/typescript/backend/module-architecture.md");
+    const decision = await read("docs/decisions/0037-operation-first-backend-modules.md");
 
     assert.deepEqual(
       directive(rule, "ts.module.operation-first-layout").applicability.paths,
@@ -48,6 +49,9 @@ describe("TypeScript backend operation-first module architecture", () => {
     assert.match(content, /index\.ts/);
     assert.match(content, /sideways operation imports/i);
     assert.match(content, /shared by multiple operations/i);
+    assert.match(content, /Default layout[\s\S]*src\/modules\/<feature>\/<operation>\//i);
+    assert.match(content, /Layer-based alternative[\s\S]*established host convention/i);
+    assert.match(decision, /layer-based folders remain allowed for an established host convention/i);
   });
 
   it("keeps transport, policy, and persistence roles separate across simple and sensitive reads", async () => {

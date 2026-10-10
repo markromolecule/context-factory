@@ -5,7 +5,7 @@ parent: "feat-PLN-0007-typescript-backend-rule-expansion"
 phase: "04"
 task_branch: "feat/PLN-0007-typescript-backend-rule-expansion"
 base_commit: "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9"
-status: planned
+status: completed
 created: "2026-10-10"
 tags: [task, phase]
 ---
@@ -24,7 +24,7 @@ Prove relevant backend guidance reaches short requests, measure rendered context
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | --- | --- | --- | --- | --- | --- |
-| 04.01 | Selection, payload, and whole-task verification | `unit-01-verification-and-release.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | 03.01 | planned |
+| 04.01 | Selection, payload, and whole-task verification | `unit-01-verification-and-release.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | 03.01 | verified |
 
 ## Impacted Files & Components
 
@@ -33,9 +33,9 @@ Prove relevant backend guidance reaches short requests, measure rendered context
 
 ## Implementation Tasks
 
-- [ ] Test short create/read requests for operation-module selection, established host roots and test suffixes, and exclusion of unrelated UI/framework guidance.
-- [ ] Measure rendered provider payload on fixed requests and evaluate representative output against boundary, privacy, transaction, and testing expectations; report both quality and size.
-- [ ] Reconcile catalog/decision maps and run final lint, evaluations, doctor, review, and whole-diff conformance.
+- [x] Test short create/read requests for operation-module selection, established host roots and test suffixes, and exclusion of unrelated UI/framework guidance.
+- [x] Measure rendered provider payload on fixed requests and evaluate representative output against boundary, privacy, transaction, and testing expectations; report both quality and size.
+- [x] Reconcile catalog/decision maps and run final lint, evaluations, doctor, review, and whole-diff conformance.
 
 ## Verification & Testing
 

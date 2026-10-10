@@ -1,8 +1,8 @@
 {
-  "id": "report-binding-adhoc-00-00-d819e010a8f1-1791600831041",
-  "bindingId": "binding-adhoc-00-00-d819e010a8f1",
-  "bindingHash": "sha256:d819e010a8f10c46f2be8b370139a90041e05b435ecf7712c5f274291085c5c5",
-  "diffHash": "sha256:750d1704040119d0a6359222a90816cfd7a6b8d5b676ee4cbc3d84d7819eaf11",
+  "id": "report-binding-adhoc-00-00-7afb1a09c117-1791636548819",
+  "bindingId": "binding-adhoc-00-00-7afb1a09c117",
+  "bindingHash": "sha256:7afb1a09c117356d9fcc039cc69528743aa7dada6552d41c5a6cf452c72dcfa0",
+  "diffHash": "sha256:9d3827c593ad979eada12c5fd6cbe9d8dbcdf94c05a98638b9a5abfefbbb37f5",
   "verdict": "PASS",
   "summary": {
     "passed": 50,
@@ -21,9 +21,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.arch.adrs; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.arch.contracts",
@@ -31,11 +31,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.arch.direction",
@@ -44,9 +44,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.arch.direction; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.arch.layers",
@@ -54,11 +54,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.arch.patterns",
@@ -68,7 +68,7 @@
         "verifierType": "advisory-report",
         "outputFragment": "Directive cf.arch.patterns is advisory and does not provide enforced conformance."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.arch.policy",
@@ -76,11 +76,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.arch.solid",
@@ -89,9 +89,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.arch.solid; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.arch.trust",
@@ -100,9 +100,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.arch.trust; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.evidence.completion",
@@ -110,11 +110,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.evidence.grounding",
@@ -122,11 +122,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.evidence.integrity",
@@ -134,11 +134,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.evidence.scope-fencing",
@@ -146,11 +146,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.evidence.verification",
@@ -159,9 +159,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.evidence.verification; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.global.1-3-1-compare-options",
@@ -169,11 +169,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.global.1-3-1-define",
@@ -181,11 +181,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.global.1-3-1-recommend",
@@ -193,11 +193,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.naming.domain-action-async-commands",
@@ -205,11 +205,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.naming.framework-file-conventions",
@@ -218,9 +218,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.naming.framework-file-conventions; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.naming.no-single-letter-names",
@@ -229,9 +229,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.naming.no-single-letter-names; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.naming.predicate-booleans",
@@ -240,9 +240,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.naming.predicate-booleans; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.naming.preserve-established-conventions",
@@ -252,7 +252,7 @@
         "verifierType": "advisory-report",
         "outputFragment": "Directive cf.naming.preserve-established-conventions is advisory and does not provide enforced conformance."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.naming.singular-entities-plural-collections",
@@ -261,9 +261,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.naming.singular-entities-plural-collections; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.delete-dead-code",
@@ -272,9 +272,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.delete-dead-code; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.directional-dependencies",
@@ -283,9 +283,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.directional-dependencies; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.domain-types-over-framework",
@@ -293,11 +293,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.executable-examples",
@@ -307,7 +307,7 @@
         "verifierType": "advisory-report",
         "outputFragment": "Directive cf.quality.executable-examples is advisory and does not provide enforced conformance."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.explicit-interfaces",
@@ -316,9 +316,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.explicit-interfaces; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.minimal-complete-change",
@@ -326,11 +326,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.no-any-or-swallowed-errors",
@@ -339,9 +339,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.no-any-or-swallowed-errors; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.reject-duplicate-policy",
@@ -349,11 +349,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.reject-unbounded-work",
@@ -361,11 +361,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.reject-unstable-contracts",
@@ -373,11 +373,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.reject-untestable-code",
@@ -385,11 +385,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.run-existing-checks",
@@ -398,9 +398,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.run-existing-checks; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.solid-compliance",
@@ -408,11 +408,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.quality.tests-for-behavior-changes",
@@ -421,9 +421,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.tests-for-behavior-changes; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.allowlisted-boundary-validation",
@@ -432,9 +432,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.allowlisted-boundary-validation; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.explicit-cors-and-headers",
@@ -442,11 +442,11 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.idempotency-replay-protection",
@@ -455,9 +455,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.idempotency-replay-protection; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.lock-dependencies-and-audit",
@@ -466,9 +466,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.lock-dependencies-and-audit; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.maintained-crypto-libraries",
@@ -477,9 +477,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.maintained-crypto-libraries; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.no-credentials-in-source-or-logs",
@@ -488,9 +488,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.no-credentials-in-source-or-logs; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.parameterized-queries-no-concat",
@@ -499,9 +499,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.parameterized-queries-no-concat; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.rate-limiting-and-bounds",
@@ -510,9 +510,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.rate-limiting-and-bounds; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.redact-telemetry-pii",
@@ -521,9 +521,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.redact-telemetry-pii; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.restrict-outbound-urls-ssrf",
@@ -532,9 +532,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.restrict-outbound-urls-ssrf; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.sanitized-public-errors",
@@ -543,9 +543,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.sanitized-public-errors; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.server-side-auth-default-deny",
@@ -554,9 +554,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.server-side-auth-default-deny; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.server-side-tenant-isolation",
@@ -565,9 +565,9 @@
       "evidence": {
         "verifierType": "human-compensation",
         "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.server-side-tenant-isolation; named human compensation recorded.",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     },
     {
       "directiveId": "cf.sec.untrusted-input-boundaries",
@@ -575,12 +575,12 @@
       "mode": "evidence-blocking",
       "evidence": {
         "verifierType": "human-judgment",
-        "humanEvidence": "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10.",
-        "outputFragment": "Architectural boundary verified: Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), layer-based subfolders (controllers, services, data), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+        "humanEvidence": "Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge.",
+        "outputFragment": "Architectural boundary verified: Joseph confirmed PLN-0007 whole-task semantics in the recorded 2026-10-10 review; Joseph then directed operation-first as default with layer folders allowed and explicitly accepted deferring structural verifiers to named human review before merge."
       },
       "durationMs": 5,
-      "evaluatedAt": "2026-10-10T02:53:51.041Z"
+      "evaluatedAt": "2026-10-10T12:49:08.819Z"
     }
   ],
-  "generatedAt": "2026-10-10T02:53:51.042Z"
+  "generatedAt": "2026-10-10T12:49:08.819Z"
 }

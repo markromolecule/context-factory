@@ -5,7 +5,7 @@ parent: "feat-PLN-0007-typescript-backend-rule-expansion"
 phase: "03"
 task_branch: "feat/PLN-0007-typescript-backend-rule-expansion"
 base_commit: "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9"
-status: planned
+status: completed
 created: "2026-10-10"
 tags: [task, phase]
 ---
@@ -14,7 +14,7 @@ tags: [task, phase]
 
 ## Objective
 
-Verify structural backend rules with real checks and prevent unhandled blocking directives from producing a false PASS.
+Prevent unhandled blocking directives from producing a false PASS. Keep structural backend directives evidence-blocking until ID-specific verifiers are delivered in a later task.
 
 ## Dependencies & Prerequisites
 
@@ -25,7 +25,7 @@ Verify structural backend rules with real checks and prevent unhandled blocking 
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | --- | --- | --- | --- | --- | --- |
-| 03.01 | Structural verifier and fail-closed fallback | `unit-01-implementation-and-tests.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | 02.02 | planned |
+| 03.01 | Structural verifier and fail-closed fallback | `unit-01-implementation-and-tests.md` | `feat/PLN-0007-typescript-backend-rule-expansion` | 02.02 | verified |
 
 ## Impacted Files & Components
 
@@ -35,9 +35,9 @@ Verify structural backend rules with real checks and prevent unhandled blocking 
 
 ## Implementation Tasks
 
-- [ ] Demonstrate the current unhandled-automated false PASS with an adapter-plus-report test.
-- [ ] Add good/bad operation path, public import, and naming cases, then implement only checks proved by those fixtures.
-- [ ] Make unresolved paths, missing tools, and semantic directives block or require named evidence; never represent advisory reporting as enforced.
+- [x] Demonstrate the current unhandled-automated false PASS with an adapter-plus-report test.
+- [x] Record the user-approved deferral of ID-specific structural path, public-import, and naming verifiers; leave their directives evidence-blocking with named human review.
+- [x] Make unresolved paths, missing tools, and semantic directives block or require named evidence; never represent advisory reporting as enforced.
 
 ## Verification & Testing
 

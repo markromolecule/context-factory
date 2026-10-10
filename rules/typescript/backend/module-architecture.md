@@ -13,11 +13,29 @@ alwaysApply: true
 
 ## Required shape
 
-Organize each backend capability under `src/modules/<feature>/` using clear layer folders for controllers, services, and data access, or operation folders when isolating use cases:
+Organize each backend capability under `src/modules/<feature>/`. The default groups each use case in an operation folder. An established host may retain layer-based folders while preserving the same responsibility and public-contract boundaries.
 
-### Layer-based module layout
+### Default layout: operation-first
 
-Organize feature responsibilities into explicit layer folders:
+For a new capability, group the artifacts of each use case in an operation subfolder:
+
+```text
+src/modules/<feature>/
+├── index.ts                          # Public contract for cross-module imports
+├── <feature>.data.ts                 # Only mechanics shared by multiple operations
+└── <operation>/                      # E.g., create-order/, get-order/
+    ├── <operation>.schema.ts
+    ├── <operation>.types.ts
+    ├── <operation>.controller.ts     # E.g., create-<operation>.controller.ts
+    ├── <operation>.service.ts        # E.g., create-<operation>.service.ts
+    ├── <operation>.data.ts
+    ├── <operation>.mapper.ts
+    └── <operation>.test.ts
+```
+
+### Layer-based alternative
+
+Layer-based folders remain allowed for an established host convention. Keep transport, policy, persistence, and DTO responsibilities explicit; do not add placeholder files or migrate a host solely to match this example:
 
 ```text
 src/modules/<feature>/
@@ -42,27 +60,9 @@ src/modules/<feature>/
     └── <operation>.types.ts
 ```
 
-### Operation-first layout
-
-Alternatively, group all artifacts of a use case in an operation subfolder:
-
-```text
-src/modules/<feature>/
-├── index.ts                          # Public contract for cross-module imports
-├── <feature>.data.ts                 # Only mechanics shared by multiple operations
-└── <operation>/                      # E.g., create-order/, get-order/
-    ├── <operation>.schema.ts
-    ├── <operation>.types.ts
-    ├── <operation>.controller.ts     # E.g., create-<operation>.controller.ts
-    ├── <operation>.service.ts        # E.g., create-<operation>.service.ts
-    ├── <operation>.data.ts
-    ├── <operation>.mapper.ts
-    └── <operation>.test.ts
-```
-
 Add only files with a responsibility in the operation or layer. Use `types`, `errors`, `mapper`, `schema`, `policy`, `events`, and tests as role suffixes when they are needed; do not create empty files. Feature-root files are shared by multiple operations, never an alternate operation dump. `src/features/<feature>/` is an established-host compatibility root and follows the same shape when a host has adopted it.
 
-- [directive:ts.module.operation-first-layout][mode:evidence-blocking][verifier:human-evidence] Organize the default backend shape as `src/modules/<feature>/<operation>/`; keep only genuinely shared concerns at the feature root.
+- [directive:ts.module.operation-first-layout][mode:evidence-blocking][verifier:human-evidence] Organize the default backend shape as `src/modules/<feature>/<operation>/`. Preserve an established host's layer-based folder convention when it keeps the same responsibility and public-contract boundaries; keep only genuinely shared concerns at the feature root.
 - [directive:ts.module.cross-module-public-contract][mode:evidence-blocking][verifier:human-evidence] Expose cross-module behavior through the feature `index.ts`; do not use deep imports or sideways operation imports.
 
 ## Dependency direction

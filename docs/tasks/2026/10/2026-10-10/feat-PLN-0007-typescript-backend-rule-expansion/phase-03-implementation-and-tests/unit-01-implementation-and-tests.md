@@ -5,7 +5,7 @@ parent: "phase-03-implementation-and-tests"
 unit: "03.01"
 task_branch: "feat/PLN-0007-typescript-backend-rule-expansion"
 base_commit: "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9"
-status: planned
+status: verified
 created: "2026-10-10"
 tags: [task, unit, conformance]
 depends_on: ["02.02"]
@@ -18,7 +18,7 @@ parallelizable_with: []
 
 ## Objective
 
-Make TypeScript backend architecture enforcement truthful: verify structural rules with real checks and keep unsupported semantic or unavailable cases from reaching report PASS.
+Make TypeScript backend architecture enforcement truthful: keep unverified structural rules evidence-blocking and prevent unsupported semantic or unavailable cases from reaching report PASS.
 
 ## Context packet
 
@@ -51,15 +51,15 @@ Make TypeScript backend architecture enforcement truthful: verify structural rul
 ## Steps
 
 1. Add a failing adapter-plus-aggregate test for an unknown automated-blocking ID: no `heuristic-pass` PASS and no aggregate PASS. Cover unknown evidence-blocking IDs with missing versus named human evidence, and unknown advisory IDs as non-enforced.
-2. Add positive/negative fixtures for operation-local imports, module `index.ts` versus deep import, sideways operation imports, forbidden upward imports, and role suffix/name violations. Include relative paths and unresolved alias/tsconfig cases. For every automated ID, prove full changed-scope coverage and detection or `TOOL_UNAVAILABLE`/`NOT_AUTOMATABLE` when resolution is insufficient.
-3. Dispatch only exact structural directive IDs to their verifier. Replace generic PASS fallback with non-PASS outcomes for unhandled blocking modes and non-enforced advisory reporting for advisory modes. Ensure status/mode/verifierType/aggregate verdict agree; tighten the evidence gate only where a test shows a concrete bypass. Preserve known verifier cases.
+2. Record the 2026-10-10 user-approved deferral of ID-specific structural import/path/name verifiers and their good/bad fixtures. Keep these directives evidence-blocking with named human review; a future task must prove changed-scope coverage, aliases, and negative cases before promoting them to automated-blocking.
+3. Replace generic PASS fallback with non-PASS outcomes for unhandled blocking modes and non-enforced advisory reporting for advisory modes. Ensure status/mode/verifierType/aggregate verdict agree; tighten the evidence gate only where a test shows a concrete bypass. Preserve known verifier cases.
 4. Reconcile rule modes with actual coverage: structural constraints are automated only if fixtures prove them; semantic directives remain evidence-blocking. Run `npm run sync` if rules or inventory change. Never claim an unproved code check exists.
 5. Run focused suites, lint, evaluations, doctor, and fresh preflight/conform on exact unit scope. Review diff and record newly blocked host rules as rollout impact, not passing exceptions.
 
 ## Verification
 
 - **Unit tests:** `node --test evals/tests/conformance/typescript-adapter.test.mjs`. Justification: catches dispatch regressions and missing-tool paths in the adapter itself.
-- **Architecture tests:** Good/bad fixture pairs in that suite cover public imports, operation isolation, and suffix paths. Justification: syntax checks cannot prove dependency direction.
+- **Architecture tests:** ID-specific public-import, operation-isolation, and suffix fixture pairs are deferred by direct user decision. The current evidence-blocking directives require named human review; a later task must add a real verifier before claiming automation.
 - **Integration/contract tests:** `node --test evals/tests/conformance/conformance-gate.test.mjs` passes adapter results into aggregation and asserts non-PASS for unknown automated IDs, tool unavailability, and missing human evidence. Justification: adapter status alone does not prove the public report verdict is honest.
 - **Regression:** Existing exact-ID checks remain PASS on valid scope and FAIL/BLOCKED on invalid or unavailable scope; advisory results never count as enforced passes.
 - **Catalog:** `npm run lint`, `node evals/run-evals.mjs`, `node scripts/context.mjs doctor`; refresh lock with `npm run sync` if catalog files change.
@@ -71,7 +71,7 @@ Revert adapter, gate, fixtures/tests, and matching rule/catalog changes together
 
 ## Definition of done
 
-- [ ] AC-05 has failing-then-passing structural and aggregate-report cases.
-- [ ] No unhandled automated directive returns `heuristic-pass` PASS; unresolved checks and missing evidence block progression.
-- [ ] Known-verifier regressions, lint, evaluations, doctor, `/review`, and fresh conformance PASS are recorded.
-- [ ] Exact file fence and task branch verified; unit committed after its gate.
+- [x] AC-05 has failing-then-passing aggregate-report cases; structural fixtures and ID-specific verifiers are recorded as deferred, with directives still evidence-blocking.
+- [x] No unhandled automated directive returns `heuristic-pass` PASS; unresolved checks and missing evidence block progression.
+- [x] Known-verifier regressions, lint, evaluations, doctor, `/review`, and fresh conformance PASS are recorded.
+- [x] Exact file fence and task branch verified; unit committed after its gate.
