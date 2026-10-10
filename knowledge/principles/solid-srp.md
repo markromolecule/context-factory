@@ -44,9 +44,11 @@ In full-stack TypeScript systems, responsibility boundaries must be partitioned 
 2. **Layer Isolation:** UI components must never perform direct database operations or heavy domain algorithms. Custom hooks or services must isolate state and effects.
 3. **Cohesion over Size:** SRP is not merely about line count; high cohesion means all internal methods and fields collaborate toward a single unified purpose.
 4. **Refactoring Trigger:** If modifying feature X requires editing a file that is also touched when modifying unrelated feature Y, that file violates SRP and must be decomposed using `skills/refactor`.
+5. **Cohesion over Artificial File Splits:** SRP mandates responsibility separation by actor and business capability, not arbitrary one-file-per-function fragmentation. For policy-free simple operations, cohesive functions may reside within the same operation module without creating empty pass-through classes or dedicated hooks for trivial local state.
 
 ## Cross-References
 
 - Rule Enforcement: [[rules/solid/single-responsibility|Single Responsibility Rule]]
-- Refactoring Skill: [[skills/engineering/refactor/SKILL|Refactor Skill]]
+- Pragmatic Design: [[rules/typescript/common/pragmatic-design|Pragmatic Design Rule]]
+- KISS: [[knowledge/principles/kiss|Keep It Simple, Stupid (KISS)]]
 - Architectural Conformance: [[rules/global/architecture-conformance|Architecture Conformance]]

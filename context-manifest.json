@@ -231,6 +231,7 @@
     "evals/tests/rules/catalog-coverage.test.mjs",
     "evals/tests/rules/code-generation-evaluation.test.mjs",
     "evals/tests/rules/pragmatic-design.test.mjs",
+    "evals/tests/rules/pragmatic-solid-alignment.test.mjs",
     "evals/tests/rules/prompt-compiler.test.mjs",
     "evals/tests/rules/rule-binding.test.mjs",
     "evals/tests/rules/rule-contract-schema.test.mjs",
