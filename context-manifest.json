@@ -131,11 +131,15 @@
   ],
   "knowledge": [
     "knowledge/README.md",
+    "knowledge/principles/composition-over-inheritance.md",
+    "knowledge/principles/kiss.md",
+    "knowledge/principles/law-of-demeter-tell-dont-ask.md",
     "knowledge/principles/solid-dip.md",
     "knowledge/principles/solid-isp.md",
     "knowledge/principles/solid-lsp.md",
     "knowledge/principles/solid-ocp.md",
-    "knowledge/principles/solid-srp.md"
+    "knowledge/principles/solid-srp.md",
+    "knowledge/principles/yagni.md"
   ],
   "schemas": [
     "schemas/claim-evidence.schema.json",

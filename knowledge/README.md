@@ -38,6 +38,13 @@ Canonical LLM knowledge lives under `knowledge/`. Each note is independently ret
 - [[knowledge/principles/solid-isp|Interface Segregation Principle (`factory.principles.solid.isp`)]]
 - [[knowledge/principles/solid-dip|Dependency Inversion Principle (`factory.principles.solid.dip`)]]
 
+### Pragmatic Design Principles
+
+- [[knowledge/principles/yagni|You Aren't Gonna Need It (`factory.principles.yagni`)]]
+- [[knowledge/principles/kiss|Keep It Simple, Stupid (`factory.principles.kiss`)]]
+- [[knowledge/principles/composition-over-inheritance|Composition over Inheritance (`factory.principles.composition-over-inheritance`)]]
+- [[knowledge/principles/law-of-demeter-tell-dont-ask|Law of Demeter and Tell, Don't Ask (`factory.principles.demeter-tell-dont-ask`)]]
+
 ## Rules
 
 - Keep one primary subject per note and use stable dotted IDs.
