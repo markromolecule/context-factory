@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:bfa40ad54177a268c3d81001454b326963c70b56ccb342bfd4ff5787a25dbd9a",
+  "digest": "sha256:b3878bb88bda1bd09acec8639be33766e1c09b3b106179e31b6ce607b91ba14d",
   "files": {
     ".cursorrules": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
     ".github/copilot-instructions.md": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:e0aa7a561369c0839dd6c7f1e25f8ba0bee33d3c046abb17ac5576b6b36f8e51",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:7dfea65d29a838380abf64c8e54328463b51aa5fbb96b129c5c7bd927434453d",
+    "context-manifest.json": "sha256:231f54c3aa953b288bc95b6e3b0318cc6e987e336ac33048289f349c8784933c",
     "docs/ARCHITECTURE.md": "sha256:ca6145eb2b6e41e098d124b1f1884a86c8d680e3cbd7125d254ddf7bb29356a3",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
@@ -157,6 +157,7 @@
     "evals/tests/rules/backend-testing.test.mjs": "sha256:bc6ef9f4f126e759252cde66818282853b9da5bd689d7cc5d73a04cbe73722f3",
     "evals/tests/rules/catalog-coverage.test.mjs": "sha256:e79cf32059f0690a9ea91802cc585461a8a7d17c16f1476ad47b0fd75d50b562",
     "evals/tests/rules/code-generation-evaluation.test.mjs": "sha256:3388151a482a7a71e8d88dfd7a00923300d6356fae0b46904c999f3c36c09025",
+    "evals/tests/rules/pragmatic-backend-ui-alignment.test.mjs": "sha256:5360a9483bfabc51486e618ccc3ffbb07a37595a5b00015496321ac5e1d89033",
     "evals/tests/rules/pragmatic-design.test.mjs": "sha256:2653bc71a00cd72b2e97019a94a6644a55373f944fe80a80c08bf24573596e70",
     "evals/tests/rules/pragmatic-solid-alignment.test.mjs": "sha256:674e110ef586c4e61ab72a91858a82b471ffa26abe8d870e56f0c9be264505d1",
     "evals/tests/rules/prompt-compiler.test.mjs": "sha256:8ce260c0302681073a0095d31522545ecabbdc9936ffc8a86c5f14ab1e95831e",

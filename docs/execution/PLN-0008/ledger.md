@@ -130,3 +130,50 @@
 - **Diff Hash:** `sha256:de44fc5b34472f44c57268aa4b5560bb5e211122534054abb33ea72a9072e920`
 - **Human Evidence:** "Joseph reviewed Unit 03.01 SOLID rule and knowledge reconciliations across OCP, SRP, and DIP; conflict matrix, present-need triggers, operation cohesion, and preserved policy-to-infrastructure boundaries are verified."
 - **Verdict:** **PASS** (34/34 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0008/unit-03-01-conformance-report.json --binding sha256:b439a620bf4ff7b61390530f04d0ef1825b1887675ab05bdea3a01d5f52a2298`.
+
+---
+
+## Unit 03.02: Backend, UI, and Global TypeScript Scope Audit
+
+### Conflict Matrix (Backend, UI, and Global Scope Audit)
+
+| File | Target Directive / Section | Text / Mandate | Audit Judgment & Pragmatic Alignment | Retained Mode & Verifier |
+| :--- | :--- | :--- | :--- | :--- |
+| `rules/typescript/backend/service-layer.md` | `ts.service.create-for-coordination` | `Create a service when an operation coordinates multiple boundaries... A simple read without policy, authorization-sensitive decisions, or orchestration may use controller-to-data directly; do not add a pass-through service.` | Complies with YAGNI/KISS. Permits controller-to-data for simple policy-free reads; rejects pass-through services. Retained verbatim without modification. | `advisory` [verifier: none]. |
+| `rules/typescript/backend/service-layer.md` | `ts.service.policy-bearing-operations` | `Put commands and policy-bearing reads behind a service or policy boundary; tenant and authorization decisions must not be bypassed by a controller-to-data shortcut.` | Preserves critical security/tenant boundary. Rejects controller-to-data shortcuts for tenant or policy decisions. Retained verbatim. | `evidence-blocking` [verifier: human-evidence]. |
+| `rules/typescript/backend/controllers-and-routes.md` | `ts.controllers.direct-data-for-simple-read` | `A controller may call data directly only for a simple read with no business policy, authorization-sensitive decision, or orchestration. A policy-bearing read uses a trusted service or policy boundary.` | Complies with pragmatic simple-read boundary; explicitly fences sensitive reads. Retained verbatim. | `evidence-blocking` [verifier: human-evidence]. |
+| `rules/typescript/backend/module-architecture.md` | `ts.module.operation-first-layout` | `Organize the default backend shape as src/modules/<feature>/<operation>/. Preserve an established host's layer-based folder convention when it keeps the same responsibility and public-contract boundaries...` | Preserves ADR 0037 operation-first default while allowing established host layer folders. Forbids empty placeholder files. Retained verbatim. | `evidence-blocking` [verifier: human-evidence]. |
+| `rules/typescript/backend/dto-and-serialization.md` | `ts.dto.domain-persistence-separation`, `ts.dto.public-response-whitelist` | `Explicitly map validated request DTO values to domain values and persistence inputs... Explicitly map domain or persistence values to a public response with a named whitelist of fields.` | Aligns with `ts.pragmatic.demeter-tell-dont-ask` explicit exception for DTO reads, validation, serialization, and transformations. Retained verbatim. | `evidence-blocking` [verifier: human-evidence]. |
+| `rules/typescript/ui/code-organization.md` | `ts.ui.promote-shared-on-reuse`, `ts.ui.cohesive-modules` | `Promote code to shared scope only after it has multiple real consumers. Prefer cohesive modules over one-file-per-symbol ceremony.` | Directly instantiates YAGNI and KISS in frontend organization. Framework-agnostic dependency direction. Retained verbatim. | `advisory` [verifier: none]. |
+| `rules/global/code-quality.md` | `cf.quality.solid-compliance` | `Strictly adhere to the 5 SOLID principles (rules/solid/)... across backend services, repositories, and React UI components.` | References `rules/solid/` which was reconciled in Unit 03.01. Leaving global wording intact prevents behavioral and selection drift for plain JavaScript (`.js`/`.mjs`). Retained verbatim. | `evidence-blocking` [verifier: human-evidence]. |
+| `rules/global/architecture-conformance.md` | `cf.arch.solid`, `cf.arch.trust`, `cf.arch.patterns` | `Enforce SRP, OCP, LSP, ISP, and DIP. Auth and tenant checks reside at backend boundaries. Use existing patterns unless requirements prove inadequate.` | Aligned with pragmatic architecture; preserves trust boundary and pattern reuse. Retained verbatim. | `automated-blocking` / `advisory`. |
+
+### Changes
+
+- Added focused contract test suite (`evals/tests/rules/pragmatic-backend-ui-alignment.test.mjs`) asserting:
+  - Policy-free simple reads allow direct controller-to-data access without pass-through service (`ts.service.create-for-coordination`, `ts.controllers.direct-data-for-simple-read`).
+  - Tenant-sensitive reads mandate trusted service/policy boundary (`ts.service.policy-bearing-operations`).
+  - ADR 0037 operation-first default and established-host layer folder compatibility are preserved without empty placeholder files (`ts.module.operation-first-layout`).
+  - Legitimate DTO mapping, schema parsing, and serialization are tested as explicit exceptions to Demeter / tell-don't-ask rules (`ts.dto.domain-persistence-separation`, `ts.pragmatic.demeter-tell-dont-ask`).
+  - UI code organization favors cohesive modules and contextual composition without forced hook decomposition (`ts.ui.cohesive-modules`, `ts.ui.promote-shared-on-reuse`, `cf.solid.srp-extract-async-hooks`).
+  - Plain JavaScript scope (`stack: "javascript"`, `legacy/service.js`) selects global rules and excludes TypeScript-specific pragmatic rules with `wrong-stack`.
+  - Nearest-package metadata scopes framework-specific additions without prompt-led leakage.
+- Synchronized `context-manifest.json` and regenerated `context-lock.json` (`sha256:b3878bb88bda1bd09acec8639be33766e1c09b3b106179e31b6ce607b91ba14d`).
+
+### Verification
+
+- `node --test evals/tests/rules/pragmatic-backend-ui-alignment.test.mjs evals/tests/rules/backend-module-architecture.test.mjs` → **PASS** (10/10 tests passed in 64ms).
+- `node --test evals/tests/rules/pragmatic-design.test.mjs` → **PASS** (4/4 tests passed in 13ms).
+- `node --test evals/tests/rules/pragmatic-solid-alignment.test.mjs` → **PASS** (3/3 tests passed in 6ms).
+- `npm run lint` → **PASS** (41 rules, 18 skills, 12 workflows, 23 agent resources, 10 knowledge items, 20 evaluations, 506 Markdown files).
+- `node scripts/context.mjs doctor` → **PASS** (HEALTHY; 33/33 evaluations passed in 207ms).
+- `git diff --check` → **PASS**.
+
+### Conformance Receipt
+
+- **Report:** `docs/execution/PLN-0008/unit-03-02-conformance-report.json`
+- **Report ID:** `report-binding-adhoc-00-00-bbd03b47c1a9-1791644921323`
+- **Binding Hash:** `sha256:bbd03b47c1a91fbbd575ac39ac9861212c8c7e1d4d68cd2cfd691b8070eaa220`
+- **Diff Hash:** `sha256:83e504902df1a9cad29ba6aa7bd3bfb564a2ed13483db0c8d6649db6dce2aa5c`
+- **Human Evidence:** "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+- **Verdict:** **PASS** (47/47 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0008/unit-03-02-conformance-report.json --binding sha256:bbd03b47c1a91fbbd575ac39ac9861212c8c7e1d4d68cd2cfd691b8070eaa220`.

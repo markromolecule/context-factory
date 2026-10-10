@@ -230,6 +230,7 @@
     "evals/tests/rules/backend-testing.test.mjs",
     "evals/tests/rules/catalog-coverage.test.mjs",
     "evals/tests/rules/code-generation-evaluation.test.mjs",
+    "evals/tests/rules/pragmatic-backend-ui-alignment.test.mjs",
     "evals/tests/rules/pragmatic-design.test.mjs",
     "evals/tests/rules/pragmatic-solid-alignment.test.mjs",
     "evals/tests/rules/prompt-compiler.test.mjs",
