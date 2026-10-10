@@ -296,6 +296,7 @@
     "evals/datasets/conformance/08-bridge-omission.json",
     "evals/datasets/defects/defect-resolution.json",
     "evals/datasets/features/feature-delivery.json",
+    "evals/datasets/features/typescript-backend-codegen.json",
     "evals/datasets/features/typescript-web-codegen.json",
     "evals/datasets/refactors/architecture-change.json"
   ],

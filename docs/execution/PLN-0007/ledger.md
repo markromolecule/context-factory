@@ -16,6 +16,8 @@
 | 01 | Operation-first architecture contract | 01.01 | READY FOR DEVELOPER INSPECTION |
 | 02 | DTO and backend-testing rule owners | 02.01 → 02.02 | READY FOR DEVELOPER INSPECTION |
 | 03 | Honest TypeScript conformance | 03.01 | READY FOR DEVELOPER INSPECTION |
+| 04 | Backend rule selection and whole-task release | 04.01 | READY FOR DEVELOPER INSPECTION |
+
 
 ## Packet and Branch Checkpoint: 2026-10-10
 
@@ -181,3 +183,57 @@ Phase 1 is ready for developer inspection. Its unit commit is the next recorded 
 | Test completeness | PASS | Regression coverage proves unimplemented automated checks block, named compensation is required, and compensation produces a receipt-verifiable result. Existing exact-ID checks remain covered by the adapter suite. |
 | Conformance | PASS | Receipt `report-binding-adhoc-00-00-29369b024648-1791597394553` validates against its exact binding and changed-file hash. |
 | Definition of done | PASS | Failing-then-passing aggregate and adapter tests, fresh factory checks, named human evidence, and the validated receipt are recorded; commit is next. |
+
+## Phase 4 Packet Review: 2026-10-10
+
+- Reissued packet: `PLN-0007-plan-review-2026-10-10-phase-04`, approved by `user-continue-phase-4-2026-10-10`.
+- Verified packet via `node scripts/context.mjs handoff:verify-packet docs/execution/PLN-0007/packet.json` → PASS (`valid: true`).
+
+## Unit 04.01: Backend Rule Selection, Payload, and Whole-task Verification
+
+### Changes
+
+- Added `evals/datasets/features/typescript-backend-codegen.json` with reproducible scenario benchmarks for two-write transactions, simple bounded reads, tenant-sensitive reads, and internal row field serialization whitelisting. Captured baseline and final prompt payload measurements in JSON UTF-8 bytes.
+- Added representative backend code generation assertions and payload delta checks in `evals/tests/rules/code-generation-evaluation.test.mjs`.
+- Added backend TypeScript rule binding tests in `evals/tests/rules/rule-binding.test.mjs` verifying operation-scoped backend selections, established host roots, and UI/framework exclusion.
+- Maintained catalog coverage and Maps of Content synchronization in `context-manifest.json` and `context-lock.json`.
+
+### Verification
+
+- Focused tests: `node --test evals/tests/rules/rule-binding.test.mjs evals/tests/rules/code-generation-evaluation.test.mjs` → PASS (21/21).
+- Full PLN-0007 suite across all 4 phases: 69/69 tests PASS across 8 test suites.
+- Lint: `npm run lint` → PASS (40 rules, 18 skills, 12 workflows, 23 agent resources, 6 knowledge items, 20 evaluations, 487 Markdown files).
+- Doctor: `node scripts/context.mjs doctor` → PASS (HEALTHY; 33/33 evaluations).
+- Plan check: `node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-10/feat-PLN-0007-typescript-backend-rule-expansion` → PASS.
+- Git diff format: `git diff --check` → PASS.
+
+### Whole-Task Conformance Preflight & Gate
+
+- Preflight: `context-cli preflight "PLN-0007 whole-task verification" --stack typescript --scope <entire-task-diff>`
+  - Binding ID: `binding-adhoc-00-00-d6f9ac9dee3c`
+  - Binding Hash: `sha256:d6f9ac9dee3c4a3300dae33f145accc4c72f3c2c3734e3d43a7e2a39e3e12f2a`
+  - Directives: 50 total (47 blocking, 3 advisory)
+- Honest no-evidence conformance check: `context-cli conform "PLN-0007 whole-task verification" --stack typescript --scope <entire-task-diff>`
+  - Diff Hash: `sha256:260b7b8f4ba3b6e57a39fe4d395ce0dbfbf47fe59aa4f0496ddb074e71896288`
+  - Verdict: **BLOCKED** (3 passed advisory, 47 blocked directives)
+  - Result: Fails closed honestly as expected under the Phase 3 fail-closed model without ungrounded heuristic passes.
+- Named human evidence supplied by Joseph on 2026-10-10: "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
+- Final report: `docs/execution/PLN-0007/whole-task-conformance-report.json`
+- Report ID: `report-binding-adhoc-00-00-d6f9ac9dee3c-1791600241956`
+- Binding Hash: `sha256:d6f9ac9dee3c4a3300dae33f145accc4c72f3c2c3734e3d43a7e2a39e3e12f2a`
+- Diff Hash: `sha256:fb4d3a2b40a040383bc8dfa1b6521330a4029b13b8c21208a7024248fc192b19`
+- Verdict: **PASS** (50/50 directives). `context-cli conform verify` validated the receipt against the whole task diff and binding hash. No waiver was created.
+
+### Pre-screen Review
+
+| Gate | Result | Evidence |
+| --- | --- | --- |
+| Scope fence | PASS | All changes are within unit scope, catalog, test datasets, and required lifecycle artifacts; no unapproved host application edits. |
+| Test completeness | PASS | 69/69 PLN-0007 tests pass across 8 suites; 33/33 evaluations pass; all AC-01 through AC-08 acceptance scenarios covered. |
+| SOLID and boundary audit | PASS | Strict separation between transport, policy, and persistence; fail-closed honest conformance; no host code contamination. |
+| Conformance | PASS | Whole-task receipt `report-binding-adhoc-00-00-d6f9ac9dee3c-1791600241956` verified and PASS (50/50). |
+| Definition of done | PASS | All unit and whole-task criteria satisfied, fresh doctor healthy, lint passing, and verified receipt recorded. |
+
+### Checkpoint
+
+Unit 04.01 and the whole PLN-0007 task are ready for developer inspection.

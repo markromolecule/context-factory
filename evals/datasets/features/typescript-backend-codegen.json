@@ -1,0 +1,111 @@
+{
+  "id": "typescript-backend-codegen",
+  "name": "TypeScript Backend Code-Generation Evaluation",
+  "domain": "features",
+  "request": "Create a TypeScript backend order operation with safe serialization and tests",
+  "goldenOutput": {
+    "workflow": "workflows/feature-delivery.md",
+    "status": "completed"
+  },
+  "version": 1,
+  "renderer": "compilePrompt plus buildOpenAIPayload, measured as UTF-8 JSON bytes",
+  "tokenMeasurement": "unavailable: no shared tokenizer is installed for both baseline and final payloads",
+  "baseline": {
+    "commit": "a1ffd01afeaff61e1ec2f649e60d23a51ed313a9",
+    "requests": "The matching scenario request, stack, scope, renderer, and system prompt are preserved in each scenario."
+  },
+  "scenarios": [
+    {
+      "id": "create-two-writes",
+      "request": "Create an order with an audit record in one transaction",
+      "scope": [
+        "src/modules/orders/create-order/create-order.service.ts",
+        "src/modules/orders/create-order/create-order.test.ts"
+      ],
+      "expectedDirectiveIds": [
+        "ts.module.operation-first-layout",
+        "ts.service.transaction-ownership",
+        "ts.backend-testing.service-policy-cases"
+      ],
+      "payload": { "baselineBytes": 48916, "finalBytes": 52611, "deltaBytes": 3695 },
+      "representativeOutput": "export async function createOrder(input, deps) {\n  return deps.transaction(async (tx) => {\n    const order = await deps.orders.insert(input, tx);\n    await deps.audit.insert({ orderId: order.id }, tx);\n    return { id: order.id, total: order.total };\n  });\n}",
+      "quality": {
+        "requiredPatterns": ["transaction\\(async \\(tx\\)", "orders\\.insert\\(input, tx\\)", "audit\\.insert\\(\\{ orderId: order\\.id \\}, tx\\)"],
+        "forbiddenPatterns": ["return input"]
+      }
+    },
+    {
+      "id": "simple-bounded-read",
+      "request": "Read one order without policy or orchestration",
+      "scope": [
+        "src/modules/orders/get-order/get-order.controller.ts",
+        "src/modules/orders/get-order/get-order.test.ts"
+      ],
+      "expectedDirectiveIds": [
+        "ts.controllers.direct-data-for-simple-read",
+        "ts.dto.public-response-whitelist",
+        "ts.backend-testing.controller-mapping-cases"
+      ],
+      "payload": { "baselineBytes": 49129, "finalBytes": 54867, "deltaBytes": 5738 },
+      "representativeOutput": "export async function getOrderController(request, orderData) {\n  const order = await orderData.findById(request.params.id);\n  return { id: order.id, total: order.total };\n}",
+      "quality": {
+        "requiredPatterns": ["orderData\\.findById\\(request\\.params\\.id\\)", "return \\{ id: order\\.id, total: order\\.total \\}"],
+        "forbiddenPatterns": ["getOrderService"]
+      }
+    },
+    {
+      "id": "tenant-sensitive-read",
+      "request": "Read an order for a tenant with authorization policy",
+      "scope": [
+        "src/modules/orders/get-order/get-order.controller.ts",
+        "src/modules/orders/get-order/get-order.service.ts",
+        "src/modules/orders/get-order/get-order.test.ts"
+      ],
+      "expectedDirectiveIds": [
+        "ts.controllers.direct-data-for-simple-read",
+        "ts.service.policy-bearing-operations",
+        "ts.backend-testing.service-policy-cases"
+      ],
+      "payload": { "baselineBytes": 51593, "finalBytes": 57772, "deltaBytes": 6179 },
+      "representativeOutput": "export async function getOrderController(request, deps) {\n  return getOrderForTenant({ orderId: request.params.id, tenantId: request.auth.tenantId }, deps);\n}\n\nexport async function getOrderForTenant(input, deps) {\n  return deps.orders.findForTenant(input.orderId, input.tenantId);\n}",
+      "quality": {
+        "requiredPatterns": ["getOrderForTenant\\(", "tenantId: request\\.auth\\.tenantId", "findForTenant\\(input\\.orderId, input\\.tenantId\\)"],
+        "forbiddenPatterns": ["orderData\\.findById\\(request\\.params\\.id\\)"]
+      }
+    },
+    {
+      "id": "public-row-serialization",
+      "request": "Return an order row without exposing internal persistence fields",
+      "scope": [
+        "src/modules/orders/get-order/get-order.mapper.ts",
+        "src/modules/orders/get-order/get-order.controller.ts",
+        "src/modules/orders/get-order/get-order.test.ts"
+      ],
+      "expectedDirectiveIds": [
+        "ts.dto.public-response-whitelist",
+        "ts.controllers.no-leak-internals",
+        "ts.backend-testing.public-contract-cases"
+      ],
+      "payload": { "baselineBytes": 49197, "finalBytes": 54935, "deltaBytes": 5738 },
+      "representativeOutput": "export function toOrderResponse(row) {\n  const persistenceRow = { id: row.id, email: row.email, passwordHash: row.passwordHash };\n  return { id: persistenceRow.id, email: persistenceRow.email };\n}",
+      "quality": {
+        "requiredPatterns": ["passwordHash: row\\.passwordHash", "return \\{ id: persistenceRow\\.id, email: persistenceRow\\.email \\}"],
+        "forbiddenPatterns": ["return persistenceRow"]
+      }
+    }
+  ],
+  "compatibility": [
+    {
+      "id": "default-test-suffix",
+      "request": "Test create order",
+      "scope": ["src/modules/orders/create-order/create-order.test.ts"],
+      "expectedDirectiveIds": ["ts.module.operation-first-layout", "ts.backend-testing.operation-test-discovery"]
+    },
+    {
+      "id": "established-host-and-spec-suffix",
+      "request": "Test existing order",
+      "scope": ["src/features/orders/get-order/get-order.spec.ts"],
+      "expectedDirectiveIds": ["ts.module.operation-first-layout", "ts.backend-testing.operation-test-discovery"]
+    }
+  ]
+}

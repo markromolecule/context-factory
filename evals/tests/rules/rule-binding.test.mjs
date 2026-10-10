@@ -292,4 +292,48 @@ describe("Unit 02.01: Rule Binding Compiler and Artifact-Aware Resolver", () => 
       assert.ok(Array.isArray(res.rules), "Legacy informational rules array is preserved");
     });
   });
+
+  describe("Backend TypeScript rule binding (PLN-0007)", () => {
+    it("binds backend architecture, DTO, and testing rules for operation-scoped backend files without UI leakage", async () => {
+      const result = await resolveContext("Create an order with an audit record in one transaction", {
+        stack: "typescript",
+        scope: [
+          "src/modules/orders/create-order/create-order.service.ts",
+          "src/modules/orders/create-order/create-order.test.ts",
+        ],
+      });
+      assert.ok(result.binding, "Expected material binding for operation-scoped backend files");
+      const ids = result.binding.directives.map((d) => d.id);
+      assert.ok(ids.includes("ts.module.operation-first-layout"));
+      assert.ok(ids.includes("ts.service.transaction-ownership"));
+      assert.ok(ids.includes("ts.backend-testing.service-policy-cases"));
+      assert.ok(!ids.some((id) => /^(ts\.(?:react|nextjs|solidjs)\.|ts\.structure\.rsc-default$)/.test(id)));
+    });
+
+    it("supports established src/features/ host convention and .spec.ts tests", async () => {
+      const result = await resolveContext("Test existing order", {
+        stack: "typescript",
+        scope: ["src/features/orders/get-order/get-order.spec.ts"],
+      });
+      assert.ok(result.binding, "Expected material binding for established host convention");
+      const ids = result.binding.directives.map((d) => d.id);
+      assert.ok(ids.includes("ts.module.operation-first-layout"));
+      assert.ok(ids.includes("ts.backend-testing.operation-test-discovery"));
+    });
+
+    it("requires service boundary for policy-bearing read negative case", async () => {
+      const result = await resolveContext("Read an order for a tenant with authorization policy", {
+        stack: "typescript",
+        scope: [
+          "src/modules/orders/get-order/get-order.controller.ts",
+          "src/modules/orders/get-order/get-order.service.ts",
+          "src/modules/orders/get-order/get-order.test.ts",
+        ],
+      });
+      assert.ok(result.binding, "Expected material binding");
+      const ids = result.binding.directives.map((d) => d.id);
+      assert.ok(ids.includes("ts.service.policy-bearing-operations"));
+      assert.ok(ids.includes("ts.backend-testing.service-policy-cases"));
+    });
+  });
 });

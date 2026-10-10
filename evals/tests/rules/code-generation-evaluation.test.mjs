@@ -1,6 +1,6 @@
 import { describe, it, before } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
+import { mkdtemp, mkdir, writeFile, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { resolveContext } from "../../../scripts/context-core.mjs";
@@ -355,5 +355,73 @@ describe("Representative Web Code-Generation Evaluation Suite", () => {
     assert.ok(costSavingsPercent >= 50, "Total cost reduced by at least 50% due to 0-turn resolution");
     assert.ok(latencySavingsPercent >= 50, "Total latency reduced by at least 50% due to 0-turn resolution");
     assert.equal(scoped.repairTurns, 0, "Scoped generation eliminates repair turns");
+  });
+
+  it("PLN-0007: evaluates representative backend guidance separately from rendered payload size", async () => {
+    const dataset = JSON.parse(await readFile(
+      join(process.cwd(), "evals/datasets/features/typescript-backend-codegen.json"),
+      "utf8",
+    ));
+
+    for (const scenario of dataset.scenarios) {
+      const selection = await resolveContext(scenario.request, {
+        stack: "typescript",
+        scope: scenario.scope,
+      });
+      assert.ok(selection.binding, `${scenario.id} needs a material binding`);
+
+      const selectedIds = selection.binding.directives.map((directive) => directive.id);
+      for (const directiveId of scenario.expectedDirectiveIds) {
+        assert.ok(selectedIds.includes(directiveId), `${scenario.id} must select ${directiveId}`);
+      }
+      assert.ok(
+        !selectedIds.some((directiveId) => /^(ts\.(?:react|nextjs|solidjs)\.|ts\.structure\.rsc-default$)/.test(directiveId)),
+        `${scenario.id} must exclude unrelated UI and framework directives`,
+      );
+
+      const compiled = compilePrompt({
+        request: scenario.request,
+        systemPrompt: "You are a TypeScript backend engineer.",
+        selection,
+        binding: selection.binding,
+      });
+      const payload = buildOpenAIPayload({ prompt: compiled.prompt, systemPrompt: compiled.systemPrompt });
+      const renderedPayload = JSON.stringify(payload);
+      assert.equal(
+        Buffer.byteLength(renderedPayload, "utf8"),
+        scenario.payload.finalBytes,
+        `${scenario.id} rendered payload bytes must match the recorded measurement`,
+      );
+      assert.equal(
+        scenario.payload.finalBytes - scenario.payload.baselineBytes,
+        scenario.payload.deltaBytes,
+        `${scenario.id} must record its payload delta without implying a target reduction`,
+      );
+      for (const directiveId of scenario.expectedDirectiveIds) {
+        const directive = selection.binding.directives.find((candidate) => candidate.id === directiveId);
+        assert.ok(renderedPayload.includes(directive.statement), `${scenario.id} must render ${directiveId}`);
+      }
+
+      for (const requiredPattern of scenario.quality.requiredPatterns) {
+        assert.match(scenario.representativeOutput, new RegExp(requiredPattern), `${scenario.id} quality check: ${requiredPattern}`);
+      }
+      for (const forbiddenPattern of scenario.quality.forbiddenPatterns) {
+        assert.doesNotMatch(scenario.representativeOutput, new RegExp(forbiddenPattern), `${scenario.id} quality check: ${forbiddenPattern}`);
+      }
+    }
+
+    for (const compatibility of dataset.compatibility) {
+      const selection = await resolveContext(compatibility.request, {
+        stack: "typescript",
+        scope: compatibility.scope,
+      });
+      const selectedIds = selection.binding.directives.map((directive) => directive.id);
+      for (const directiveId of compatibility.expectedDirectiveIds) {
+        assert.ok(selectedIds.includes(directiveId), `${compatibility.id} must select ${directiveId}`);
+      }
+    }
+
+    const ambiguous = await resolveContext("Create a TypeScript backend order operation", { stack: "typescript" });
+    assert.equal(ambiguous.binding, null, "A pathless request must not infer a host module convention");
   });
 });
