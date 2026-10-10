@@ -14,6 +14,7 @@
 | Phase | Title | Units | Status |
 | --- | --- | --- | --- |
 | 01 | Operation-first architecture contract | 01.01 | READY FOR DEVELOPER INSPECTION |
+| 02 | DTO and backend-testing rule owners | 02.01 → 02.02 | 02.01 ready for developer inspection; 02.02 pending |
 
 ## Packet and Branch Checkpoint: 2026-10-10
 
@@ -66,3 +67,48 @@ The scope amendment is limited to the catalog regression test required by the ne
 ### Checkpoint
 
 Phase 1 is ready for developer inspection. Its unit commit is the next recorded action; Phase 2 must not begin until the developer inspects this checkpoint and gives a new instruction.
+
+## Phase 2 Packet Review: 2026-10-10
+
+- `node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-10/feat-PLN-0007-typescript-backend-rule-expansion --json` → PASS (five units, valid binding, done-check, and handoff).
+- `node scripts/context.mjs handoff:verify-brief docs/discovery/typescript-backend-rule-expansion/brief.md` → PASS.
+- `node scripts/context.mjs handoff:issue-packet ... --review PLN-0007-plan-review-2026-10-10-phase-02 --approval user-execute-phase-2-2026-10-10` → approved packet issued; `handoff:verify-packet` → PASS.
+
+## Unit 02.01: DTO and Response Serialization Owner
+
+### Changes
+
+- Added `rules/typescript/backend/dto-and-serialization.md` with operation-scoped request-schema, DTO-to-domain/persistence mapping, public field-whitelisting, nullable-output, and output-mapper reuse directives.
+- Referenced existing `runtime-validation` and controller response-safety IDs rather than duplicating parsing or HTTP error policy.
+- Added focused descriptor/selection/negative-case coverage and synchronized the Rules map, manifest, and lock.
+
+### Verification
+
+- Initial test: `node --test evals/tests/rules/backend-dto-serialization.test.mjs` → FAIL (3/3, expected missing-rule `ENOENT`).
+- Current tests: `node --test evals/tests/rules/backend-dto-serialization.test.mjs evals/tests/rules/catalog-coverage.test.mjs` → PASS (4/4).
+- `npm run lint` → PASS (39 rules).
+- `node scripts/context.mjs doctor` → PASS (HEALTHY; 32/32 evaluations).
+- `git diff --check` → PASS.
+
+### Conformance Stop
+
+- Report: `docs/execution/PLN-0007/unit-02-01-conformance-report.json`
+- Report ID: `report-binding-adhoc-00-00-e10e8ae30413-1791596723926`
+- Binding hash: `sha256:e10e8ae304132bea95fb89e0b678b09a1c25a408d6de19d5a4ab8382965ce506`
+- Diff hash: `sha256:fb9eefe41022cc9272798993a26aa6844736980186368d464b3da2b924240f53`
+- Initial verdict: **BLOCKED** (30 PASS, 20 NOT_AUTOMATABLE) because named human evidence had not reviewed Unit 02.01's semantic DTO and serialization boundaries. No waiver was created.
+- Joseph confirmed the requested semantic boundaries on 2026-10-10. Current report ID: `report-binding-adhoc-00-00-451d4e0e98ed-1791596806307`; binding hash: `sha256:451d4e0e98ed8718ac1d2b7631c1d0b08ab0c8671f6975bbe04eb11b9a7ffb20`; diff hash: `sha256:50ae69b75f364786eec80f4c5dce10214a1db0850dd0617adb2c8ff8bb5ee69b`; verdict: **PASS** (50/50). `context-cli conform verify` accepted the persisted receipt.
+
+### Scope-review stop
+
+`evals/tests/rules/catalog-coverage.test.mjs` was updated because Unit 02.01 explicitly requires catalog count assertions to be refreshed from parsed facts, but that file was omitted from the unit's `## Scope` list. Joseph authorized the amendment on 2026-10-10. The unit now includes it; `plan:check` and brief verification pass, and packet `PLN-0007-plan-review-2026-10-10-phase-02-scope-amendment` is valid. Unit 02.01 is ready for its pre-screen review and commit.
+
+### Pre-screen review
+
+| Gate | Result | Evidence |
+| --- | --- | --- |
+| Scope fence | PASS | The amended unit includes the DTO rule, module reference, DTO contract test, catalog coverage test, Rules map, manifest, and lock. Packet, ledger, and report are required lifecycle artifacts. |
+| Test completeness | PASS | DTO and catalog contract tests pass without skips; DTO test covers selection, request/domain/persistence/response separation, malformed input, and internal-field exclusion. |
+| SOLID and boundary audit | PASS | The rule has one mapping-boundary responsibility and delegates parsing and HTTP response safety to existing owners. |
+| Conformance | PASS | Receipt `report-binding-adhoc-00-00-451d4e0e98ed-1791596806307` is valid for binding `sha256:451d4e0e98ed8718ac1d2b7631c1d0b08ab0c8671f6975bbe04eb11b9a7ffb20`. |
+| Definition of done | PASS | Failing-then-passing tests, catalog synchronization, named human evidence, and scope amendment are recorded; commit is next. |

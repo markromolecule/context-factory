@@ -42,7 +42,7 @@ Give each backend operation one request schema and an explicit public-output map
 
 ## Scope
 
-**In scope:** `rules/typescript/backend/dto-and-serialization.md` (new), `rules/typescript/backend/module-architecture.md`, `evals/tests/rules/backend-dto-serialization.test.mjs` (new), `docs/Rules.md`, `context-manifest.json`, `context-lock.json`.
+**In scope:** `rules/typescript/backend/dto-and-serialization.md` (new), `rules/typescript/backend/module-architecture.md`, `evals/tests/rules/backend-dto-serialization.test.mjs` (new), `evals/tests/rules/catalog-coverage.test.mjs`, `docs/Rules.md`, `context-manifest.json`, `context-lock.json`.
 
 **Out of scope:** Changing application DTOs, modifying common runtime-validation semantics, adopting a serializer library, backend-testing rule, adapter verifier implementation.
 

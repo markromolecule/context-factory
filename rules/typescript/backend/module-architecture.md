@@ -45,6 +45,8 @@ Add only files with a responsibility in the operation. Use `types`, `errors`, `m
 - [directive:ts.module.dto-single-source][mode:evidence-blocking][verifier:human-evidence] DTO schemas are the single input-validation source at the transport boundary. Do not use DTOs as database models.
 - [directive:ts.module.no-upward-imports][mode:evidence-blocking][verifier:human-evidence] A lower layer must not import a higher layer, and one module must use another module through an explicit public contract rather than its internals. Keep this evidence-blocking until an ID-specific verifier exists.
 
+Use `dto-and-serialization.md` for the operation's request-to-domain and response mapping contract. It complements this module boundary without duplicating runtime validation or controller response-safety rules.
+
 ## Naming
 
 - [directive:ts.module.file-suffix-convention][mode:evidence-blocking][verifier:human-evidence] Give operation files a role suffix such as `.types.ts`, `.errors.ts`, `.mapper.ts`, `.schema.ts`, `.policy.ts`, `.events.ts`, `.controller.ts`, `.service.ts`, `.data.ts`, `.routes.ts`, or the host test suffix. Keep this evidence-blocking until an ID-specific verifier exists.

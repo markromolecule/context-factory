@@ -39,6 +39,7 @@ tags: [rules, engineering]
 
 - [[rules/typescript/backend/controllers-and-routes|Controllers and Routes]]
 - [[rules/typescript/backend/data-access-via-api|Data Access via API]]
+- [[rules/typescript/backend/dto-and-serialization|DTO and Serialization]]
 - [[rules/typescript/backend/module-architecture|Backend Module Architecture]]
 - [[rules/typescript/backend/service-layer|Service Layer]]
 
