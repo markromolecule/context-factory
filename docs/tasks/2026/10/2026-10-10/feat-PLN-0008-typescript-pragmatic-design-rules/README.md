@@ -132,12 +132,12 @@ The scaffold placed its master file beside the task directory; it was moved to `
 
 | Stage | Branch / target | Required evidence | State |
 | --- | --- | --- | --- |
-| Plan review | task branch | `plan:check`, released brief, independent review, developer approval | pending |
-| Each unit | task branch | failing test first for behavior, exact file fence, focused tests, fresh preflight/conform PASS, review | pending |
-| Phase checkpoints | task branch | dependency units committed, catalog/lock sync, developer checkpoint | pending |
-| Task finalization | task branch → `master` | full acceptance, lint, evaluations, doctor, verified whole-diff receipt, clean review | pending |
-| Integration | `master` | user-approved merge, post-merge doctor and Git state | pending |
+| Plan review | task branch | `plan:check`, released brief, independent review, developer approval | completed |
+| Each unit | task branch | failing test first for behavior, exact file fence, focused tests, fresh preflight/conform PASS, review | completed |
+| Phase checkpoints | task branch | dependency units committed, catalog/lock sync, developer checkpoint | completed |
+| Task finalization | task branch → `master` | full acceptance, lint, evaluations, doctor, verified whole-diff receipt, clean review | completed |
+| Integration | `master` | user-approved merge, post-merge doctor and Git state | approved |
 
 ## Result
 
-Planning only. No new principle rule or knowledge implementation is claimed.
+Delivered and verified across 5 milestone units: canonical knowledge notes for YAGNI, KISS, composition over inheritance, and Law of Demeter / tell-don't-ask; shared pragmatic design rule (`rules/typescript/common/pragmatic-design.md`) with 4 evidence-blocking directives; reconciled OCP, SRP, and DIP rules and knowledge notes; verified backend simple/tenant-sensitive read and UI cohesion boundaries; TypeScript/TSX scoping with negative JavaScript exclusion; evaluation dataset and rendered payload metrics; and verified whole-diff PASS conformance receipt.
