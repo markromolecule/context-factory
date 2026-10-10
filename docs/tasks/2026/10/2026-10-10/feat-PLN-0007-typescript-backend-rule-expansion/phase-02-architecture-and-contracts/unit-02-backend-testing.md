@@ -42,7 +42,7 @@ Define a focused test matrix for operation-local services, controllers, data, ro
 
 ## Scope
 
-**In scope:** `rules/typescript/backend/testing.md` (new), `rules/typescript/database/testing-data-access-layer.md`, `rules/typescript/backend/module-architecture.md`, `evals/tests/rules/backend-testing.test.mjs` (new), `docs/Rules.md`, `context-manifest.json`, `context-lock.json`.
+**In scope:** `rules/typescript/backend/testing.md` (new), `rules/typescript/database/testing-data-access-layer.md`, `rules/typescript/backend/module-architecture.md`, `evals/tests/rules/backend-testing.test.mjs` (new), `evals/tests/rules/catalog-coverage.test.mjs`, `docs/Rules.md`, `context-manifest.json`, `context-lock.json`.
 
 **Out of scope:** Replacing DB/API adapter fixtures, forcing all hosts to use `.spec.ts`, creating placeholder service files/tests, adding a test runner dependency, UI/common TypeScript testing catalog.
 

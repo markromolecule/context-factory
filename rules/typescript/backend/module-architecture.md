@@ -46,6 +46,7 @@ Add only files with a responsibility in the operation. Use `types`, `errors`, `m
 - [directive:ts.module.no-upward-imports][mode:evidence-blocking][verifier:human-evidence] A lower layer must not import a higher layer, and one module must use another module through an explicit public contract rather than its internals. Keep this evidence-blocking until an ID-specific verifier exists.
 
 Use `dto-and-serialization.md` for the operation's request-to-domain and response mapping contract. It complements this module boundary without duplicating runtime validation or controller response-safety rules.
+Use `testing.md` for operation-boundary test ownership and `testing-data-access-layer.md` for database and network adapter test mechanics.
 
 ## Naming
 

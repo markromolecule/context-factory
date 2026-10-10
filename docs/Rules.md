@@ -42,6 +42,7 @@ tags: [rules, engineering]
 - [[rules/typescript/backend/dto-and-serialization|DTO and Serialization]]
 - [[rules/typescript/backend/module-architecture|Backend Module Architecture]]
 - [[rules/typescript/backend/service-layer|Service Layer]]
+- [[rules/typescript/backend/testing|Backend Testing]]
 
 ### Database
 

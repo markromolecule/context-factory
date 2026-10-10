@@ -4,7 +4,7 @@ name: testing-data-access-layer
 description: Verify database and API adapters at the boundary with isolated, deterministic tests.
 scope: Repository tests, API-client tests, fixtures, database harnesses, and transport mocks.
 stack: typescript
-appliesTo: ["src/**/db/**/*.test.ts", "src/**/repositories/**/*.test.ts", "tests/**/*.test.ts"]
+appliesTo: ["src/**/db/**/*.test.ts", "src/**/db/**/*.spec.ts", "src/**/repositories/**/*.test.ts", "src/**/repositories/**/*.spec.ts", "src/modules/**/data/**/*.test.ts", "src/modules/**/data/**/*.spec.ts", "src/features/**/data/**/*.test.ts", "src/features/**/data/**/*.spec.ts", "tests/**/*.test.ts", "tests/**/*.spec.ts"]
 layers: ["database", "data"]
 alwaysApply: true
 ---

@@ -14,7 +14,7 @@
 | Phase | Title | Units | Status |
 | --- | --- | --- | --- |
 | 01 | Operation-first architecture contract | 01.01 | READY FOR DEVELOPER INSPECTION |
-| 02 | DTO and backend-testing rule owners | 02.01 → 02.02 | 02.01 ready for developer inspection; 02.02 pending |
+| 02 | DTO and backend-testing rule owners | 02.01 → 02.02 | READY FOR DEVELOPER INSPECTION |
 
 ## Packet and Branch Checkpoint: 2026-10-10
 
@@ -112,3 +112,32 @@ Phase 1 is ready for developer inspection. Its unit commit is the next recorded 
 | SOLID and boundary audit | PASS | The rule has one mapping-boundary responsibility and delegates parsing and HTTP response safety to existing owners. |
 | Conformance | PASS | Receipt `report-binding-adhoc-00-00-451d4e0e98ed-1791596806307` is valid for binding `sha256:451d4e0e98ed8718ac1d2b7631c1d0b08ab0c8671f6975bbe04eb11b9a7ffb20`. |
 | Definition of done | PASS | Failing-then-passing tests, catalog synchronization, named human evidence, and scope amendment are recorded; commit is next. |
+
+## Unit 02.02: Backend Module Testing Owner
+
+### Changes and verification
+
+- Added `rules/typescript/backend/testing.md` for operation-local discovery, service policy, controller mapping, data boundary, route composition, and public-contract test responsibilities.
+- Kept database migrations, fixtures, and network interception with `testing-data-access-layer.md`; added its established `.spec.ts` and operation-local data-test compatibility paths.
+- Initial focused test failed as expected because the testing rule was absent. Current tests passed: `backend-testing`, `catalog-coverage`, and `rule-binding` (17/17).
+- `npm run lint` → PASS (40 rules); `node scripts/context.mjs doctor` → PASS (HEALTHY; 32/32 evaluations).
+- Unit 02.02 now includes `catalog-coverage.test.mjs`, authorized during Phase 2 continuation; `plan:check`, brief verification, and packet `PLN-0007-plan-review-2026-10-10-phase-02-unit-02-scope-amendment` pass.
+
+### Conformance stop
+
+- Report: `docs/execution/PLN-0007/unit-02-02-conformance-report.json`
+- Report ID: `report-binding-adhoc-00-00-969ef4effb5f-1791596959744`
+- Binding hash: `sha256:969ef4effb5fb33f3fc4999d9bf29bf38b6ffe4ca67df85cb64e390b4b44cfbb`
+- Diff hash: `sha256:3e31ecd7bc711d99567bebdf24ac4cc11f475a4599ad150b5978f112e143a1aa`
+- Initial verdict: **BLOCKED** (30 PASS, 20 NOT_AUTOMATABLE) pending named human evidence for Unit 02.02's testing boundary semantics. No waiver was created.
+- Joseph confirmed the requested Unit 02.02 boundaries on 2026-10-10. Current report ID: `report-binding-adhoc-00-00-969ef4effb5f-1791596997788`; binding hash: `sha256:969ef4effb5fb33f3fc4999d9bf29bf38b6ffe4ca67df85cb64e390b4b44cfbb`; diff hash: `sha256:3e31ecd7bc711d99567bebdf24ac4cc11f475a4599ad150b5978f112e143a1aa`; verdict: **PASS** (50/50). `context-cli conform verify` accepted the receipt.
+
+### Pre-screen review
+
+| Gate | Result | Evidence |
+| --- | --- | --- |
+| Scope fence | PASS | The amended unit includes the testing rule, data-rule compatibility paths, module reference, testing and catalog tests, map, manifest, and lock. Packet, ledger, report, and the scope amendment are lifecycle artifacts. |
+| Test completeness | PASS | The testing rule covers discovery, service policy, controller mapping, data boundary, route composition, public contract, absent layers, and adapter ownership; focused and binding tests passed 17/17. |
+| SOLID and boundary audit | PASS | Boundary-purpose ownership is isolated; database/network mechanics remain in the data-adapter rule. |
+| Conformance | PASS | Receipt `report-binding-adhoc-00-00-969ef4effb5f-1791596997788` validates against binding `sha256:969ef4effb5fb33f3fc4999d9bf29bf38b6ffe4ca67df85cb64e390b4b44cfbb`. |
+| Definition of done | PASS | Test-first evidence, map/inventory/lock synchronization, named human evidence, scope amendment, and checks are recorded; commit is next. |
