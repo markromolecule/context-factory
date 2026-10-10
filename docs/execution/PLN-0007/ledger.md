@@ -18,7 +18,6 @@
 | 03 | Honest TypeScript conformance | 03.01 | READY FOR DEVELOPER INSPECTION |
 | 04 | Backend rule selection and whole-task release | 04.01 | READY FOR DEVELOPER INSPECTION |
 
-
 ## Packet and Branch Checkpoint: 2026-10-10
 
 - `node scripts/context.mjs handoff:verify-packet docs/execution/PLN-0007/packet.json` → PASS (`valid: true`).
@@ -219,9 +218,9 @@ Phase 1 is ready for developer inspection. Its unit commit is the next recorded 
   - Result: Fails closed honestly as expected under the Phase 3 fail-closed model without ungrounded heuristic passes.
 - Named human evidence supplied by Joseph on 2026-10-10: "Joseph reviewed and confirmed the entire PLN-0007 task diff: operation-first backend module boundaries (ADR 0037), DTO serialization whitelisting, backend testing guidance, honest fail-closed conformance fallback, and evaluation benchmarks on 2026-10-10."
 - Final report: `docs/execution/PLN-0007/whole-task-conformance-report.json`
-- Report ID: `report-binding-adhoc-00-00-d6f9ac9dee3c-1791600241956`
-- Binding Hash: `sha256:d6f9ac9dee3c4a3300dae33f145accc4c72f3c2c3734e3d43a7e2a39e3e12f2a`
-- Diff Hash: `sha256:fb4d3a2b40a040383bc8dfa1b6521330a4029b13b8c21208a7024248fc192b19`
+- Report ID: `report-binding-adhoc-00-00-d819e010a8f1-1791600831041`
+- Binding Hash: `sha256:d819e010a8f10c46f2be8b370139a90041e05b435ecf7712c5f274291085c5c5`
+- Diff Hash: `sha256:750d1704040119d0a6359222a90816cfd7a6b8d5b676ee4cbc3d84d7819eaf11`
 - Verdict: **PASS** (50/50 directives). `context-cli conform verify` validated the receipt against the whole task diff and binding hash. No waiver was created.
 
 ### Pre-screen Review
@@ -231,7 +230,7 @@ Phase 1 is ready for developer inspection. Its unit commit is the next recorded 
 | Scope fence | PASS | All changes are within unit scope, catalog, test datasets, and required lifecycle artifacts; no unapproved host application edits. |
 | Test completeness | PASS | 69/69 PLN-0007 tests pass across 8 suites; 33/33 evaluations pass; all AC-01 through AC-08 acceptance scenarios covered. |
 | SOLID and boundary audit | PASS | Strict separation between transport, policy, and persistence; fail-closed honest conformance; no host code contamination. |
-| Conformance | PASS | Whole-task receipt `report-binding-adhoc-00-00-d6f9ac9dee3c-1791600241956` verified and PASS (50/50). |
+| Conformance | PASS | Whole-task receipt `report-binding-adhoc-00-00-d819e010a8f1-1791600831041` verified and PASS (50/50). |
 | Definition of done | PASS | All unit and whole-task criteria satisfied, fresh doctor healthy, lint passing, and verified receipt recorded. |
 
 ### Checkpoint

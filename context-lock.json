@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:ae14f91a5824ed38eed8175f78e6523021a00a8ae53c87c9f92ec0397145ff18",
+  "digest": "sha256:6ea1e7b6268e1f257ef3127783795234678432ed74f47a96123deb382b89ceb7",
   "files": {
     ".cursorrules": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
     ".github/copilot-instructions.md": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
@@ -203,7 +203,7 @@
     "rules/typescript/backend/controllers-and-routes.md": "sha256:7de7c13c2cac6528f4e5ffd299e84bc7e2dd48abab3bd6a51cddfc2a1fe4363d",
     "rules/typescript/backend/data-access-via-api.md": "sha256:b1ca0d5e6bec35a493114658ade64e3d79a5992a6212f7b1d4ccb8e4aff2ef1f",
     "rules/typescript/backend/dto-and-serialization.md": "sha256:47565105ab47927550959051baf859574a546a1613ab6ca2efdc47e7416ba61e",
-    "rules/typescript/backend/module-architecture.md": "sha256:9b94ee6b16428d306b5533c601ffa9b67ab34ef299d808db5641b0f428206e0d",
+    "rules/typescript/backend/module-architecture.md": "sha256:ab5b680e6fd73507bfac8faa1f361d9c029dff43959b0c12517a7a0331ef6907",
     "rules/typescript/backend/service-layer.md": "sha256:b9d21e05117bf63c2da013025c396367d2bf58efdd471bae1a025fb03b1de904",
     "rules/typescript/backend/testing.md": "sha256:ac8bd2df2742f09ba4481f32b2c9cedb641ae3f7c20a7fe33702441f54db57fa",
     "rules/typescript/common/async-discipline.md": "sha256:c9d56c6981973fd96dad0f4925ae03e5ab8d519d46c30287aaf2787604a95e3d",
