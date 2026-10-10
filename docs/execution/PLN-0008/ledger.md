@@ -13,7 +13,7 @@
 | Phase | Title | Units | Status |
 | :--- | :--- | :--- | :--- |
 | **01** | Canonical concepts and knowledge | 01.01 | VERIFIED |
-| **02** | Shared TypeScript pragmatic design rule | 02.01 | PENDING |
+| **02** | Shared TypeScript pragmatic design rule | 02.01 | VERIFIED |
 | **03** | SOLID, backend, and UI rule alignment | 03.01 → 03.02 | PENDING |
 | **04** | Selection, binding, enforcement, and release | 04.01 | PENDING |
 
@@ -55,3 +55,34 @@
 - **Diff Hash:** `sha256:3cc9aba8cf9862a1885e56b7a3ed4d3a0c2e332116fbbf8b292987a37a88f8e2`
 - **Human Evidence:** "Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified."
 - **Verdict:** **PASS** (8/8 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0008/unit-01-01-conformance-report.json --binding sha256:542005f7f8094c2e731bffb9b88be2f8fdca07d10489e52761fe2facda09b18f`.
+
+---
+
+## Unit 02.01: Shared TypeScript Pragmatic Design Rule
+
+### Changes
+
+- Added focused contract test suite (`evals/tests/rules/pragmatic-design.test.mjs`) asserting all 4 directive IDs, evidence-blocking modes with `human-evidence` verifiers, TypeScript/TSX applicability, combined Demeter/tell-don't-ask behavior with DTO exceptions, 1-implementation direct design acceptance, and exclusion from plain JavaScript scope.
+- Created `rules/typescript/common/pragmatic-design.md` (`cf-rule-ts-pragmatic-design`) with 4 stable directives:
+  - `ts.pragmatic.yagni-present-need` [mode:evidence-blocking][verifier:human-evidence]
+  - `ts.pragmatic.kiss-minimal-implementation` [mode:evidence-blocking][verifier:human-evidence]
+  - `ts.pragmatic.composition-over-inheritance` [mode:evidence-blocking][verifier:human-evidence]
+  - `ts.pragmatic.demeter-tell-dont-ask` [mode:evidence-blocking][verifier:human-evidence]
+- Added realistic conforming and non-conforming TypeScript examples for each principle, including DTO projection and schema validation exceptions.
+- Updated `context-manifest.json` rules list (40 → 41 rules), regenerated `docs/Rules.md`, and updated `context-lock.json` (`sha256:b9d731cfb51fd583389226dacc89ccb4c5b15a34d216594af2c19f4297183428`).
+
+### Verification
+
+- `node --test evals/tests/rules/pragmatic-design.test.mjs` → **PASS** (4/4 tests passed in 14ms).
+- `npm run lint` → **PASS** (41 rules, 18 skills, 12 workflows, 23 agent resources, 10 knowledge items, 20 evaluations, 506 Markdown files).
+- `node scripts/context.mjs doctor` → **PASS** (HEALTHY; 33/33 evaluations passed in 200ms).
+- `git diff --check` → **PASS**.
+
+### Conformance Receipt
+
+- **Report:** `docs/execution/PLN-0008/unit-02-01-conformance-report.json`
+- **Report ID:** `report-binding-adhoc-00-00-41827c356cc5-1791643136357`
+- **Binding Hash:** `sha256:41827c356cc592a7742e2ae6673776fa39e7d4ab3ce2fd816347d662700ec533`
+- **Diff Hash:** `sha256:e0138e22bd10b3f57c78046260c5db736c6186b861f3ad449fb77ee352eeb604`
+- **Human Evidence:** "Joseph reviewed Unit 02.01 shared TypeScript pragmatic design rule and test suite; directives, present-need YAGNI/KISS triggers, composition defaults, combined Demeter/tell-don't-ask wording, and DTO exceptions are verified."
+- **Verdict:** **PASS** (34/34 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0008/unit-02-01-conformance-report.json --binding sha256:41827c356cc592a7742e2ae6673776fa39e7d4ab3ce2fd816347d662700ec533`.
