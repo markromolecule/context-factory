@@ -43,10 +43,11 @@ Rather than heavy classical OOP inheritance hierarchies, modern TypeScript and R
 
 1. **Avoid Cascading Switch Blocks:** If adding a new feature requires modifying conditional logic across 5 different files, replace the switch block with a strategy interface or registry.
 2. **Stability of Core Abstractions:** Core workflows should depend on polymorphic contracts (`interface`, `type`, function signatures) that allow new implementors to plug in seamlessly.
-3. **Pragmatic Boundary:** Do not apply premature OCP to trivial, non-variable code. Apply OCP where requirements are known or expected to vary over time.
+3. **Pragmatic Boundary:** Do not apply premature OCP to single-implementation or non-variable code (YAGNI). Apply OCP where present requirements exhibit multiple real variants or an accepted contract explicitly demands extension. Accept direct implementations when variation is hypothetical.
 
 ## Cross-References
 
 - Rule Enforcement: [[rules/solid/open-closed|Open/Closed Rule]]
-- Strategy & Planning: [[skills/productivity/plan/SKILL|Plan Skill]]
+- Pragmatic Design: [[rules/typescript/common/pragmatic-design|Pragmatic Design Rule]]
+- Composition over Inheritance: [[knowledge/principles/composition-over-inheritance|Composition over Inheritance]]
 - Architectural Conformance: [[rules/global/architecture-conformance|Architecture Conformance]]

@@ -32,6 +32,7 @@ tags: [rules, engineering]
 - [[rules/typescript/common/error-handling|Error Handling and Result Types]]
 - [[rules/typescript/common/module-and-imports|Module Resolution and Import Discipline]]
 - [[rules/typescript/common/next-react-project-structure|React and Next.js Project Structure]]
+- [[rules/typescript/common/pragmatic-design|Pragmatic Design Principles]]
 - [[rules/typescript/common/runtime-validation|Runtime Validation and Boundaries]]
 - [[rules/typescript/common/type-safety|Type Safety]]
 

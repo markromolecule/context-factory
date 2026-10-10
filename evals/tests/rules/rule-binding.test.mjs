@@ -336,4 +336,56 @@ describe("Unit 02.01: Rule Binding Compiler and Artifact-Aware Resolver", () => 
       assert.ok(ids.includes("ts.backend-testing.service-policy-cases"));
     });
   });
+
+  describe("Pragmatic TypeScript design rules binding (PLN-0008)", () => {
+    it("binds pragmatic design directives once to TypeScript scope and renders statements in payload", async () => {
+      const result = await resolveContext("Implement order discount calculator", {
+        stack: "typescript",
+        scope: ["src/modules/pricing/calculator.ts"],
+      });
+      assert.ok(result.binding, "Expected material binding");
+      const ids = result.binding.directives.map((d) => d.id);
+      assert.ok(ids.includes("ts.pragmatic.yagni-present-need"));
+      assert.ok(ids.includes("ts.pragmatic.kiss-minimal-implementation"));
+      assert.ok(ids.includes("ts.pragmatic.composition-over-inheritance"));
+      assert.ok(ids.includes("ts.pragmatic.demeter-tell-dont-ask"));
+
+      // Verify each directive is bound exactly once
+      for (const id of [
+        "ts.pragmatic.yagni-present-need",
+        "ts.pragmatic.kiss-minimal-implementation",
+        "ts.pragmatic.composition-over-inheritance",
+        "ts.pragmatic.demeter-tell-dont-ask",
+      ]) {
+        assert.equal(ids.filter((x) => x === id).length, 1, `Directive ${id} must bind exactly once`);
+      }
+
+      // Check rendered prompt contains directive statement exactly once
+      const rendered = renderCompiledDirectives(result.binding);
+      assert.match(rendered, /Implement only what is required by active present requirements/);
+      assert.match(rendered, /Choose the simplest, most direct, and readable implementation/);
+      assert.match(rendered, /composing small, focused collaborator functions or objects/);
+      assert.match(rendered, /Tell the owner of domain state to perform operations/);
+    });
+
+    it("excludes pragmatic design rules from plain JavaScript and unrelated stacks", async () => {
+      const jsResult = await resolveContext("Build user utility", {
+        stack: "javascript",
+        scope: ["legacy/utils.js"],
+      });
+      if (jsResult.binding) {
+        const jsIds = jsResult.binding.directives.map((d) => d.id);
+        assert.ok(!jsIds.some((id) => id.startsWith("ts.pragmatic.")));
+      }
+
+      const pythonResult = await resolveContext("Build python helper", {
+        stack: "python",
+        scope: ["src/helper.py"],
+      });
+      if (pythonResult.binding) {
+        const pyIds = pythonResult.binding.directives.map((d) => d.id);
+        assert.ok(!pyIds.some((id) => id.startsWith("ts.pragmatic.")));
+      }
+    });
+  });
 });

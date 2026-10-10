@@ -15,7 +15,7 @@ High-level business policies and domain services **must not depend on low-level 
 
 ## Mandatory Directives
 
-- [directive:cf.solid.dip-domain-ports-infrastructure-adapters][mode:evidence-blocking][verifier:human-evidence] **MUST:** Define domain repository and adapter interfaces in the domain/service layer, and implement concrete adapters in the infrastructure layer (inverting the dependency).
+- [directive:cf.solid.dip-domain-ports-infrastructure-adapters][mode:evidence-blocking][verifier:human-evidence] **MUST:** Define domain repository and adapter contracts when crossing real architectural boundaries (e.g. third-party SDKs, complex domain policies needing isolated testing, or multi-variant persistence). For simple reads without business policy, direct typed data access is permitted without synthetic ports.
 - [directive:cf.solid.dip-explicit-dependency-injection][mode:evidence-blocking][verifier:human-evidence] **MUST:** Inject dependencies explicitly via constructor parameters, factory function arguments, or React Context providers.
 - [directive:cf.solid.dip-isolate-third-party-sdks][mode:evidence-blocking][verifier:human-evidence] **MUST:** Keep all direct third-party SDK calls (Stripe, SendGrid, AWS S3, Prisma, Kysely) isolated within infrastructure adapters behind domain interfaces.
 - [directive:cf.solid.dip-no-direct-client-instantiation][mode:automated-blocking][verifier:linter] **MUST NOT:** Directly instantiate concrete database clients or third-party service classes inside domain services (`const db = new PrismaClient()`).

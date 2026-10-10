@@ -1,0 +1,550 @@
+{
+  "id": "report-binding-adhoc-00-00-bbd03b47c1a9-1791644921323",
+  "bindingId": "binding-adhoc-00-00-bbd03b47c1a9",
+  "bindingHash": "sha256:bbd03b47c1a91fbbd575ac39ac9861212c8c7e1d4d68cd2cfd691b8070eaa220",
+  "diffHash": "sha256:83e504902df1a9cad29ba6aa7bd3bfb564a2ed13483db0c8d6649db6dce2aa5c",
+  "verdict": "PASS",
+  "summary": {
+    "passed": 47,
+    "failed": 0,
+    "waived": 0,
+    "notAutomatable": 0,
+    "toolUnavailable": 0,
+    "unsupported": 0,
+    "total": 47
+  },
+  "results": [
+    {
+      "directiveId": "cf.arch.adrs",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.arch.adrs; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.arch.contracts",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.arch.direction",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.arch.direction; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.arch.layers",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.arch.patterns",
+      "mode": "advisory",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "advisory-report",
+        "outputFragment": "Directive cf.arch.patterns is advisory and does not provide enforced conformance."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.arch.policy",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.arch.solid",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.arch.solid; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.arch.trust",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.arch.trust; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.evidence.completion",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.evidence.grounding",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.evidence.integrity",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.evidence.scope-fencing",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.evidence.verification",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.evidence.verification; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.naming.domain-action-async-commands",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.naming.framework-file-conventions",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.naming.framework-file-conventions; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.naming.no-single-letter-names",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.naming.no-single-letter-names; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.naming.predicate-booleans",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.naming.predicate-booleans; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.naming.preserve-established-conventions",
+      "mode": "advisory",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "advisory-report",
+        "outputFragment": "Directive cf.naming.preserve-established-conventions is advisory and does not provide enforced conformance."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.naming.singular-entities-plural-collections",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.naming.singular-entities-plural-collections; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.delete-dead-code",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.delete-dead-code; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.directional-dependencies",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.directional-dependencies; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.domain-types-over-framework",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.executable-examples",
+      "mode": "advisory",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "advisory-report",
+        "outputFragment": "Directive cf.quality.executable-examples is advisory and does not provide enforced conformance."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.explicit-interfaces",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.explicit-interfaces; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.minimal-complete-change",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.no-any-or-swallowed-errors",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.no-any-or-swallowed-errors; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.reject-duplicate-policy",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.reject-unbounded-work",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.reject-unstable-contracts",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.reject-untestable-code",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.run-existing-checks",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.run-existing-checks; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.solid-compliance",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.quality.tests-for-behavior-changes",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.quality.tests-for-behavior-changes; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.allowlisted-boundary-validation",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.allowlisted-boundary-validation; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.explicit-cors-and-headers",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.idempotency-replay-protection",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.idempotency-replay-protection; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.lock-dependencies-and-audit",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.lock-dependencies-and-audit; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.maintained-crypto-libraries",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.maintained-crypto-libraries; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.no-credentials-in-source-or-logs",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.no-credentials-in-source-or-logs; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.parameterized-queries-no-concat",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.parameterized-queries-no-concat; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.rate-limiting-and-bounds",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.rate-limiting-and-bounds; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.redact-telemetry-pii",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.redact-telemetry-pii; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.restrict-outbound-urls-ssrf",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.restrict-outbound-urls-ssrf; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.sanitized-public-errors",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.sanitized-public-errors; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.server-side-auth-default-deny",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.server-side-auth-default-deny; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.server-side-tenant-isolation",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.sec.server-side-tenant-isolation; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    },
+    {
+      "directiveId": "cf.sec.untrusted-input-boundaries",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 03.02 backend, UI, and global TypeScript scope audit; simple read vs tenant-bearing service boundaries, ADR 0037 operation-first and layer compatibility, DTO Demeter exceptions, cohesive UI modules, and plain JavaScript scope isolation verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T15:08:41.323Z"
+    }
+  ],
+  "generatedAt": "2026-10-10T15:08:41.323Z"
+}

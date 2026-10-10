@@ -64,6 +64,7 @@
     "rules/typescript/common/error-handling.md",
     "rules/typescript/common/module-and-imports.md",
     "rules/typescript/common/next-react-project-structure.md",
+    "rules/typescript/common/pragmatic-design.md",
     "rules/typescript/common/runtime-validation.md",
     "rules/typescript/common/type-safety.md",
     "rules/typescript/database/data-access-via-db.md",
@@ -131,11 +132,15 @@
   ],
   "knowledge": [
     "knowledge/README.md",
+    "knowledge/principles/composition-over-inheritance.md",
+    "knowledge/principles/kiss.md",
+    "knowledge/principles/law-of-demeter-tell-dont-ask.md",
     "knowledge/principles/solid-dip.md",
     "knowledge/principles/solid-isp.md",
     "knowledge/principles/solid-lsp.md",
     "knowledge/principles/solid-ocp.md",
-    "knowledge/principles/solid-srp.md"
+    "knowledge/principles/solid-srp.md",
+    "knowledge/principles/yagni.md"
   ],
   "schemas": [
     "schemas/claim-evidence.schema.json",
@@ -225,6 +230,9 @@
     "evals/tests/rules/backend-testing.test.mjs",
     "evals/tests/rules/catalog-coverage.test.mjs",
     "evals/tests/rules/code-generation-evaluation.test.mjs",
+    "evals/tests/rules/pragmatic-backend-ui-alignment.test.mjs",
+    "evals/tests/rules/pragmatic-design.test.mjs",
+    "evals/tests/rules/pragmatic-solid-alignment.test.mjs",
     "evals/tests/rules/prompt-compiler.test.mjs",
     "evals/tests/rules/rule-binding.test.mjs",
     "evals/tests/rules/rule-contract-schema.test.mjs",
@@ -297,6 +305,7 @@
     "evals/datasets/defects/defect-resolution.json",
     "evals/datasets/features/feature-delivery.json",
     "evals/datasets/features/typescript-backend-codegen.json",
+    "evals/datasets/features/typescript-pragmatic-design.json",
     "evals/datasets/features/typescript-web-codegen.json",
     "evals/datasets/refactors/architecture-change.json"
   ],

@@ -56,9 +56,11 @@ graph TD
    ```
 
 3. **Frontend Context as Inversion Mechanism:** In React, avoid hardcoding singleton API clients inside UI components; inject dependencies via React Context providers, custom hooks, or props to facilitate isolated storybook rendering and unit testing.
+4. **Pragmatic Persistence Boundaries:** Port and adapter abstractions are required when crossing real architectural boundaries (e.g. payment SDKs, multi-backend persistence, or isolated domain testing). For direct policy-free reads where no domain rules or runtime variations exist, simple direct data access functions are accepted without creating artificial port contracts.
 
 ## Cross-References
 
 - Rule Enforcement: [[rules/solid/dependency-inversion|Dependency Inversion Rule]]
+- Pragmatic Design: [[rules/typescript/common/pragmatic-design|Pragmatic Design Rule]]
 - Module Architecture: [[rules/typescript/backend/module-architecture|Backend Module Architecture]]
 - Service Layer: [[rules/typescript/backend/service-layer|Service Layer]]

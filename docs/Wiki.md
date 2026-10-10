@@ -42,8 +42,12 @@ Use the [[skills/productivity/grounding/SKILL|grounding]] skill. Filter by metad
 ## Index
 
 - [[knowledge/README|Knowledge index]]
+- [[knowledge/principles/composition-over-inheritance|Composition over Inheritance (`factory.principles.composition-over-inheritance`)]]
+- [[knowledge/principles/kiss|Keep It Simple, Stupid (KISS) (`factory.principles.kiss`)]]
+- [[knowledge/principles/law-of-demeter-tell-dont-ask|Law of Demeter and Tell, Don't Ask (`factory.principles.demeter-tell-dont-ask`)]]
 - [[knowledge/principles/solid-dip|Dependency Inversion Principle (`factory.principles.solid.dip`)]]
 - [[knowledge/principles/solid-isp|Interface Segregation Principle (`factory.principles.solid.isp`)]]
 - [[knowledge/principles/solid-lsp|Liskov Substitution Principle (`factory.principles.solid.lsp`)]]
 - [[knowledge/principles/solid-ocp|Open/Closed Principle (`factory.principles.solid.ocp`)]]
 - [[knowledge/principles/solid-srp|Single Responsibility Principle (`factory.principles.solid.srp`)]]
+- [[knowledge/principles/yagni|You Aren't Gonna Need It (YAGNI) (`factory.principles.yagni`)]]
