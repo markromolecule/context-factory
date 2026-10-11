@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:bbb0913a4bdc6eb4dbd23c596c75fcee0beb4cebb0810507ca742066c6dac5c0",
+  "digest": "sha256:9596b1b9f485d8cc0d4e1e6085b240b7c67a634aa0b0f917b1c7e655bcdda44d",
   "files": {
     ".cursorrules": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
     ".github/copilot-instructions.md": "sha256:56b4a3c630964adee8a8d384d06cf3a454db19e4755e68c9ae256e5a1c9d6f59",
@@ -36,7 +36,7 @@
     "agents/ux-agent/AGENT.md": "sha256:e0aa7a561369c0839dd6c7f1e25f8ba0bee33d3c046abb17ac5576b6b36f8e51",
     "agents/ux-agent/prompts/subagent-invocation.md": "sha256:0d38006931ac11d7589edaf7fb73f8da8d0f7222fd16a245e65f58b8dcf10176",
     "agents/ux-agent/prompts/system-prompt.md": "sha256:dba523994fd9a81d4ff496e4fdd1d589c3570ec9047f509837958694d4a9bb9e",
-    "context-manifest.json": "sha256:aa43a12ae2ec2a5b2c042a8af0b653e5852f18293ae209390f243bfdd6b25d9d",
+    "context-manifest.json": "sha256:aa92654896e1938ac35e763e4d91d87422d6c6a99bf524ec3f1ee85d12fa22b0",
     "docs/ARCHITECTURE.md": "sha256:ca6145eb2b6e41e098d124b1f1884a86c8d680e3cbd7125d254ddf7bb29356a3",
     "docs/Agents.md": "sha256:276766d0ffcd4e57d2c1fa73bcce18646c34ab5b89433b83b2af4d1ca5a4d2e6",
     "docs/Connectors.md": "sha256:5eda7795fc2171e747437fe36dc5dfce5add8cc04290fd99998ea3020d5173b2",
@@ -82,7 +82,8 @@
     "docs/decisions/0035-host-conformance-receipts-and-fixture-modes.md": "sha256:f3a5bcc3b259f5e3b98a499a448d41d6d9e863a47757af51b2614feda6e4356c",
     "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md": "sha256:d54d5285c3069efd3b4e1ff3d70af3c4a6b97a63abae357eb77e846ee22609ac",
     "docs/decisions/0037-operation-first-backend-modules.md": "sha256:38c203e378e49324d22afdf694d2a5a02fe7000ba232ffa239f0ff3ed12b59b3",
-    "docs/decisions/README.md": "sha256:8930ec185e6dca8bb87b836e35d2ba5ade0a0779627928027a0922fac37f33c6",
+    "docs/decisions/0038-host-native-workflow-entries.md": "sha256:0989cf96e778138c6442d5686f9bc351f49280b291c39eb1ba58f6c7c6d03709",
+    "docs/decisions/README.md": "sha256:f5d90ce77b48829e3502b54142d9aa64223b5411ea04d2eae0f9a37e51ca7291",
     "docs/guide/README.md": "sha256:d94360ea22bde81983ffc65f7c31f65d2b68940ec93fa767c7b8a54fc663188e",
     "docs/guide/cross-workspace-integration.md": "sha256:5a7092fdda752499ecd99a0f9706f663f345d3f0e2b726dae180c093c56f158b",
     "docs/guide/rules-and-workflows.md": "sha256:ba73cb2f4fb2c557d97271be8991306bbc15315b328a969b8c0bf06673da2270",

@@ -200,7 +200,8 @@
     "docs/decisions/0034-framework-scoped-typescript-rules.md",
     "docs/decisions/0035-host-conformance-receipts-and-fixture-modes.md",
     "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md",
-    "docs/decisions/0037-operation-first-backend-modules.md"
+    "docs/decisions/0037-operation-first-backend-modules.md",
+    "docs/decisions/0038-host-native-workflow-entries.md"
   ],
   "tools": [
     "evals/run-evals.mjs",

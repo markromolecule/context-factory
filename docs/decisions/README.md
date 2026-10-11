@@ -44,3 +44,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0035-host-conformance-receipts-and-fixture-modes|Host Conformance Receipts and Offline Fixture Modes]]
 - [[docs/decisions/0036-decommission-laravel-php-stack-focus-typescript|Decommission Laravel / PHP Stack and Dedicate Context Factory to TypeScript Ecosystem]]
 - [[docs/decisions/0037-operation-first-backend-modules|Operation-first Backend Modules]]
+- [[docs/decisions/0038-host-native-workflow-entries|Host-Native Entries for Canonical Workflows]]
