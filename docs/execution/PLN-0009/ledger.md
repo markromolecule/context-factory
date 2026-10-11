@@ -13,7 +13,7 @@
 | Phase | Title | Units | Status |
 | :--- | :--- | :--- | :--- |
 | **01** | Canonical workflow adapter inventory | 01.01 | VERIFIED |
-| **02** | Ownership-aware host bridge and repair | 02.01 | PENDING |
+| **02** | Ownership-aware host bridge and repair | 02.01 | VERIFIED |
 | **03** | Resolver boundaries and host guidance | 03.01 | PENDING |
 | **04** | Whole-diff and live-host evidence | 04.01 | PENDING |
 
@@ -59,4 +59,55 @@
 - **Verdict:** **PASS** (50/50 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0009/unit-01-01-conformance-report.json`.
 
 ---
+
+## Unit 02.01: Ownership-Aware Host Bridge and Repair
+
+### Changes
+
+- Narrowed `detectInstalledIdes` in `app/cli/core/bridge-generator.mjs` so `.agents` folder presence alone never falsely identifies Antigravity; only Antigravity-specific markers (`GEMINI.md`, `.gemini`, `.agents/GEMINI.md`, `.agents/rules`, `.agents/workflows`, `.agents/agents`, `.agents/skills.json`) trigger `antigravity` detection (AC-06).
+- Decoupled Codex and Claude discovery symlinks in `generateBridge`:
+  - Codex profile (`activeIdes.includes("codex") || isAll`) creates `.agents/skills/` links independently of Antigravity (AC-06).
+  - Claude profile (`activeIdes.includes("claude") || isAll`) creates `.claude/skills/workflow-<slug>` links without touching `.agents/` (AC-06).
+  - Legacy Antigravity links (`.agents/rules`, `.agents/agents`, `.agents/workflows`, etc.) remain guarded strictly behind `isAntigravity`.
+- Enforced strict ownership-aware collision detection in `createRelativeSymlink`:
+  - Pre-existing unowned files and unowned symlinks are NEVER deleted or overwritten, even when `force: true` is passed (AC-04).
+  - Flags collisions explicitly (`status: "collision (...)"`, `collision: true`) and leaves user content bytes 100% untouched.
+  - Added atomic pre-write concurrency recheck immediately before filesystem mutation to catch race-condition destination appearance.
+- Re-architected `.context-bridge.json` generation in `generateBridge`:
+  - Only records symlinks that are successfully created / owned; colliding host files are excluded from bridge ownership metadata.
+  - Closed silent fallback bug: declared missing factory paths throw `FACTORY_PATH_NOT_FOUND` diagnostic errors with remediation instructions instead of silently defaulting to local factory checkout (AC-05).
+- Extended `verifySymlinkHealth` to audit `.claude/skills` discovery links for Claude profiles, check factory target reachability, distinguish healthy vs broken vs missing vs colliding symlinks, and report exact `collisionCount` (AC-05).
+- Wired collision status and error recovery into CLI commands:
+  - `handleBridgeCommand` in `app/cli/commands/bridge.mjs` formats collision items, warns users about preserved host files, catches `FACTORY_PATH_NOT_FOUND`, and returns exit code 1 on collisions.
+  - `handleDoctorCommand` in `app/cli/commands/doctor.mjs` exposes `collisionCount` in JSON diagnostics, table output, and remediation instructions.
+  - `repairBridgeSymlinks` safely repairs missing/broken links without clobbering unowned user files.
+- Extended `evals/tests/bridge/bridge-conformance.test.mjs` with comprehensive integration test suite covering:
+  - Narrowed `detectInstalledIdes` Antigravity detection (AC-06).
+  - Linked host independent Codex & Claude symlink generation (AC-04, AC-06).
+  - Submodule host embedded target resolution (AC-04).
+  - Preservation of unowned files and symlinks on collision under both `generateBridge` and `repairBridgeSymlinks({ force: true })` (AC-04).
+  - Failing closed on missing declared factory path (AC-05).
+  - Rerun idempotence.
+  - Pre-mutation destination appearance concurrency safety.
+
+### Verification
+
+- `node --test evals/tests/bridge/bridge-conformance.test.mjs` → **PASS** (16/16 tests passed in 65ms).
+- `node --test evals/tests/bridge/workflow-entry-contract.test.mjs tests/bridge-generator.test.mjs tests/bridge-multi-editor.test.mjs tests/doctor-editor-audit.test.mjs tests/editor-wizard.test.mjs evals/tests/cli/init-preview.test.mjs` → **PASS** (44/44 tests passed).
+- `npm run lint` → **PASS** (41 rules, 30 skills, 12 workflows, 23 agent resources, 10 knowledge items, 20 evaluations, 532 Markdown files).
+- `npm run lock` → **PASS** (lockfile updated and verified).
+- `node scripts/context.mjs doctor` → **PASS** (HEALTHY; 48/48 symlink & agent configs verified healthy; 34/34 evaluations passed).
+- `git diff --check` → **PASS** (zero whitespace or syntax issues).
+
+### Conformance Receipt
+
+- **Report:** `docs/execution/PLN-0009/unit-02-01-conformance-report.json`
+- **Report ID:** `report-binding-adhoc-00-00-ab3ad5d2ea88-1791731965226`
+- **Binding Hash:** `sha256:ab3ad5d2ea88ac0610624410855c4873061ac82861261aec5c1e7069def32196`
+- **Diff Hash:** `sha256:e81f9c24aec151a98c4b45e9903d58e6ff6f1326090a826d66f8e5c8b650986c`
+- **Human Evidence:** "Joseph reviewed Unit 02.01 ownership-aware host bridge and repair: independent Codex and Claude discovery symlinks, narrowed Antigravity detection, safe unowned file and symlink collision preservation, closed missing factory path diagnostics, and full test suite passing."
+- **Verdict:** **PASS** (47/47 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0009/unit-02-01-conformance-report.json`.
+
+---
+
 

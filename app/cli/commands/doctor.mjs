@@ -137,6 +137,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
           healthyCount: symlinkHealth.healthyCount,
           brokenCount: symlinkHealth.brokenCount,
           missingCount: symlinkHealth.missingCount,
+          collisionCount: symlinkHealth.collisionCount || 0,
           links: symlinkHealth.links,
         },
         editorIntegrity: {
@@ -184,11 +185,11 @@ export async function handleDoctorCommand(args = [], flags = {}) {
       lockPassed ? `Current (${expectedLock.digest.slice(0, 20)}...)` : "Lock is stale or missing. Run `npm run lock`",
     ],
     [
-      ".agents Symlink Integrity",
+      ".agents & Editor Symlink Integrity",
       symlinkPassed ? badges.pass() : badges.fail(),
       symlinkPassed
         ? `${symlinkHealth.healthyCount}/${symlinkHealth.totalCount || 6} symlink & agent configs verified healthy`
-        : `${symlinkHealth.brokenCount} broken, ${symlinkHealth.missingCount} missing. Run \`context-cli doctor --repair\``,
+        : `${symlinkHealth.brokenCount} broken, ${symlinkHealth.missingCount} missing${symlinkHealth.collisionCount ? `, ${symlinkHealth.collisionCount} collisions` : ""}. Run \`context-cli doctor --repair\``,
     ],
     [
       "Editor Artifact Integrity",
@@ -224,6 +225,9 @@ export async function handleDoctorCommand(args = [], flags = {}) {
       if (link.status !== "healthy") {
         console.log(`  - ${colors.red(link.name)}: ${link.status} (path: ${colors.dim(link.path)})`);
       }
+    }
+    if (symlinkHealth.collisionCount > 0) {
+      console.log(`  ${colors.bold(colors.yellow("Notice:"))} ${symlinkHealth.collisionCount} collisions detected. Unowned host paths were preserved; rename or remove colliding files to complete bridge setup.`);
     }
     console.log(`  ${colors.bold("Auto-fix:")} Run ${colors.cyan("context-cli doctor --repair")} to restore links.\n`);
   }

@@ -28,20 +28,33 @@ export async function handleBridgeCommand(args = [], flags = {}) {
     console.log("");
   }
 
-  const result = await generateBridge({
-    target,
-    factoryPath,
-    ide,
-    method,
-    packageManager: pm,
-    dryRun,
-    force,
-    addNpmScripts,
-  });
+  let result;
+  try {
+    result = await generateBridge({
+      target,
+      factoryPath,
+      ide,
+      method,
+      packageManager: pm,
+      dryRun,
+      force,
+      addNpmScripts,
+    });
+  } catch (err) {
+    if (isJson) {
+      console.log(JSON.stringify({ success: false, error: err.message, repair: err.repair || null }, null, 2));
+      return 1;
+    }
+    console.error(`\n${badges.fail("ERROR")} ${err.message}\n`);
+    if (err.repair) {
+      console.log(`  ${colors.bold("Remediation:")} ${colors.cyan(err.repair)}\n`);
+    }
+    return 1;
+  }
 
   if (isJson) {
     console.log(JSON.stringify(result, null, 2));
-    return 0;
+    return result.hasCollisions ? 1 : 0;
   }
 
   const headers = ["Target Item", "Type", "Status"];
@@ -51,6 +64,8 @@ export async function handleBridgeCommand(args = [], flags = {}) {
       statusText = colors.green(f.status);
     } else if (f.status === "overwritten") {
       statusText = colors.yellow(f.status);
+    } else if (f.status.startsWith("collision")) {
+      statusText = colors.red(f.status);
     } else if (f.status.startsWith("skipped")) {
       statusText = colors.dim(f.status);
     } else if (f.status.startsWith("failed")) {
@@ -67,6 +82,10 @@ export async function handleBridgeCommand(args = [], flags = {}) {
   console.log(table(headers, rows));
   console.log("");
 
+  if (result.hasCollisions) {
+    console.log(`  ${badges.warn("COLLISION")} ${colors.yellow(`${result.collisions.length} pre-existing host files collided and were preserved intact.`)}`);
+  }
+
   if (result.packageJsonUpdated) {
     console.log(`  ${badges.done()} Injected Context Factory helper scripts into host ${colors.cyan("package.json")}`);
   }
@@ -75,6 +94,6 @@ export async function handleBridgeCommand(args = [], flags = {}) {
   console.log(`\n${colors.bold("Next step in your host repository:")}`);
   console.log(`  Run ${colors.bold(colors.cyan("context-cli status"))} to verify host readiness and next actions.\n`);
 
-  return 0;
+  return result.hasCollisions ? 1 : 0;
 }
 

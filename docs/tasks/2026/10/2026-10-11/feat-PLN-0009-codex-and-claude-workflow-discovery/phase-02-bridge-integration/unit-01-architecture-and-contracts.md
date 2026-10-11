@@ -5,7 +5,7 @@ parent: "phase-02-bridge-integration"
 unit: "02.01"
 task_branch: "feat/PLN-0009-codex-and-claude-workflow-discovery"
 base_commit: "fa8f5db00cb0d113589190ed15d6752ab3612831"
-status: planned
+status: verified
 created: "2026-10-11"
 tags: [task, unit, bridge]
 depends_on: ["01.01"]
@@ -63,7 +63,7 @@ Revert bridge and test changes. Remove only generated entries whose metadata and
 
 ## Definition of done
 
-- [ ] AC-04, AC-05, and AC-06 fixture cases pass.
-- [ ] Exact task branch, scoped diff, and review confirmed.
-- [ ] No unowned host file changed in collision/concurrency tests.
-- [ ] Fresh unit conformance PASS receipt verified and change committed.
+- [x] AC-04, AC-05, and AC-06 fixture cases pass.
+- [x] Exact task branch, scoped diff, and review confirmed.
+- [x] No unowned host file changed in collision/concurrency tests.
+- [x] Fresh unit conformance PASS receipt verified and change committed.

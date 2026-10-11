@@ -5,7 +5,7 @@ parent: "feat-PLN-0009-codex-and-claude-workflow-discovery"
 phase: "02"
 task_branch: "feat/PLN-0009-codex-and-claude-workflow-discovery"
 base_commit: "fa8f5db00cb0d113589190ed15d6752ab3612831"
-status: planned
+status: verified
 created: "2026-10-11"
 tags: [task, phase]
 ---
@@ -24,7 +24,7 @@ Unit 01.01 passes and commits; host bridge source and fixture conventions inspec
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | --- | --- | --- | --- | --- | --- |
-| 02.01 | Ownership-aware host bridge and repair | `unit-01-architecture-and-contracts.md` | `feat/PLN-0009-codex-and-claude-workflow-discovery` | 01.01 | planned |
+| 02.01 | Ownership-aware host bridge and repair | `unit-01-architecture-and-contracts.md` | `feat/PLN-0009-codex-and-claude-workflow-discovery` | 01.01 | verified |
 
 ## Impacted Files & Components
 
@@ -32,7 +32,7 @@ bridge generator/repair/audit, focused bridge tests (and bridge CLI wrapper only
 
 ## Implementation Tasks
 
-- [ ] 02.01: Extend Codex and Claude link generation; enforce ownership and collision checks; report repair routes; correct editor detection.
+- [x] 02.01: Extend Codex and Claude link generation; enforce ownership and collision checks; report repair routes; correct editor detection.
 
 ## Verification & Testing
 

@@ -112,7 +112,17 @@ export function detectInstalledIdes(targetDir = process.cwd()) {
   if (existsSync(join(targetDir, ".trae"))) {
     detected.push("trae");
   }
-  if (existsSync(join(targetDir, ".agents")) || existsSync(join(targetDir, "GEMINI.md"))) {
+  // Antigravity is detected via explicit Gemini/Antigravity markers, NOT by .agents folder alone
+  // (which is shared by Codex skill discovery).
+  if (
+    existsSync(join(targetDir, "GEMINI.md")) ||
+    existsSync(join(targetDir, ".gemini")) ||
+    existsSync(join(targetDir, ".agents", "GEMINI.md")) ||
+    existsSync(join(targetDir, ".agents", "rules")) ||
+    existsSync(join(targetDir, ".agents", "workflows")) ||
+    existsSync(join(targetDir, ".agents", "agents")) ||
+    existsSync(join(targetDir, ".agents", "skills.json"))
+  ) {
     detected.push("antigravity");
   }
   return detected;
@@ -173,6 +183,7 @@ export async function createRelativeSymlink({
   type = "dir",
   dryRun = false,
   force = false,
+  isOwned = false,
 }) {
   const linkDir = dirname(linkPath);
   let canonicalLinkDir = linkDir;
@@ -193,6 +204,28 @@ export async function createRelativeSymlink({
   } catch {}
   const relTarget = relative(canonicalLinkDir, canonicalTarget).replaceAll("\\", "/");
 
+  // Helper to evaluate pre-existing or newly appeared item at linkPath
+  const checkExisting = async (stat) => {
+    if (!stat) return null;
+    if (stat.isSymbolicLink()) {
+      const currentTarget = (await readlink(linkPath).catch(() => null))?.replaceAll("\\", "/");
+      if (currentTarget === relTarget) {
+        return { action: "skip_current", currentTarget };
+      }
+      // If symlink target differs from expected: it must be recorded as owned
+      // in previous bridge metadata to allow replacement/repair. Unowned symlinks collide.
+      if (!isOwned) {
+        return { action: "collision", reason: "unowned symlink exists", currentTarget };
+      }
+      return { action: "update_owned", currentTarget };
+    }
+    // If it's a regular file or directory: user content, NEVER overwrite!
+    return {
+      action: "collision",
+      reason: stat.isDirectory() ? "unowned directory exists" : "unowned file exists",
+    };
+  };
+
   let existingStat = null;
   try {
     existingStat = await lstat(linkPath);
@@ -200,36 +233,57 @@ export async function createRelativeSymlink({
     existingStat = null;
   }
 
-  if (existingStat) {
-    if (existingStat.isSymbolicLink()) {
-      const currentTarget = (await readlink(linkPath).catch(() => null))?.replaceAll("\\", "/");
-      if (currentTarget === relTarget && !force) {
-        return { path: linkPath, target: relTarget, status: "skipped (up to date)", isSymlink: true };
-      }
-      if (!dryRun) {
-        await rm(linkPath, { recursive: true, force: true });
-      }
-    } else if (!force) {
-      return { path: linkPath, target: relTarget, status: "skipped (exists, not symlink)", isSymlink: false };
-    } else if (!dryRun) {
-      try {
-        await rm(linkPath, { recursive: true, force: true });
-      } catch {
-        // Fallback
-      }
+  const evalResult = await checkExisting(existingStat);
+  if (evalResult) {
+    if (evalResult.action === "skip_current" && !force) {
+      return { path: linkPath, target: relTarget, status: "skipped (up to date)", isSymlink: true };
     }
+    if (evalResult.action === "collision") {
+      return {
+        path: linkPath,
+        target: relTarget,
+        status: `collision (${evalResult.reason})`,
+        isSymlink: existingStat.isSymbolicLink(),
+        collision: true,
+      };
+    }
+    // action === "update_owned" or force update on identical
+    if (dryRun) {
+      return { path: linkPath, target: relTarget, status: "would update", isSymlink: true };
+    }
+    await rm(linkPath, { recursive: true, force: true });
   }
 
   if (dryRun) {
     return {
       path: linkPath,
       target: relTarget,
-      status: existingStat ? "would update" : "would create",
+      status: "would create",
       isSymlink: true,
     };
   }
 
   await mkdir(linkDir, { recursive: true });
+
+  // Concurrency check: recheck lstat immediately before mutation
+  let recheckStat = null;
+  try {
+    recheckStat = await lstat(linkPath);
+  } catch {
+    recheckStat = null;
+  }
+  if (recheckStat) {
+    const recheckEval = await checkExisting(recheckStat);
+    if (recheckEval?.action === "collision") {
+      return {
+        path: linkPath,
+        target: relTarget,
+        status: `collision (${recheckEval.reason})`,
+        isSymlink: recheckStat.isSymbolicLink(),
+        collision: true,
+      };
+    }
+  }
 
   const symlinkType = process.platform === "win32"
     ? (type === "dir" ? "junction" : "file")
@@ -244,6 +298,22 @@ export async function createRelativeSymlink({
       isSymlink: true,
     };
   } catch (err) {
+    // If EEXIST, recheck if concurrent collision occurred
+    if (err.code === "EEXIST") {
+      try {
+        const existStat = await lstat(linkPath);
+        const lateEval = await checkExisting(existStat);
+        if (lateEval?.action === "collision") {
+          return {
+            path: linkPath,
+            target: relTarget,
+            status: `collision (${lateEval.reason})`,
+            isSymlink: existStat.isSymbolicLink(),
+            collision: true,
+          };
+        }
+      } catch {}
+    }
     // Windows non-admin fallback: attempt directory copy if symlink failed
     if (process.platform === "win32" && err.code === "EPERM") {
       try {
@@ -466,9 +536,20 @@ export async function generateBridge({
 
   if (relFactoryPath) {
     absFactoryPath = isAbsolute(relFactoryPath) ? relFactoryPath : resolve(targetDir, relFactoryPath);
-    if (!existsSync(absFactoryPath) && existsSync(canonicalRoot)) {
-      absFactoryPath = canonicalRoot;
-      relFactoryPath = relative(targetDir, canonicalRoot).replaceAll("\\", "/");
+    if (!existsSync(absFactoryPath)) {
+      const err = new Error(
+        `Declared factory path "${relFactoryPath}" does not exist at "${absFactoryPath}". ` +
+        `If using a submodule, run 'git submodule update --init --recursive'. ` +
+        `Otherwise, check --factory-path or run 'context-cli repair --factory <valid-path>'.`
+      );
+      err.code = "FACTORY_PATH_NOT_FOUND";
+      err.declaredPath = relFactoryPath;
+      err.resolvedPath = absFactoryPath;
+      err.repair = "Run 'git submodule update --init --recursive' or pass '--factory-path <valid-path>'";
+      throw err;
+    }
+    if (isAbsolute(relFactoryPath)) {
+      relFactoryPath = relative(targetDir, absFactoryPath).replaceAll("\\", "/");
     }
   } else {
     if (targetDir === canonicalRoot || targetDir === root) {
@@ -482,7 +563,10 @@ export async function generateBridge({
   }
 
   // Normalize path format for scripts and markdown
-  const normalizedFactoryPath = relFactoryPath.startsWith(".") ? relFactoryPath : `./${relFactoryPath}`;
+  let normalizedFactoryPath = relFactoryPath;
+  if (!isAbsolute(normalizedFactoryPath) && !normalizedFactoryPath.startsWith(".")) {
+    normalizedFactoryPath = `./${normalizedFactoryPath}`;
+  }
   const scriptPrefix = normalizedFactoryPath === "." ? "node scripts/context.mjs" : `node ${normalizedFactoryPath}/scripts/context.mjs`;
   const cliPrefix = normalizedFactoryPath === "." ? "node app/cli/bin/context-cli.mjs" : `node ${normalizedFactoryPath}/app/cli/bin/context-cli.mjs`;
 
@@ -657,20 +741,41 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
     });
   }
 
-  // 9. Antigravity & Agentic IDE Symlinks (.agents/)
+  // 9. Host Discovery & Editor Symlinks (.agents/ and .claude/)
   const symlinksToCreate = [];
-  if (isAll || activeIdes.includes("antigravity") || activeIdes.includes("gemini")) {
-    const dotAgentsDir = join(targetDir, ".agents");
 
-    // Discover factory skills for per-skill symlink creation
-    let factorySkills = [];
-    try {
-      const manifestPath = existsSync(join(absFactoryPath, "context-manifest.json"))
-        ? join(absFactoryPath, "context-manifest.json")
-        : join(root, "context-manifest.json");
-      const m = JSON.parse(await readFile(manifestPath, "utf8"));
-      factorySkills = m.skills || [];
-    } catch {}
+  // Load existing .context-bridge.json ownership metadata if present
+  const existingOwnedSymlinkIds = new Set();
+  try {
+    const rawBridge = await readFile(join(targetDir, ".context-bridge.json"), "utf8");
+    const parsedBridge = JSON.parse(rawBridge);
+    if (Array.isArray(parsedBridge.symlinks)) {
+      for (const s of parsedBridge.symlinks) {
+        if (s.id) existingOwnedSymlinkIds.add(s.id);
+      }
+    }
+  } catch {}
+
+  // Discover factory skills & workflows from manifest
+  let factoryManifest = null;
+  let factorySkills = [];
+  let factoryWorkflows = [];
+  try {
+    const manifestPath = existsSync(join(absFactoryPath, "context-manifest.json"))
+      ? join(absFactoryPath, "context-manifest.json")
+      : join(canonicalRoot, "context-manifest.json");
+    factoryManifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    factorySkills = factoryManifest.skills || [];
+    factoryWorkflows = factoryManifest.workflows || [];
+  } catch {}
+
+  const isAntigravity = isAll || activeIdes.includes("antigravity") || activeIdes.includes("gemini");
+  const isCodex = isAll || activeIdes.includes("codex");
+  const isClaude = isAll || activeIdes.includes("claude");
+
+  // A. Antigravity & Gemini Core Environment Symlinks (.agents/)
+  if (isAntigravity) {
+    const dotAgentsDir = join(targetDir, ".agents");
 
     // Skills directory entries for skills.json
     const skillsRelDir = targetDir === absFactoryPath ? "skills" : join(normalizedFactoryPath, "skills").replaceAll("\\", "/");
@@ -704,17 +809,21 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
         linkPath,
         sourcePath,
         type: def.type,
+        isOwned: existingOwnedSymlinkIds.has(def.id),
       });
     }
+  }
+
+  // B. Codex & Agentic Skills Discovery (.agents/skills/)
+  if (isCodex || isAntigravity) {
+    const dotAgentsDir = join(targetDir, ".agents");
+    const dotAgentsSkillsDir = join(dotAgentsDir, "skills");
 
     // Clean up old single .agents/skills symlink if present
-    const dotAgentsSkillsDir = join(dotAgentsDir, "skills");
     try {
       const s = await lstat(dotAgentsSkillsDir);
-      if (s.isSymbolicLink()) {
-        if (!dryRun) {
-          await rm(dotAgentsSkillsDir, { force: true });
-        }
+      if (s.isSymbolicLink() && !dryRun) {
+        await rm(dotAgentsSkillsDir, { force: true });
       }
     } catch {}
 
@@ -726,54 +835,59 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
       const linkPath = join(dotAgentsSkillsDir, skillName);
       const sourcePath = existsSync(join(absFactoryPath, relSkillDir))
         ? join(absFactoryPath, relSkillDir)
-        : join(root, relSkillDir);
+        : join(canonicalRoot, relSkillDir);
       symlinksToCreate.push({
         id: `.agents/skills/${skillName}`,
         linkPath,
         sourcePath,
         type: "dir",
+        isOwned: existingOwnedSymlinkIds.has(`.agents/skills/${skillName}`),
       });
     }
   }
 
-  // 10. .context-bridge.json (Bridge Metadata for Host Repositories)
-  if (targetDir !== root) {
-    const bridgeConfig = {
-      schemaVersion: 1,
-      bridgeVersion: "1.2.0",
-      factoryPath: normalizedFactoryPath,
-      integrationMethod: method,
-      packageManager: activePm,
-      ides: activeIdes,
-      installedIdes: activeIdes,
-      stacks: stacks || (stack ? [stack] : ["typescript"]),
-      createdAt: new Date().toISOString(),
-      scoping: {
-        tasks: "./docs/tasks",
-        decisions: "./docs/decisions",
-        rules: "./rules",
-        agents: "./.agents",
-      },
-      symlinks: symlinksToCreate.map((s) => ({
-        id: s.id,
-        target: relative(dirname(s.linkPath), s.sourcePath).replaceAll("\\", "/"),
-        type: s.type,
-      })),
-      commands: {
-        resolve: `${scriptPrefix} resolve`,
-        bundle: `${scriptPrefix} bundle`,
-        doctor: `${scriptPrefix} doctor`,
-        cli: `${cliPrefix}`,
-      },
-    };
+  // C. Claude Code Workflow Discovery Entries (.claude/skills/)
+  if (isClaude) {
+    const dotClaudeSkillsDir = join(targetDir, ".claude", "skills");
 
-    filesToGenerate.push({
-      path: join(targetDir, ".context-bridge.json"),
-      content: `${JSON.stringify(bridgeConfig, null, 2)}\n`,
-      id: ".context-bridge.json",
-      category: "config",
-    });
+    const workflowEntries = [];
+    if (factoryWorkflows.length > 0) {
+      for (const wfPath of factoryWorkflows) {
+        const slug = basename(wfPath, ".md");
+        workflowEntries.push({
+          adapterName: `workflow-${slug}`,
+          sourceRelDir: `skills/workflow-entries/workflow-${slug}`,
+        });
+      }
+    } else {
+      for (const skillPath of factorySkills) {
+        if (skillPath.startsWith("skills/workflow-entries/")) {
+          const parts = skillPath.split("/");
+          const skillName = parts[parts.length - 2];
+          workflowEntries.push({
+            adapterName: skillName,
+            sourceRelDir: `skills/workflow-entries/${skillName}`,
+          });
+        }
+      }
+    }
+
+    for (const entry of workflowEntries) {
+      const linkPath = join(dotClaudeSkillsDir, entry.adapterName);
+      const sourcePath = existsSync(join(absFactoryPath, entry.sourceRelDir))
+        ? join(absFactoryPath, entry.sourceRelDir)
+        : join(canonicalRoot, entry.sourceRelDir);
+      symlinksToCreate.push({
+        id: `.claude/skills/${entry.adapterName}`,
+        linkPath,
+        sourcePath,
+        type: "dir",
+        isOwned: existingOwnedSymlinkIds.has(`.claude/skills/${entry.adapterName}`),
+      });
+    }
   }
+
+
 
   // Write contract and scaffold files
   const fileResults = [];
@@ -821,6 +935,9 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
 
   // Create symlinks
   const symlinkResults = [];
+  let hasCollisions = false;
+  const collisions = [];
+
   for (const sym of symlinksToCreate) {
     const symRes = await createRelativeSymlink({
       linkPath: sym.linkPath,
@@ -828,7 +945,12 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
       type: sym.type,
       dryRun,
       force,
+      isOwned: sym.isOwned,
     });
+    if (symRes.collision) {
+      hasCollisions = true;
+      collisions.push(symRes);
+    }
     symlinkResults.push({
       id: sym.id,
       path: symRes.path,
@@ -836,6 +958,66 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
       status: symRes.status,
       category: "symlink",
       isSymlink: symRes.isSymlink,
+      collision: Boolean(symRes.collision),
+    });
+  }
+
+  // 10. .context-bridge.json (Bridge Metadata for Host Repositories)
+  // Only records symlinks actually owned and non-colliding
+  if (targetDir !== root) {
+    const ownedSymlinks = symlinkResults
+      .filter((s) => !s.collision)
+      .map((s) => ({
+        id: s.id,
+        target: s.target,
+        type: symlinksToCreate.find((stc) => stc.id === s.id)?.type || "dir",
+      }));
+
+    const bridgeConfig = {
+      schemaVersion: 1,
+      bridgeVersion: "1.2.0",
+      factoryPath: normalizedFactoryPath,
+      integrationMethod: method,
+      packageManager: activePm,
+      ides: activeIdes,
+      installedIdes: activeIdes,
+      stacks: stacks || (stack ? [stack] : ["typescript"]),
+      createdAt: new Date().toISOString(),
+      scoping: {
+        tasks: "./docs/tasks",
+        decisions: "./docs/decisions",
+        rules: "./rules",
+        agents: "./.agents",
+      },
+      symlinks: ownedSymlinks,
+      commands: {
+        resolve: `${scriptPrefix} resolve`,
+        bundle: `${scriptPrefix} bundle`,
+        doctor: `${scriptPrefix} doctor`,
+        cli: `${cliPrefix}`,
+      },
+    };
+
+    const bridgeJsonPath = join(targetDir, ".context-bridge.json");
+    let bridgeExists = false;
+    try {
+      await readFile(bridgeJsonPath);
+      bridgeExists = true;
+    } catch {
+      bridgeExists = false;
+    }
+
+    if (!dryRun) {
+      await mkdir(dirname(bridgeJsonPath), { recursive: true });
+      await writeFile(bridgeJsonPath, `${JSON.stringify(bridgeConfig, null, 2)}\n`, "utf8");
+    }
+
+    fileResults.push({
+      path: bridgeJsonPath,
+      id: ".context-bridge.json",
+      status: dryRun ? "would create" : (bridgeExists ? "updated" : "created"),
+      category: "config",
+      isSymlink: false,
     });
   }
 
@@ -884,6 +1066,8 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
     dryRun,
     files: [...fileResults, ...symlinkResults],
     symlinks: symlinkResults,
+    hasCollisions,
+    collisions,
     packageJsonUpdated,
   };
 }
@@ -898,6 +1082,7 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
       canonicalTarget = realpathSync(targetDir);
     }
   } catch {}
+
   const dotAgentsDir = join(canonicalTarget, ".agents");
   let hasDotAgents = false;
   try {
@@ -907,36 +1092,97 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
     hasDotAgents = false;
   }
 
-  // Load manifest skills to verify per-skill links
+  let bridgeConfig = null;
+  let factoryPath = canonicalTarget;
+  let factoryTargetMissing = false;
+  if (existsSync(join(canonicalTarget, ".context-bridge.json"))) {
+    try {
+      bridgeConfig = JSON.parse(await readFile(join(canonicalTarget, ".context-bridge.json"), "utf8"));
+      if (bridgeConfig.factoryPath) {
+        const candidate = resolve(canonicalTarget, bridgeConfig.factoryPath);
+        if (existsSync(candidate)) {
+          factoryPath = candidate;
+        } else {
+          factoryTargetMissing = true;
+          factoryPath = candidate;
+        }
+      }
+    } catch {}
+  } else if (existsSync(join(canonicalTarget, "context-factory", "context-manifest.json"))) {
+    factoryPath = join(canonicalTarget, "context-factory");
+  } else if (existsSync(join(canonicalTarget, ".context-factory", "context-manifest.json"))) {
+    factoryPath = join(canonicalTarget, ".context-factory");
+  } else {
+    factoryPath = root;
+  }
+
+  // Load manifest skills & workflows
   let factorySkills = [];
+  let factoryWorkflows = [];
   try {
-    let factoryPath = targetDir;
-    if (existsSync(join(targetDir, ".context-bridge.json"))) {
-      const bridge = JSON.parse(await readFile(join(targetDir, ".context-bridge.json"), "utf8"));
-      if (bridge.factoryPath) factoryPath = resolve(targetDir, bridge.factoryPath);
-    } else if (existsSync(join(targetDir, "context-factory", "context-manifest.json"))) {
-      factoryPath = join(targetDir, "context-factory");
-    }
     const manifestPath = existsSync(join(factoryPath, "context-manifest.json"))
       ? join(factoryPath, "context-manifest.json")
       : join(root, "context-manifest.json");
     const m = JSON.parse(await readFile(manifestPath, "utf8"));
     factorySkills = m.skills || [];
+    factoryWorkflows = m.workflows || [];
   } catch {}
 
-  const expectedLinks = [
-    { name: "rules", type: "dir" },
-    { name: "agents", type: "dir" },
-    { name: "workflows", type: "dir" },
-    { name: "AGENTS.md", type: "file" },
-    { name: "GEMINI.md", type: "file" },
-  ];
+  // Determine active profiles from bridge config or fallback
+  const configuredIdes = bridgeConfig?.ides || (canonicalTarget === root ? ["all"] : []);
+  const isAll = configuredIdes.includes("all") || configuredIdes.includes("*") || (configuredIdes.length === 0 && canonicalTarget === root);
+  const checkAntigravity = isAll || configuredIdes.includes("antigravity") || configuredIdes.includes("gemini");
+  const checkCodex = isAll || configuredIdes.includes("codex");
+  const checkClaude = isAll || configuredIdes.includes("claude");
 
-  for (const skillPath of factorySkills) {
-    const parts = skillPath.split("/");
-    const skillName = parts[parts.length - 2];
-    if (skillName) {
-      expectedLinks.push({ name: `skills/${skillName}`, type: "dir" });
+  // Track owned symlink IDs from bridge config
+  const ownedSymlinkIds = new Set();
+  if (Array.isArray(bridgeConfig?.symlinks)) {
+    for (const s of bridgeConfig.symlinks) {
+      if (s.id) ownedSymlinkIds.add(s.id);
+    }
+  }
+
+  const expectedLinks = [];
+
+  if (checkAntigravity) {
+    expectedLinks.push(
+      { name: "rules", relPath: ".agents/rules", type: "dir" },
+      { name: "agents", relPath: ".agents/agents", type: "dir" },
+      { name: "workflows", relPath: ".agents/workflows", type: "dir" },
+      { name: "AGENTS.md", relPath: ".agents/AGENTS.md", type: "file" },
+      { name: "GEMINI.md", relPath: ".agents/GEMINI.md", type: "file" }
+    );
+  }
+
+  if (checkCodex || checkAntigravity) {
+    for (const skillPath of factorySkills) {
+      const parts = skillPath.split("/");
+      const skillName = parts[parts.length - 2];
+      if (skillName) {
+        expectedLinks.push({ name: `skills/${skillName}`, relPath: `.agents/skills/${skillName}`, type: "dir" });
+      }
+    }
+  }
+
+  if (checkClaude) {
+    const workflowEntries = [];
+    if (factoryWorkflows.length > 0) {
+      for (const wfPath of factoryWorkflows) {
+        const slug = basename(wfPath, ".md");
+        workflowEntries.push(`workflow-${slug}`);
+      }
+    } else {
+      for (const skillPath of factorySkills) {
+        if (skillPath.startsWith("skills/workflow-entries/")) {
+          const parts = skillPath.split("/");
+          const skillName = parts[parts.length - 2];
+          workflowEntries.push(skillName);
+        }
+      }
+    }
+    for (const wfName of workflowEntries) {
+      expectedLinks.push({ name: `claude/skills/${wfName}`, relPath: `.claude/skills/${wfName}`, type: "dir" });
     }
   }
 
@@ -944,9 +1190,10 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
   let brokenCount = 0;
   let missingCount = 0;
   let healthyCount = 0;
+  let collisionCount = 0;
 
   for (const item of expectedLinks) {
-    const linkPath = join(dotAgentsDir, item.name);
+    const linkPath = join(canonicalTarget, item.relPath);
     try {
       const stat = await lstat(linkPath);
       if (stat.isSymbolicLink()) {
@@ -954,14 +1201,29 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
         const resolvedPath = resolve(dirname(linkPath), rawTarget);
         try {
           await lstat(resolvedPath);
-          healthyCount++;
-          linkStatuses.push({ name: item.name, path: linkPath, target: rawTarget, status: "healthy", isSymlink: true });
+          const isOwned = ownedSymlinkIds.has(item.relPath) ||
+            rawTarget.includes("skills/workflow-entries") ||
+            rawTarget.includes("context-factory") ||
+            rawTarget.includes(".context-factory");
+          if (!isOwned && bridgeConfig) {
+            collisionCount++;
+            linkStatuses.push({ name: item.name, path: linkPath, target: rawTarget, status: "collision (unowned symlink)", isSymlink: true });
+          } else {
+            healthyCount++;
+            linkStatuses.push({ name: item.name, path: linkPath, target: rawTarget, status: "healthy", isSymlink: true });
+          }
         } catch {
           brokenCount++;
           linkStatuses.push({ name: item.name, path: linkPath, target: rawTarget, status: "broken (target not found)", isSymlink: true });
         }
       } else {
-        linkStatuses.push({ name: item.name, path: linkPath, status: "regular file/dir", isSymlink: false });
+        collisionCount++;
+        linkStatuses.push({
+          name: item.name,
+          path: linkPath,
+          status: stat.isDirectory() ? "collision (unowned directory exists)" : "collision (unowned file exists)",
+          isSymlink: false,
+        });
       }
     } catch {
       missingCount++;
@@ -969,29 +1231,33 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
     }
   }
 
-  // Check .agents/skills.json
-  const skillsJsonPath = join(dotAgentsDir, "skills.json");
-  try {
-    const skillsJson = JSON.parse(await readFile(skillsJsonPath, "utf8"));
-    if (Array.isArray(skillsJson.entries) && skillsJson.entries.length > 0) {
-      healthyCount++;
-      linkStatuses.push({ name: "skills.json", path: skillsJsonPath, status: "healthy", isSymlink: false });
-    } else {
-      brokenCount++;
-      linkStatuses.push({ name: "skills.json", path: skillsJsonPath, status: "invalid schema", isSymlink: false });
+  // Check .agents/skills.json if Antigravity is active
+  if (checkAntigravity) {
+    const skillsJsonPath = join(dotAgentsDir, "skills.json");
+    try {
+      const skillsJson = JSON.parse(await readFile(skillsJsonPath, "utf8"));
+      if (Array.isArray(skillsJson.entries) && skillsJson.entries.length > 0) {
+        healthyCount++;
+        linkStatuses.push({ name: "skills.json", path: skillsJsonPath, status: "healthy", isSymlink: false });
+      } else {
+        brokenCount++;
+        linkStatuses.push({ name: "skills.json", path: skillsJsonPath, status: "invalid schema", isSymlink: false });
+      }
+    } catch {
+      missingCount++;
+      linkStatuses.push({ name: "skills.json", path: skillsJsonPath, status: "missing", isSymlink: false });
     }
-  } catch {
-    missingCount++;
-    linkStatuses.push({ name: "skills.json", path: skillsJsonPath, status: "missing", isSymlink: false });
   }
 
-  const totalCount = expectedLinks.length + 1;
-  const passed = hasDotAgents && brokenCount === 0 && missingCount === 0 && healthyCount === totalCount;
+  const totalCount = expectedLinks.length + (checkAntigravity ? 1 : 0);
+  const passed = !factoryTargetMissing && brokenCount === 0 && missingCount === 0 && collisionCount === 0 && healthyCount === totalCount;
   return {
     passed,
     hasDotAgents,
+    factoryTargetMissing,
     brokenCount,
     missingCount,
+    collisionCount,
     healthyCount,
     totalCount,
     links: linkStatuses,
@@ -1003,8 +1269,8 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
  */
 export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}) {
   let factoryPath = flags.factoryPath || flags.factory || null;
-  let ide = flags.ide || ["all"];
-  let method = flags.method || "submodule";
+  let ide = flags.ide || null;
+  let method = flags.method || null;
 
   // 1. Check local .gitmodules first (if host repo embeds context-factory as a git submodule)
   try {
@@ -1039,12 +1305,20 @@ export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}
       const candidate = resolve(targetDir, bridgeJson.factoryPath);
       if (existsSync(candidate)) {
         factoryPath = bridgeJson.factoryPath;
+      } else {
+        const err = new Error(
+          `Cannot repair bridge: declared factory path "${bridgeJson.factoryPath}" does not exist at "${candidate}". ` +
+          `Run 'git submodule update --init --recursive' or update with '--factory-path <path>'.`
+        );
+        err.code = "FACTORY_PATH_NOT_FOUND";
+        err.repair = "Run 'git submodule update --init --recursive' or pass '--factory-path <path>'";
+        throw err;
       }
     }
     if (bridgeJson.ides && (!flags.ide || flags.ide.length === 0)) ide = bridgeJson.ides;
     if (bridgeJson.integrationMethod && !flags.method) method = bridgeJson.integrationMethod;
-  } catch {
-    // If inside context-factory itself
+  } catch (err) {
+    if (err.code === "FACTORY_PATH_NOT_FOUND") throw err;
     if (targetDir === root) {
       factoryPath = ".";
     }
@@ -1053,8 +1327,8 @@ export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}
   return generateBridge({
     target: targetDir,
     factoryPath: factoryPath || (targetDir === root ? "." : relative(targetDir, root).replaceAll("\\", "/")),
-    ide,
-    method,
+    ide: ide || ["all"],
+    method: method || "submodule",
     force: true,
     addNpmScripts: true,
   });
