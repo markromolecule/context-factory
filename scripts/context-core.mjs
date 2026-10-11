@@ -252,15 +252,29 @@ async function entries(paths) {
 const ACTION_TERMS = new Set([
   "add", "adr", "architect", "build", "change", "commit", "create", "data", "deliver", "deploy",
   "design", "dip", "discovery", "doc", "docs", "documentation", "execute", "execution", "explore", "fix", "grill", "grounding", "hotfix",
-  "implement", "isp", "lsp", "migrate", "mitigation", "ocp", "plan", "push", "redesign", "refactor", "release",
+  "implement", "isp", "lsp", "maintain", "migrate", "mitigation", "ocp", "plan", "push", "redesign", "refactor", "release",
   "remove", "report", "resolve", "review", "sec", "security", "ship", "solid", "srp", "summary", "sync", "test",
-  "threat", "triage", "upgrade", "ux", "verify", "wiki",
+  "threat", "triage", "update", "upgrade", "ux", "verify", "wiki",
 ]);
 
 const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan)|context spec(?:ification)?|author context|create context)\b|^\/(?:grill|discovery|context)\b|^\[(?:GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i;
 const EXECUTION_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b|^\/(?:exec|execute|execution)\b|^\[(?:EXEC|EXECUTE|EXECUTION)\]/i;
 
 const ROUTING_HINTS = [
+  // 0. Host-Native Workflow Commands (/workflow-<slug> for Claude Code, $workflow-<slug> for Codex)
+  { test: /^[/\\$]workflow-architecture-change\b/i, workflow: "architecture-change" },
+  { test: /^[/\\$]workflow-code-review-and-optimization\b/i, workflow: "code-review-and-optimization" },
+  { test: /^[/\\$]workflow-commit-push-release\b/i, workflow: "commit-push-release" },
+  { test: /^[/\\$]workflow-context-maintenance\b/i, workflow: "context-maintenance" },
+  { test: /^[/\\$]workflow-database-migration\b/i, workflow: "database-migration" },
+  { test: /^[/\\$]workflow-defect-resolution\b/i, workflow: "defect-resolution" },
+  { test: /^[/\\$]workflow-dependency-upgrade\b/i, workflow: "dependency-upgrade" },
+  { test: /^[/\\$]workflow-docs\b/i, workflow: "docs" },
+  { test: /^[/\\$]workflow-feature-delivery\b/i, workflow: "feature-delivery" },
+  { test: /^[/\\$]workflow-new-project-delivery\b/i, workflow: "new-project-delivery" },
+  { test: /^[/\\$]workflow-release-readiness\b/i, workflow: "release-readiness" },
+  { test: /^[/\\$]workflow-security-sensitive-change\b/i, workflow: "security-sensitive-change" },
+
   // 1. Explicit Agent Commands (Highest Precedence)
   { test: /^\/architect\b|^\[ARCHITECT\]/i, workflow: "architecture-change" },
   { test: /^\/data\b|^\[DATA\]/i, workflow: "database-migration" },
@@ -293,9 +307,9 @@ const ROUTING_HINTS = [
   { test: /\b(webhook|credential|secret|authorization|authentication|security|signature|replay)\b/i, workflow: "security-sensitive-change" },
   { test: /\b(database migration|schema migration|backfill)\b/i, workflow: "database-migration" },
   { test: /\b(dependency|package|library|framework).*\b(upgrade|update|migrate)\b/i, workflow: "dependency-upgrade" },
-  { test: /\b(frontend|interface|dialog|form|responsive|accessibility|ux|redesign)\b/i, workflow: "feature-delivery" },
+  { test: /\b(feature|product capability|user story|frontend|interface|dialog|form|responsive|accessibility|ux|redesign)\b/i, workflow: "feature-delivery" },
   { test: /\b(release|readiness|production handoff)\b/i, workflow: "release-readiness" },
-  { test: /\b(context factory|rule|skill|workflow|manifest).*\b(add|change|update|maintain|sync)\b/i, workflow: "context-maintenance" },
+  { test: /\b(?:context[- ]factory|manifest)\b.*\b(?:add|change|update|maintain|sync)\b|\b(?:add|change|update|maintain|sync)\b.*\b(?:context[- ]factory|manifest)\b|\b(?:maintain|sync)\s+(?:context[- ]factory|rules?|skills?|workflows?)\b/i, workflow: "context-maintenance" },
   { test: /\b(report|summary|mitigation|post-mortem)\b/i, workflow: "docs" },
   { test: PREPLANNING_TEST, workflow: "feature-delivery" },
 ];
@@ -367,7 +381,13 @@ export async function resolveContext(request, options = {}) {
   };
 
   const requestTerms = terms(request);
-  const hasAction = requestTerms.some((term) => ACTION_TERMS.has(term)) || /^\/[a-z0-9_-]+|^\[[a-z0-9_-]+\]/i.test(request.trim());
+  const trimmedRequest = request.trim();
+  const isExplicitTrigger = /^[/\\$][a-z0-9_-]+|^\[[a-z0-9_-]+\]/i.test(trimmedRequest);
+  const hasAction = requestTerms.some((term) => ACTION_TERMS.has(term)) || isExplicitTrigger;
+  const isDirectQuestion = !isExplicitTrigger && (
+    /^(?:how (?:do|can|to|does|should|is|are)\b|what (?:is|are|does|do|can|workflows?)\b|which (?:workflow|rule|skill|command)\b|why\b|where\b|when\b|explain (?:how|what|the)?\b|tell me\b)/i.test(trimmedRequest)
+    || /^(?:how|what|which|why|where|when|can you explain)\b.*\?$/i.test(trimmedRequest)
+  );
   const ruleEntries = await entries(manifest.rules);
   const skillEntries = await entries(manifest.skills);
   const workflowEntries = await entries(manifest.workflows);
@@ -377,7 +397,6 @@ export async function resolveContext(request, options = {}) {
 
   // 1. Check for explicit agent invocation via aliases
   let selectedAgent = null;
-  const trimmedRequest = request.trim();
   for (const agent of agentEntries) {
     const aliases = Array.isArray(agent.meta.aliases) ? agent.meta.aliases : [];
     for (const alias of aliases) {
@@ -423,6 +442,7 @@ export async function resolveContext(request, options = {}) {
 
   // 3. Skill selection (scored + execution/security filters + agent declared skills)
   let selectedSkills = skillEntries
+    .filter((entry) => !entry.path.startsWith("skills/workflow-entries/"))
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
     .filter((entry) => (
       entry.relevance.score >= 6
@@ -456,7 +476,7 @@ export async function resolveContext(request, options = {}) {
   // 4. Workflow selection
   let selectedWorkflow = null;
   let selectedWorkflowSource = "";
-  if (hasAction) {
+  if (hasAction && !isDirectQuestion) {
     const matchedHint = ROUTING_HINTS.find((hint) => hint.test.test(request));
     if (matchedHint && matchedHint.workflow === null) {
       selectedWorkflow = null;
@@ -468,7 +488,7 @@ export async function resolveContext(request, options = {}) {
         .sort((a, b) => b.relevance.score - a.relevance.score || a.path.localeCompare(b.path));
       const hinted = workflowEntries.find((entry) => entry.meta.name === hintedName);
       const winner = hinted ?? ranked[0];
-      if (winner && (hinted || winner.relevance.score >= 4)) {
+      if (winner && (hinted || (winner.relevance.score >= 6 && winner.relevance.matches.length >= 2))) {
         const relevance = scoreEntry(requestTerms, winner.path, winner.meta);
         selectedWorkflow = {
           path: winner.path,
@@ -503,6 +523,7 @@ export async function resolveContext(request, options = {}) {
     ]);
     const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));
     for (const entry of skillEntries) {
+      if (entry.path.startsWith("skills/workflow-entries/")) continue;
       if ((entry.meta.name === "grill" || entry.meta.name === "grill-with-docs" || entry.meta.name === "context") && !PREPLANNING_TEST.test(request)) continue;
       if ((entry.meta.name === "execution" || entry.meta.name === "execution-plan") && !EXECUTION_TEST.test(request)) continue;
       if (linkedSkillNames.has(entry.meta.name) && !selectedSkillPaths.has(entry.path)) {

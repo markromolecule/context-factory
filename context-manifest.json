@@ -219,6 +219,7 @@
     "evals/run-evals.mjs",
     "evals/tests/bridge/bridge-conformance.test.mjs",
     "evals/tests/bridge/workflow-entry-contract.test.mjs",
+    "evals/tests/bridge/workflow-routing.test.mjs",
     "evals/tests/cli/github-gate.test.mjs",
     "evals/tests/cli/help-output.test.mjs",
     "evals/tests/cli/hook-safety.test.mjs",
@@ -305,7 +306,8 @@
     "evals/cases/solid-principles.json",
     "evals/cases/sync-modernization.json",
     "evals/cases/typescript-backend-resolution.json",
-    "evals/cases/unsupported-completion.json"
+    "evals/cases/unsupported-completion.json",
+    "evals/cases/workflow-discovery.json"
   ],
   "datasets": [
     "evals/datasets/conformance/01-missing-binding.json",

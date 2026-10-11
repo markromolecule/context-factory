@@ -32,9 +32,30 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 
 - [[workflows/docs|Documentation & System Reporting Workflow]] — Synthesize evidence-backed development and system reports, performance mitigation summaries, architectural digests, post-mortems, and technical documentation with tables and conclusions.
 
-## Session Slash Commands & Prefix Triggers
+## Host-Native Workflow Discovery (Codex & Claude Code)
 
-Use leading slash commands or bracket prefix tags for instant, deterministic workflow activation:
+Each canonical workflow is exposed as a thin host discovery entry point:
+
+- **Claude Code:** Project skills under `.claude/skills/workflow-<slug>`. Invoke directly in prompt:
+  - `/workflow-feature-delivery` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]
+  - `/workflow-defect-resolution` $\rightarrow$ [[workflows/defect-resolution|Defect resolution]]
+  - `/workflow-architecture-change` $\rightarrow$ [[workflows/architecture-change|Architecture change]]
+  - `/workflow-context-maintenance` $\rightarrow$ [[workflows/context-maintenance|Context maintenance]]
+  - `/workflow-release-readiness` $\rightarrow$ [[workflows/release-readiness|Release readiness]]
+  - `/workflow-code-review-and-optimization` $\rightarrow$ [[workflows/code-review-and-optimization|Code review and optimization]]
+  - `/workflow-commit-push-release` $\rightarrow$ [[workflows/commit-push-release|Commit, push & release]]
+  - `/workflow-database-migration` $\rightarrow$ [[workflows/database-migration|Database migration]]
+  - `/workflow-dependency-upgrade` $\rightarrow$ [[workflows/dependency-upgrade|Dependency upgrade]]
+  - `/workflow-docs` $\rightarrow$ [[workflows/docs|Docs]]
+  - `/workflow-new-project-delivery` $\rightarrow$ [[workflows/new-project-delivery|New project progressive delivery]]
+  - `/workflow-security-sensitive-change` $\rightarrow$ [[workflows/security-sensitive-change|Security-sensitive change]]
+- **Codex:** Discoverable under `.agents/skills/workflow-<slug>` via the `/skills` menu or referenced in prompt as `$workflow-<slug>` (e.g. `$workflow-feature-delivery`, `$workflow-defect-resolution`).
+
+Each entry instructs the host agent to read the canonical `workflows/<slug>.md` file and invoke `node scripts/context.mjs resolve` on the user prompt. Adapters carry zero duplicate policy; authoritative phases, quality gates, and stop conditions remain in canonical workflow files.
+
+## Internal Resolver Aliases & Prompt Triggers
+
+These slash-prefixed strings and bracket prefix tags are internal resolver keywords recognized by `node scripts/context.mjs resolve` and prompt matching. They are NOT registered host slash commands:
 
 - `/new-project`, `[NEW_PROJECT]` $\rightarrow$ [[workflows/new-project-delivery|New project progressive delivery]]: progressive vertical-slice execution with grilling and 4-layer tests
 - `/context`, `[CONTEXT]`, `[CONTEXT_SPEC]` $\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: author and grill context specifications in `docs/context/`

@@ -1,0 +1,14 @@
+{
+  "name": "host native workflow invocation resolves canonical workflow",
+  "request": "/workflow-feature-delivery implement user avatar upload",
+  "expected": {
+    "workflow": "workflows/feature-delivery.md",
+    "rules": [
+      "rules/global/evidence-and-claims.md"
+    ],
+    "skills": [],
+    "excludedSkills": [
+      "skills/workflow-entries/workflow-feature-delivery/SKILL.md"
+    ]
+  }
+}

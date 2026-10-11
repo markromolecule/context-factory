@@ -5,7 +5,7 @@ parent: "phase-03-routing-and-docs"
 unit: "03.01"
 task_branch: "feat/PLN-0009-codex-and-claude-workflow-discovery"
 base_commit: "fa8f5db00cb0d113589190ed15d6752ab3612831"
-status: planned
+status: verified
 created: "2026-10-11"
 tags: [task, unit, resolver]
 depends_on: ["01.01"]
@@ -56,13 +56,22 @@ The released brief and user decision require both implicit routing and visible h
 - **Evaluation integration:** `node evals/run-evals.mjs` covers resolver case metadata and regression; `node scripts/context.mjs doctor` checks generated docs and inventory.
 - **Conformance gate:** Fresh `node app/cli/bin/context-cli.mjs preflight` and `node app/cli/bin/context-cli.mjs conform` for exact scope, persisted PASS receipt and hashes; stop on FAIL/BLOCKED.
 
+### Verification Evidence (2026-10-11)
+- `node --test evals/tests/bridge/workflow-routing.test.mjs` → **PASS** (6/6 tests passed).
+- `node --test evals/tests/bridge/bridge-conformance.test.mjs evals/tests/bridge/workflow-entry-contract.test.mjs` → **PASS** (23/23 tests passed).
+- `npm test` → **PASS** (35/35 evaluations passed, including `workflow-discovery`).
+- `npm run lint` → **PASS** (41 rules, 30 skills, 12 workflows, 21 evaluations verified).
+- `node scripts/context.mjs doctor` → **PASS** (HEALTHY; 48/48 symlink & agent configs verified healthy).
+- Conformance Receipt: `docs/execution/PLN-0009/unit-03-01-conformance-report.json`, ID `report-binding-adhoc-00-00-d245fb5d616d-1791732799027`, Verdict `PASS` (47/47 directives).
+- Conformance Verification: `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0009/unit-03-01-conformance-report.json` → **PASS** (`CONFORMANCE RECEIPT VALID`).
+
 ## Rollback
 
 Revert resolver/test/docs changes together and regenerate `docs/Workflows.md` from the reverted indexer. Existing internal aliases remain functional.
 
 ## Definition of done
 
-- [ ] AC-03 and AC-07 cases pass, including negative boundaries.
-- [ ] Generated and hand-written syntax guidance agrees.
-- [ ] Exact task branch, scoped diff, and review confirmed.
-- [ ] Fresh unit conformance PASS receipt verified and change committed.
+- [x] AC-03 and AC-07 cases pass, including negative boundaries.
+- [x] Generated and hand-written syntax guidance agrees.
+- [x] Exact task branch, scoped diff, and review confirmed.
+- [x] Fresh unit conformance PASS receipt verified and change committed.

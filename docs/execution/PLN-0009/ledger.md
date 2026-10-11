@@ -14,7 +14,7 @@
 | :--- | :--- | :--- | :--- |
 | **01** | Canonical workflow adapter inventory | 01.01 | VERIFIED |
 | **02** | Ownership-aware host bridge and repair | 02.01 | VERIFIED |
-| **03** | Resolver boundaries and host guidance | 03.01 | PENDING |
+| **03** | Resolver boundaries and host guidance | 03.01 | VERIFIED |
 | **04** | Whole-diff and live-host evidence | 04.01 | PENDING |
 
 ---
@@ -107,6 +107,55 @@
 - **Diff Hash:** `sha256:e81f9c24aec151a98c4b45e9903d58e6ff6f1326090a826d66f8e5c8b650986c`
 - **Human Evidence:** "Joseph reviewed Unit 02.01 ownership-aware host bridge and repair: independent Codex and Claude discovery symlinks, narrowed Antigravity detection, safe unowned file and symlink collision preservation, closed missing factory path diagnostics, and full test suite passing."
 - **Verdict:** **PASS** (47/47 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0009/unit-02-01-conformance-report.json`.
+
+---
+
+## Unit 03.01: Resolver Boundaries and Host Guidance
+
+### Changes
+
+- Isolated workflow entry adapters from procedural skill recommendations in `scripts/context-core.mjs`:
+  - Filtered `skills/workflow-entries/` out of candidate procedural `selectedSkills` (AC-03).
+  - Filtered `skills/workflow-entries/` out of workflow-linked skills expansion, ensuring adapter wrappers never leak into prompt context.
+- Added host-native workflow routing commands to `ROUTING_HINTS`:
+  - Registered Claude Code native entries (`/workflow-<slug>`) and Codex native entries (`$workflow-<slug>`) for all 12 canonical workflows at top routing hint precedence.
+  - Expanded `hasAction` and `isExplicitTrigger` to recognize `$` command triggers alongside `/` commands (AC-03).
+- Hardened question and ambiguous query handling:
+  - Guarded workflow selection against direct factual queries and questions (`isDirectQuestion` matching `how do I...`, `which workflow...`, `what is...`, `explain...`), ensuring questions like "how do I run plan check?" or "Which workflow should I use for database changes?" do not force lifecycle workflows.
+  - Required non-hinted workflow score matching to satisfy `relevance.score >= 6 && relevance.matches.length >= 2`, preventing single generic words (e.g. `code` or `change`) from triggering unintended workflows on ambiguous requests (AC-03).
+  - Added `maintain` and `update` to `ACTION_TERMS`.
+  - Refined context-maintenance routing hint to require bidirectional context-factory or manifest targets (`context-factory ... update`, `update ... context-factory`, `maintain rules`, etc.), eliminating false triggers from queries containing "workflow" and "add".
+- Updated `generateWorkflowsMoc` in `app/cli/core/indexer.mjs`:
+  - Added `## Host-Native Workflow Discovery (Codex & Claude Code)` section documenting native invocation syntax (`/workflow-<slug>` for Claude Code, `/skills` or `$workflow-<slug>` for Codex) with links to canonical workflows and zero duplicated gate policy (AC-07).
+  - Re-labeled internal resolver aliases under `## Internal Resolver Aliases & Prompt Triggers`, clarifying that they are resolver input keywords and prompt triggers rather than registered host slash commands (AC-07).
+- Updated `README.md` to document Claude Code and Codex workflow discovery under Multi-Editor Bridging.
+- Added evaluation case `evals/cases/workflow-discovery.json` testing native `/workflow-feature-delivery` resolution to `workflows/feature-delivery.md` and verifying adapter exclusion from skills.
+- Added integration test suite `evals/tests/bridge/workflow-routing.test.mjs` verifying:
+  - Actionable feature, defect, and maintenance requests route to expected canonical workflows with transparent reasons.
+  - Direct questions and factual queries avoid forcing lifecycle workflows.
+  - Ambiguous requests avoid unjustified confident winners.
+  - Claude Code and Codex native host workflow commands route deterministically for all 12 canonical workflows.
+  - Legacy slash commands and bracket prefixes maintain full backward compatibility.
+  - Workflow entry adapter wrappers are never included in selected procedural skills.
+- Synchronized inventory, MOCs, manifest, and lockfile (`context-lock.json` digest: `sha256:77fa4d1e7d06a0370b7be47ae355afd9bb73a08785af650818a95f4733070f44`).
+
+### Verification
+
+- `node --test evals/tests/bridge/workflow-routing.test.mjs` → **PASS** (6/6 tests passed in 41ms).
+- `node --test evals/tests/bridge/workflow-routing.test.mjs evals/tests/bridge/workflow-entry-contract.test.mjs evals/tests/bridge/bridge-conformance.test.mjs` → **PASS** (29/29 tests passed in 796ms).
+- `npm test` → **PASS** (35/35 evaluations passed in 225ms).
+- `npm run lint` → **PASS** (41 rules, 30 skills, 12 workflows, 23 agent resources, 10 knowledge items, 21 evaluations, 532 Markdown files).
+- `node scripts/context.mjs doctor` → **PASS** (HEALTHY; 48/48 symlink & agent configs verified healthy; 35/35 evaluations passed).
+- `git diff --check` → **PASS** (zero whitespace or syntax issues).
+
+### Conformance Receipt
+
+- **Report:** `docs/execution/PLN-0009/unit-03-01-conformance-report.json`
+- **Report ID:** `report-binding-adhoc-00-00-d245fb5d616d-1791732799027`
+- **Binding Hash:** `sha256:d245fb5d616d91c7ae7746e6fc689da8c3379a8be273aef0ae5383cf123e3087`
+- **Diff Hash:** `sha256:7815b4ddfabf289d6c710495c974846bd8a6fd73091ecdd62a49cedf602ba95e`
+- **Human Evidence:** "Joseph reviewed Unit 03.01 resolver boundaries and host guidance: canonical workflow resolution, exclusion of workflow entry adapters from procedural skills, handling of direct questions and ambiguous requests, deterministic routing of Claude Code and Codex native workflow commands, and generated documentation distinguishing host entries from internal aliases."
+- **Verdict:** **PASS** (47/47 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0009/unit-03-01-conformance-report.json`.
 
 ---
 
