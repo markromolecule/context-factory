@@ -24,7 +24,7 @@ Released brief, ADR 0038, and current 12-entry manifest. Execute serially on `fe
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | --- | --- | --- | --- | --- | --- |
-| 01.01 | Canonical workflow adapter inventory | `unit-01-discovery-and-scenarios.md` | `feat/PLN-0009-codex-and-claude-workflow-discovery` | none | planned |
+| 01.01 | Canonical workflow adapter inventory | `unit-01-discovery-and-scenarios.md` | `feat/PLN-0009-codex-and-claude-workflow-discovery` | none | verified |
 
 ## Impacted Files & Components
 
@@ -32,7 +32,7 @@ skills/workflow-entries/ (new), .agents/skills/workflow-* (new), .claude/skills/
 
 ## Implementation Tasks
 
-- [ ] 01.01: Enumerate canonical workflows; create thin entries and links; add inventory/target checks and failing tests first.
+- [x] 01.01: Enumerate canonical workflows; create thin entries and links; add inventory/target checks and failing tests first.
 
 ## Verification & Testing
 

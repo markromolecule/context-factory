@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "kind": "execution-packet",
+  "owner": "plan-review",
+  "status": "approved",
+  "reviewReference": "PLN-0009-plan-review-2026-10-11",
+  "approvalReference": "user-approval-2026-10-11",
+  "taskBranch": "feat/PLN-0009-codex-and-claude-workflow-discovery",
+  "targetBranch": "master",
+  "baseCommit": "fa8f5db00cb0d113589190ed15d6752ab3612831",
+  "source": {
+    "path": "docs/tasks/2026/10/2026-10-11/feat-PLN-0009-codex-and-claude-workflow-discovery/README.md",
+    "sha256": "sha256:07440a897c7f0aab8a017aeb133c03ef7c41ef3d549722849d6c5dac7c777ddb"
+  }
+}

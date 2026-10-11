@@ -102,7 +102,19 @@
     "skills/productivity/plan-review/SKILL.md",
     "skills/productivity/plan/SKILL.md",
     "skills/productivity/session/SKILL.md",
-    "skills/productivity/triage/SKILL.md"
+    "skills/productivity/triage/SKILL.md",
+    "skills/workflow-entries/workflow-architecture-change/SKILL.md",
+    "skills/workflow-entries/workflow-code-review-and-optimization/SKILL.md",
+    "skills/workflow-entries/workflow-commit-push-release/SKILL.md",
+    "skills/workflow-entries/workflow-context-maintenance/SKILL.md",
+    "skills/workflow-entries/workflow-database-migration/SKILL.md",
+    "skills/workflow-entries/workflow-defect-resolution/SKILL.md",
+    "skills/workflow-entries/workflow-dependency-upgrade/SKILL.md",
+    "skills/workflow-entries/workflow-docs/SKILL.md",
+    "skills/workflow-entries/workflow-feature-delivery/SKILL.md",
+    "skills/workflow-entries/workflow-new-project-delivery/SKILL.md",
+    "skills/workflow-entries/workflow-release-readiness/SKILL.md",
+    "skills/workflow-entries/workflow-security-sensitive-change/SKILL.md"
   ],
   "skillResources": [
     "skills/engineering/execute/agents/openai.yaml",
@@ -206,6 +218,7 @@
   "tools": [
     "evals/run-evals.mjs",
     "evals/tests/bridge/bridge-conformance.test.mjs",
+    "evals/tests/bridge/workflow-entry-contract.test.mjs",
     "evals/tests/cli/github-gate.test.mjs",
     "evals/tests/cli/help-output.test.mjs",
     "evals/tests/cli/hook-safety.test.mjs",

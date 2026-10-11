@@ -100,10 +100,12 @@ export async function generateSkillsMoc(actualSkills) {
 
   const engineeringSkills = skillItems.filter((item) => item.path.startsWith("skills/engineering/"));
   const productivitySkills = skillItems.filter((item) => item.path.startsWith("skills/productivity/"));
-  const otherSkills = skillItems.filter((item) => !item.path.startsWith("skills/engineering/") && !item.path.startsWith("skills/productivity/"));
+  const workflowEntrySkills = skillItems.filter((item) => item.path.startsWith("skills/workflow-entries/"));
+  const otherSkills = skillItems.filter((item) => !item.path.startsWith("skills/engineering/") && !item.path.startsWith("skills/productivity/") && !item.path.startsWith("skills/workflow-entries/"));
 
   const engRows = engineeringSkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
   const prodRows = productivitySkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
+  const wfRows = workflowEntrySkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
   const otherRows = otherSkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
 
   let content = `---
@@ -114,7 +116,7 @@ tags: [skills, workflows, tools]
 
 # Skills
 
-The Context Factory defines ${skillItems.length} focused procedural skills across two primary categories for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
+The Context Factory defines ${engineeringSkills.length + productivitySkills.length} focused procedural skills across two primary categories for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
 
 ## Engineering & Coding
 *Group Index:* [[skills/engineering/README|Engineering Skills Overview]]
@@ -125,6 +127,10 @@ ${engRows.join("\n")}
 *Group Index:* [[skills/productivity/README|Productivity Skills Overview]]
 
 ${prodRows.join("\n")}`;
+
+  if (wfRows.length > 0) {
+    content += `\n\n## Canonical Workflow Entries\n*Group Index:* Thin host-native entries delegating to canonical workflows ([[docs/Workflows|Workflows Overview]])\n\n${wfRows.join("\n")}`;
+  }
 
   if (otherRows.length > 0) {
     content += `\n\n## Other Skills\n\n${otherRows.join("\n")}`;

@@ -5,7 +5,7 @@ parent: "phase-01-adapter-contract"
 unit: "01.01"
 task_branch: "feat/PLN-0009-codex-and-claude-workflow-discovery"
 base_commit: "fa8f5db00cb0d113589190ed15d6752ab3612831"
-status: planned
+status: verified
 created: "2026-10-11"
 tags: [task, unit, contract]
 depends_on: []
@@ -62,7 +62,7 @@ Revert this unit's source, manifest, validator, and generated map/lock commit; r
 
 ## Definition of done
 
-- [ ] AC-01 and AC-07 contract checks pass.
-- [ ] Exact task branch, scoped diff, and review confirmed.
-- [ ] Factory inventory and lock synchronized; doctor passed.
-- [ ] Fresh unit conformance PASS receipt verified and change committed.
+- [x] AC-01 and AC-07 contract checks pass.
+- [x] Exact task branch, scoped diff, and review confirmed.
+- [x] Factory inventory and lock synchronized; doctor passed.
+- [x] Fresh unit conformance PASS receipt verified and change committed.

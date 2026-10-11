@@ -12,6 +12,164 @@ import {
   root,
 } from "./context-core.mjs";
 
+
+export async function validateWorkflowEntries({ root: targetRoot = root, manifest: targetManifest = null } = {}) {
+  const entryErrors = [];
+  const currentManifest = targetManifest || (await readJson("context-manifest.json", targetRoot));
+  const workflows = currentManifest.workflows ?? [];
+
+  const existingProceduralSkillNames = new Set(
+    (currentManifest.skills ?? [])
+      .filter((s) => !s.startsWith("skills/workflow-entries/"))
+      .map((s) => s.split("/").at(-2))
+  );
+
+  const expectedEntries = new Map();
+  for (const wfPath of workflows) {
+    const slug = wfPath.split("/").at(-1).replace(/\.md$/, "");
+    const adapterName = `workflow-${slug}`;
+    expectedEntries.set(adapterName, {
+      wfPath,
+      slug,
+      adapterName,
+      sourceDir: `skills/workflow-entries/${adapterName}`,
+      sourceFile: `skills/workflow-entries/${adapterName}/SKILL.md`,
+      codexLink: `.agents/skills/${adapterName}`,
+      claudeLink: `.claude/skills/${adapterName}`,
+    });
+  }
+
+  // 1. Collision check
+  for (const [adapterName] of expectedEntries) {
+    if (existingProceduralSkillNames.has(adapterName)) {
+      entryErrors.push(`Workflow entry name '${adapterName}' collides with an existing procedural skill`);
+    }
+  }
+
+  // 2. Validate all expected entries
+  for (const [adapterName, entry] of expectedEntries) {
+    try {
+      const sourceContent = await readText(entry.sourceFile, targetRoot);
+      const meta = frontmatter(sourceContent);
+      if (!meta) {
+        entryErrors.push(`Workflow entry has no YAML frontmatter: ${entry.sourceFile}`);
+      } else {
+        const keys = Object.keys(meta).sort();
+        if (keys.join(",") !== "description,name") {
+          entryErrors.push(`Workflow entry frontmatter must contain only name and description: ${entry.sourceFile}`);
+        }
+        if (meta.name !== adapterName) {
+          entryErrors.push(`Workflow entry name (${meta.name}) does not match expected (${adapterName}): ${entry.sourceFile}`);
+        }
+        if (!meta.description) {
+          entryErrors.push(`Workflow entry description is missing: ${entry.sourceFile}`);
+        }
+      }
+
+      if (!sourceContent.includes(entry.wfPath)) {
+        entryErrors.push(`Workflow entry ${entry.sourceFile} does not reference canonical workflow path ${entry.wfPath}`);
+      }
+      if (!/read.*canonical/i.test(sourceContent)) {
+        entryErrors.push(`Workflow entry ${entry.sourceFile} does not instruct host to read canonical workflow`);
+      }
+      if (!/node scripts\/context\.mjs resolve/i.test(sourceContent)) {
+        entryErrors.push(`Workflow entry ${entry.sourceFile} does not delegate request to resolver`);
+      }
+      if (!/gates|stop|defer|authority|shared contract/i.test(sourceContent)) {
+        entryErrors.push(`Workflow entry ${entry.sourceFile} does not defer gates/authorization to shared contract`);
+      }
+
+      const forbiddenPolicyHeadings = [
+        "## Phases",
+        "## Quality gates",
+        "## Stop and escalation conditions",
+        "## Required inputs",
+        "## Applicable rules and skills",
+        "## Artifacts and completion",
+      ];
+      for (const heading of forbiddenPolicyHeadings) {
+        if (sourceContent.includes(heading)) {
+          entryErrors.push(`Workflow entry ${entry.sourceFile} contains forbidden copied policy heading: ${heading}`);
+        }
+      }
+    } catch {
+      entryErrors.push(`Missing workflow entry adapter file: ${entry.sourceFile} for workflow ${entry.wfPath}`);
+    }
+
+    // Check Codex symlink
+    const codexPath = resolve(targetRoot, entry.codexLink);
+    try {
+      const stat = await lstat(codexPath);
+      if (!stat.isSymbolicLink()) {
+        entryErrors.push(`Codex workflow entry must be a symbolic link: ${entry.codexLink}`);
+      } else {
+        const rawTarget = await readlink(codexPath);
+        const resolvedTarget = resolve(resolve(targetRoot, ".agents/skills"), rawTarget);
+        try {
+          await lstat(resolvedTarget);
+        } catch {
+          entryErrors.push(`Dangling Codex symlink: ${entry.codexLink} -> ${rawTarget}`);
+        }
+      }
+    } catch {
+      entryErrors.push(`Missing Codex workflow entry link: ${entry.codexLink}`);
+    }
+
+    // Check Claude Code symlink
+    const claudePath = resolve(targetRoot, entry.claudeLink);
+    try {
+      const stat = await lstat(claudePath);
+      if (!stat.isSymbolicLink()) {
+        entryErrors.push(`Claude Code workflow entry must be a symbolic link: ${entry.claudeLink}`);
+      } else {
+        const rawTarget = await readlink(claudePath);
+        const resolvedTarget = resolve(resolve(targetRoot, ".claude/skills"), rawTarget);
+        try {
+          await lstat(resolvedTarget);
+        } catch {
+          entryErrors.push(`Dangling Claude Code symlink: ${entry.claudeLink} -> ${rawTarget}`);
+        }
+      }
+    } catch {
+      entryErrors.push(`Missing Claude Code workflow entry link: ${entry.claudeLink}`);
+    }
+  }
+
+  // 3. Stale or unmapped entries check
+  try {
+    const entriesDir = resolve(targetRoot, "skills/workflow-entries");
+    const diskDirs = await readdir(entriesDir);
+    for (const d of diskDirs) {
+      if (!expectedEntries.has(d)) {
+        entryErrors.push(`Stale or unmapped workflow entry directory on disk: skills/workflow-entries/${d}`);
+      }
+    }
+  } catch {}
+
+  try {
+    const agentsDir = resolve(targetRoot, ".agents/skills");
+    const diskLinks = await readdir(agentsDir);
+    for (const l of diskLinks) {
+      if (l.startsWith("workflow-") && !expectedEntries.has(l)) {
+        entryErrors.push(`Stale or unmapped workflow entry link in .agents/skills: ${l}`);
+      }
+    }
+  } catch {}
+
+  try {
+    const claudeDir = resolve(targetRoot, ".claude/skills");
+    const diskLinks = await readdir(claudeDir);
+    for (const l of diskLinks) {
+      if (l.startsWith("workflow-") && !expectedEntries.has(l)) {
+        entryErrors.push(`Stale or unmapped workflow entry link in .claude/skills: ${l}`);
+      }
+    }
+  } catch {}
+
+  return entryErrors;
+}
+
+export async function validateContext() {
 const errors = [];
 const manifest = await readJson("context-manifest.json");
 const diskFiles = await filesUnder(".");
@@ -561,6 +719,22 @@ try {
   error("Missing required .agents/skills directory");
 }
 
+// Validate .claude/skills directory
+try {
+  const claudeDirStat = await lstat(resolve(root, ".claude/skills"));
+  if (!claudeDirStat.isDirectory()) {
+    error(".claude/skills must be a directory containing per-skill symlinks");
+  }
+} catch {
+  error("Missing required .claude/skills directory");
+}
+
+// Validate workflow entries contract
+const workflowEntryErrors = await validateWorkflowEntries({ root, manifest });
+for (const msg of workflowEntryErrors) {
+  error(msg);
+}
+
 try {
   const actualLock = await readJson("context-lock.json");
   const expectedLock = await createLock(manifest);
@@ -583,3 +757,8 @@ console.log(
   + `${manifest.workflows.length} workflows, ${(manifest.agents ?? []).length} agent resources, ${manifest.knowledge.length} knowledge items, `
   + `${manifest.evaluations.length} evaluations, ${allMarkdown.length} Markdown files.`,
 );
+}
+
+if (process.argv[1]?.endsWith("validate-context.mjs")) {
+  await validateContext();
+}

@@ -34,6 +34,22 @@ The Context Factory defines 18 focused procedural skills across two primary cate
 - [[skills/productivity/session/SKILL|session]] — Capture, persist, inspect, and resume active agent task execution state across clean session boundaries to prevent context saturation degradation (/session, /session-save, /session-resume, [SESSION]).
 - [[skills/productivity/triage/SKILL|triage]] — Scan recent repository activity, CI failures, issues, and anomalies using explore and grounding procedures to produce structured findings in docs/tasks/INBOX.md (/triage, [TRIAGE]).
 
+## Canonical Workflow Entries
+*Group Index:* Thin host-native entries delegating to canonical workflows ([[docs/Workflows|Workflows Overview]])
+
+- [[skills/workflow-entries/workflow-architecture-change/SKILL|workflow-architecture-change]] — Change durable system boundaries, dependency direction, shared patterns, or public contracts with explicit evidence, decisions, migration, and conformance checks.
+- [[skills/workflow-entries/workflow-code-review-and-optimization/SKILL|workflow-code-review-and-optimization]] — Audit, suggest improvements for, and optimize code generated from implementation plans to ensure high performance, type safety, modularity, and clean architecture.
+- [[skills/workflow-entries/workflow-commit-push-release/SKILL|workflow-commit-push-release]] — Safely stage, craft conventional commits, push to remote repository, tag releases, and execute release verification.
+- [[skills/workflow-entries/workflow-context-maintenance/SKILL|workflow-context-maintenance]] — Evolve Context Factory rules, skills, workflows, orchestration, and architecture without duplication, drift, or invalid inventory.
+- [[skills/workflow-entries/workflow-database-migration/SKILL|workflow-database-migration]] — Evolve schemas and production data through compatible, reviewed, observable, and recoverable migration phases.
+- [[skills/workflow-entries/workflow-defect-resolution/SKILL|workflow-defect-resolution]] — Resolve a defect by reproducing it, establishing root cause, adding regression evidence, and applying the smallest safe fix.
+- [[skills/workflow-entries/workflow-dependency-upgrade/SKILL|workflow-dependency-upgrade]] — Upgrade runtimes, frameworks, libraries, and tooling through bounded compatibility analysis and verified migration steps.
+- [[skills/workflow-entries/workflow-docs/SKILL|workflow-docs]] — Synthesize evidence-backed development and system reports, performance mitigation summaries, architectural digests, post-mortems, and technical documentation with tables and conclusions.
+- [[skills/workflow-entries/workflow-feature-delivery/SKILL|workflow-feature-delivery]] — Deliver a product capability from scoped outcome through implementation, verification, documentation, and handoff.
+- [[skills/workflow-entries/workflow-new-project-delivery/SKILL|workflow-new-project-delivery]] — Deliver a greenfield system or major multi-module domain capability using progressive vertical-slice execution, pre-planning grilling discovery, 4-layer backend testing, client hook validation, and dual-loop engineering.
+- [[skills/workflow-entries/workflow-release-readiness/SKILL|workflow-release-readiness]] — Decide whether a change set is ready to release using evidence across behavior, quality, operations, security, accessibility, and recovery.
+- [[skills/workflow-entries/workflow-security-sensitive-change/SKILL|workflow-security-sensitive-change]] — Deliver changes across trust boundaries with explicit threat modeling, security gates, adversarial verification, and safe release controls.
+
 Skills trigger through their YAML descriptions and slash command shortcuts. All declarative engineering standards (TypeScript type safety, runtime validation, database query optimization, backend module architecture, and UI styling) are defined in and loaded from `rules/`.
 
 For a new system, product, or feature capability, the skill sequence is `context` / `grill` → `explore` → `plan` → approval → `execute` → `refactor` (optional). Repository discovery may run inside context authoring and grilling to answer evidence-discoverable questions.
