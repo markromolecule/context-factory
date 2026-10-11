@@ -5,7 +5,7 @@ parent: "phase-04-verification-and-release"
 unit: "04.01"
 task_branch: "feat/PLN-0009-codex-and-claude-workflow-discovery"
 base_commit: "fa8f5db00cb0d113589190ed15d6752ab3612831"
-status: planned
+status: verified
 created: "2026-10-11"
 tags: [task, unit, verification]
 depends_on: ["02.01", "03.01"]
@@ -64,8 +64,8 @@ Revert the task branch's owned adapter, bridge, resolver, and generated catalog 
 
 ## Definition of done
 
-- [ ] AC-01–08 have exact unit test or live host evidence, with factory and host results separated.
-- [ ] Manifest/maps/lock, lint, evaluations, doctor, and whole-diff review pass.
-- [ ] Separate Codex and Claude smoke evidence proves discovery, canonical load, and stop condition.
-- [ ] Fresh whole-diff conformance PASS receipt verified; finalization ledger updated.
-- [ ] Task branch remains unmerged and unpushed pending separate authorization.
+- [x] AC-01–08 have exact unit test or live host evidence, with factory and host results separated.
+- [x] Manifest/maps/lock, lint, evaluations, doctor, and whole-diff review pass.
+- [x] Separate Codex and Claude smoke evidence proves discovery, canonical load, and stop condition.
+- [x] Fresh whole-diff conformance PASS receipt verified; finalization ledger updated.
+- [x] Task branch remains unmerged and unpushed pending separate authorization.

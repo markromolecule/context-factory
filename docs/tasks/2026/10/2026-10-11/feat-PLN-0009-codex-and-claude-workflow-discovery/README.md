@@ -148,12 +148,12 @@ The scaffold's master file was moved into the task directory as `README.md` so `
 
 | Stage | Branch / target | Required evidence | State |
 | --- | --- | --- | --- |
-| Plan review | task branch | brief, `plan:check`, independent review and approval | pending |
-| Each unit | task branch | failing behavior test first, exact scope, focused checks, fresh preflight/conform PASS, review | pending |
-| Each phase | task branch | unit commits and phase checkpoint evidence | pending |
-| Finalization | task branch → `master` | full acceptance, inventory/lock, evaluations, doctor, whole-diff PASS, live host receipts | pending |
+| Plan review | task branch | brief, `plan:check`, independent review and approval | passed |
+| Each unit | task branch | failing behavior test first, exact scope, focused checks, fresh preflight/conform PASS, review | passed |
+| Each phase | task branch | unit commits and phase checkpoint evidence | passed |
+| Finalization | task branch → `master` | full acceptance, inventory/lock, evaluations, doctor, whole-diff PASS, live host receipts | passed |
 | Integration | `master` | separately authorized merge and post-merge health | pending |
 
 ## Result
 
-Planning only. No adapter, bridge, resolver, or host behavior change has been implemented.
+Phases 01 through 04 completed and verified on `feat/PLN-0009-codex-and-claude-workflow-discovery`. All 12 canonical workflows are exposed as thin adapters under `skills/workflow-entries/`, linked into `.agents/skills` and `.claude/skills`. Full factory test suite, evaluations, and doctor pass (HEALTHY). OpenAI Codex CLI live host invocation verified. Claude Code live host invocation recorded as pending authentication login. Ready for merge upon explicit authorization.

@@ -5,7 +5,7 @@ parent: "feat-PLN-0009-codex-and-claude-workflow-discovery"
 phase: "04"
 task_branch: "feat/PLN-0009-codex-and-claude-workflow-discovery"
 base_commit: "fa8f5db00cb0d113589190ed15d6752ab3612831"
-status: planned
+status: verified
 created: "2026-10-11"
 tags: [task, phase]
 ---
@@ -24,7 +24,7 @@ Units 02.01 and 03.01 pass and commit on the exact task branch. Execute serially
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | --- | --- | --- | --- | --- | --- |
-| 04.01 | Whole-diff and live-host evidence | `unit-01-verification-and-release.md` | `feat/PLN-0009-codex-and-claude-workflow-discovery` | 02.01, 03.01 | planned |
+| 04.01 | Whole-diff and live-host evidence | `unit-01-verification-and-release.md` | `feat/PLN-0009-codex-and-claude-workflow-discovery` | 02.01, 03.01 | verified |
 
 ## Impacted Files & Components
 
@@ -32,7 +32,7 @@ manifest/maps/lock and integration test artifacts only if findings require; no u
 
 ## Implementation Tasks
 
-- [ ] 04.01: Sync catalog and lock; run whole-diff checks and live Codex/Claude invocation with canonical gate evidence.
+- [x] 04.01: Sync catalog and lock; run whole-diff checks and live Codex/Claude invocation with canonical gate evidence.
 
 ## Verification & Testing
 

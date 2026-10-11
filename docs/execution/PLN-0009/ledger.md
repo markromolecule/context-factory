@@ -1,12 +1,12 @@
 # Execution Ledger: PLN-0009 (Codex and Claude Workflow Discovery)
 
-> **Task ID:** PLN-0009  
-> **Target Branch:** `master`  
-> **Task Branch:** `feat/PLN-0009-codex-and-claude-workflow-discovery`  
-> **Baseline Commit:** `fa8f5db00cb0d113589190ed15d6752ab3612831`  
-> **Execution Packet:** `docs/execution/PLN-0009/packet.json` (plan source SHA-256: `sha256:07440a897c7f0aab8a017aeb133c03ef7c41ef3d549722849d6c5dac7c777ddb`)  
-> **Review Reference:** `PLN-0009-plan-review-2026-10-11`  
-> **Approval Reference:** `user-approval-2026-10-11`  
+> **Task ID:** PLN-0009
+> **Target Branch:** `master`
+> **Task Branch:** `feat/PLN-0009-codex-and-claude-workflow-discovery`
+> **Baseline Commit:** `fa8f5db00cb0d113589190ed15d6752ab3612831`
+> **Execution Packet:** `docs/execution/PLN-0009/packet.json` (plan source SHA-256: `sha256:07440a897c7f0aab8a017aeb133c03ef7c41ef3d549722849d6c5dac7c777ddb`)
+> **Review Reference:** `PLN-0009-plan-review-2026-10-11`
+> **Approval Reference:** `user-approval-2026-10-11`
 
 ## Execution Progress
 
@@ -15,7 +15,7 @@
 | **01** | Canonical workflow adapter inventory | 01.01 | VERIFIED |
 | **02** | Ownership-aware host bridge and repair | 02.01 | VERIFIED |
 | **03** | Resolver boundaries and host guidance | 03.01 | VERIFIED |
-| **04** | Whole-diff and live-host evidence | 04.01 | PENDING |
+| **04** | Whole-diff and live-host evidence | 04.01 | VERIFIED |
 
 ---
 
@@ -159,4 +159,44 @@
 
 ---
 
+## Unit 04.01: Whole-Diff and Live-Host Evidence
 
+### Changes & Reconciliations
+
+- Verified 1-to-1 manifest mapping for all 12 canonical workflows to thin adapter sources under `skills/workflow-entries/workflow-<slug>/SKILL.md`.
+- Verified host discovery symlinks:
+  - 12 workflow entry symlinks + 18 procedural skill symlinks = 30 total skills in `.agents/skills` (Codex discovery root).
+  - 12 workflow entry symlinks in `.claude/skills` (Claude Code discovery root).
+  - Measured entry names: length 13–38 characters (shortest: `workflow-docs`, longest: `workflow-code-review-and-optimization`), zero truncation or naming collisions observed.
+- Validated whole-diff factory health and diagnostics:
+  - `node --test evals/tests/bridge/workflow-entry-contract.test.mjs evals/tests/bridge/bridge-conformance.test.mjs evals/tests/bridge/workflow-routing.test.mjs` (29/29 tests passed).
+  - `npm run sync`, `npm run lock`, and `npm run lint` passed with 317 canonical pinned paths, 30 skills, 12 workflows.
+  - `node evals/run-evals.mjs` (35/35 evaluations passed).
+  - `node scripts/context.mjs doctor` passed with HEALTHY status (48/48 symlink & agent configs verified healthy).
+- Live Host Smoke Evidence (evaluated separately from factory health per ADR 0038 and S-06):
+  - **OpenAI Codex CLI (`0.144.3`):** **PASS**.
+    - Executed non-interactive session via `codex exec -m gpt-reserve -s read-only --ephemeral` in workspace root.
+    - Verified discovery of all 12 `workflow-*` entries from `.agents/skills/`.
+    - Tested bounded invocation on `$workflow-docs`: Codex loaded `skills/workflow-entries/workflow-docs/SKILL.md`, identified canonical lifecycle file `workflows/docs.md`, extracted required inputs (topic/area, audience, historical evidence), confirmed `node scripts/context.mjs resolve` intake instruction, quoted the exact stop condition ("stop and ask for clarification if the target system, timeframe, or baseline benchmark is missing or completely ambiguous"), and confirmed the authority boundary ("selecting it does not grant autonomous execution, merge, release, or waiver authority").
+  - **Claude Code CLI (`2.1.112`):** **BLOCKED / PENDING AUTHENTICATION**.
+    - Inspected binary at `/Users/joseph/.local/bin/claude` (`2.1.112 (Claude Code)`).
+    - Executed invocation attempt via `claude -p "ping test only" --permission-mode dontAsk`.
+    - Failed with message: `Not logged in · Please run /login` (exit code 1).
+    - Per ADR 0038 and Unit 04.01 Step 5, recorded Claude Code live host invocation as pending user/device login rather than simulating host UI or conflating factory symlink health with live host behavior.
+
+### Verification
+
+- `node --test evals/tests/bridge/workflow-entry-contract.test.mjs evals/tests/bridge/bridge-conformance.test.mjs evals/tests/bridge/workflow-routing.test.mjs` → **PASS** (29/29 tests passed in 825ms).
+- `npm run sync && npm run lock && npm run lint` → **PASS** (sync, lockfile, and lint verified).
+- `node evals/run-evals.mjs` → **PASS** (35/35 evaluations passed in 212ms).
+- `node scripts/context.mjs doctor` → **PASS** (HEALTHY; 48/48 symlink & agent configs verified healthy; 35/35 evaluations passed).
+- `git diff --check fa8f5db00cb0d113589190ed15d6752ab3612831` → **PASS** (zero whitespace or syntax issues).
+
+### Conformance Receipt
+
+- **Report:** `docs/execution/PLN-0009/unit-04-01-conformance-report.json`
+- **Report ID:** `report-binding-adhoc-00-00-4d4498fc606e-1791733334761`
+- **Binding Hash:** `sha256:4d4498fc606e60331e50f57b85d410bace7583b3ec8a8534813de2cc3bd538cf`
+- **Diff Hash:** `sha256:48d397d091f9b44a472b011c51af5d7393dae27a01f2d082e8216b1485aef678`
+- **Human Evidence:** "Joseph reviewed Unit 04.01 whole-diff and live-host evidence: verified 12 thin workflow adapters, Codex and Claude discovery symlinks, collision-safe bridge generator, narrowed Antigravity detection, resolver question and ambiguous request guards, exclusion of adapters from procedural skills, regenerated catalog and lockfile, 29 passing bridge tests, clean doctor receipt (48/48 symlinks healthy, 35/35 evaluations passed), real Codex CLI live host invocation proving canonical workflow load and stop condition, and recorded Claude Code CLI login prerequisite as blocked/device-pending."
+- **Verdict:** **PASS** (47/47 directives). Receipt independently verified via `node app/cli/bin/context-cli.mjs conform verify docs/execution/PLN-0009/unit-04-01-conformance-report.json`.
