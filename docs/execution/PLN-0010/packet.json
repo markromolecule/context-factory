@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "kind": "execution-packet",
+  "owner": "plan-review",
+  "status": "approved",
+  "reviewReference": "PLN-0010-plan-review-2026-10-16",
+  "approvalReference": "user-slash-command-2026-10-16",
+  "taskBranch": "refactor/PLN-0010-clean-and-rebuild-typescript-factory",
+  "targetBranch": "feat/PLN-0009-codex-and-claude-workflow-discovery",
+  "baseCommit": "a37f557a2fde8e30b6ae23a941d74d8e87a5677f",
+  "source": {
+    "path": "docs/tasks/2026/10/2026-10-16/refactor-PLN-0010-clean-and-rebuild-typescript-factory/README.md",
+    "sha256": "sha256:34a25bd5a05e3f44320e58fb0a92d8395dd9a61ea41c35ef38f824620f6f442e"
+  }
+}
