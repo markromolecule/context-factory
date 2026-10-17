@@ -1,5 +1,5 @@
 ---
-id: factory.principles.solid.dip
+id: factory.principles.dependency-inversion
 title: Dependency Inversion Principle
 type: concept
 status: active
@@ -7,9 +7,9 @@ scope: [software-architecture, context-factory, clean-code]
 owner: context-factory
 authority: canonical
 created: 2026-08-23
-lastVerified: 2026-08-23
-reviewAfter: 2027-02-23
-appliesTo: [rules/solid/dependency-inversion.md, skills/refactor/**, skills/plan/**]
+lastVerified: 2026-10-17
+reviewAfter: 2027-04-17
+appliesTo: [rules/global/architecture-conformance.md, rules/global/code-quality.md, rules/typescript/backend/module-architecture.md, rules/typescript/backend/service-layer.md, skills/engineering/refactor/**, skills/productivity/plan/**]
 supersedes: []
 sources: [docs/Wiki.md, schemas/knowledge.schema.json]
 tags: [solid, dip, dependency-inversion, architecture, principles]
@@ -60,7 +60,8 @@ graph TD
 
 ## Cross-References
 
-- Rule Enforcement: [[rules/solid/dependency-inversion|Dependency Inversion Rule]]
+- Rule Enforcement: [[rules/global/architecture-conformance|Architecture Conformance Rule]]
+- Code Quality: [[rules/global/code-quality|Code Quality Rule]]
 - Pragmatic Design: [[rules/typescript/common/pragmatic-design|Pragmatic Design Rule]]
 - Module Architecture: [[rules/typescript/backend/module-architecture|Backend Module Architecture]]
 - Service Layer: [[rules/typescript/backend/service-layer|Service Layer]]

@@ -9,11 +9,6 @@ rules:
   - rules/global/architecture-conformance.md
   - rules/global/code-quality.md
   - rules/global/1-3-1-rule.md
-  - rules/solid/single-responsibility.md
-  - rules/solid/open-closed.md
-  - rules/solid/liskov-substitution.md
-  - rules/solid/interface-segregation.md
-  - rules/solid/dependency-inversion.md
 skills:
   - adr
   - explore

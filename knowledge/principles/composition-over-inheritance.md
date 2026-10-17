@@ -9,7 +9,7 @@ authority: canonical
 created: 2026-10-10
 lastVerified: 2026-10-10
 reviewAfter: 2027-04-10
-appliesTo: [rules/typescript/common/pragmatic-design.md, rules/solid/open-closed.md]
+appliesTo: [rules/typescript/common/pragmatic-design.md]
 supersedes: []
 sources: [docs/Wiki.md, schemas/knowledge.schema.json, docs/discovery/pragmatic-design-principles-and-rule-alignment/brief.md]
 tags: [composition, inheritance, principles, architecture, typescript, clean-code]
@@ -107,5 +107,5 @@ export async function updateUserEmail(
 ## Cross-References
 
 - Rules Index: [[docs/Rules|Rules Index]]
-- Open/Closed Principle: [[knowledge/principles/solid-ocp|Open/Closed Principle]]
+- Open/Closed Principle: [[knowledge/principles/open-closed|Open/Closed Principle]]
 - Companion Concept: [[knowledge/principles/law-of-demeter-tell-dont-ask|Law of Demeter & Tell, Don't Ask]]

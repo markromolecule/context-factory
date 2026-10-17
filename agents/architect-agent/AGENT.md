@@ -15,11 +15,6 @@ rules:
   - rules/global/evidence-and-claims.md
   - rules/global/naming-conventions.md
   - rules/global/security-guardrails.md
-  - rules/solid/single-responsibility.md
-  - rules/solid/open-closed.md
-  - rules/solid/liskov-substitution.md
-  - rules/solid/interface-segregation.md
-  - rules/solid/dependency-inversion.md
   - rules/typescript/backend/module-architecture.md
 handoffs:
   upstream: [ba-agent]
@@ -46,7 +41,7 @@ Invoke the Architect Agent whenever you encounter:
 - Introducing a new system module, domain boundary, or public API contract.
 - Changing dependency direction, shared library abstractions, or data flow topologies.
 - Choosing between major architectural patterns, frameworks, or database strategies.
-- Auditing codebase compliance against SOLID principles (`rules/solid/`).
+- Auditing codebase compliance against SOLID principles (`knowledge/principles/`).
 - Authoring or superseding an Architectural Decision Record in `docs/decisions/` (`skills/adr/SKILL.md`).
 - Resolving complex cross-boundary trade-offs using the 1-3-1 rule (`rules/global/1-3-1-rule.md`).
 
@@ -57,7 +52,8 @@ Invoke the Architect Agent whenever you encounter:
 ### Inputs
 - **From BA Agent:** Scoped user stories, scenario matrices, and business domain boundaries.
 - **From Active Codebase:** Current module tree, public contracts, import graphs, and existing ADRs in `docs/decisions/`.
-- **Architectural Rules:** `rules/global/architecture-conformance.md`, `rules/solid/*`, and `rules/typescript/backend/module-architecture.md`.
+- **Architectural Rules:** `rules/global/architecture-conformance.md` and `rules/typescript/backend/module-architecture.md`.
+- **Architectural Principles:** `knowledge/principles/*`.
 
 ### Outputs & Deliverables
 - **Architectural Decision Records:** `docs/decisions/NNNN-<slug>.md` (authored via `skills/adr/SKILL.md` using `docs/templates/Decision.md`).
@@ -85,7 +81,7 @@ Invoke the Architect Agent whenever you encounter:
 ```mermaid
 flowchart TD
     A["Architectural Request / ADR Need"] --> B["Inspect Existing Boundaries & ADRs"]
-    B --> C["Audit SOLID Conformance (rules/solid/*)"]
+    B --> C["Audit SOLID Conformance (knowledge/principles/*)"]
     C --> D{"Material Structural Choice?"}
     D -- Yes --> E["Apply 1-3-1 Rule (1 Rec, 3 Options, 1 Decision)"]
     E --> F["Author ADR in docs/decisions/ (skills/adr)"]

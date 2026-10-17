@@ -1,5 +1,5 @@
 ---
-id: factory.principles.solid.ocp
+id: factory.principles.open-closed
 title: Open/Closed Principle
 type: concept
 status: active
@@ -7,9 +7,9 @@ scope: [software-architecture, context-factory, clean-code]
 owner: context-factory
 authority: canonical
 created: 2026-08-23
-lastVerified: 2026-08-23
-reviewAfter: 2027-02-23
-appliesTo: [rules/solid/open-closed.md, skills/refactor/**, skills/plan/**]
+lastVerified: 2026-10-17
+reviewAfter: 2027-04-17
+appliesTo: [rules/global/architecture-conformance.md, rules/global/code-quality.md, rules/typescript/common/pragmatic-design.md, skills/engineering/refactor/**, skills/productivity/plan/**]
 supersedes: []
 sources: [docs/Wiki.md, schemas/knowledge.schema.json]
 tags: [solid, ocp, open-closed, architecture, principles]
@@ -47,7 +47,7 @@ Rather than heavy classical OOP inheritance hierarchies, modern TypeScript and R
 
 ## Cross-References
 
-- Rule Enforcement: [[rules/solid/open-closed|Open/Closed Rule]]
+- Rule Enforcement: [[rules/global/architecture-conformance|Architecture Conformance Rule]]
+- Code Quality: [[rules/global/code-quality|Code Quality Rule]]
 - Pragmatic Design: [[rules/typescript/common/pragmatic-design|Pragmatic Design Rule]]
 - Composition over Inheritance: [[knowledge/principles/composition-over-inheritance|Composition over Inheritance]]
-- Architectural Conformance: [[rules/global/architecture-conformance|Architecture Conformance]]

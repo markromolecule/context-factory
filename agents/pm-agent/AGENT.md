@@ -15,11 +15,6 @@ rules:
   - rules/global/evidence-and-claims.md
   - rules/global/naming-conventions.md
   - rules/global/security-guardrails.md
-  - rules/solid/single-responsibility.md
-  - rules/solid/open-closed.md
-  - rules/solid/liskov-substitution.md
-  - rules/solid/interface-segregation.md
-  - rules/solid/dependency-inversion.md
 handoffs:
   upstream: [ba-agent, architect-agent, data-agent, ux-agent]
   downstream: [devops-agent]

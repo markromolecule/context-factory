@@ -16,14 +16,6 @@ tags: [rules, engineering]
 - [[rules/global/naming-conventions|Naming Conventions]]
 - [[rules/global/security-guardrails|Security Guardrails]]
 
-## SOLID Architecture
-
-- [[rules/solid/dependency-inversion|Dependency Inversion Principle (DIP)]]
-- [[rules/solid/interface-segregation|Interface Segregation Principle (ISP)]]
-- [[rules/solid/liskov-substitution|Liskov Substitution Principle (LSP)]]
-- [[rules/solid/open-closed|Open/Closed Principle (OCP)]]
-- [[rules/solid/single-responsibility|Single Responsibility Principle (SRP)]]
-
 ## TypeScript
 
 ### Common

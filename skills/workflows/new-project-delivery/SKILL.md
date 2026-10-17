@@ -9,7 +9,6 @@ rules:
   - rules/global/evidence-and-claims.md
   - rules/global/architecture-conformance.md
   - rules/global/1-3-1-rule.md
-  - rules/solid/single-responsibility.md
 skills:
   - grill
   - context

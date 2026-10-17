@@ -15,7 +15,7 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 ## Working contract
 
 - Preserve user changes and existing conventions unless a requirement explicitly replaces them.
-- Strictly adhere to SOLID architectural principles (`rules/solid/`) across backend services, repositories, hooks, and UI components.
+- Strictly adhere to SOLID architectural principles (`knowledge/principles/`) and Context Factory rules (`rules/`) across backend services, repositories, hooks, and UI components.
 - Classify consequential claims as verified facts, assumptions, decisions, unknowns, or results and retain their evidence.
 - Prefer the smallest complete change and avoid speculative dependencies.
 - Keep architecture, rules, tests, and documentation synchronized with behavior.

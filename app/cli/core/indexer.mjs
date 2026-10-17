@@ -27,7 +27,6 @@ export async function generateRulesMoc(actualRules) {
 
   const groups = {
     global: { title: "## Global", items: [] },
-    solid: { title: "## SOLID Architecture", items: [] },
     typescriptCommon: { title: "## TypeScript\n\n### Common", items: [] },
     typescriptBackend: { title: "### Backend", items: [] },
     typescriptDatabase: { title: "### Database", items: [] },
@@ -43,7 +42,6 @@ export async function generateRulesMoc(actualRules) {
     const row = `- [[${linkPath}|${item.title}]]`;
 
     if (p.startsWith("rules/global/")) groups.global.items.push(row);
-    else if (p.startsWith("rules/solid/")) groups.solid.items.push(row);
     else if (p.startsWith("rules/typescript/common/")) groups.typescriptCommon.items.push(row);
     else if (p.startsWith("rules/typescript/backend/")) groups.typescriptBackend.items.push(row);
     else if (p.startsWith("rules/typescript/database/")) groups.typescriptDatabase.items.push(row);

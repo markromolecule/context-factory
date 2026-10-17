@@ -1,5 +1,5 @@
 ---
-id: factory.principles.solid.lsp
+id: factory.principles.liskov-substitution
 title: Liskov Substitution Principle
 type: concept
 status: active
@@ -7,9 +7,9 @@ scope: [software-architecture, context-factory, clean-code]
 owner: context-factory
 authority: canonical
 created: 2026-08-23
-lastVerified: 2026-08-23
-reviewAfter: 2027-02-23
-appliesTo: [rules/solid/liskov-substitution.md, skills/refactor/**, skills/plan/**]
+lastVerified: 2026-10-17
+reviewAfter: 2027-04-17
+appliesTo: [rules/global/architecture-conformance.md, rules/global/code-quality.md, rules/typescript/common/type-safety.md, skills/engineering/refactor/**, skills/productivity/plan/**]
 supersedes: []
 sources: [docs/Wiki.md, schemas/knowledge.schema.json]
 tags: [solid, lsp, liskov-substitution, architecture, principles]
@@ -47,6 +47,7 @@ When implementing an interface or extending a base class:
 
 ## Cross-References
 
-- Rule Enforcement: [[rules/solid/liskov-substitution|Liskov Substitution Rule]]
+- Rule Enforcement: [[rules/global/architecture-conformance|Architecture Conformance Rule]]
+- Code Quality: [[rules/global/code-quality|Code Quality Rule]]
 - Type Safety: [[rules/typescript/common/type-safety|Strict Type Safety]]
 - Error Handling: [[rules/typescript/common/error-handling|Error Handling and Result Types]]

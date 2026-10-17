@@ -108,12 +108,11 @@ describe("Pragmatic backend, UI, and global TypeScript scope alignment (Unit 03.
 
   it("aligns UI code organization with cohesive modules and framework-native composition without forced hook splits", async () => {
     const { descriptor: uiRule } = await getDescriptor("rules/typescript/ui/code-organization.md");
-    const { descriptor: solidRule } = await getDescriptor("rules/solid/single-responsibility.md");
+    const srpNote = await read("knowledge/principles/single-responsibility.md");
 
     const reuse = findDirective(uiRule, "ts.ui.promote-shared-on-reuse");
     const cohesive = findDirective(uiRule, "ts.ui.cohesive-modules");
     const direction = findDirective(uiRule, "ts.ui.enforce-dependency-direction");
-    const hooks = findDirective(solidRule, "cf.solid.srp-extract-async-hooks");
 
     // Reusable only on multiple consumers (YAGNI)
     assert.match(reuse.statement, /multiple real consumers/i);
@@ -125,8 +124,8 @@ describe("Pragmatic backend, UI, and global TypeScript scope alignment (Unit 03.
     assert.match(direction.statement, /direction/i);
     assert.match(direction.statement, /selected framework/i);
 
-    // Hooks rule allows simple local state without forced extraction
-    assert.match(hooks.statement, /simple local state or single-use component queries do not require forced hook decomposition/i);
+    // SRP principle note acknowledges cohesion over artificial file fragmentation
+    assert.match(srpNote, /cohesion|artificial file split|trivial local state/i);
   });
 
   it("binds pragmatic rules to TypeScript while excluding plain JavaScript from TypeScript-specific directives", async () => {

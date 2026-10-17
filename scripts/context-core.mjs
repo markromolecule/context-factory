@@ -372,7 +372,7 @@ export async function resolveContext(request, options = {}) {
   }
 
   const isRuleAllowed = (rulePath) => {
-    if (rulePath.startsWith("rules/global/") || rulePath.startsWith("rules/solid/")) {
+    if (rulePath.startsWith("rules/global/")) {
       return true;
     }
     const parts = rulePath.split("/");

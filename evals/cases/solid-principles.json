@@ -1,11 +1,11 @@
 {
-  "name": "solid principles selects solid rules and refactor skill",
+  "name": "solid principles selects architecture and quality rules with refactor skill",
   "request": "Refactor the payment service to adhere to single responsibility and dependency inversion",
   "expected": {
     "workflow": "skills/workflows/architecture-change/SKILL.md",
     "rules": [
-      "rules/solid/single-responsibility.md",
-      "rules/solid/dependency-inversion.md"
+      "rules/global/architecture-conformance.md",
+      "rules/global/code-quality.md"
     ],
     "skills": [
       "skills/engineering/refactor/SKILL.md"

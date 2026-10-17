@@ -8,7 +8,6 @@ rules:
   - rules/global/code-quality.md
   - rules/global/evidence-and-claims.md
   - rules/global/architecture-conformance.md
-  - rules/solid/single-responsibility.md
 skills:
   - context
   - grill

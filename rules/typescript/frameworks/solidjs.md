@@ -12,7 +12,7 @@ alwaysApply: false
 
 # SolidJS
 
-Use with shared TypeScript rules. `rules/solid/` means SOLID architecture principles, not SolidJS. Use the installed Solid router and data APIs; do not import React hooks or assume components rerun on every update.
+Use with shared TypeScript rules. `knowledge/principles/` defines SOLID architecture principles, not SolidJS. Use the installed Solid router and data APIs; do not import React hooks or assume components rerun on every update.
 
 - [directive:ts.solidjs.preserve-reactivity][mode:evidence-blocking][verifier:human-evidence] Read reactive props inside tracked expressions or accessors. Do not snapshot them through top-level destructuring; use the installed framework's reactive prop utilities when splitting or merging props.
 - [directive:ts.solidjs.derive-state][mode:evidence-blocking][verifier:human-evidence] Derive values with accessors or memos. Use effects for external side effects; avoid effects that repeatedly copy derived values into signals or create update loops.

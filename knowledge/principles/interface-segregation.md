@@ -1,5 +1,5 @@
 ---
-id: factory.principles.solid.isp
+id: factory.principles.interface-segregation
 title: Interface Segregation Principle
 type: concept
 status: active
@@ -7,9 +7,9 @@ scope: [software-architecture, context-factory, clean-code]
 owner: context-factory
 authority: canonical
 created: 2026-08-23
-lastVerified: 2026-08-23
-reviewAfter: 2027-02-23
-appliesTo: [rules/solid/interface-segregation.md, skills/refactor/**, skills/plan/**]
+lastVerified: 2026-10-17
+reviewAfter: 2027-04-17
+appliesTo: [rules/global/architecture-conformance.md, rules/global/code-quality.md, rules/typescript/ui/code-organization.md, skills/engineering/refactor/**, skills/productivity/plan/**]
 supersedes: []
 sources: [docs/Wiki.md, schemas/knowledge.schema.json]
 tags: [solid, isp, interface-segregation, architecture, principles]
@@ -51,6 +51,7 @@ Instead of passing an entire 30-field `UserRecord` object into an avatar compone
 
 ## Cross-References
 
-- Rule Enforcement: [[rules/solid/interface-segregation|Interface Segregation Rule]]
+- Rule Enforcement: [[rules/global/architecture-conformance|Architecture Conformance Rule]]
+- Code Quality: [[rules/global/code-quality|Code Quality Rule]]
 - UI Organization: [[rules/typescript/ui/code-organization|UI Code Organization]]
 - Refactoring Skill: [[skills/engineering/refactor/SKILL|Refactor Skill]]

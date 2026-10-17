@@ -9,7 +9,7 @@ authority: canonical
 created: 2026-10-10
 lastVerified: 2026-10-10
 reviewAfter: 2027-04-10
-appliesTo: [rules/typescript/common/pragmatic-design.md, rules/solid/single-responsibility.md]
+appliesTo: [rules/typescript/common/pragmatic-design.md]
 supersedes: []
 sources: [docs/Wiki.md, schemas/knowledge.schema.json, docs/discovery/pragmatic-design-principles-and-rule-alignment/brief.md]
 tags: [law-of-demeter, tell-dont-ask, principles, architecture, typescript, clean-code]
@@ -104,5 +104,5 @@ export function mapUserDtoToResponse(dto: CreateUserDto): { email: string } {
 ## Cross-References
 
 - Rules Index: [[docs/Rules|Rules Index]]
-- Single Responsibility: [[knowledge/principles/solid-srp|Single Responsibility Principle]]
+- Single Responsibility: [[knowledge/principles/single-responsibility|Single Responsibility Principle]]
 - Companion Concept: [[knowledge/principles/composition-over-inheritance|Composition over Inheritance]]

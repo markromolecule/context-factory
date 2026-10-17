@@ -1,5 +1,5 @@
 ---
-id: factory.principles.solid.srp
+id: factory.principles.single-responsibility
 title: Single Responsibility Principle
 type: concept
 status: active
@@ -7,9 +7,9 @@ scope: [software-architecture, context-factory, clean-code]
 owner: context-factory
 authority: canonical
 created: 2026-08-23
-lastVerified: 2026-08-23
-reviewAfter: 2027-02-23
-appliesTo: [rules/solid/single-responsibility.md, skills/refactor/**, skills/plan/**]
+lastVerified: 2026-10-17
+reviewAfter: 2027-04-17
+appliesTo: [rules/global/architecture-conformance.md, rules/global/code-quality.md, rules/typescript/common/pragmatic-design.md, skills/engineering/refactor/**, skills/productivity/plan/**]
 supersedes: []
 sources: [docs/Wiki.md, schemas/knowledge.schema.json]
 tags: [solid, srp, single-responsibility, architecture, principles]
@@ -48,7 +48,7 @@ In full-stack TypeScript systems, responsibility boundaries must be partitioned 
 
 ## Cross-References
 
-- Rule Enforcement: [[rules/solid/single-responsibility|Single Responsibility Rule]]
+- Rule Enforcement: [[rules/global/architecture-conformance|Architecture Conformance Rule]]
+- Code Quality: [[rules/global/code-quality|Code Quality Rule]]
 - Pragmatic Design: [[rules/typescript/common/pragmatic-design|Pragmatic Design Rule]]
 - KISS: [[knowledge/principles/kiss|Keep It Simple, Stupid (KISS)]]
-- Architectural Conformance: [[rules/global/architecture-conformance|Architecture Conformance]]
