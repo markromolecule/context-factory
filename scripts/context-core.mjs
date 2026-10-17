@@ -442,7 +442,7 @@ export async function resolveContext(request, options = {}) {
 
   // 3. Skill selection (scored + execution/security filters + agent declared skills)
   let selectedSkills = skillEntries
-    .filter((entry) => !entry.path.startsWith("skills/workflow-entries/"))
+    .filter((entry) => !entry.path.startsWith("skills/workflow-entries/") && !entry.path.startsWith("skills/workflows/"))
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
     .filter((entry) => (
       entry.relevance.score >= 6
@@ -612,7 +612,11 @@ export async function resolveContext(request, options = {}) {
   if (rawScopeArr.length > 0 && explicitStack) {
     const catalogResult = await parseRuleCatalog(join(root, "rules"));
     const workflowName = options.workflow
-      || (selectedWorkflow?.path ? basename(selectedWorkflow.path, ".md") : "feature-delivery");
+      || (selectedWorkflow?.path
+        ? (selectedWorkflow.path.endsWith("/SKILL.md")
+            ? selectedWorkflow.path.split("/").at(-2)
+            : basename(selectedWorkflow.path, ".md"))
+        : "feature-delivery");
     bindingCompilation = compileRuleBinding({
       taskId: options.taskId || "adhoc",
       phase: options.phase || "00",
@@ -640,7 +644,9 @@ export async function resolveContext(request, options = {}) {
       role: selectedAgent.meta.role,
       path: selectedAgent.path,
       defaultWorkflow: selectedAgent.meta.defaultWorkflow
-        ? (selectedAgent.meta.defaultWorkflow.endsWith(".md") ? selectedAgent.meta.defaultWorkflow : `workflows/${selectedAgent.meta.defaultWorkflow}.md`)
+        ? (selectedAgent.meta.defaultWorkflow.endsWith("/SKILL.md")
+            ? selectedAgent.meta.defaultWorkflow
+            : `skills/workflows/${selectedAgent.meta.defaultWorkflow}/SKILL.md`)
         : null,
       handoffs: selectedAgent.meta.handoffs ?? null,
     } : null,

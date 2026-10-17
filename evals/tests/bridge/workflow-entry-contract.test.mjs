@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { lstat, readlink, readdir } from "node:fs/promises";
-import { resolve, join } from "node:path";
+import { lstat, readlink } from "node:fs/promises";
+import { resolve } from "node:path";
 import { existsSync } from "node:fs";
 import {
   readJson,
@@ -10,25 +10,27 @@ import {
   root,
 } from "../../../scripts/context-core.mjs";
 
-test("Unit 01.01: Canonical Workflow Adapter Contract (AC-01, AC-07)", async (t) => {
+test("Unit 01.01: Canonical Workflow Skill and Host Entry Contract (AC-01, AC-07)", async (t) => {
   const manifest = await readJson("context-manifest.json");
   const workflows = manifest.workflows ?? [];
   assert.ok(workflows.length >= 12, "Manifest must contain at least 12 canonical workflows");
 
   const existingProceduralSkillNames = new Set(
     (manifest.skills ?? [])
-      .filter((s) => !s.startsWith("skills/workflow-entries/"))
+      .filter((s) => !s.startsWith("skills/workflows/"))
       .map((s) => s.split("/").at(-2))
   );
 
   const expectedEntries = workflows.map((wfPath) => {
-    const slug = wfPath.split("/").at(-1).replace(/\.md$/, "");
+    const slug = wfPath.endsWith("/SKILL.md")
+      ? wfPath.split("/").at(-2)
+      : wfPath.split("/").at(-1).replace(/\.md$/, "");
     return {
       wfPath,
       slug,
       adapterName: `workflow-${slug}`,
-      sourceDir: `skills/workflow-entries/workflow-${slug}`,
-      sourceFile: `skills/workflow-entries/workflow-${slug}/SKILL.md`,
+      sourceDir: `skills/workflows/${slug}`,
+      sourceFile: wfPath,
       codexLink: `.agents/skills/workflow-${slug}`,
       claudeLink: `.claude/skills/workflow-${slug}`,
     };
@@ -45,75 +47,25 @@ test("Unit 01.01: Canonical Workflow Adapter Contract (AC-01, AC-07)", async (t)
         `Adapter name collides with existing procedural skill: ${entry.adapterName}`
       );
     }
-    assert.equal(seenNames.size, workflows.length, "Each canonical workflow must have exactly one unique adapter");
+    assert.equal(seenNames.size, workflows.length, "Each canonical workflow must have exactly one unique adapter name");
   });
 
-  await t.test("all adapter source files exist with valid metadata and reference canonical workflows", async () => {
+  await t.test("all workflow skill source files exist with valid metadata and define authoritative lifecycle policies", async () => {
     for (const entry of expectedEntries) {
       const fullPath = resolve(root, entry.sourceFile);
-      assert.ok(existsSync(fullPath), `Adapter source file must exist: ${entry.sourceFile}`);
+      assert.ok(existsSync(fullPath), `Workflow skill file must exist: ${entry.sourceFile}`);
 
       const content = await readText(entry.sourceFile);
       const meta = frontmatter(content);
-      assert.ok(meta, `Adapter must have YAML frontmatter: ${entry.sourceFile}`);
+      assert.ok(meta, `Workflow skill must have YAML frontmatter: ${entry.sourceFile}`);
 
-      const keys = Object.keys(meta).sort();
-      assert.deepEqual(keys, ["description", "name"], `Adapter frontmatter must only contain name and description: ${entry.sourceFile}`);
-      assert.equal(meta.name, entry.adapterName, `Adapter name must match folder name: ${entry.sourceFile}`);
-      assert.ok(meta.description && meta.description.length > 10, `Adapter description must be descriptive: ${entry.sourceFile}`);
+      assert.equal(meta.name, entry.slug, `Workflow skill name must match folder name: ${entry.sourceFile}`);
+      assert.ok(meta.description && meta.description.length > 10, `Workflow description must be descriptive: ${entry.sourceFile}`);
 
-      // Must identify canonical workflow path and require reading it
-      assert.ok(
-        content.includes(entry.wfPath),
-        `Adapter must explicitly reference canonical workflow path ${entry.wfPath}: ${entry.sourceFile}`
-      );
-      assert.match(
-        content,
-        /read.*canonical/i,
-        `Adapter must instruct host to read the canonical workflow file: ${entry.sourceFile}`
-      );
-
-      // Must delegate to resolver
-      assert.match(
-        content,
-        /node scripts\/context\.mjs resolve/i,
-        `Adapter must instruct host to pass actual user request to resolver: ${entry.sourceFile}`
-      );
-
-      // Must defer authorization and quality gates
-      assert.match(
-        content,
-        /gates|stop|defer|authority|shared contract/i,
-        `Adapter must defer gates and authorization to the workflow and shared contract: ${entry.sourceFile}`
-      );
-
-      // Canonical workflow file must exist on disk
-      assert.ok(
-        existsSync(resolve(root, entry.wfPath)),
-        `Referenced canonical workflow must exist on disk: ${entry.wfPath}`
-      );
-    }
-  });
-
-  await t.test("adapters do not duplicate phase or gate policy bodies (SRP & reject duplicate policy)", async () => {
-    const forbiddenPolicyHeadings = [
-      "## Phases",
-      "## Quality gates",
-      "## Stop and escalation conditions",
-      "## Required inputs",
-      "## Applicable rules and skills",
-      "## Artifacts and completion",
-    ];
-
-    for (const entry of expectedEntries) {
-      if (!existsSync(resolve(root, entry.sourceFile))) continue;
-      const content = await readText(entry.sourceFile);
-      for (const heading of forbiddenPolicyHeadings) {
-        assert.ok(
-          !content.includes(heading),
-          `Adapter ${entry.sourceFile} must not duplicate policy section '${heading}' from canonical workflow`
-        );
-      }
+      // Must contain authoritative lifecycle policies
+      assert.ok(content.includes("## Phases"), `Workflow must contain ## Phases: ${entry.sourceFile}`);
+      assert.ok(content.includes("## Quality gates"), `Workflow must contain ## Quality gates: ${entry.sourceFile}`);
+      assert.ok(content.includes("## Stop and escalation conditions"), `Workflow must contain ## Stop and escalation conditions: ${entry.sourceFile}`);
     }
   });
 
@@ -134,7 +86,7 @@ test("Unit 01.01: Canonical Workflow Adapter Contract (AC-01, AC-07)", async (t)
       assert.equal(
         resolvedTarget,
         resolve(root, entry.sourceDir),
-        `Codex link must resolve to source adapter dir ${entry.sourceDir}`
+        `Codex link must resolve to source workflow dir ${entry.sourceDir}`
       );
     }
   });
@@ -156,7 +108,7 @@ test("Unit 01.01: Canonical Workflow Adapter Contract (AC-01, AC-07)", async (t)
       assert.equal(
         resolvedTarget,
         resolve(root, entry.sourceDir),
-        `Claude link must resolve to source adapter dir ${entry.sourceDir}`
+        `Claude link must resolve to source workflow dir ${entry.sourceDir}`
       );
     }
   });
@@ -172,7 +124,7 @@ test("Unit 01.01: Canonical Workflow Adapter Contract (AC-01, AC-07)", async (t)
     // Synthetic test: missing workflow entry
     const mockManifestWithExtraWf = {
       ...manifest,
-      workflows: [...manifest.workflows, "workflows/non-existent-synthetic-workflow.md"],
+      workflows: [...manifest.workflows, "skills/workflows/non-existent-synthetic-workflow/SKILL.md"],
     };
     const missingErrors = await validateWorkflowEntries({ root, manifest: mockManifestWithExtraWf });
     assert.ok(

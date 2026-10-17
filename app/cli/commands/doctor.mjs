@@ -203,7 +203,9 @@ export async function handleDoctorCommand(args = [], flags = {}) {
     [
       "Conformance Enforcement",
       badges.pass(),
-      `Adapters: ${editorHealth.enforcementCapabilities.supportedStacks.join(", ")} (ready) | Stacks: ${editorHealth.enforcementCapabilities.unsupportedStacks.join(", ")} (unsupported)`,
+      editorHealth.enforcementCapabilities.unsupportedStacks.length > 0
+        ? `Adapters: ${editorHealth.enforcementCapabilities.supportedStacks.join(", ")} (ready) | Stacks: ${editorHealth.enforcementCapabilities.unsupportedStacks.join(", ")} (unsupported)`
+        : `Adapters: ${editorHealth.enforcementCapabilities.supportedStacks.join(", ")} (ready)`,
     ],
     [
       "Evaluation Suite",
@@ -280,7 +282,7 @@ export async function auditEnforcementCapabilities() {
   } catch {}
   const registeredAdapters = listAdapters();
   const supportedStacks = registeredAdapters.map((a) => a.stack);
-  const knownStacks = ["typescript", "flutter"];
+  const knownStacks = ["typescript"];
   const unsupportedStacks = knownStacks.filter((s) => !supportedStacks.includes(s));
 
   return {
@@ -368,7 +370,7 @@ export async function auditEditorConfigurations(targetDir = process.cwd()) {
       brokenCount: 0,
       totalCount: 1,
       items: [
-        { name: "AGENTS.md", ide: "universal", status: "healthy", path: join(canonicalTarget, "AGENTS.md") },
+        { name: "orchestrator/SHARED.md", ide: "universal", status: "healthy", path: join(canonicalTarget, "orchestrator", "SHARED.md") },
       ],
       enforcementCapabilities: enforcement,
       fullyEnforcedFromFilesAlone: false,

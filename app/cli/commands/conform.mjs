@@ -13,10 +13,12 @@ export async function handleConformCommand(args = [], flags = {}) {
   registerTypeScriptAdapter();
 
   const isJson = Boolean(flags.json);
-  const stack = flags.stack || flags.stacks || "typescript";
-  const normalizedStack = typeof stack === "string" ? stack.toLowerCase() : (Array.isArray(stack) ? stack[0]?.toLowerCase() : "");
-  if (normalizedStack === "laravel") {
-    const errorMsg = "Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem.";
+  const rawStack = flags.stack || flags.stacks;
+  const normalizedStack = typeof rawStack === "string" ? rawStack.toLowerCase() : (Array.isArray(rawStack) ? rawStack[0]?.toLowerCase() : "");
+  if (normalizedStack && normalizedStack !== "typescript") {
+    const errorMsg = normalizedStack === "laravel"
+      ? "Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem."
+      : `Stack '${normalizedStack}' is not supported. Context Factory focuses strictly on the TypeScript ecosystem.`;
     if (isJson) {
       console.log(JSON.stringify({ verdict: "BLOCKED", status: "BLOCKED", error: errorMsg }, null, 2));
       return 2;
@@ -24,6 +26,7 @@ export async function handleConformCommand(args = [], flags = {}) {
     console.error(`\n${badges.warn("BLOCKED")} ${errorMsg}\n`);
     return 2;
   }
+  const stack = "typescript";
   const scope = normalizeScope(flags.scope || flags.paths);
   const waiverPath = flags.waiver || null;
   const humanEvidence = flags["human-evidence"] || flags.humanEvidence || flags.evidence || null;
@@ -64,7 +67,7 @@ export async function handleConformCommand(args = [], flags = {}) {
 
   const request = args.join(" ").trim() || (scope.length > 0 ? `Verify conformance for ${scope.join(", ")}` : "");
   if (!request && !scope) {
-    throw new Error("Usage: context-cli conform \"<prompt>\" [--stack <name>] [--scope <paths>] [--waiver <path>] [--human-evidence <text>] [--out <path>] [--json]");
+    throw new Error("Usage: context-cli conform \"<prompt>\" [--scope <paths>] [--waiver <path>] [--human-evidence <text>] [--out <path>] [--json]");
   }
 
   try {

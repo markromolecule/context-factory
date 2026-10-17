@@ -20,148 +20,76 @@ export async function validateWorkflowEntries({ root: targetRoot = root, manifes
 
   const existingProceduralSkillNames = new Set(
     (currentManifest.skills ?? [])
-      .filter((s) => !s.startsWith("skills/workflow-entries/"))
+      .filter((s) => !s.startsWith("skills/workflows/"))
       .map((s) => s.split("/").at(-2))
   );
 
   const expectedEntries = new Map();
   for (const wfPath of workflows) {
-    const slug = wfPath.split("/").at(-1).replace(/\.md$/, "");
+    const slug = wfPath.endsWith("/SKILL.md")
+      ? wfPath.split("/").at(-2)
+      : wfPath.split("/").at(-1).replace(/\.md$/, "");
     const adapterName = `workflow-${slug}`;
-    expectedEntries.set(adapterName, {
+    expectedEntries.set(slug, {
       wfPath,
       slug,
       adapterName,
-      sourceDir: `skills/workflow-entries/${adapterName}`,
-      sourceFile: `skills/workflow-entries/${adapterName}/SKILL.md`,
-      codexLink: `.agents/skills/${adapterName}`,
-      claudeLink: `.claude/skills/${adapterName}`,
+      skillFile: wfPath,
     });
   }
 
   // 1. Collision check
-  for (const [adapterName] of expectedEntries) {
-    if (existingProceduralSkillNames.has(adapterName)) {
-      entryErrors.push(`Workflow entry name '${adapterName}' collides with an existing procedural skill`);
+  for (const [, entry] of expectedEntries) {
+    if (existingProceduralSkillNames.has(entry.adapterName)) {
+      entryErrors.push(`Workflow entry name '${entry.adapterName}' collides with an existing procedural skill`);
     }
   }
 
-  // 2. Validate all expected entries
-  for (const [adapterName, entry] of expectedEntries) {
+  // 2. Validate all expected workflow skills exist
+  for (const [slug, entry] of expectedEntries) {
     try {
-      const sourceContent = await readText(entry.sourceFile, targetRoot);
+      const sourceContent = await readText(entry.skillFile, targetRoot);
       const meta = frontmatter(sourceContent);
       if (!meta) {
-        entryErrors.push(`Workflow entry has no YAML frontmatter: ${entry.sourceFile}`);
+        entryErrors.push(`Workflow skill has no YAML frontmatter: ${entry.skillFile}`);
       } else {
-        const keys = Object.keys(meta).sort();
-        if (keys.join(",") !== "description,name") {
-          entryErrors.push(`Workflow entry frontmatter must contain only name and description: ${entry.sourceFile}`);
-        }
-        if (meta.name !== adapterName) {
-          entryErrors.push(`Workflow entry name (${meta.name}) does not match expected (${adapterName}): ${entry.sourceFile}`);
+        if (meta.name !== slug) {
+          entryErrors.push(`Workflow skill name (${meta.name}) does not match expected (${slug}): ${entry.skillFile}`);
         }
         if (!meta.description) {
-          entryErrors.push(`Workflow entry description is missing: ${entry.sourceFile}`);
-        }
-      }
-
-      if (!sourceContent.includes(entry.wfPath)) {
-        entryErrors.push(`Workflow entry ${entry.sourceFile} does not reference canonical workflow path ${entry.wfPath}`);
-      }
-      if (!/read.*canonical/i.test(sourceContent)) {
-        entryErrors.push(`Workflow entry ${entry.sourceFile} does not instruct host to read canonical workflow`);
-      }
-      if (!/node scripts\/context\.mjs resolve/i.test(sourceContent)) {
-        entryErrors.push(`Workflow entry ${entry.sourceFile} does not delegate request to resolver`);
-      }
-      if (!/gates|stop|defer|authority|shared contract/i.test(sourceContent)) {
-        entryErrors.push(`Workflow entry ${entry.sourceFile} does not defer gates/authorization to shared contract`);
-      }
-
-      const forbiddenPolicyHeadings = [
-        "## Phases",
-        "## Quality gates",
-        "## Stop and escalation conditions",
-        "## Required inputs",
-        "## Applicable rules and skills",
-        "## Artifacts and completion",
-      ];
-      for (const heading of forbiddenPolicyHeadings) {
-        if (sourceContent.includes(heading)) {
-          entryErrors.push(`Workflow entry ${entry.sourceFile} contains forbidden copied policy heading: ${heading}`);
+          entryErrors.push(`Workflow skill description is missing: ${entry.skillFile}`);
         }
       }
     } catch {
-      entryErrors.push(`Missing workflow entry adapter file: ${entry.sourceFile} for workflow ${entry.wfPath}`);
-    }
-
-    // Check Codex symlink
-    const codexPath = resolve(targetRoot, entry.codexLink);
-    try {
-      const stat = await lstat(codexPath);
-      if (!stat.isSymbolicLink()) {
-        entryErrors.push(`Codex workflow entry must be a symbolic link: ${entry.codexLink}`);
-      } else {
-        const rawTarget = await readlink(codexPath);
-        const resolvedTarget = resolve(resolve(targetRoot, ".agents/skills"), rawTarget);
-        try {
-          await lstat(resolvedTarget);
-        } catch {
-          entryErrors.push(`Dangling Codex symlink: ${entry.codexLink} -> ${rawTarget}`);
-        }
-      }
-    } catch {
-      entryErrors.push(`Missing Codex workflow entry link: ${entry.codexLink}`);
-    }
-
-    // Check Claude Code symlink
-    const claudePath = resolve(targetRoot, entry.claudeLink);
-    try {
-      const stat = await lstat(claudePath);
-      if (!stat.isSymbolicLink()) {
-        entryErrors.push(`Claude Code workflow entry must be a symbolic link: ${entry.claudeLink}`);
-      } else {
-        const rawTarget = await readlink(claudePath);
-        const resolvedTarget = resolve(resolve(targetRoot, ".claude/skills"), rawTarget);
-        try {
-          await lstat(resolvedTarget);
-        } catch {
-          entryErrors.push(`Dangling Claude Code symlink: ${entry.claudeLink} -> ${rawTarget}`);
-        }
-      }
-    } catch {
-      entryErrors.push(`Missing Claude Code workflow entry link: ${entry.claudeLink}`);
+      entryErrors.push(`Missing workflow skill file: ${entry.skillFile}`);
     }
   }
 
-  // 3. Stale or unmapped entries check
+  // 3. Ensure obsolete skills/workflow-entries directory does not exist
   try {
     const entriesDir = resolve(targetRoot, "skills/workflow-entries");
     const diskDirs = await readdir(entriesDir);
-    for (const d of diskDirs) {
-      if (!expectedEntries.has(d)) {
-        entryErrors.push(`Stale or unmapped workflow entry directory on disk: skills/workflow-entries/${d}`);
-      }
+    if (diskDirs.length > 0) {
+      entryErrors.push(`Obsolete skills/workflow-entries directory must be deleted`);
     }
   } catch {}
 
+  // 4. Ensure obsolete root workflows directory does not exist
   try {
-    const agentsDir = resolve(targetRoot, ".agents/skills");
-    const diskLinks = await readdir(agentsDir);
-    for (const l of diskLinks) {
-      if (l.startsWith("workflow-") && !expectedEntries.has(l)) {
-        entryErrors.push(`Stale or unmapped workflow entry link in .agents/skills: ${l}`);
-      }
+    const wfDir = resolve(targetRoot, "workflows");
+    const diskDirs = await readdir(wfDir);
+    if (diskDirs.length > 0) {
+      entryErrors.push(`Obsolete root workflows directory must be deleted`);
     }
   } catch {}
 
+  // 5. Ensure no unmapped workflow directories exist on disk
   try {
-    const claudeDir = resolve(targetRoot, ".claude/skills");
-    const diskLinks = await readdir(claudeDir);
-    for (const l of diskLinks) {
-      if (l.startsWith("workflow-") && !expectedEntries.has(l)) {
-        entryErrors.push(`Stale or unmapped workflow entry link in .claude/skills: ${l}`);
+    const wfDir = resolve(targetRoot, "skills/workflows");
+    const diskDirs = await readdir(wfDir);
+    for (const dir of diskDirs) {
+      if (!expectedEntries.has(dir)) {
+        entryErrors.push(`Stale or unmapped workflow entry: skills/workflows/${dir}`);
       }
     }
   } catch {}
@@ -310,7 +238,10 @@ for (const path of manifest.workflows) {
       }
     }
     if (!meta.name || !meta.description || !meta.scope) error(`Workflow metadata is incomplete: ${path}`);
-    if (meta.name !== path.split("/").at(-1).replace(/\.md$/, "")) {
+    const expectedName = path.endsWith("/SKILL.md")
+      ? path.split("/").at(-2)
+      : path.split("/").at(-1).replace(/\.md$/, "");
+    if (meta.name !== expectedName) {
       error(`Workflow name does not match its filename: ${path}`);
     }
     if (meta.primaryAgent && !knownAgentNames.has(meta.primaryAgent)) {
@@ -439,19 +370,20 @@ for (const path of manifest.agents ?? []) {
       error(`Agent workflows must be a non-empty array: ${path}`);
     } else {
       for (const wf of meta.workflows) {
-        const wfPath = wf.endsWith(".md") ? wf : `workflows/${wf}.md`;
-        if (!manifest.workflows.includes(wfPath)) {
+        const wfPath = wf.endsWith("/SKILL.md")
+          ? wf
+          : (manifest.workflows.find((p) => p === wf || p === `skills/workflows/${wf}/SKILL.md` || p === `workflows/${wf}.md`));
+        if (!wfPath || !manifest.workflows.includes(wfPath)) {
           error(`Agent references unknown workflow in ${path}: ${wf}`);
         }
       }
     }
 
-    const defaultWfPath = meta.defaultWorkflow?.endsWith(".md") ? meta.defaultWorkflow : `workflows/${meta.defaultWorkflow}.md`;
-    if (!manifest.workflows.includes(defaultWfPath)) {
+    const defaultWfPath = manifest.workflows.find((p) => p === meta.defaultWorkflow || p === `skills/workflows/${meta.defaultWorkflow}/SKILL.md` || p === `workflows/${meta.defaultWorkflow}.md`);
+    if (!defaultWfPath) {
       error(`Agent defaultWorkflow references unknown workflow in ${path}: ${meta.defaultWorkflow}`);
     } else if (Array.isArray(meta.workflows)) {
-      const declaredWfPaths = meta.workflows.map((w) => (w.endsWith(".md") ? w : `workflows/${w}.md`));
-      if (!declaredWfPaths.includes(defaultWfPath)) {
+      if (!meta.workflows.includes(meta.defaultWorkflow)) {
         error(`Agent defaultWorkflow '${meta.defaultWorkflow}' is not in workflows list: ${path}`);
       }
     }
@@ -494,10 +426,10 @@ for (const path of manifest.agents ?? []) {
 
 const actualAgents = (await filesUnder("agents")).filter((path) => extname(path) === ".md");
 const actualRules = (await filesUnder("rules")).filter((path) => extname(path) === ".md");
-const actualSkills = (await filesUnder("skills")).filter((path) => path.endsWith("/SKILL.md"));
-const actualSkillResources = (await filesUnder("skills")).filter((path) => !path.endsWith("/SKILL.md") && !path.endsWith("README.md"));
+const actualSkills = (await filesUnder("skills")).filter((path) => path.endsWith("/SKILL.md") && !path.startsWith("skills/workflows/"));
+const actualSkillResources = (await filesUnder("skills")).filter((path) => !path.endsWith("/SKILL.md") && !path.endsWith("README.md") && !path.startsWith("skills/workflows/"));
 
-const actualWorkflows = (await filesUnder("workflows")).filter((path) => extname(path) === ".md");
+const actualWorkflows = (await filesUnder("skills/workflows")).filter((path) => path.endsWith("/SKILL.md"));
 const actualKnowledge = (await filesUnder("knowledge")).filter((path) => extname(path) === ".md");
 const actualSchemas = (await filesUnder("schemas")).filter((path) => extname(path) === ".json");
 const actualTemplates = (await filesUnder("docs/templates")).filter((path) => extname(path) === ".md");
@@ -609,6 +541,7 @@ for (const path of manifest.evaluations) {
 }
 
 for (const path of manifest.orchestrators) {
+  if (path === "orchestrator/SHARED.md") continue;
   if (!(await readText(path)).includes("orchestrator/SHARED.md")) {
     error(`Orchestrator does not defer to the shared contract: ${path}`);
   }
@@ -648,7 +581,7 @@ for (const path of ["app.json", "appearance.json", "core-plugins.json", "graph.j
   }
 }
 
-const expectedDotAgents = ["rules", "agents", "workflows", "AGENTS.md", "GEMINI.md"];
+const expectedDotAgents = ["rules", "agents", "workflows"];
 try {
   const dotAgentsStat = await lstat(resolve(root, ".agents"));
   if (!dotAgentsStat.isDirectory()) throw new Error("not dir");

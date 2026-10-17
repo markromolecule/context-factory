@@ -214,7 +214,9 @@ export async function createRelativeSymlink({
       }
       // If symlink target differs from expected: it must be recorded as owned
       // in previous bridge metadata to allow replacement/repair. Unowned symlinks collide.
-      if (!isOwned) {
+      const isTargetDangling = !existsSync(resolve(linkDir, currentTarget));
+      const isInternalCF = currentTarget.includes("skills/workflows") || currentTarget.includes("skills/workflow-entries") || currentTarget.includes("context-factory") || currentTarget.includes("../workflows");
+      if (!isOwned && !(isTargetDangling && isInternalCF)) {
         return { action: "collision", reason: "unowned symlink exists", currentTarget };
       }
       return { action: "update_owned", currentTarget };
@@ -744,7 +746,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
   // 9. Host Discovery & Editor Symlinks (.agents/ and .claude/)
   const symlinksToCreate = [];
 
-  // Load existing .context-bridge.json ownership metadata if present
+  const isContextFactory = targetDir === root || targetDir === canonicalRoot || targetDir === absFactoryPath;
   const existingOwnedSymlinkIds = new Set();
   try {
     const rawBridge = await readFile(join(targetDir, ".context-bridge.json"), "utf8");
@@ -793,23 +795,35 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
       category: "config",
     });
 
+    // Clean up obsolete model files in .agents/
+    for (const obsolete of ["AGENTS.md", "GEMINI.md"]) {
+      const p = join(dotAgentsDir, obsolete);
+      try {
+        const stat = await lstat(p);
+        if (stat.isSymbolicLink() || stat.isFile()) {
+          await rm(p, { force: true });
+        }
+      } catch {}
+    }
+
     const symlinkDefs = [
-      { id: ".agents/rules", name: "rules", type: "dir" },
-      { id: ".agents/agents", name: "agents", type: "dir" },
-      { id: ".agents/workflows", name: "workflows", type: "dir" },
-      { id: ".agents/AGENTS.md", name: "AGENTS.md", type: "file" },
-      { id: ".agents/GEMINI.md", name: "GEMINI.md", type: "file" },
+      { id: ".agents/rules", name: "rules", source: "rules", type: "dir" },
+      { id: ".agents/agents", name: "agents", source: "agents", type: "dir" },
+      { id: ".agents/workflows", name: "workflows", source: "skills/workflows", type: "dir" },
     ];
 
     for (const def of symlinkDefs) {
       const linkPath = join(dotAgentsDir, def.name);
-      const sourcePath = join(absFactoryPath, def.name);
+      const sourceRel = def.source || def.name;
+      const sourcePath = existsSync(join(absFactoryPath, sourceRel))
+        ? join(absFactoryPath, sourceRel)
+        : join(canonicalRoot, sourceRel);
       symlinksToCreate.push({
         id: def.id,
         linkPath,
         sourcePath,
         type: def.type,
-        isOwned: existingOwnedSymlinkIds.has(def.id),
+        isOwned: isContextFactory || existingOwnedSymlinkIds.has(def.id),
       });
     }
   }
@@ -829,6 +843,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
 
     // Create individual symlinks for each skill under .agents/skills/
     for (const skillPath of factorySkills) {
+      if (skillPath.startsWith("skills/workflows/")) continue;
       const parts = skillPath.split("/");
       const skillName = parts[parts.length - 2];
       const relSkillDir = parts.slice(0, -1).join("/");
@@ -841,7 +856,31 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
         linkPath,
         sourcePath,
         type: "dir",
-        isOwned: existingOwnedSymlinkIds.has(`.agents/skills/${skillName}`),
+        isOwned: isContextFactory || existingOwnedSymlinkIds.has(`.agents/skills/${skillName}`),
+      });
+    }
+
+    // Workflows exposed to Codex & Antigravity as workflow-<slug>
+    for (const wfPath of factoryWorkflows) {
+      const slug = wfPath.endsWith("/SKILL.md")
+        ? wfPath.split("/").at(-2)
+        : basename(wfPath, ".md");
+      const adapterName = `workflow-${slug}`;
+      const relWfDir = existsSync(join(absFactoryPath, `skills/workflows/${slug}`))
+        ? `skills/workflows/${slug}`
+        : (existsSync(join(absFactoryPath, `skills/workflow-entries/workflow-${slug}`))
+            ? `skills/workflow-entries/workflow-${slug}`
+            : `skills/workflows/${slug}`);
+      const linkPath = join(dotAgentsSkillsDir, adapterName);
+      const sourcePath = existsSync(join(absFactoryPath, relWfDir))
+        ? join(absFactoryPath, relWfDir)
+        : join(canonicalRoot, relWfDir);
+      symlinksToCreate.push({
+        id: `.agents/skills/${adapterName}`,
+        linkPath,
+        sourcePath,
+        type: "dir",
+        isOwned: isContextFactory || existingOwnedSymlinkIds.has(`.agents/skills/${adapterName}`),
       });
     }
   }
@@ -853,22 +892,18 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
     const workflowEntries = [];
     if (factoryWorkflows.length > 0) {
       for (const wfPath of factoryWorkflows) {
-        const slug = basename(wfPath, ".md");
+        const slug = wfPath.endsWith("/SKILL.md")
+          ? wfPath.split("/").at(-2)
+          : basename(wfPath, ".md");
+        const relDir = existsSync(join(absFactoryPath, `skills/workflows/${slug}`))
+          ? `skills/workflows/${slug}`
+          : (existsSync(join(absFactoryPath, `skills/workflow-entries/workflow-${slug}`))
+              ? `skills/workflow-entries/workflow-${slug}`
+              : `skills/workflows/${slug}`);
         workflowEntries.push({
           adapterName: `workflow-${slug}`,
-          sourceRelDir: `skills/workflow-entries/workflow-${slug}`,
+          sourceRelDir: relDir,
         });
-      }
-    } else {
-      for (const skillPath of factorySkills) {
-        if (skillPath.startsWith("skills/workflow-entries/")) {
-          const parts = skillPath.split("/");
-          const skillName = parts[parts.length - 2];
-          workflowEntries.push({
-            adapterName: skillName,
-            sourceRelDir: `skills/workflow-entries/${skillName}`,
-          });
-        }
       }
     }
 
@@ -882,7 +917,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
         linkPath,
         sourcePath,
         type: "dir",
-        isOwned: existingOwnedSymlinkIds.has(`.claude/skills/${entry.adapterName}`),
+        isOwned: isContextFactory || existingOwnedSymlinkIds.has(`.claude/skills/${entry.adapterName}`),
       });
     }
   }
@@ -1150,39 +1185,32 @@ export async function verifySymlinkHealth(targetDir = process.cwd()) {
       { name: "rules", relPath: ".agents/rules", type: "dir" },
       { name: "agents", relPath: ".agents/agents", type: "dir" },
       { name: "workflows", relPath: ".agents/workflows", type: "dir" },
-      { name: "AGENTS.md", relPath: ".agents/AGENTS.md", type: "file" },
-      { name: "GEMINI.md", relPath: ".agents/GEMINI.md", type: "file" }
     );
   }
 
   if (checkCodex || checkAntigravity) {
     for (const skillPath of factorySkills) {
+      if (skillPath.startsWith("skills/workflows/")) continue;
       const parts = skillPath.split("/");
       const skillName = parts[parts.length - 2];
       if (skillName) {
         expectedLinks.push({ name: `skills/${skillName}`, relPath: `.agents/skills/${skillName}`, type: "dir" });
       }
     }
+    for (const wfPath of factoryWorkflows) {
+      const slug = wfPath.endsWith("/SKILL.md")
+        ? wfPath.split("/").at(-2)
+        : basename(wfPath, ".md");
+      expectedLinks.push({ name: `skills/workflow-${slug}`, relPath: `.agents/skills/workflow-${slug}`, type: "dir" });
+    }
   }
 
   if (checkClaude) {
-    const workflowEntries = [];
-    if (factoryWorkflows.length > 0) {
-      for (const wfPath of factoryWorkflows) {
-        const slug = basename(wfPath, ".md");
-        workflowEntries.push(`workflow-${slug}`);
-      }
-    } else {
-      for (const skillPath of factorySkills) {
-        if (skillPath.startsWith("skills/workflow-entries/")) {
-          const parts = skillPath.split("/");
-          const skillName = parts[parts.length - 2];
-          workflowEntries.push(skillName);
-        }
-      }
-    }
-    for (const wfName of workflowEntries) {
-      expectedLinks.push({ name: `claude/skills/${wfName}`, relPath: `.claude/skills/${wfName}`, type: "dir" });
+    for (const wfPath of factoryWorkflows) {
+      const slug = wfPath.endsWith("/SKILL.md")
+        ? wfPath.split("/").at(-2)
+        : basename(wfPath, ".md");
+      expectedLinks.push({ name: `claude/skills/workflow-${slug}`, relPath: `.claude/skills/workflow-${slug}`, type: "dir" });
     }
   }
 

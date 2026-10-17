@@ -4,7 +4,7 @@
   "domain": "features",
   "request": "Create a TypeScript backend order operation with safe serialization and tests",
   "goldenOutput": {
-    "workflow": "workflows/feature-delivery.md",
+    "workflow": "skills/workflows/feature-delivery/SKILL.md",
     "status": "completed"
   },
   "version": 1,

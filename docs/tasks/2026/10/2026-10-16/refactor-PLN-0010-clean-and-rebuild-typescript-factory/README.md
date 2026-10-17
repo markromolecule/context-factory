@@ -1,7 +1,7 @@
 ---
 title: "Clean and Rebuild Context Factory for TypeScript Ecosystem"
 type: task
-status: planned
+status: completed
 plan_contract_version: 3
 plan_id: "PLN-0010"
 created: "2026-10-16"
@@ -62,10 +62,10 @@ The released discovery brief is fresh and has no material unknowns (`docs/discov
 
 | ID | Source goal/scenario/decision | Criterion | Unit | Verification Command | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| AC-01 | S-01, D-01 | All 12 workflows exist as first-class skills under skills/workflows/ and old wrappers deleted | 01.01 | node scripts/context.mjs doctor | planned |
-| AC-02 | S-02, D-02 | Root model files and orchestrator wrappers are deleted | 02.01 | git status --short | planned |
-| AC-03 | S-03, D-03 | CLI commands and doctor remove --stack flags and flutter checks | 03.01 | npm test | planned |
-| AC-04 | S-04, D-01..D-03 | Bridge generator, validator, indexer, manifest, lockfile, and MOCs updated; ADR 0039 recorded | 04.01 | node scripts/context.mjs doctor | planned |
+| AC-01 | S-01, D-01 | All 12 workflows exist as first-class skills under skills/workflows/ and old wrappers deleted | 01.01 | node scripts/context.mjs doctor | passed |
+| AC-02 | S-02, D-02 | Root model files and orchestrator wrappers are deleted | 02.01 | git status --short | passed |
+| AC-03 | S-03, D-03 | CLI commands and doctor remove --stack flags and flutter checks | 03.01 | npm test | passed |
+| AC-04 | S-04, D-01..D-03 | Bridge generator, validator, indexer, manifest, lockfile, and MOCs updated; ADR 0039 recorded | 04.01 | node scripts/context.mjs doctor | passed |
 
 ## Scope
 
@@ -109,17 +109,17 @@ The released discovery brief is fresh and has no material unknowns (`docs/discov
 
 ## Phases
 
-- [ ] `phase-01-workflow-consolidation/phase.md` — Phase 1 — Consolidate Workflows into First-Class Skills
-- [ ] `phase-02-root-adapter-removal/phase.md` — Phase 2 — Purge Model-Specific Root Entrypoints & Model Adapters
-- [ ] `phase-03-typescript-environment/phase.md` — Phase 3 — Streamline TypeScript-Only Environment, CLI & Harness Tools
-- [ ] `phase-04-tooling-and-verification/phase.md` — Phase 4 — Tooling Alignment, Bridge Generator, Validator, and Final Verification
+- [x] `phase-01-workflow-consolidation/phase.md` — Phase 1 — Consolidate Workflows into First-Class Skills
+- [x] `phase-02-root-adapter-removal/phase.md` — Phase 2 — Purge Model-Specific Root Entrypoints & Model Adapters
+- [x] `phase-03-typescript-environment/phase.md` — Phase 3 — Streamline TypeScript-Only Environment, CLI & Harness Tools
+- [x] `phase-04-tooling-and-verification/phase.md` — Phase 4 — Tooling Alignment, Bridge Generator, Validator, and Final Verification
 
 ## Finalization & Merge Ledger
 
 | Stage | Branch or merge | Commit SHA | Conformance Report | Verification Command |
 | :--- | :--- | :--- | :--- | :--- |
-| Phase 01 Verification | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | pending | pending | `npm test` |
-| Phase 02 Verification | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | pending | pending | `git status --short` |
-| Phase 03 Verification | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | pending | pending | `npm test` |
-| Phase 04 Verification | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | pending | pending | `node scripts/context.mjs doctor` |
-| Task Finalization | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` to `feat/PLN-0009-codex-and-claude-workflow-discovery` | pending | pending | `node scripts/context.mjs doctor` |
+| Phase 01 Verification | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `099f8e6` | PASS | `npm test` |
+| Phase 02 Verification | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `099f8e6` | PASS | `git status --short` |
+| Phase 03 Verification | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `099f8e6` | PASS | `npm test` |
+| Phase 04 Verification | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `099f8e6` | PASS | `node scripts/context.mjs doctor` |
+| Task Finalization | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` to `feat/PLN-0009-codex-and-claude-workflow-discovery` | `099f8e6` | PASS | `node scripts/context.mjs doctor` |

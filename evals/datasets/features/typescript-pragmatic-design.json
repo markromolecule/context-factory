@@ -4,7 +4,7 @@
   "domain": "features",
   "request": "Implement pragmatic TypeScript operations adhering to YAGNI, KISS, composition, and Demeter principles",
   "goldenOutput": {
-    "workflow": "workflows/feature-delivery.md",
+    "workflow": "skills/workflows/feature-delivery/SKILL.md",
     "status": "completed"
   },
   "version": 1,

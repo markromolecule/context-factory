@@ -5,7 +5,7 @@ parent: "refactor-PLN-0010-clean-and-rebuild-typescript-factory"
 phase: "01"
 task_branch: "refactor/PLN-0010-clean-and-rebuild-typescript-factory"
 base_commit: "a37f557a2fde8e30b6ae23a941d74d8e87a5677f"
-status: planned
+status: completed
 created: "2026-10-16"
 tags: [task, phase]
 ---
@@ -24,7 +24,7 @@ Migrate all 12 workflows into unified first-class skill directories under `skill
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 01.01** | Migrate Workflows to First-Class Skills and Remove Wrapper Indirection | `unit-01-workflow-consolidation.md` | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `none` | `planned` |
+| **Unit 01.01** | Migrate Workflows to First-Class Skills and Remove Wrapper Indirection | `unit-01-workflow-consolidation.md` | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `none` | `completed` |
 
 ## Impacted Files & Components
 
@@ -47,7 +47,7 @@ Migrate all 12 workflows into unified first-class skill directories under `skill
 
 ## Implementation Tasks
 
-- [ ] Unit 01.01 — Author `SKILL.md` files under `skills/workflows/<slug>/` combining YAML frontmatter and lifecycle policies, then remove old `workflows/` and `skills/workflow-entries/`.
+- [x] Unit 01.01 — Author `SKILL.md` files under `skills/workflows/<slug>/` combining YAML frontmatter and lifecycle policies, then remove old `workflows/` and `skills/workflow-entries/`.
 
 ## Verification & Testing
 

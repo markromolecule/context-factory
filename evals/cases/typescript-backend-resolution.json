@@ -5,7 +5,7 @@
     "stacks": ["typescript"]
   },
   "expected": {
-    "workflow": "workflows/feature-delivery.md",
+    "workflow": "skills/workflows/feature-delivery/SKILL.md",
     "rules": [
       "rules/typescript/common/runtime-validation.md",
       "rules/typescript/backend/controllers-and-routes.md"

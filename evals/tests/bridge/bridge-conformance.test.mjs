@@ -93,14 +93,14 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
 
   await t.test("repository entry points route to current contracts without worktree instructions", async () => {
     const entryPoints = [
-      "AGENTS.md", "CLAUDE.md", "CODEX.md", "GEMINI.md",
-      ".cursorrules", ".windsurfrules", ".github/copilot-instructions.md",
-      "orchestrator/AGENTS.md", "orchestrator/CLAUDE.md",
-      "orchestrator/CODEX.md", "orchestrator/GEMINI.md",
+      "README.md",
+      "orchestrator/SHARED.md",
     ];
     for (const path of entryPoints) {
       const content = await readFile(join(process.cwd(), path), "utf8");
-      assert.match(content, /orchestrator\/SHARED\.md/, `${path} must point to the shared contract`);
+      if (path === "README.md") {
+        assert.match(content, /orchestrator\/SHARED(?:\.md)?/, `${path} must point to the shared contract`);
+      }
       assert.doesNotMatch(content, /intra-worktree|isolated worktrees|skills\/(?:context|plan|execute|test|review)\/SKILL\.md/i,
         `${path} must not use obsolete task terms or skill paths`);
     }
@@ -196,7 +196,7 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.strictEqual(capabilities.adapters.some((a) => a.stack === "laravel"), false);
     assert.ok(capabilities.supportedStacks.includes("typescript"));
     assert.strictEqual(capabilities.supportedStacks.includes("laravel"), false);
-    assert.ok(capabilities.unsupportedStacks.includes("flutter"));
+    assert.deepStrictEqual(capabilities.unsupportedStacks, []);
     assert.strictEqual(capabilities.fullyEnforcedFromFilesAlone, false);
     assert.strictEqual(capabilities.instructionOnlyProfiles, true);
 
@@ -227,7 +227,7 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.strictEqual(capturedJson.checks.editorIntegrity.fullyEnforcedFromFilesAlone, false);
     assert.ok(capturedJson.checks.enforcementCapabilities);
     assert.deepStrictEqual(capturedJson.checks.enforcementCapabilities.supportedStacks, ["typescript"]);
-    assert.ok(capturedJson.checks.enforcementCapabilities.unsupportedStacks.includes("flutter"));
+    assert.deepStrictEqual(capturedJson.checks.enforcementCapabilities.unsupportedStacks, []);
     assert.strictEqual(capturedJson.checks.enforcementCapabilities.enforcementMode, "repository-cli");
   });
 });
@@ -340,19 +340,19 @@ test("Unit 02.01: Ownership-Aware Host Bridge and Repair (AC-04, AC-05, AC-06)",
     await mkdir(subHost, { recursive: true });
 
     const subFactory = join(subHost, ".context-factory");
-    await mkdir(join(subFactory, "skills", "workflow-entries", "workflow-feature-delivery"), { recursive: true });
+    await mkdir(join(subFactory, "skills", "workflows", "feature-delivery"), { recursive: true });
     await writeFile(
       join(subFactory, "context-manifest.json"),
       JSON.stringify({
         contextVersion: "1.0.0",
-        skills: ["skills/workflow-entries/workflow-feature-delivery/SKILL.md"],
-        workflows: ["workflows/feature-delivery.md"],
+        skills: [],
+        workflows: ["skills/workflows/feature-delivery/SKILL.md"],
       }),
       "utf8"
     );
     await writeFile(
-      join(subFactory, "skills", "workflow-entries", "workflow-feature-delivery", "SKILL.md"),
-      "---\nname: workflow-feature-delivery\ndescription: test\n---\nRead canonical workflows/feature-delivery.md\nnode scripts/context.mjs resolve",
+      join(subFactory, "skills", "workflows", "feature-delivery", "SKILL.md"),
+      "---\nname: feature-delivery\ndescription: test\n---\n## Phases\n## Quality gates\n## Stop and escalation conditions",
       "utf8"
     );
 

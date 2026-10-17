@@ -28,11 +28,9 @@
       "type": "string",
       "enum": [
         "typescript",
-        "laravel",
         "global",
         "common",
         "solid",
-        "flutter",
         "general"
       ]
     },

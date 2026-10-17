@@ -7,10 +7,12 @@ import { normalizeScope } from "../core/options.mjs";
 
 export async function handlePreflightCommand(args = [], flags = {}) {
   const isJson = Boolean(flags.json);
-  const stack = flags.stack || flags.stacks || undefined;
-  const normalizedStack = typeof stack === "string" ? stack.toLowerCase() : (Array.isArray(stack) ? stack[0]?.toLowerCase() : "");
-  if (normalizedStack === "laravel") {
-    const errorMsg = "Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem.";
+  const rawStack = flags.stack || flags.stacks;
+  const normalizedStack = typeof rawStack === "string" ? rawStack.toLowerCase() : (Array.isArray(rawStack) ? rawStack[0]?.toLowerCase() : "");
+  if (normalizedStack && normalizedStack !== "typescript") {
+    const errorMsg = normalizedStack === "laravel"
+      ? "Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem."
+      : `Stack '${normalizedStack}' is not supported. Context Factory focuses strictly on the TypeScript ecosystem.`;
     if (isJson) {
       console.log(JSON.stringify({ status: "BLOCKED", error: errorMsg }, null, 2));
       return 2;
@@ -18,12 +20,13 @@ export async function handlePreflightCommand(args = [], flags = {}) {
     console.error(`\n${badges.warn("BLOCKED")} ${errorMsg}\n`);
     return 2;
   }
+  const stack = "typescript";
   const scope = normalizeScope(flags.scope || flags.paths);
   const waiverPath = flags.waiver || null;
 
   const request = args.join(" ").trim() || (scope.length > 0 ? `Verify scope ${scope.join(", ")}` : "");
   if (!request && !scope) {
-    throw new Error("Usage: context-cli preflight \"<prompt>\" [--stack <name>] [--scope <paths>] [--waiver <path>] [--json]");
+    throw new Error("Usage: context-cli preflight \"<prompt>\" [--scope <paths>] [--waiver <path>] [--json]");
   }
 
   try {

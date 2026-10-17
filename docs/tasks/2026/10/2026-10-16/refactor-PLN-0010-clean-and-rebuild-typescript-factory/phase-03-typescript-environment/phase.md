@@ -5,7 +5,7 @@ parent: "refactor-PLN-0010-clean-and-rebuild-typescript-factory"
 phase: "03"
 task_branch: "refactor/PLN-0010-clean-and-rebuild-typescript-factory"
 base_commit: "a37f557a2fde8e30b6ae23a941d74d8e87a5677f"
-status: planned
+status: completed
 created: "2026-10-16"
 tags: [task, phase]
 ---
@@ -24,7 +24,7 @@ Eliminate language and framework selection options (`--stack`, `--stacks` flags 
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 03.01** | Streamline CLI and Doctor to Dedicated TypeScript Stack | `unit-01-typescript-environment.md` | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `02.01` | `planned` |
+| **Unit 03.01** | Streamline CLI and Doctor to Dedicated TypeScript Stack | `unit-01-typescript-environment.md` | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `02.01` | `completed` |
 
 ## Impacted Files & Components
 
@@ -40,7 +40,7 @@ Eliminate language and framework selection options (`--stack`, `--stacks` flags 
 
 ## Implementation Tasks
 
-- [ ] Unit 03.01 — Remove `--stack` and `--stacks` flags/prompts, eliminate Flutter checks in `doctor.mjs` and schemas, remove framework-filtering branches in resolver, and update tests.
+- [x] Unit 03.01 — Remove `--stack` and `--stacks` flags/prompts, eliminate Flutter checks in `doctor.mjs` and schemas, remove framework-filtering branches in resolver, and update tests.
 
 ## Verification & Testing
 

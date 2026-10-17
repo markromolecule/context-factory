@@ -5,7 +5,7 @@ parent: "refactor-PLN-0010-clean-and-rebuild-typescript-factory"
 phase: "04"
 task_branch: "refactor/PLN-0010-clean-and-rebuild-typescript-factory"
 base_commit: "a37f557a2fde8e30b6ae23a941d74d8e87a5677f"
-status: planned
+status: completed
 created: "2026-10-16"
 tags: [task, phase]
 ---
@@ -24,7 +24,7 @@ Update `scripts/validate-context.mjs`, `app/cli/core/bridge-generator.mjs`, and 
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 04.01** | Tooling Alignment, Bridge Symlinks, ADR 0039, and Lockfile Synchronization | `unit-01-tooling-and-verification.md` | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `03.01` | `planned` |
+| **Unit 04.01** | Tooling Alignment, Bridge Symlinks, ADR 0039, and Lockfile Synchronization | `unit-01-tooling-and-verification.md` | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `03.01` | `completed` |
 
 ## Impacted Files & Components
 
@@ -42,7 +42,7 @@ Update `scripts/validate-context.mjs`, `app/cli/core/bridge-generator.mjs`, and 
 
 ## Implementation Tasks
 
-- [ ] Unit 04.01 — Update validator and bridge generator, author ADR 0039, regenerate MOCs, manifest, and lockfile, and verify `node scripts/context.mjs doctor`.
+- [x] Unit 04.01 — Update validator and bridge generator, author ADR 0039, regenerate MOCs, manifest, and lockfile, and verify `node scripts/context.mjs doctor`.
 
 ## Verification & Testing
 

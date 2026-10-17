@@ -2,7 +2,7 @@
   "name": "bridge and cross-workspace integration resolves context-maintenance workflow",
   "request": "/sync bridge and configure antigravity .agents symlinks in host repository",
   "expected": {
-    "workflow": "workflows/context-maintenance.md",
+    "workflow": "skills/workflows/context-maintenance/SKILL.md",
     "rules": [
       "rules/global/architecture-conformance.md",
       "rules/global/evidence-and-claims.md"

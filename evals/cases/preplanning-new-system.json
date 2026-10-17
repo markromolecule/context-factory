@@ -2,7 +2,7 @@
   "name": "new system begins with documented grilling",
   "request": "Pre-plan a new customer support system before coding and cover its users, goals, scenarios, permissions, failures, and boundaries",
   "expected": {
-    "workflow": "workflows/feature-delivery.md",
+    "workflow": "skills/workflows/feature-delivery/SKILL.md",
     "rules": [
       "rules/global/evidence-and-claims.md"
     ],

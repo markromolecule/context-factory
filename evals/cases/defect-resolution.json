@@ -2,7 +2,7 @@
   "name": "observed defect selects defect workflow",
   "request": "Fix the checkout defect that charges an order twice when the request is retried",
   "expected": {
-    "workflow": "workflows/defect-resolution.md",
+    "workflow": "skills/workflows/defect-resolution/SKILL.md",
     "rules": [
       "rules/global/evidence-and-claims.md"
     ],

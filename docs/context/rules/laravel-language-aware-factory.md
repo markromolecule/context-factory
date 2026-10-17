@@ -82,5 +82,5 @@ feature: "laravel-language-aware-factory"
 - [[docs/decisions/README|Architecture Decisions]]
 - [[docs/decisions/0021-explicit-language-stack-selection|Explicit Language Stack Selection]]
 - [[docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards|Pragmatic Laravel Rule Taxonomy, Anti-Overengineering Architecture, and Dynamic Multi-Language Alignment]]
-- [[workflows/context-maintenance|Context Maintenance Workflow]]
+- [[skills/workflows/context-maintenance/SKILL|Context Maintenance Workflow]]
 - [[docs/context/refactors/language-scoped-rules-restructure|Language-Scoped Rules Architecture]]

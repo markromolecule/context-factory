@@ -1,7 +1,8 @@
 ---
 title: "Host-Native Entries for Canonical Workflows"
 type: decision
-status: accepted
+status: superseded
+superseded_by: "0039-first-class-workflow-skills-and-typescript-consolidation"
 created: "2026-10-11"
 tags: [adr, workflows, skills, codex, claude, bridge]
 ---

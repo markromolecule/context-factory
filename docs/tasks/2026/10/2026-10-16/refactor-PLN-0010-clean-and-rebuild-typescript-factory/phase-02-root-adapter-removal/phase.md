@@ -5,7 +5,7 @@ parent: "refactor-PLN-0010-clean-and-rebuild-typescript-factory"
 phase: "02"
 task_branch: "refactor/PLN-0010-clean-and-rebuild-typescript-factory"
 base_commit: "a37f557a2fde8e30b6ae23a941d74d8e87a5677f"
-status: planned
+status: completed
 created: "2026-10-16"
 tags: [task, phase]
 ---
@@ -24,7 +24,7 @@ Remove redundant model-specific adapter files from the root and orchestrator dir
 
 | Unit ID | Title | Artifact File | Task Branch | Depends On | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Unit 02.01** | Remove Root Model Adapters and Centralize Contract | `unit-01-root-adapter-removal.md` | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `01.01` | `planned` |
+| **Unit 02.01** | Remove Root Model Adapters and Centralize Contract | `unit-01-root-adapter-removal.md` | `refactor/PLN-0010-clean-and-rebuild-typescript-factory` | `01.01` | `completed` |
 
 ## Impacted Files & Components
 
@@ -46,7 +46,7 @@ Remove redundant model-specific adapter files from the root and orchestrator dir
 
 ## Implementation Tasks
 
-- [ ] Unit 02.01 — Remove the 7 root/github adapter files and 4 orchestrator model adapter files, ensuring `orchestrator/SHARED.md` is clean and model-neutral.
+- [x] Unit 02.01 — Remove the 7 root/github adapter files and 4 orchestrator model adapter files, ensuring `orchestrator/SHARED.md` is clean and model-neutral.
 
 ## Verification & Testing
 

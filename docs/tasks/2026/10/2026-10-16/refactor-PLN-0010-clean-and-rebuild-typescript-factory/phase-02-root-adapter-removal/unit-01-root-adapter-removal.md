@@ -5,7 +5,7 @@ parent: "phase-02-root-adapter-removal"
 unit: "02.01"
 task_branch: "refactor/PLN-0010-clean-and-rebuild-typescript-factory"
 base_commit: "a37f557a2fde8e30b6ae23a941d74d8e87a5677f"
-status: planned
+status: completed
 created: "2026-10-16"
 tags: [task, unit, cleanup, root, orchestrator]
 depends_on: ["01.01"]
@@ -82,8 +82,8 @@ Run `git checkout -- AGENTS.md CLAUDE.md CODEX.md GEMINI.md .cursorrules .windsu
 
 ## Definition of done
 
-- [ ] Maps to acceptance criteria: AC-02
-- [ ] Executed on the recorded task branch
-- [ ] Changes committed cleanly to the task branch
-- [ ] Zero scope leaks confirmed via `/review`
-- [ ] All listed verification passes
+- [x] Maps to acceptance criteria: AC-02
+- [x] Executed on the recorded task branch
+- [x] Changes committed cleanly to the task branch
+- [x] Zero scope leaks confirmed via `/review`
+- [x] All listed verification passes

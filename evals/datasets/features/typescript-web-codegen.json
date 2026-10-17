@@ -4,7 +4,7 @@
   "domain": "features",
   "request": "Deliver accessible React web component feature with strict TypeScript typing and boundary validation",
   "expected": {
-    "workflow": "workflows/feature-delivery.md",
+    "workflow": "skills/workflows/feature-delivery/SKILL.md",
     "rules": [
       "rules/global/architecture-conformance.md",
       "rules/global/code-quality.md",
@@ -17,7 +17,7 @@
     ]
   },
   "goldenOutput": {
-    "workflow": "workflows/feature-delivery.md",
+    "workflow": "skills/workflows/feature-delivery/SKILL.md",
     "status": "completed"
   }
 }

@@ -4,17 +4,7 @@
   "entrypoint": "README.md",
   "orchestrationContract": "orchestrator/SHARED.md",
   "orchestrators": [
-    ".cursorrules",
-    ".github/copilot-instructions.md",
-    ".windsurfrules",
-    "AGENTS.md",
-    "CLAUDE.md",
-    "CODEX.md",
-    "GEMINI.md",
-    "orchestrator/AGENTS.md",
-    "orchestrator/CLAUDE.md",
-    "orchestrator/CODEX.md",
-    "orchestrator/GEMINI.md"
+    "orchestrator/SHARED.md"
   ],
   "agents": [
     "agents/README.md",
@@ -102,19 +92,7 @@
     "skills/productivity/plan-review/SKILL.md",
     "skills/productivity/plan/SKILL.md",
     "skills/productivity/session/SKILL.md",
-    "skills/productivity/triage/SKILL.md",
-    "skills/workflow-entries/workflow-architecture-change/SKILL.md",
-    "skills/workflow-entries/workflow-code-review-and-optimization/SKILL.md",
-    "skills/workflow-entries/workflow-commit-push-release/SKILL.md",
-    "skills/workflow-entries/workflow-context-maintenance/SKILL.md",
-    "skills/workflow-entries/workflow-database-migration/SKILL.md",
-    "skills/workflow-entries/workflow-defect-resolution/SKILL.md",
-    "skills/workflow-entries/workflow-dependency-upgrade/SKILL.md",
-    "skills/workflow-entries/workflow-docs/SKILL.md",
-    "skills/workflow-entries/workflow-feature-delivery/SKILL.md",
-    "skills/workflow-entries/workflow-new-project-delivery/SKILL.md",
-    "skills/workflow-entries/workflow-release-readiness/SKILL.md",
-    "skills/workflow-entries/workflow-security-sensitive-change/SKILL.md"
+    "skills/productivity/triage/SKILL.md"
   ],
   "skillResources": [
     "skills/engineering/execute/agents/openai.yaml",
@@ -129,18 +107,18 @@
     "skills/productivity/plan/agents/openai.yaml"
   ],
   "workflows": [
-    "workflows/architecture-change.md",
-    "workflows/code-review-and-optimization.md",
-    "workflows/commit-push-release.md",
-    "workflows/context-maintenance.md",
-    "workflows/database-migration.md",
-    "workflows/defect-resolution.md",
-    "workflows/dependency-upgrade.md",
-    "workflows/docs.md",
-    "workflows/feature-delivery.md",
-    "workflows/new-project-delivery.md",
-    "workflows/release-readiness.md",
-    "workflows/security-sensitive-change.md"
+    "skills/workflows/architecture-change/SKILL.md",
+    "skills/workflows/code-review-and-optimization/SKILL.md",
+    "skills/workflows/commit-push-release/SKILL.md",
+    "skills/workflows/context-maintenance/SKILL.md",
+    "skills/workflows/database-migration/SKILL.md",
+    "skills/workflows/defect-resolution/SKILL.md",
+    "skills/workflows/dependency-upgrade/SKILL.md",
+    "skills/workflows/docs/SKILL.md",
+    "skills/workflows/feature-delivery/SKILL.md",
+    "skills/workflows/new-project-delivery/SKILL.md",
+    "skills/workflows/release-readiness/SKILL.md",
+    "skills/workflows/security-sensitive-change/SKILL.md"
   ],
   "knowledge": [
     "knowledge/README.md",
@@ -213,7 +191,8 @@
     "docs/decisions/0035-host-conformance-receipts-and-fixture-modes.md",
     "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md",
     "docs/decisions/0037-operation-first-backend-modules.md",
-    "docs/decisions/0038-host-native-workflow-entries.md"
+    "docs/decisions/0038-host-native-workflow-entries.md",
+    "docs/decisions/0039-first-class-workflow-skills-and-typescript-consolidation.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
