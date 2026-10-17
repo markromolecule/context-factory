@@ -11,7 +11,6 @@ import { handleInitCommand } from "../app/cli/commands/init.mjs";
 import { handleLintCommand } from "../app/cli/commands/lint.mjs";
 import { handleLockCommand } from "../app/cli/commands/lock.mjs";
 import { handlePreflightCommand } from "../app/cli/commands/preflight.mjs";
-import { handleConformCommand } from "../app/cli/commands/conform.mjs";
 import { handleRepairCommand } from "../app/cli/commands/repair.mjs";
 import { handleResolveCommand } from "../app/cli/commands/resolve.mjs";
 import { handleSessionCommand } from "../app/cli/commands/session.mjs";
@@ -72,10 +71,6 @@ export async function handleCli(argv = process.argv.slice(2)) {
 
   if (command === "preflight") {
     return handlePreflightCommand(parsedArgs, flags);
-  }
-
-  if (command === "conform" || command === "conformance") {
-    return handleConformCommand(parsedArgs, flags);
   }
 
   if (command === "bundle") {

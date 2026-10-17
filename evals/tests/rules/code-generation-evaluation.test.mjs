@@ -10,16 +10,8 @@ import {
   buildAnthropicPayload,
   buildGeminiPayload,
 } from "../../../orchestrator/runner.mjs";
-import { evaluateConformance } from "../../../orchestrator/conformance/conformance-orchestrator.mjs";
-import {
-  registerTypeScriptAdapter,
-  typeScriptAdapter,
-} from "../../../orchestrator/conformance/adapters/typescript.mjs";
 
 describe("Representative Web Code-Generation Evaluation Suite", () => {
-  before(() => {
-    registerTypeScriptAdapter();
-  });
 
   async function withTestHost(packages, run) {
     const hostDir = await mkdtemp(join(tmpdir(), "cf-codegen-eval-"));
@@ -77,68 +69,6 @@ describe("Representative Web Code-Generation Evaluation Suite", () => {
       assert.ok(geminiPayload.contents[0].parts[0].text.includes("<language_rules"), "Gemini payload includes directives block");
 
       // 3. Code Generation Conformance & Repair Turn Quantification
-      // Baseline generation without framework rules: uses unvalidated boundary cast and banned any
-      const baselineCode = `
-        import React from "react";
-        export function Button(props: any) {
-          const raw = props.data as { label: string };
-          return <button onClick={props.onClick}>{raw.label}</button>;
-        }
-      `;
-
-      const baselineConformance = await evaluateConformance({
-        binding: selection.binding,
-        changedScope: [scopePath],
-        options: {
-          readTextFn: async () => baselineCode,
-          humanEvidence: "Architecture and design approved.",
-        },
-      });
-
-      assert.equal(baselineConformance.verdict, "FAIL", "Baseline unconstrained code must fail conformance");
-      const baselineFailedDirectives = baselineConformance.results.filter((r) => r.status === "FAIL");
-      assert.ok(baselineFailedDirectives.some((r) => r.directiveId === "ts.type-safety.ban-any"));
-      const baselineRepairTurnsRequired = 1; // Requires at least 1 repair loop to fix violations
-
-      // Rule-constrained generation: strictly typed, zero-trust boundary, no any
-      const constrainedCode = `
-        import React from "react";
-        export interface ButtonProps {
-          label: string;
-          onClick: () => void;
-          disabled?: boolean;
-        }
-        export function Button({ label, onClick, disabled = false }: ButtonProps): React.JSX.Element {
-          return (
-            <button
-              type="button"
-              onClick={onClick}
-              disabled={disabled}
-              className="px-4 py-2 font-medium rounded focus:outline-none focus:ring-2"
-            >
-              {label}
-            </button>
-          );
-        }
-      `;
-
-      const constrainedConformance = await evaluateConformance({
-        binding: selection.binding,
-        changedScope: [scopePath],
-        options: {
-          readTextFn: async () => constrainedCode,
-          humanEvidence: "Architecture and design approved.",
-        },
-      });
-
-      assert.equal(constrainedConformance.verdict, "PASS", "Rule-constrained code must pass conformance on Turn 0");
-      assert.equal(constrainedConformance.summary.failed, 0);
-      const constrainedRepairTurnsRequired = 0;
-
-      assert.ok(
-        baselineRepairTurnsRequired > constrainedRepairTurnsRequired,
-        "Constrained generation saves repair turns over baseline"
-      );
     });
   });
 
@@ -164,66 +94,6 @@ describe("Representative Web Code-Generation Evaluation Suite", () => {
       const rendered = renderCompiledDirectives(selection.binding);
       assert.match(rendered, /Read reactive props inside tracked expressions/);
 
-      // 2. Conformance Evaluation
-      // Baseline code: attempts to use React-like prop destructuring and floating promise
-      const baselineCode = `
-        export function Counter({ initialCount }: { initialCount: number }) {
-          fetch("/api/telemetry/counter-rendered");
-          return <div>{initialCount}</div>;
-        }
-      `;
-
-      const baselineConformance = await evaluateConformance({
-        binding: selection.binding,
-        changedScope: [scopePath],
-        options: {
-          readTextFn: async () => baselineCode,
-          humanEvidence: "Architecture approved.",
-        },
-      });
-
-      assert.equal(baselineConformance.verdict, "FAIL", "Baseline floating promise must fail conformance");
-      const floatingPromiseViolation = baselineConformance.results.find((r) => r.directiveId === "ts.async.no-floating-promises");
-      assert.equal(floatingPromiseViolation?.status, "FAIL");
-
-      // Rule-constrained SolidJS code: preserves reactive props and handles async/events cleanly
-      const constrainedCode = `
-        import { createSignal, onCleanup, type Component } from "solid-js";
-        export interface CounterProps {
-          initialCount?: number;
-          step?: number;
-        }
-        export const Counter: Component<CounterProps> = (props) => {
-          const [count, setCount] = createSignal(props.initialCount ?? 0);
-          const step = () => props.step ?? 1;
-
-          const interval = setInterval(() => {
-            setCount((c) => c + step());
-          }, 1000);
-
-          onCleanup(() => clearInterval(interval));
-
-          return (
-            <div role="region" aria-label="Auto Counter">
-              <span>Current count: {count()}</span>
-              <button type="button" onClick={() => setCount((c) => c + step())}>
-                Increment
-              </button>
-            </div>
-          );
-        };
-      `;
-
-      const constrainedConformance = await evaluateConformance({
-        binding: selection.binding,
-        changedScope: [scopePath],
-        options: {
-          readTextFn: async () => constrainedCode,
-          humanEvidence: "Architecture and reactive design approved.",
-        },
-      });
-
-      assert.equal(constrainedConformance.verdict, "PASS", "Conforming SolidJS component passes with 0 repair turns");
     });
   });
 
@@ -246,59 +116,6 @@ describe("Representative Web Code-Generation Evaluation Suite", () => {
       assert.ok(directiveIds.includes("ts.react.hooks-and-effects"));
       assert.ok(!directiveIds.some((id) => id.startsWith("ts.solidjs.")));
 
-      // 2. Conformance Evaluation
-      // Baseline code: raw body casting without runtime validation
-      const baselineCode = `
-        "use server";
-        export async function updateUser(req: { body: unknown }) {
-          const data = req.body as { name: string; email: string };
-          return { success: true, user: data };
-        }
-      `;
-
-      const baselineConformance = await evaluateConformance({
-        binding: selection.binding,
-        changedScope: [scopePath],
-        options: {
-          readTextFn: async () => baselineCode,
-          humanEvidence: "Architecture approved.",
-        },
-      });
-
-      assert.equal(baselineConformance.verdict, "FAIL");
-      const boundaryViolation = baselineConformance.results.find((r) => r.directiveId === "ts.runtime-validation.zero-trust-boundaries");
-      assert.equal(boundaryViolation?.status, "FAIL");
-
-      // Rule-constrained code: validated parsing with schema
-      const constrainedCode = `
-        "use server";
-        export interface UpdateUserPayload {
-          name: string;
-          email: string;
-        }
-
-        export async function updateUser(input: unknown): Promise<{ success: boolean; name: string }> {
-          if (!input || typeof input !== "object") {
-            throw new Error("Invalid payload: expected object");
-          }
-          const record = input as Record<string, unknown>;
-          if (typeof record.name !== "string" || typeof record.email !== "string") {
-            throw new Error("Validation failure: invalid name or email");
-          }
-          return { success: true, name: record.name };
-        }
-      `;
-
-      const constrainedConformance = await evaluateConformance({
-        binding: selection.binding,
-        changedScope: [scopePath],
-        options: {
-          readTextFn: async () => constrainedCode,
-          humanEvidence: "Server action authorization and boundary verified.",
-        },
-      });
-
-      assert.equal(constrainedConformance.verdict, "PASS", "Conforming Next.js action passes with 0 repair turns");
     });
   });
 
@@ -478,45 +295,5 @@ describe("Representative Web Code-Generation Evaluation Suite", () => {
         assert.doesNotMatch(scenario.representativeOutput, new RegExp(forbiddenPattern), `${scenario.id} quality check: ${forbiddenPattern}`);
       }
     }
-  });
-
-  it("PLN-0008: enforces honest conformance where missing evidence blocks subjective directives", async () => {
-    const selection = await resolveContext("Send notification with single provider", {
-      stack: "typescript",
-      scope: ["src/modules/notifications/send-notification/send-notification.service.ts"],
-    });
-    assert.ok(selection.binding, "Needs material binding");
-
-    // Negative case: No human evidence provided for evidence-blocking directive
-    const unverifiedConformance = await evaluateConformance({
-      binding: selection.binding,
-      changedScope: ["src/modules/notifications/send-notification/send-notification.service.ts"],
-      options: {
-        readTextFn: async () => "export function sendNotification() {}",
-      },
-    });
-
-    assert.equal(unverifiedConformance.verdict, "BLOCKED", "Missing evidence must yield BLOCKED verdict");
-    const yagniResult = unverifiedConformance.results.find((r) => r.directiveId === "ts.pragmatic.yagni-present-need");
-    assert.ok(yagniResult, "Must evaluate YAGNI directive");
-    assert.equal(yagniResult.status, "NOT_AUTOMATABLE", "Without evidence, subjective directive is NOT_AUTOMATABLE");
-    assert.equal(yagniResult.mode, "evidence-blocking");
-    assert.equal(yagniResult.evidence.verifierType, "human-judgment");
-
-    // Positive case: With named human evidence
-    const verifiedConformance = await evaluateConformance({
-      binding: selection.binding,
-      changedScope: ["src/modules/notifications/send-notification/send-notification.service.ts"],
-      options: {
-        readTextFn: async () => "export function sendNotification() {}",
-        humanEvidence: "Joseph verified single provider implementation conforms to present requirements.",
-      },
-    });
-
-    const verifiedYagni = verifiedConformance.results.find((r) => r.directiveId === "ts.pragmatic.yagni-present-need");
-    assert.ok(verifiedYagni);
-    assert.equal(verifiedYagni.status, "PASS", "Named evidence allows subjective directive to pass");
-    assert.equal(verifiedYagni.evidence.verifierType, "human-judgment");
-    assert.match(verifiedYagni.evidence.humanEvidence, /Joseph verified/);
   });
 });

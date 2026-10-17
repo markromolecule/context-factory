@@ -87,7 +87,6 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.strictEqual(weakenedInspection.valid, false);
     assert.ok(weakenedInspection.missingGates.includes("shared-contract (SHARED.md)"));
     assert.ok(weakenedInspection.missingGates.includes("preflight command"));
-    assert.ok(weakenedInspection.missingGates.includes("conform command"));
     assert.ok(weakenedInspection.missingGates.includes("fail-closed gate"));
   });
 
@@ -169,12 +168,11 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     let initialAudit = await auditEditorConfigurations(weakenedHost);
     assert.strictEqual(initialAudit.passed, true);
 
-    // Intentionally strip preflight and conform commands from CLAUDE.md
+    // Intentionally strip preflight command from CLAUDE.md
     const claudePath = join(weakenedHost, "CLAUDE.md");
     const originalClaude = await readFile(claudePath, "utf8");
     const weakenedClaude = originalClaude
-      .replace(/.*preflight.*/g, "")
-      .replace(/.*conform.*/g, "");
+      .replace(/.*preflight.*/g, "");
     await writeFile(claudePath, weakenedClaude, "utf8");
 
     const auditAfterWeakening = await auditEditorConfigurations(weakenedHost);
@@ -185,14 +183,12 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.ok(claudeItem);
     assert.match(claudeItem.status, /weakened contract/);
     assert.match(claudeItem.status, /preflight/);
-    assert.match(claudeItem.status, /conform/);
   });
 
   await t.test("doctor reports enforcement capabilities separately from instruction file existence", async () => {
     const capabilities = await auditEnforcementCapabilities();
     assert.ok(capabilities);
     assert.ok(Array.isArray(capabilities.adapters));
-    assert.ok(capabilities.adapters.some((a) => a.stack === "typescript" && a.status === "ready"));
     assert.strictEqual(capabilities.adapters.some((a) => a.stack === "laravel"), false);
     assert.ok(capabilities.supportedStacks.includes("typescript"));
     assert.strictEqual(capabilities.supportedStacks.includes("laravel"), false);
@@ -215,7 +211,7 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
         try {
           const parsed = JSON.parse(output);
           if (parsed && parsed.checks) capturedJson = parsed;
-        } catch {}
+        } catch { }
       };
 
       await handleDoctorCommand([], { target: testHost, json: true });

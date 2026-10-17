@@ -45,13 +45,12 @@ The Context Factory CLI is a text-first, zero-dependency Node.js ESM interface p
 
 ### Setup & Discovery
 - `context-cli init`: Interactive or flag-driven host setup with `--preview` dry-runs and explicit editor selection.
-- `context-cli status`: Reports three distinct dimensions — **Host Setup**, **Factory Health**, and **Code Conformance** — with an actionable next command.
+- `context-cli status`: Reports distinct dimensions — **Host Setup** and **Factory Health** — with an actionable next command.
 - `context-cli --help`: Text-first accessible help hierarchy (no mascot decoration; full ANSI / `NO_COLOR` / non-TTY / JSON parity).
 
 ### Quality Gates & Verification
 - **Local Pre-Commit Hook:** `context-cli hook install` installs a non-clobbering, exclusive pre-commit hook in `.git/hooks/pre-commit` supporting standard git repos, git submodules, and worktrees.
-- **GitHub Actions Quality Gate:** `context-cli init --ci github` generates `.github/workflows/context-factory-gate.yml` with recursive submodule checkout, health check, conformance execution, report persistence, and receipt verification.
-- **Content-Bound Conformance Verification:** `context-cli conform verify <reportPath>` verifies that a generated report has a `PASS` verdict, matches the active binding hash, and matches the content-bound SHA-256 byte digest of changed files, preventing stale receipts and uncommitted edits.
+- **GitHub Actions Quality Gate:** `context-cli init --ci github` generates `.github/workflows/context-factory-gate.yml` with recursive submodule checkout, health check, and test verification.
 
 ### Automation & Migration Note
 - **Explicit Editor Selection:** In non-interactive environments where no existing editor configurations are detected, `init` requires an explicit `--ide <vscode|cursor|trae|antigravity|all>`. Silent fallback to all IDE profiles is eliminated to protect host repositories from unintended file generation. Existing automation scripts should pass `--ide all` explicitly.

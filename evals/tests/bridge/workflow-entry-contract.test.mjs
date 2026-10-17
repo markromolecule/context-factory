@@ -69,47 +69,15 @@ test("Unit 01.01: Canonical Workflow Skill and Host Entry Contract (AC-01, AC-07
     }
   });
 
-  await t.test("host discovery entries in .agents/skills (Codex) exist and point to valid adapter sources", async () => {
-    const agentsSkillsDir = resolve(root, ".agents/skills");
-    assert.ok(existsSync(agentsSkillsDir), ".agents/skills directory must exist");
+  await t.test("canonical workflow skills are self-contained and require no root host discovery symlinks", async () => {
+    assert.strictEqual(existsSync(resolve(root, ".agents")), false, "Factory root must not contain ephemeral .agents directory");
+    assert.strictEqual(existsSync(resolve(root, ".claude")), false, "Factory root must not contain ephemeral .claude directory");
 
     for (const entry of expectedEntries) {
-      const linkPath = resolve(root, entry.codexLink);
-      assert.ok(existsSync(linkPath), `Codex entry link must exist: ${entry.codexLink}`);
-
-      const stat = await lstat(linkPath);
-      assert.ok(stat.isSymbolicLink(), `Codex entry must be a symbolic link: ${entry.codexLink}`);
-
-      const rawTarget = await readlink(linkPath);
-      const resolvedTarget = resolve(agentsSkillsDir, rawTarget);
-      assert.ok(existsSync(resolvedTarget), `Codex link target must exist and not dangle: ${entry.codexLink} -> ${rawTarget}`);
-      assert.equal(
-        resolvedTarget,
-        resolve(root, entry.sourceDir),
-        `Codex link must resolve to source workflow dir ${entry.sourceDir}`
-      );
-    }
-  });
-
-  await t.test("host discovery entries in .claude/skills (Claude Code) exist and point to valid adapter sources", async () => {
-    const claudeSkillsDir = resolve(root, ".claude/skills");
-    assert.ok(existsSync(claudeSkillsDir), ".claude/skills directory must exist");
-
-    for (const entry of expectedEntries) {
-      const linkPath = resolve(root, entry.claudeLink);
-      assert.ok(existsSync(linkPath), `Claude Code entry link must exist: ${entry.claudeLink}`);
-
-      const stat = await lstat(linkPath);
-      assert.ok(stat.isSymbolicLink(), `Claude Code entry must be a symbolic link: ${entry.claudeLink}`);
-
-      const rawTarget = await readlink(linkPath);
-      const resolvedTarget = resolve(claudeSkillsDir, rawTarget);
-      assert.ok(existsSync(resolvedTarget), `Claude link target must exist and not dangle: ${entry.claudeLink} -> ${rawTarget}`);
-      assert.equal(
-        resolvedTarget,
-        resolve(root, entry.sourceDir),
-        `Claude link must resolve to source workflow dir ${entry.sourceDir}`
-      );
+      const skillPath = resolve(root, entry.sourceFile);
+      assert.ok(existsSync(skillPath), `Canonical workflow skill must exist: ${entry.sourceFile}`);
+      const content = await readText(entry.sourceFile);
+      assert.ok(content.length > 50, `Canonical workflow skill must be substantive: ${entry.sourceFile}`);
     }
   });
 

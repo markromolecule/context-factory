@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { resolveContext, root } from "../../../scripts/context-core.mjs";
-import { validateWaiver } from "../../../orchestrator/conformance/waiver-policy.mjs";
+import { assertValid, loadSchema } from "../../../orchestrator/validator.mjs";
 import { badges, colors } from "../core/formatter.mjs";
 import { normalizeScope } from "../core/options.mjs";
 
@@ -34,7 +34,8 @@ export async function handlePreflightCommand(args = [], flags = {}) {
     if (waiverPath) {
       const fullWaiverPath = resolve(process.cwd(), waiverPath);
       const waiverContent = JSON.parse(await readFile(fullWaiverPath, "utf8"));
-      await validateWaiver(waiverContent);
+      const waiverSchema = await loadSchema("rule-waiver");
+      assertValid(waiverContent, waiverSchema);
       waivers.push(waiverContent);
     }
 

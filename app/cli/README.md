@@ -8,12 +8,14 @@ A zero-dependency, pure ESM command-line interface for maintaining, validating, 
 
 The CLI is written in pure Node.js ESM without external dependencies. It works immediately out of the box with zero `npm install` requirements.
 
-### Direct Node Invocation:
+### Direct Node Invocation
+
 ```sh
 node app/cli/bin/context-cli.mjs <command> [options]
 ```
 
-### Global CLI (via `npm link`):
+### Global CLI (via `npm link`)
+
 ```sh
 npm link
 context-cli --help
@@ -22,7 +24,8 @@ context-cli status
 context-cli pull
 ```
 
-### Via Root NPM Scripts:
+### Via Root NPM Scripts
+
 ```sh
 npm run cli -- <command>
 npm run init
@@ -42,6 +45,7 @@ npm run diff
 ## Command Reference
 
 ### 1. Interactive Project Initialization (`init`)
+
 Launches the streamlined setup wizard to onboard and bridge Context Factory into any host repository:
 
 1. **Submodule Integration:** Embed Context Factory into `.context-factory` via `git submodule add <url> .context-factory`. If run before submoduling, `init` detects the host environment and offers a hybrid assistant to automatically run or display the command.
@@ -71,7 +75,9 @@ context-cli init --target ../my-app --ide vscode,trae --method submodule --hook 
 ---
 
 ### 2. Cross-Repository Bridging (`bridge`)
+
 Generates the complete bridging layer and editor configurations in any target host repository:
+
 - **VS Code & GitHub Copilot:** `.github/copilot-instructions.md`, `.vscode/extensions.json`, and non-destructive JSON merge for `.vscode/settings.json` (preserves existing user font, theme, and tab preferences).
 - **Trae AI IDE:** `.trae/rules/project_rules.md` referencing Context Factory's orchestrator contracts, rules, and workflows.
 - **Cursor IDE:** Modern `.cursor/rules/context-factory.mdc` rules alongside legacy `.cursorrules`.
@@ -103,7 +109,9 @@ context-cli bridge --target ../my-host-app --force
 ---
 
 ### 3. Pull Submodule Updates & Auto-Heal (`pull` / `update`)
+
 Pulls the latest changes from upstream Context Factory, auto-heals `.agents/` symlinks, and automatically validates health with `doctor`:
+
 - When run inside a **host repository**, it updates the `.context-factory` submodule via `git submodule update --remote --merge`.
 - Automatically restores any missing or broken symlinks.
 - Automatically verifies lockfile integrity, syntax, and evaluations post-pull.
@@ -128,7 +136,9 @@ context-cli pull --no-doctor
 ---
 
 ### 4. Diagnostics, Health & Auto-Repair (`doctor`)
+
 Runs a comprehensive multi-point health check across:
+
 - **Manifest & Syntax Lint:** Validates YAML frontmatter, schema conformance, and catalog rules.
 - **Lockfile Integrity:** Verifies `context-lock.json` against current repository hashes.
 - **`.agents` Symlink Integrity:** Validates Antigravity live symlinks and `.agents/skills.json`.
@@ -152,6 +162,7 @@ context-cli doctor --json
 ---
 
 ### 5. Automated Synchronization (`sync`)
+
 Automatically scans directory trees, updates `context-manifest.json`, validates `.agents/` symlinks, and regenerates `context-lock.json`.
 
 ```sh
@@ -161,6 +172,7 @@ context-cli sync
 ---
 
 ### 6. Compilation & Bundling (`build` / `compile`)
+
 Compiles the entire factory (rules, skills, workflows, agents, knowledge, schemas, templates, decisions) into a standalone, portable JSON bundle with token estimates.
 
 ```sh
@@ -174,6 +186,7 @@ context-cli build --out dist/bundle.min.json --minify
 ---
 
 ### 7. Linting & Validation (`lint` / `validate`)
+
 Validates schema compliance, frontmatter structure, required workflow sections, and symlink integrity.
 
 ```sh
@@ -187,6 +200,7 @@ context-cli validate schemas/project-profile.schema.json --schema project-profil
 ---
 
 ### 8. Evaluation Suite (`eval` / `test`)
+
 Runs unit evaluation cases (`evals/cases/`) and golden dataset executions (`evals/datasets/`).
 
 ```sh
@@ -200,6 +214,7 @@ context-cli eval --unit
 ---
 
 ### 9. Drift & Lock Management (`diff` / `lock`)
+
 Tracks and enforces consistency between disk files, `context-manifest.json`, and `context-lock.json`.
 
 ```sh
@@ -216,6 +231,7 @@ context-cli diff
 ---
 
 ### 10. Context Resolution & Execution (`resolve` / `run`)
+
 Deterministically resolves relevant context rules and executes 3-stage LLM runs.
 
 ```sh
@@ -229,6 +245,7 @@ context-cli run "implement user authentication" --provider mock
 ---
 
 ### 11. Task Scaffolding (`task`)
+
 Manages task plans and phase breakdowns in `docs/tasks/`.
 
 ```sh
@@ -242,7 +259,9 @@ context-cli task list
 ---
 
 ### 12. Host & Factory Status (`status`)
+
 Reports three independent dimensions of project health with an actionable next command:
+
 - **Host Setup:** Validates submodule presence, configured editor profiles, and local git pre-commit hook.
 - **Factory Health:** Checks manifest synchronization, lockfile integrity, and evaluation status.
 - **Code Conformance:** Reports current conformance verification state.
@@ -261,7 +280,9 @@ context-cli status --json
 ---
 
 ### 13. Git Hook Quality Gate (`hook`)
+
 Installs and manages an atomic, non-clobbering pre-commit quality gate in `.git/hooks/pre-commit`:
+
 - Automatically supports standard git repositories, git submodules, and git worktrees.
 - Performs non-clobbering checks to prevent overwriting existing unrelated hooks without `--force`.
 - Executes `context-cli doctor` before commits to ensure zero-drift manifest and lockfile integrity.
@@ -279,20 +300,13 @@ context-cli hook preview
 
 ---
 
-### 14. Quality Gates & Conformance (`preflight`, `conform`)
-Enforces executable architectural and coding rule compliance across changed scopes:
+### 14. Quality Gates (`preflight`)
+
+Enforces executable architectural and coding rule compliance across planned scopes:
 
 - **Preflight:** Compiles and binds applicable rules for a prompt and target scope before code modifications.
-- **Conform:** Evaluates changes against active rule bindings and writes authoritative conformance reports.
-- **Conform Verify:** Fail-closed independent verification of conformance report receipts against the current checkout, ensuring PASS verdict, binding hash match, and content-bound SHA-256 byte digest equivalence.
 
 ```sh
 # Preflight rule binding verification
-context-cli preflight "Implement payments webhook" --stack typescript --scope "src/webhook.ts"
-
-# Evaluate changes and generate conformance receipt
-context-cli conform "Verify payments webhook" --stack typescript --scope "src/webhook.ts" --out .context-runs/report.json
-
-# Independently verify conformance report receipt against current checkout
-context-cli conform verify .context-runs/report.json
+context-cli preflight "Implement payments webhook" --scope "src/webhook.ts"
 ```

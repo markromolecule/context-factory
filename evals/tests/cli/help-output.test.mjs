@@ -19,11 +19,9 @@ describe("Unit 01.02: Text-first help and output (AC-05)", () => {
       // Displays one-line identity and quality journey
       assert.match(output, /Context Factory CLI/i);
       assert.match(output, /preflight/i);
-      assert.match(output, /conform/i);
 
       // Examples are present
       assert.match(output, /context-cli preflight/);
-      assert.match(output, /context-cli conform/);
     } finally {
       console.log = originalLog;
     }
