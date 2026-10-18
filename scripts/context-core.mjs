@@ -254,7 +254,7 @@ const ACTION_TERMS = new Set([
   "design", "dip", "discovery", "doc", "docs", "documentation", "execute", "execution", "explore", "fix", "grill", "grounding", "hotfix",
   "implement", "isp", "lsp", "maintain", "migrate", "mitigation", "ocp", "plan", "push", "redesign", "refactor", "release",
   "remove", "report", "resolve", "review", "sec", "security", "ship", "solid", "srp", "summary", "sync", "test",
-  "threat", "triage", "update", "upgrade", "ux", "verify", "wiki",
+  "threat", "update", "upgrade", "ux", "verify", "wiki",
 ]);
 
 const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan)|context spec(?:ification)?|author context|create context)\b|^\/(?:grill|discovery|context)\b|^\[(?:GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i;
@@ -296,7 +296,7 @@ const ROUTING_HINTS = [
   { test: /^\/(?:sync|lock|maintain)\b|^\[(?:SYNC|LOCK|MAINTENANCE)\]/i, workflow: "context-maintenance" },
   { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "new-project-delivery" },
   { test: /^\/(?:doc|docs|documentation|report)\b|^\[(?:DOC|DOCS|DOCUMENTATION|REPORT)\]/i, workflow: "docs" },
-  { test: /^\/(?:plan|feature|grill|discovery|context|triage)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC|TRIAGE)\]/i, workflow: "feature-delivery" },
+  { test: /^\/(?:plan|feature|grill|discovery|context)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i, workflow: "feature-delivery" },
   { test: /^\/(?:session|session-save|session-resume)\b|^\[SESSION\]/i, workflow: null },
 
   // 3. Keyword & Concept matchers
@@ -426,8 +426,8 @@ export async function resolveContext(request, options = {}) {
       reason: entry.meta.frameworks?.length && rawScopeArr.length
         ? `matched framework and affected files: ${entry.meta.frameworks.join(", ")}`
         : entry.meta.alwaysApply === true
-        ? (entry.meta.name === "evidence-and-claims" ? "global evidence contract" : "alwaysApply within action scope")
-        : `matched: ${entry.relevance.matches.join(", ")}`,
+          ? (entry.meta.name === "evidence-and-claims" ? "global evidence contract" : "alwaysApply within action scope")
+          : `matched: ${entry.relevance.matches.join(", ")}`,
     }));
 
   if (selectedAgent && Array.isArray(selectedAgent.meta.rules)) {
@@ -614,8 +614,8 @@ export async function resolveContext(request, options = {}) {
     const workflowName = options.workflow
       || (selectedWorkflow?.path
         ? (selectedWorkflow.path.endsWith("/SKILL.md")
-            ? selectedWorkflow.path.split("/").at(-2)
-            : basename(selectedWorkflow.path, ".md"))
+          ? selectedWorkflow.path.split("/").at(-2)
+          : basename(selectedWorkflow.path, ".md"))
         : "feature-delivery");
     bindingCompilation = compileRuleBinding({
       taskId: options.taskId || "adhoc",
@@ -645,8 +645,8 @@ export async function resolveContext(request, options = {}) {
       path: selectedAgent.path,
       defaultWorkflow: selectedAgent.meta.defaultWorkflow
         ? (selectedAgent.meta.defaultWorkflow.endsWith("/SKILL.md")
-            ? selectedAgent.meta.defaultWorkflow
-            : `skills/workflows/${selectedAgent.meta.defaultWorkflow}/SKILL.md`)
+          ? selectedAgent.meta.defaultWorkflow
+          : `skills/workflows/${selectedAgent.meta.defaultWorkflow}/SKILL.md`)
         : null,
       handoffs: selectedAgent.meta.handoffs ?? null,
     } : null,

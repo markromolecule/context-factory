@@ -9,9 +9,9 @@ rules:
   - rules/global/code-quality.md
   - rules/typescript/common/error-handling.md
 skills:
-  - explore
   - execute
-  - verify
+  - test
+  - refactor
 ---
 
 # Defect Resolution

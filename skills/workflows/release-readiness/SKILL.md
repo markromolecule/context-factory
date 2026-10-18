@@ -9,8 +9,8 @@ rules:
   - rules/global/security-guardrails.md
   - rules/global/code-quality.md
 skills:
-  - verify
-  - explore
+  - test
+  - security
 ---
 
 # Release Readiness

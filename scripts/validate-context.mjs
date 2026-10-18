@@ -309,7 +309,6 @@ export async function validateContext() {
     "/exec", "/execute", "/execution", "[EXEC]", "[EXECUTE]", "[EXECUTION]",
     "/tsc", "/typescript", "[TSC]", "/zod", "[ZOD]", "/explore", "[EXPLORE]",
     "/grounding", "/wiki", "[WIKI]", "/verify", "[VERIFY]", "[QA]",
-    "/triage", "[TRIAGE]",
     "/doc", "/docs", "/documentation", "[DOC]", "[DOCS]", "[DOCUMENTATION]",
   ]);
 
@@ -564,7 +563,8 @@ export async function validateContext() {
   for (const path of allMarkdown) {
     const source = await readText(path);
     for (const match of source.matchAll(/\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]/g)) {
-      if (!aliases.has(match[1])) error(`Broken wiki link in ${path}: ${match[1]}`);
+      const target = match[1].trim();
+      if (!aliases.has(target)) error(`Broken wiki link in ${path}: ${match[1]}`);
     }
   }
 

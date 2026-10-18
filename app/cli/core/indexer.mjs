@@ -134,7 +134,7 @@ ${prodRows.join("\n")}`;
     content += `\n\n## Other Skills\n\n${otherRows.join("\n")}`;
   }
 
-  content += `\n\nSkills trigger through their YAML descriptions and slash command shortcuts. All declarative engineering standards (TypeScript type safety, runtime validation, database query optimization, backend module architecture, and UI styling) are defined in and loaded from \`rules/\`.\n\nFor a new system, product, or feature capability, the skill sequence is \`context\` / \`grill\` → \`explore\` → \`plan\` → approval → \`execute\` → \`refactor\` (optional). Repository discovery may run inside context authoring and grilling to answer evidence-discoverable questions.\n`;
+  content += `\n\nSkills trigger through their YAML descriptions and slash command shortcuts. All declarative engineering standards (TypeScript type safety, runtime validation, database query optimization, backend module architecture, and UI styling) are defined in and loaded from \`rules/\`.\n\nFor a new system, product, or feature capability, the skill sequence is \`context\` / \`grill\` → \`plan\` → approval → \`execute\` → \`refactor\` (optional). Repository discovery may run inside context authoring and grilling to answer evidence-discoverable questions.\n`;
 
   return content;
 }

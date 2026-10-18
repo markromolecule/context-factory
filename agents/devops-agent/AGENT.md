@@ -6,7 +6,7 @@ description: Manages CI/CD automation pipelines, containerization (Docker, Compo
 lifecycleStage: Deployment, Infrastructure & Release
 aliases: ["/devops", "[DEVOPS]"]
 defaultWorkflow: release-readiness
-skills: [security, verify]
+skills: [security, test]
 workflows: [release-readiness, security-sensitive-change, dependency-upgrade]
 rules:
   - rules/global/architecture-conformance.md
@@ -71,7 +71,7 @@ Invoke the DevOps Agent whenever you encounter:
 | **Workflow** | `workflows/security-sensitive-change.md` | Handling secrets, authentication keys, credentials, and webhook endpoints safely. |
 | **Workflow** | `workflows/dependency-upgrade.md` | Systematic dependency upgrades and vulnerability patching. |
 | **Skill** | `skills/security/SKILL.md` | Auditing authorization, secrets exposure, and infrastructure boundaries. |
-| **Skill** | `skills/verify/SKILL.md` | Verifying automated test suites and build outputs before deployment. |
+| **Skill** | `skills/engineering/test/SKILL.md` | Verifying automated test suites and build outputs before deployment. |
 
 ---
 

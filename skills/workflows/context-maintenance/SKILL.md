@@ -8,8 +8,8 @@ rules:
   - rules/global/evidence-and-claims.md
   - rules/global/architecture-conformance.md
 skills:
-  - verify
   - execute
+  - test
 ---
 
 # Context Maintenance

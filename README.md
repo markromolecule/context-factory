@@ -17,12 +17,13 @@ This repository is the source of truth for agent behavior, engineering rules, re
 5. Invoke specialized procedures through [[docs/Skills|Skills Map]].
 6. Inspect tool integrations through [[docs/Connectors|Connectors Map]] and [.mcp.json](.mcp.json).
 7. Ground durable knowledge through [[docs/Wiki|LLM Wiki]].
-8. Record durable decisions in [[docs/decisions/README|Architecture Decisions]] and work in [[docs/tasks/README|Tasks]] (triaged via [[docs/tasks/INBOX|Triage Inbox]]).
+8. Record durable decisions in [[docs/decisions/README|Architecture Decisions]] and work in [[docs/tasks/README|Tasks]].
 9. Integrate into host repositories using [[docs/guide/cross-workspace-integration|Cross-Workspace Integration Guide]] or `context-cli init`.
 
 ## Multi-Editor Bridging & Submodule Onboarding
 
 Context Factory provides first-class, non-destructive bridging for modern AI coding editors:
+
 - **VS Code:** Scaffolds `.github/copilot-instructions.md`, `.vscode/extensions.json`, and merges `.vscode/settings.json` non-destructively.
 - **Claude Code:** Provisions `.claude/skills/workflow-<slug>` discovery symlinks for all 12 canonical workflows, natively invokable via `/workflow-<slug>` (e.g. `/workflow-feature-delivery`, `/workflow-defect-resolution`).
 - **Codex:** Provisions `.agents/skills/workflow-<slug>` discovery symlinks, discoverable via `/skills` or `$workflow-<slug>` without deprecated custom prompts.
@@ -30,7 +31,8 @@ Context Factory provides first-class, non-destructive bridging for modern AI cod
 - **Cursor:** Provisions modern `.cursor/rules/context-factory.mdc` (`alwaysApply: true`) and root `.cursorrules`.
 - **Trae:** Scaffolds `.trae/rules/project_rules.md` referencing orchestrator contracts and rules.
 
-### Quick Start in Any Host Project:
+### Quick Start in Any Host Project
+
 ```sh
 # 1. Add as submodule
 git submodule add <context-factory-url> .context-factory
@@ -44,15 +46,18 @@ node .context-factory/app/cli/bin/context-cli.mjs init
 The Context Factory CLI is a text-first, zero-dependency Node.js ESM interface providing fast setup, diagnostics, and deterministic quality gates:
 
 ### Setup & Discovery
+
 - `context-cli init`: Interactive or flag-driven host setup with `--preview` dry-runs and explicit editor selection.
 - `context-cli status`: Reports distinct dimensions — **Host Setup** and **Factory Health** — with an actionable next command.
 - `context-cli --help`: Text-first accessible help hierarchy (no mascot decoration; full ANSI / `NO_COLOR` / non-TTY / JSON parity).
 
 ### Quality Gates & Verification
+
 - **Local Pre-Commit Hook:** `context-cli hook install` installs a non-clobbering, exclusive pre-commit hook in `.git/hooks/pre-commit` supporting standard git repos, git submodules, and worktrees.
 - **GitHub Actions Quality Gate:** `context-cli init --ci github` generates `.github/workflows/context-factory-gate.yml` with recursive submodule checkout, health check, and test verification.
 
 ### Automation & Migration Note
+
 - **Explicit Editor Selection:** In non-interactive environments where no existing editor configurations are detected, `init` requires an explicit `--ide <vscode|cursor|trae|antigravity|all>`. Silent fallback to all IDE profiles is eliminated to protect host repositories from unintended file generation. Existing automation scripts should pass `--ide all` explicitly.
 - **Host Test & Lint Execution:** Generated CI workflows execute host tests (`--test-command`) and linting (`--lint-command`) only when explicitly configured; unconfigured checks are marked as unconfigured and never implied to have passed.
 

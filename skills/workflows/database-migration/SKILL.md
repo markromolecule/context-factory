@@ -13,7 +13,8 @@ rules:
 skills:
   - plan
   - execute
-  - verify
+  - test
+  - perf
 ---
 
 # Database Migration

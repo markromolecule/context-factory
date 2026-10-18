@@ -25,9 +25,9 @@ graph LR
 
 ## Specialized Refactoring Workflows
 
-When refactoring targets specific non-functional code smells or architectural deficiencies, route to the specialized skill:
+When refactoring targets specific non-functional code smells or architectural deficiencies, route to the specialized skill or rule:
 
-- **Type-Driven Refactoring & Static Hardening (`/types`):** When refactoring to eliminate loose `any` casts, replace untyped JSON/API payloads with runtime schemas, implement discriminated unions, or apply nominal branded types, consult `skills/engineering/types/SKILL.md`.
+- **Type-Driven Refactoring & Static Hardening:** When refactoring to eliminate loose `any` casts, replace untyped JSON/API payloads with runtime schemas, implement discriminated unions, or apply nominal branded types, adhere to `rules/typescript/common/type-safety.md`.
 - **Hot-Path & Query Performance Refactoring (`/perf`):** When refactoring to eliminate ORM N+1 query loops, apply Equality-Sort-Range (ESR) composite indexes, break up async waterfall starvation, or introduce streaming pagination, consult `skills/engineering/perf/SKILL.md`.
 
 
@@ -51,7 +51,7 @@ When refactoring targets specific non-functional code smells or architectural de
 ### 2. Map Contracts & Consumers
 
 - Catalog every exported function, class, type, interface, and constant in the target file.
-- Use `explore` or grep search to locate all importing files and consumers across the repository.
+- Use grep search to locate all importing files and consumers across the repository.
 - Ensure that no public API contract or database query behavior is altered.
 
 ### 3. Surgical Modular Extraction

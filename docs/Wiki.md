@@ -43,10 +43,10 @@ Use the [[skills/productivity/grounding/SKILL|grounding]] skill. Filter by metad
 
 - [[knowledge/README|Knowledge index]]
 - [[knowledge/principles/composition-over-inheritance|Composition over Inheritance (`factory.principles.composition-over-inheritance`)]]
-- [[knowledge/principles/kiss|Keep It Simple, Stupid (KISS) (`factory.principles.kiss`)]]
-- [[knowledge/principles/law-of-demeter-tell-dont-ask|Law of Demeter and Tell, Don't Ask (`factory.principles.demeter-tell-dont-ask`)]]
 - [[knowledge/principles/dependency-inversion|Dependency Inversion Principle (`factory.principles.dependency-inversion`)]]
 - [[knowledge/principles/interface-segregation|Interface Segregation Principle (`factory.principles.interface-segregation`)]]
+- [[knowledge/principles/kiss|Keep It Simple, Stupid (KISS) (`factory.principles.kiss`)]]
+- [[knowledge/principles/law-of-demeter-tell-dont-ask|Law of Demeter and Tell, Don't Ask (`factory.principles.demeter-tell-dont-ask`)]]
 - [[knowledge/principles/liskov-substitution|Liskov Substitution Principle (`factory.principles.liskov-substitution`)]]
 - [[knowledge/principles/open-closed|Open/Closed Principle (`factory.principles.open-closed`)]]
 - [[knowledge/principles/single-responsibility|Single Responsibility Principle (`factory.principles.single-responsibility`)]]

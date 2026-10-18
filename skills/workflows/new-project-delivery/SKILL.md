@@ -12,10 +12,10 @@ rules:
 skills:
   - grill
   - context
-  - explore
   - plan
+  - plan-review
   - execute
-  - verify
+  - test
 ---
 
 # New Project Progressive Delivery
@@ -59,6 +59,7 @@ Load global rules and relevant domain rules for touched files. Start with `grill
 ## Stop and escalation conditions
 
 Stop for user direction when:
+
 - Pre-planning discovery uncovers ambiguous business policies or conflicting constraints.
 - A database schema change would cause irreversible data loss or breaks backward compatibility.
 - An unexpected circular dependency is identified between modules.

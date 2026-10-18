@@ -34,7 +34,7 @@ flowchart TD
 
     subgraph S5["5. Verification, Security & Release"]
         THREAT["Threat Modeling Agent<br/>(agents/threat-agent)<br/>/threat, [THREAT]"]
-        QA["QA & Reviewer<br/>(skills/verify, optimize)<br/>/verify, /optimize"]
+        QA["QA & Reviewer<br/>(skills/test, optimize)<br/>/test, /optimize"]
         DEVOPS["DevOps Specialist<br/>(agents/devops-agent)<br/>/devops, [DEVOPS]"]
     end
 
@@ -57,13 +57,13 @@ flowchart TD
 
 | Subagent | Path | Role & Capabilities | Primary Skills & Rules |
 | :--- | :--- | :--- | :--- |
-| **BA Agent** | [[agents/ba-agent/AGENT|`agents/ba-agent`]] | Clarifies ambiguous requirements, interviews the user, creates context specifications, user stories, domain definitions, and scenario test matrices. | `grill`, `grounding`, `context` |
-| **Architect & ADR Agent** | [[agents/architect-agent/AGENT|`agents/architect-agent`]] | Evaluates system boundaries, dependency direction, SOLID principles conformance, and authors Architectural Decision Records (ADRs). | `adr`, `plan`, `verify`, `grounding` |
-| **Data Modeler Agent** | [[agents/data-agent/AGENT|`agents/data-agent`]] | Designs relational/document schemas, ESR composite indexing, forward/rollback migration scripts, cursor pagination, and repository isolation. | `verify`, `grounding`, `plan` |
-| **PM Agent** | [[agents/pm-agent/AGENT|`agents/pm-agent`]] | Breaks requirements into phased implementation plans, dependency-ordered phase files, milestone schedules, and execution progress tracking. | `plan`, `execute`, `adr`, `verify`, `refactor` |
-| **UX & Design System Agent** | [[agents/ux-agent/AGENT|`agents/ux-agent`]] | Composes accessible UI components (WCAG 2.1 AA), design token systems, interaction feedback states, and encapsulates client state in custom hooks/stores. | `grounding`, `verify`, `refactor` |
-| **Threat Modeling Agent** | [[agents/threat-agent/AGENT|`agents/threat-agent`]] | Conducts STRIDE threat modeling, audits trust boundaries, validates authentication/authorization policies, timing safety, and secrets hygiene. | `security`, `verify` |
-| **DevOps Agent** | [[agents/devops-agent/AGENT|`agents/devops-agent`]] | Automates CI/CD pipelines (GitHub Actions, etc.), containerization (Docker, Compose), environment hygiene (`.env.example`), and release verification. | `security`, `verify`, `release-readiness` |
+| **BA Agent** | [[agents/ba-agent/AGENT | `agents/ba-agent`]] | Clarifies ambiguous requirements, interviews the user, creates context specifications, user stories, domain definitions, and scenario test matrices. | `grill`, `grounding`, `context` |
+| **Architect & ADR Agent** | [[agents/architect-agent/AGENT | `agents/architect-agent`]] | Evaluates system boundaries, dependency direction, SOLID principles conformance, and authors Architectural Decision Records (ADRs). | `adr`, `plan`, `plan-review`, `grounding` |
+| **Data Modeler Agent** | [[agents/data-agent/AGENT | `agents/data-agent`]] | Designs relational/document schemas, ESR composite indexing, forward/rollback migration scripts, cursor pagination, and repository isolation. | `perf`, `grounding`, `plan` |
+| **PM Agent** | [[agents/pm-agent/AGENT | `agents/pm-agent`]] | Breaks requirements into phased implementation plans, dependency-ordered phase files, milestone schedules, and execution progress tracking. | `plan`, `plan-review`, `execute`, `adr`, `refactor` |
+| **UX & Design System Agent** | [[agents/ux-agent/AGENT | `agents/ux-agent`]] | Composes accessible UI components (WCAG 2.1 AA), design token systems, interaction feedback states, and encapsulates client state in custom hooks/stores. | `grounding`, `refactor`, `test` |
+| **Threat Modeling Agent** | [[agents/threat-agent/AGENT | `agents/threat-agent`]] | Conducts STRIDE threat modeling, audits trust boundaries, validates authentication/authorization policies, timing safety, and secrets hygiene. | `security`, `test` |
+| **DevOps Agent** | [[agents/devops-agent/AGENT | `agents/devops-agent`]] | Automates CI/CD pipelines (GitHub Actions, etc.), containerization (Docker, Compose), environment hygiene (`.env.example`), and release verification. | `security`, `test`, `release-readiness` |
 
 ---
 

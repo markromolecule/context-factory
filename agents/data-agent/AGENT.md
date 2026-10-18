@@ -6,7 +6,7 @@ description: Designs relational and document schemas, manages database migration
 lifecycleStage: Data Modeling & Persistence
 aliases: ["/data", "[DATA]"]
 defaultWorkflow: database-migration
-skills: [verify, grounding, plan]
+skills: [perf, grounding, plan]
 workflows: [database-migration, feature-delivery, security-sensitive-change]
 rules:
   - rules/global/1-3-1-rule.md
@@ -42,6 +42,7 @@ The **Data Modeler & Database Architect Agent** is responsible for entity relati
 ## When to Invoke the Data Agent
 
 Invoke the Data Agent whenever you encounter:
+
 - Designing new database tables, collections, foreign keys, or enum types (`rules/typescript/database/schema-db.md`).
 - Creating forward database migrations and reversible rollback scripts (`workflows/database-migration.md`).
 - Optimizing slow queries, diagnosing table scans, or planning compound indexes via ESR (`rules/typescript/database/query-optimization-and-pagination.md`).
@@ -54,11 +55,13 @@ Invoke the Data Agent whenever you encounter:
 ## Input & Output Contracts
 
 ### Inputs
+
 - **From BA Agent:** Domain entities, relationship cardinalities, data retention rules, and scale projections.
 - **From Architect Agent:** Module boundaries, vertical slice storage partitions, and data ownership invariants.
 - **Current Database State:** Existing schema definitions (Prisma schema, Drizzle schema, Kysely types, or raw SQL migrations).
 
 ### Outputs & Deliverables
+
 - **Schema & Migration Files:** Forward SQL / ORM migrations and accompanying rollback scripts under migrations directory.
 - **Generated Consumer Types:** Updated TypeScript database models, repository interfaces, and Zod schemas.
 - **Query Optimization Notes:** Index explanations (EXPLAIN ANALYZE evidence), compound index designs, and ESR query specifications.
@@ -73,7 +76,7 @@ Invoke the Data Agent whenever you encounter:
 | **Workflow** | `workflows/database-migration.md` | Guiding the 3-phase database migration lifecycle (Forward, Rollback, Consumer Verification). |
 | **Workflow** | `workflows/feature-delivery.md` | Data modeling within feature delivery Phase 2. |
 | **Workflow** | `workflows/security-sensitive-change.md` | Protecting sensitive data, encryption-at-rest, and tenant isolation. |
-| **Skill** | `skills/verify/SKILL.md` | Auditing schema changes and test coverage for the data access layer. |
+| **Skill** | `skills/engineering/perf/SKILL.md` | Auditing query performance, index coverage (ESR), and N+1 prevention. |
 | **Skill** | `skills/plan/SKILL.md` | Breaking database changes into backward-compatible rollout phases. |
 | **Skill** | `skills/grounding/SKILL.md` | Grounding entity definitions against project terminology. |
 
@@ -117,6 +120,7 @@ flowchart TD
 
 > [!CAUTION]
 > **Data Agent Hard Stops:**
+>
 > - **NEVER run destructive commands** (e.g., `DROP TABLE`, `TRUNCATE`, or `DELETE` without `WHERE`) without verified backups and explicit user confirmation.
 > - **NEVER ship a forward migration without a verified rollback script.**
 > - **NEVER use `OFFSET` pagination on tables with >10,000 rows.** Always implement keyset/cursor pagination.

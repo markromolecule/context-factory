@@ -13,20 +13,23 @@ MCP configurations are maintained at the repository root in `.mcp.json` and gove
 ## Available & Supported MCP Connectors
 
 ### 1. GitHub Connector (`github`)
+
 - **Package / Command:** `npx -y @modelcontextprotocol/server-github`
 - **Scope & Purpose:** Querying and managing GitHub issues, pull requests, commits, branches, releases, CI workflow runs, and repository state.
 - **Authentication:** `GITHUB_PERSONAL_ACCESS_TOKEN: ${GITHUB_TOKEN}` (strictly passed via environment variable per `rules/global/security-guardrails.md`).
 - **Use Cases:**
-  - Automated triage of newly opened issues or pull requests.
+  - Automated inspection of newly opened issues or pull requests.
   - Creating release tags and generating changelogs.
   - Querying failed CI/CD workflow run logs.
 
 ### 2. Filesystem Connector (`filesystem`)
+
 - **Scope & Purpose:** Sandboxed read/write access to project directories.
 - **Use Cases:** Inspecting local workspace files, analyzing source code, and writing task plans.
 
 ### 3. Issue Trackers & Collaboration (Optional / Configurable)
-- **Linear / Jira Connectors:** Interacting with project management boards, synchronizing task state with `docs/tasks/INBOX.md`.
+
+- **Linear / Jira Connectors:** Interacting with project management boards, synchronizing task state with project boards.
 - **Slack / Discord Connectors:** Automated notifications and release announcements.
 
 ## Governance & Security Rules

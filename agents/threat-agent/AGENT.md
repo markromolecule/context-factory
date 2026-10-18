@@ -6,7 +6,7 @@ description: Conducts STRIDE threat modeling, audits trust boundaries, validates
 lifecycleStage: Security, Threat Modeling & Trust Verification
 aliases: ["/threat", "[THREAT]"]
 defaultWorkflow: security-sensitive-change
-skills: [security, verify]
+skills: [security, test]
 workflows: [security-sensitive-change, feature-delivery, database-migration, release-readiness]
 rules:
   - rules/global/1-3-1-rule.md
@@ -36,6 +36,7 @@ The **Security & Threat Modeling Specialist Agent** is responsible for conductin
 ## When to Invoke the Threat Agent
 
 Invoke the Threat Agent whenever you encounter:
+
 - Implementing or changing authentication, OAuth2, session tokens, JWTs, or password hashing (`workflows/security-sensitive-change.md`).
 - Adding webhook endpoints, payment callbacks, external API integrations, or signature verifications (`rules/global/security-guardrails.md`).
 - Reviewing role-based access control (RBAC), multi-tenant data isolation, or object-level authorization (IDOR protection).
@@ -48,11 +49,13 @@ Invoke the Threat Agent whenever you encounter:
 ## Input & Output Contracts
 
 ### Inputs
+
 - **From BA / Architect Agent:** System architecture, data classification (PII, PCI, secrets), network boundaries, and trust zones.
 - **From Codebase:** Auth middleware, session validators, webhook handlers, CORS configs, and database access policies.
 - **Security Guardrails:** `rules/global/security-guardrails.md`.
 
 ### Outputs & Deliverables
+
 - **Threat Model Document:** Threat matrix categorized by STRIDE (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege).
 - **Adversarial Test Scenarios:** Explicit test cases for unauthorized access, replay attacks, parameter tampering, and injection.
 - **Remediation Runbooks:** Concrete code patterns for timing-safe comparison, rate limiting, and cryptographic signing.
@@ -68,7 +71,7 @@ Invoke the Threat Agent whenever you encounter:
 | **Workflow** | `workflows/release-readiness.md` | Security and secret hygiene pre-flight checks. |
 | **Workflow** | `workflows/database-migration.md` | Auditing sensitive data migrations and tenant partition safety. |
 | **Skill** | `skills/security/SKILL.md` | Threat modeling, secrets exposure checks, and boundary reviews. |
-| **Skill** | `skills/verify/SKILL.md` | Auditing adversarial test execution and evidence. |
+| **Skill** | `skills/engineering/test/SKILL.md` | Auditing adversarial test execution and negative test assertions. |
 
 ---
 
@@ -113,6 +116,7 @@ flowchart TD
 
 > [!CAUTION]
 > **Threat Agent Hard Stops:**
+>
 > - **NEVER commit plain-text secrets, tokens, or API keys** to repository files.
 > - **NEVER use loose string equality (`===`) for signature or secret comparisons.** Always use `crypto.timingSafeEqual`.
 > - **NEVER disable CSRF, CORS, or SSL verification** in production code.

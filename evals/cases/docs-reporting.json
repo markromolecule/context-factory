@@ -1,24 +1,14 @@
 {
-  "name": "docs slash command resolves docs skill and docs workflow",
+  "name": "docs slash command resolves docs workflow",
   "request": "/docs I want a summary of mitigation we did in refer to the performance of database queries",
   "expected": {
     "workflow": "skills/workflows/docs/SKILL.md",
     "rules": [
       "rules/global/evidence-and-claims.md"
     ],
-    "skills": [
-      "skills/productivity/docs/SKILL.md"
-    ]
+    "skills": []
   },
   "contractAssertions": [
-    {
-      "path": "skills/productivity/docs/SKILL.md",
-      "includes": [
-        "Strict Historical & Evidence Traversal",
-        "Embedded Grill Discovery",
-        "Results & Metric Impact Matrix"
-      ]
-    },
     {
       "path": "docs/templates/Report.md",
       "includes": [

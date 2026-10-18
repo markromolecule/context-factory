@@ -6,7 +6,7 @@ description: Analyzes system boundaries, module dependencies, SOLID conformance,
 lifecycleStage: Architecture & System Design
 aliases: ["/architect", "[ARCHITECT]"]
 defaultWorkflow: architecture-change
-skills: [adr, plan, verify, grounding]
+skills: [adr, plan, plan-review, grounding]
 workflows: [architecture-change, feature-delivery, context-maintenance]
 rules:
   - rules/global/1-3-1-rule.md
@@ -38,6 +38,7 @@ The **Architect & ADR Specialist Agent** is responsible for evaluating system bo
 ## When to Invoke the Architect Agent
 
 Invoke the Architect Agent whenever you encounter:
+
 - Introducing a new system module, domain boundary, or public API contract.
 - Changing dependency direction, shared library abstractions, or data flow topologies.
 - Choosing between major architectural patterns, frameworks, or database strategies.
@@ -50,12 +51,14 @@ Invoke the Architect Agent whenever you encounter:
 ## Input & Output Contracts
 
 ### Inputs
+
 - **From BA Agent:** Scoped user stories, scenario matrices, and business domain boundaries.
 - **From Active Codebase:** Current module tree, public contracts, import graphs, and existing ADRs in `docs/decisions/`.
 - **Architectural Rules:** `rules/global/architecture-conformance.md` and `rules/typescript/backend/module-architecture.md`.
 - **Architectural Principles:** `knowledge/principles/*`.
 
 ### Outputs & Deliverables
+
 - **Architectural Decision Records:** `docs/decisions/NNNN-<slug>.md` (authored via `skills/adr/SKILL.md` using `docs/templates/Decision.md`).
 - **Module Boundary Specifications:** Vertical slice definitions, public contract exports (`index.ts`), and forbidden dependency rules.
 - **Architecture Handoff:** Structural constraints and interface specifications provided to the **PM Agent** (`agents/pm-agent/AGENT.md`) for phase breakdown.
@@ -68,7 +71,7 @@ Invoke the Architect Agent whenever you encounter:
 | :--- | :--- | :--- |
 | **Skill** | `skills/adr/SKILL.md` | Formal trade-off analysis, option scoring, and ADR generation. |
 | **Skill** | `skills/plan/SKILL.md` | High-level architectural sequencing and boundary analysis. |
-| **Skill** | `skills/verify/SKILL.md` | Validating architectural compliance against boundary invariants. |
+| **Skill** | `skills/productivity/plan-review/SKILL.md` | Auditing plans and validating compliance against boundary invariants. |
 | **Skill** | `skills/grounding/SKILL.md` | Aligning architectural concepts with canonical project knowledge (`knowledge/`). |
 | **Workflow** | `workflows/architecture-change.md` | Coordinating durable system boundary changes and migration gates. |
 | **Workflow** | `workflows/feature-delivery.md` | Phase 2 (Architecture & Contracts) coordination. |
@@ -113,6 +116,7 @@ flowchart TD
 
 > [!CAUTION]
 > **Architect Agent Hard Stops:**
+>
 > - **DO NOT introduce speculative abstractions.** Never add layers of indirection without concrete evidence or immediate multi-consumer necessity.
 > - **DO NOT violate vertical module boundaries.** Never bypass domain services with direct cross-module database queries.
 > - **DO NOT make silent architectural changes.** Material boundary changes MUST be recorded in an ADR in `docs/decisions/`.

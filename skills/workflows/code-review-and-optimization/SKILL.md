@@ -9,9 +9,9 @@ rules:
   - rules/global/evidence-and-claims.md
   - rules/typescript/database/query-optimization-and-pagination.md
 skills:
-  - verify
   - refactor
-  - explore
+  - perf
+  - test
 ---
 
 # Code Review and Optimization
@@ -35,7 +35,7 @@ Use after executing an implementation plan phase, before declaring release readi
   - Backend: `rules/typescript/backend/module-architecture.md`, `rules/typescript/backend/service-layer.md`.
   - TypeScript: `rules/typescript/common/type-safety.md`, `rules/typescript/common/async-discipline.md`, `rules/typescript/common/runtime-validation.md`.
   - UI: `rules/typescript/ui/code-organization.md`, `rules/typescript/ui/interaction-feedback.md`.
-- Skills: `refactor` (for modular decomposition of oversized files), `verify` (for regression validation).
+- Skills: `refactor` (for modular decomposition of oversized files), `perf` (for query/waterfall optimizations), `test` (for regression validation).
 
 ## Phases
 
@@ -72,6 +72,7 @@ Use after executing an implementation plan phase, before declaring release readi
 ## Artifacts and completion
 
 Produce a structured code review & optimization report detailing:
+
 - Files audited and optimizations applied.
 - Modularity improvements or refactoring suggestions.
 - Test evidence demonstrating zero functional regression.

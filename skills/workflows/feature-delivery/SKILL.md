@@ -11,10 +11,10 @@ rules:
 skills:
   - context
   - grill
-  - explore
   - plan
+  - plan-review
   - execute
-  - verify
+  - test
 ---
 
 # Feature Delivery

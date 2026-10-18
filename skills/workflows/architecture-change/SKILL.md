@@ -11,11 +11,9 @@ rules:
   - rules/global/1-3-1-rule.md
 skills:
   - adr
-  - explore
   - plan
   - execute
   - refactor
-  - verify
 ---
 
 # Architecture Change
@@ -31,7 +29,7 @@ Use when work changes dependency direction, module ownership, a public contract 
 
 ## Applicable rules and skills
 
-Apply evidence-and-claims, architecture-conformance, code-quality, security, and 1-3-1. For a new system or an architecture request with unresolved goals and scenarios, start with `grill`. Use `explore` before proposing a boundary and `adr` to record a durable choice. Use `plan`/`execution` for multi-phase migration.
+Apply evidence-and-claims, architecture-conformance, code-quality, security, and 1-3-1. For a new system or an architecture request with unresolved goals and scenarios, start with `grill`. Use `grounding` before proposing a boundary and `adr` to record a durable choice. Use `plan`/`execution` for multi-phase migration.
 
 ## Phases
 

@@ -9,9 +9,8 @@ rules:
   - rules/global/architecture-conformance.md
   - rules/global/code-quality.md
 skills:
-  - docs
   - grill
-  - explore
+  - grounding
 ---
 
 # Documentation & System Reporting Workflow
@@ -28,7 +27,7 @@ Use when the user requests technical documentation, evidence-backed system repor
 
 ## Applicable rules and skills
 
-Apply `rules/global/evidence-and-claims.md`, `rules/global/architecture-conformance.md`, and `rules/global/code-quality.md`. Load `skills/productivity/docs/SKILL.md` for historical traversal, embedded grilling discovery, and tabular synthesis. Use `explore` for inspecting codebase files and git logs.
+Apply `rules/global/evidence-and-claims.md`, `rules/global/architecture-conformance.md`, and `rules/global/code-quality.md`. Use `grill` for requirement clarification and `grounding` or repository inspection for inspecting codebase files and git logs.
 
 ## Phases
 

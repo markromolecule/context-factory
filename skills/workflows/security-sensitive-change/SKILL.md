@@ -10,10 +10,9 @@ rules:
   - rules/typescript/common/runtime-validation.md
 skills:
   - security
-  - explore
   - plan
   - execute
-  - verify
+  - test
 ---
 
 # Security-Sensitive Change

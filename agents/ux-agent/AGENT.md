@@ -6,7 +6,7 @@ description: Designs intuitive user flows, accessible UI components (WCAG AA), r
 lifecycleStage: UX, Design System & Frontend Architecture
 aliases: ["/ux", "[UX]"]
 defaultWorkflow: feature-delivery
-skills: [grounding, verify, refactor]
+skills: [grounding, refactor, test]
 workflows: [feature-delivery, code-review-and-optimization]
 rules:
   - rules/global/1-3-1-rule.md
@@ -48,6 +48,7 @@ Use the affected package's installed framework and libraries. Select framework a
 ## When to Invoke the UX Agent
 
 Invoke the UX Agent whenever you encounter:
+
 - Designing new user interfaces, pages, or complex multi-step workflows (`rules/typescript/ui/frontend.md`).
 - Building reusable UI components, design tokens, or theme configurations (`rules/typescript/ui/code-organization.md`).
 - Implementing complex forms with inline Zod validation and keyboard navigation (`rules/typescript/ui/forms-and-validation.md`).
@@ -60,11 +61,13 @@ Invoke the UX Agent whenever you encounter:
 ## Input & Output Contracts
 
 ### Inputs
+
 - **From BA Agent:** User personas, user journeys, scenario matrices, and acceptance criteria.
 - **From Architect / Data Agent:** API endpoints, data models, and DTO schemas.
 - **Frontend Design System:** Existing UI tokens, CSS variables, icons, and component libraries.
 
 ### Outputs & Deliverables
+
 - **Component Specifications:** Component hierarchy breakdown, props interface definitions, and state diagrams.
 - **Accessible UI Prototypes / Components:** Components using the host framework, with clear rendering and data responsibilities.
 - **Custom Hooks & Stores:** Ergonomic hooks (`useXxx`) isolating async fetch, mutations, and local state.
@@ -79,7 +82,7 @@ Invoke the UX Agent whenever you encounter:
 | **Workflow** | `workflows/feature-delivery.md` | User flow and frontend architecture in Phase 2/3. |
 | **Workflow** | `workflows/code-review-and-optimization.md` | Auditing frontend component modularity, re-render performance, and accessibility. |
 | **Skill** | `skills/grounding/SKILL.md` | Grounding UI tokens and design vocabulary against project standards. |
-| **Skill** | `skills/verify/SKILL.md` | Validating keyboard navigation, screen reader labels, and layout integrity. |
+| **Skill** | `skills/engineering/test/SKILL.md` | Validating component render tests, accessibility assertions, and layout integrity. |
 | **Skill** | `skills/refactor/SKILL.md` | Decomposing oversized "god-components" into clean subcomponents and hooks. |
 
 ---
@@ -121,6 +124,7 @@ flowchart TD
 
 > [!CAUTION]
 > **UX Agent Hard Stops:**
+>
 > - **NEVER create inaccessible interactive elements.** Divs with `onClick` without `role="button"`, `tabIndex={0}`, and `onKeyDown` are forbidden.
 > - **Keep complex data coordination separate from markup.** Extract a hook, resource, or service when its responsibility warrants it; simple local state can remain in a component.
 > - **NEVER use generic browser alerts or unhandled error boundaries.** Always render context-aware inline feedback or toast notifications.

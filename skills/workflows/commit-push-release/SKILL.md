@@ -8,8 +8,8 @@ rules:
   - rules/global/git-commit.md
   - rules/global/evidence-and-claims.md
 skills:
-  - verify
   - execute
+  - test
 ---
 
 # Commit, Push & Release
@@ -30,7 +30,7 @@ Session triggers: `/ship`, `/commit-push-release`, `[SHIP]`, `[COMMIT_PUSH_RELEA
 ## Applicable rules and skills
 
 - **Rules:** `rules/global/git-commit.md`, `rules/global/security-guardrails.md`, `rules/global/evidence-and-claims.md`.
-- **Skills:** `skills/verify/SKILL.md`.
+- **Skills:** `skills/engineering/execute/SKILL.md`, `skills/engineering/test/SKILL.md`.
 - **Subagents:** `agents/devops-agent/AGENT.md` for CI/CD integration and deployment workflows.
 
 ## Phases

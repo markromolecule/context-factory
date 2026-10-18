@@ -30,7 +30,7 @@ Update the Obsidian maps of content, User Guide, Agent definitions, evaluation t
 
 ## Implementation Tasks
 
-- [x] Update `docs/Skills.md` with `[[skills/productivity/docs/SKILL|docs]]` link and description.
+- [x] Update `docs/Skills.md` with `docs` link and description.
 - [x] Update `docs/guide/skills.md` with complete skill documentation.
 - [x] Update `agents/pm-agent/AGENT.md` and `agents/ba-agent/AGENT.md` skills array.
 - [x] Author `evals/cases/docs-reporting.json` test case.

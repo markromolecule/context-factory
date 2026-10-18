@@ -9,10 +9,9 @@ rules:
   - rules/global/security-guardrails.md
   - rules/typescript/common/type-safety.md
 skills:
-  - explore
   - plan
   - execute
-  - verify
+  - test
 ---
 
 # Dependency Upgrade

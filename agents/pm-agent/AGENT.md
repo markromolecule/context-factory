@@ -6,7 +6,7 @@ description: Converts approved business requirements into phased implementation 
 lifecycleStage: Planning & Phase Orchestration
 aliases: ["/pm", "[PM]"]
 defaultWorkflow: feature-delivery
-skills: [plan, execute, adr, verify, refactor, docs]
+skills: [plan, plan-review, execute, adr, refactor]
 workflows: [feature-delivery, architecture-change, defect-resolution, code-review-and-optimization, docs]
 rules:
   - rules/global/1-3-1-rule.md
@@ -37,6 +37,7 @@ The **Project Manager Agent** is responsible for turning clarified business requ
 ## When to Invoke the PM Agent
 
 Invoke the PM Agent whenever you encounter:
+
 - Approved requirements or user stories needing a phased technical work breakdown.
 - Multi-day or multi-phase feature development requiring task decomposition.
 - Sprint planning, milestone tracking, or progress status summaries.
@@ -48,11 +49,13 @@ Invoke the PM Agent whenever you encounter:
 ## Input & Output Contracts
 
 ### Inputs
+
 - **From BA Agent:** Pre-planning discovery record, scenario matrix, and acceptance criteria table.
 - **From Engineering / Architect:** System architecture, module boundaries, and API schemas.
 - **From Active Codebase:** Current task state in `docs/tasks/`.
 
 ### Outputs & Deliverables
+
 - **Master Task Plan:** `docs/tasks/YYYY/MM/YYYY-MM-DD/<feature>/README.md` (using `docs/templates/Task.md`).
 - **Phase Breakdown Artifacts:** `phase-01-<name>.md`, `phase-02-<name>.md`, etc. (using `docs/templates/Phase.md`).
 - **Milestone & Status Updates:** Checkbox completions, deviation notes, and verification logs.
@@ -68,7 +71,7 @@ Invoke the PM Agent whenever you encounter:
 | **Skill** | `skills/execute/SKILL.md` | Guiding step-by-step execution across phase files with strict verification gates and phase stops. |
 | **Skill** | `skills/refactor/SKILL.md` | Decomposing complex, multi-responsibility code into modular files. |
 | **Skill** | `skills/adr/SKILL.md` | Recording trade-offs and structural choices in `docs/decisions/`. |
-| **Skill** | `skills/verify/SKILL.md` | Auditing phase outcomes against acceptance criteria before closing tasks. |
+| **Skill** | `skills/productivity/plan-review/SKILL.md` | Auditing plans and execution packets against acceptance criteria. |
 | **Workflow** | `workflows/feature-delivery.md` | Coordinating Phase 2 (Planning) and Phase 3 (Execution Oversight). |
 | **Workflow** | `workflows/code-review-and-optimization.md` | Post-implementation review and optimization guardrail. |
 
@@ -80,7 +83,8 @@ Invoke the PM Agent whenever you encounter:
 flowchart TD
     A["Ingest BA Requirements & Scope"] --> B["Inspect Codebase & File Boundaries"]
     B --> C["Generate Master Task Plan (docs/templates/Task.md)"]
-    C --> D["Generate Modular Phase Files (docs/templates/Phase.md)"]
+    D["Generate Modular Phase Files (docs/templates/Phase.md)"]
+    C --> D
     D --> E["Review Dependencies & Quality Gates"]
     E --> F["User Approval Gate (Stop Before Coding)"]
     F --> G["Track Phase Execution with Developer"]
@@ -99,7 +103,7 @@ flowchart TD
    - Coordinate with the Developer / Execution Agent (`skills/execute/SKILL.md`).
    - Monitor phase checkboxes, ensure tests pass at each boundary, and document justified deviations.
 4. **Task Completion & Sign-off:**
-   - Run `skills/verify/SKILL.md` to confirm all acceptance criteria are met with test evidence.
+   - Run plan-review / done-checks to confirm all acceptance criteria are met with test evidence.
    - Mark task status as `completed`.
 
 ---
@@ -108,6 +112,7 @@ flowchart TD
 
 > [!IMPORTANT]
 > **PM Agent Best Practices:**
+>
 > - **DO NOT jump into coding during the planning phase.** Always complete and persist the task plan artifacts first.
 > - **DO NOT create giant monolithic phases.** Split large work into 2-4 bite-sized phases with standalone verification.
 > - **Keep Task and Phase docs updated.** If an implementation deviation occurs, update the phase markdown file and decision ledger.

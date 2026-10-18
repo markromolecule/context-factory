@@ -71,31 +71,24 @@
   ],
   "skills": [
     "skills/engineering/execute/SKILL.md",
-    "skills/engineering/explore/SKILL.md",
     "skills/engineering/perf/SKILL.md",
     "skills/engineering/refactor/SKILL.md",
-    "skills/engineering/review/SKILL.md",
     "skills/engineering/security/SKILL.md",
     "skills/engineering/test/SKILL.md",
-    "skills/engineering/types/SKILL.md",
-    "skills/engineering/verify/SKILL.md",
     "skills/productivity/adr/SKILL.md",
     "skills/productivity/context/SKILL.md",
-    "skills/productivity/docs/SKILL.md",
     "skills/productivity/grill/SKILL.md",
     "skills/productivity/grounding/SKILL.md",
     "skills/productivity/plan-review/SKILL.md",
     "skills/productivity/plan/SKILL.md",
-    "skills/productivity/session/SKILL.md",
-    "skills/productivity/triage/SKILL.md"
+    "skills/productivity/session/SKILL.md"
   ],
   "skillResources": [
     "skills/engineering/execute/agents/openai.yaml",
     "skills/engineering/refactor/agents/openai.yaml",
-    "skills/engineering/review/agents/openai.yaml",
     "skills/engineering/test/agents/openai.yaml",
+    "skills/productivity/adr/agents/openai.yaml",
     "skills/productivity/context/agents/openai.yaml",
-    "skills/productivity/docs/agents/openai.yaml",
     "skills/productivity/grill/agents/openai.yaml",
     "skills/productivity/grill/references/glossary-format.md",
     "skills/productivity/plan-review/agents/openai.yaml",
@@ -235,13 +228,11 @@
     "scripts/session-core.mjs",
     "scripts/skill-access-check.mjs",
     "scripts/task-workflow.mjs",
-    "scripts/triage.mjs",
     "scripts/validate-context.mjs",
     "scripts/worktree.mjs"
   ],
   "automation": [
-    ".github/workflows/context-factory.yml",
-    ".github/workflows/discovery.yml"
+    ".github/workflows/context-factory.yml"
   ],
   "evaluations": [
     "evals/cases/agent-architect.json",
@@ -289,7 +280,6 @@
     "docs/Workflows.md",
     "docs/context/README.md",
     "docs/tasks/README.md",
-    "docs/tasks/INBOX.md",
     "docs/decisions/README.md",
     "agents/README.md",
     "docs/guide/README.md",

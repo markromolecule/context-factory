@@ -8,8 +8,7 @@
       "rules/global/evidence-and-claims.md"
     ],
     "skills": [
-      "skills/productivity/adr/SKILL.md",
-      "skills/engineering/explore/SKILL.md"
+      "skills/productivity/adr/SKILL.md"
     ]
   }
 }
