@@ -1,0 +1,99 @@
+{
+  "id": "typescript-pragmatic-design",
+  "name": "TypeScript Pragmatic Design Principles Evaluation",
+  "domain": "features",
+  "request": "Implement pragmatic TypeScript operations adhering to YAGNI, KISS, composition, and Demeter principles",
+  "goldenOutput": {
+    "workflow": "skills/workflows/feature-delivery/SKILL.md",
+    "status": "completed"
+  },
+  "version": 1,
+  "renderer": "compilePrompt plus buildOpenAIPayload, measured as UTF-8 JSON bytes",
+  "tokenMeasurement": "unavailable: no shared tokenizer is installed for both baseline and final payloads",
+  "baseline": {
+    "commit": "298768ee210189f2f2221f3cf8f041bce2ad26bf",
+    "requests": "The matching scenario request, stack, scope, renderer, and system prompt are evaluated before PLN-0008 pragmatic rules were introduced."
+  },
+  "scenarios": [
+    {
+      "id": "single-implementation-direct",
+      "request": "Send notification with single provider",
+      "scope": [
+        "src/modules/notifications/send-notification/send-notification.service.ts",
+        "src/modules/notifications/send-notification/send-notification.test.ts"
+      ],
+      "expectedDirectiveIds": [
+        "ts.pragmatic.yagni-present-need",
+        "ts.pragmatic.kiss-minimal-implementation"
+      ],
+      "payload": {
+        "baselineBytes": 53297,
+        "finalBytes": 46158,
+        "deltaBytes": -7139
+      },
+      "representativeOutput": "export async function sendNotification(input, deps) {\n  return deps.emailProvider.send({\n    to: input.recipient,\n    subject: input.subject,\n    body: input.body,\n  });\n}",
+      "quality": {
+        "requiredPatterns": [
+          "deps\\.emailProvider\\.send\\(",
+          "to: input\\.recipient"
+        ],
+        "forbiddenPatterns": [
+          "NotificationProviderFactory",
+          "StrategyRegistry"
+        ]
+      }
+    },
+    {
+      "id": "present-variants-composition",
+      "request": "Calculate order total with discount and tax rules",
+      "scope": [
+        "src/modules/pricing/calculate-total/calculate-total.service.ts",
+        "src/modules/pricing/calculate-total/calculate-total.test.ts"
+      ],
+      "expectedDirectiveIds": [
+        "ts.pragmatic.composition-over-inheritance"
+      ],
+      "payload": {
+        "baselineBytes": 53288,
+        "finalBytes": 46149,
+        "deltaBytes": -7139
+      },
+      "representativeOutput": "export function calculateTotal(baseAmount, rules) {\n  const discounted = rules.applyDiscount(baseAmount);\n  return rules.applyTax(discounted);\n}",
+      "quality": {
+        "requiredPatterns": [
+          "rules\\.applyDiscount\\(",
+          "rules\\.applyTax\\("
+        ],
+        "forbiddenPatterns": [
+          "extends BasePricingCalculator"
+        ]
+      }
+    },
+    {
+      "id": "demeter-tell-dont-ask-and-dto",
+      "request": "Process order payload and update customer account",
+      "scope": [
+        "src/modules/orders/process-order/process-order.service.ts",
+        "src/modules/orders/process-order/process-order.test.ts"
+      ],
+      "expectedDirectiveIds": [
+        "ts.pragmatic.demeter-tell-dont-ask"
+      ],
+      "payload": {
+        "baselineBytes": 53278,
+        "finalBytes": 46139,
+        "deltaBytes": -7139
+      },
+      "representativeOutput": "export async function processOrder(dto, deps) {\n  const order = await deps.orders.findById(dto.orderId);\n  await deps.account.charge(dto.amount);\n  return { orderId: order.id, status: 'processed' };\n}",
+      "quality": {
+        "requiredPatterns": [
+          "deps\\.account\\.charge\\(dto\\.amount\\)",
+          "dto\\.orderId"
+        ],
+        "forbiddenPatterns": [
+          "account\\.getWallet\\(\\)\\.getBalance\\(\\)"
+        ]
+      }
+    }
+  ]
+}

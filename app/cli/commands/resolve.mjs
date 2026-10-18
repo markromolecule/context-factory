@@ -2,10 +2,12 @@ import { resolveContext } from "../../../scripts/context-core.mjs";
 import { badges, colors, table } from "../core/formatter.mjs";
 
 export async function handleResolveCommand(args = [], flags = {}) {
-  const stack = flags.stack || flags.stacks || undefined;
-  const normalizedStack = typeof stack === "string" ? stack.toLowerCase() : (Array.isArray(stack) ? stack[0]?.toLowerCase() : "");
-  if (normalizedStack === "laravel") {
-    const errorMsg = "Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem.";
+  const rawStack = flags.stack || flags.stacks;
+  const normalizedStack = typeof rawStack === "string" ? rawStack.toLowerCase() : (Array.isArray(rawStack) ? rawStack[0]?.toLowerCase() : "");
+  if (normalizedStack && normalizedStack !== "typescript") {
+    const errorMsg = normalizedStack === "laravel"
+      ? "Stack 'laravel' was decommissioned in ADR 0036. Context Factory focuses strictly on the TypeScript ecosystem."
+      : `Stack '${normalizedStack}' is not supported. Context Factory focuses strictly on the TypeScript ecosystem.`;
     if (flags.json) {
       console.log(JSON.stringify({ status: "BLOCKED", error: errorMsg }, null, 2));
       return 2;
@@ -19,9 +21,7 @@ export async function handleResolveCommand(args = [], flags = {}) {
     throw new Error("Usage: context-cli resolve \"<task description or request prompt>\"");
   }
 
-  const resolveOptions = {};
-  if (flags.stack) resolveOptions.stack = flags.stack;
-  if (flags.stacks) resolveOptions.stacks = Array.isArray(flags.stacks) ? flags.stacks : String(flags.stacks).split(",");
+  const resolveOptions = { stack: "typescript" };
   if (flags.scope) {
     resolveOptions.scope = Array.isArray(flags.scope) ? flags.scope : String(flags.scope).split(",").map((s) => s.trim());
   } else if (flags.paths) {

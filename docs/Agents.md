@@ -9,12 +9,9 @@ tags: [agents, orchestration]
 ## Entry Points & Orchestrators
 
 - [[orchestrator/SHARED|Shared contract]] — authoritative behavior and load order
-- [[AGENTS|Factory entry point]]
-- [[orchestrator/AGENTS|Codex/agent adapter]]
-- [[orchestrator/CLAUDE|Claude adapter]]
-- [[orchestrator/GEMINI|Gemini adapter]]
+- [[README|Factory entry point]]
 
-All adapters intentionally stay thin. Add shared behavior to `SHARED.md`, not to one model adapter.
+Orchestration is unified in `orchestrator/SHARED.md` and `README.md`.
 
 ## Coding Lifecycle Subagents
 

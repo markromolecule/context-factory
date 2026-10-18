@@ -99,7 +99,7 @@ feature: "lifecycle-specialist-agents"
 ## 6. References & External Context
 
 - [[orchestrator/SHARED|Shared Orchestration Contract]]
-- [[workflows/context-maintenance|Context Maintenance]]
+- [[skills/workflows/context-maintenance/SKILL|Context Maintenance]]
 - [[docs/decisions/0009-session-keyword-triggers-and-workflow-automation|ADR 0009]]
 - [[docs/decisions/0012-skill-taxonomy-and-slash-ergonomics-optimization|ADR 0012]]
 - **ADR proposal:** Record the declarative agent-contract and slash-dispatch architecture because it changes public cross-IDE resolver behavior and its validation contract.

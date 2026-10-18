@@ -6,8 +6,6 @@ import { runAllEvaluations } from "../../../evals/run-evals.mjs";
 import { createLock, readJson, root } from "../../../scripts/context-core.mjs";
 import { repairBridgeSymlinks, verifySymlinkHealth } from "../core/bridge-generator.mjs";
 import { badges, colors, table } from "../core/formatter.mjs";
-import { listAdapters } from "../../../orchestrator/conformance/adapter-contract.mjs";
-import { registerTypeScriptAdapter } from "../../../orchestrator/conformance/adapters/typescript.mjs";
 
 export async function handleDoctorCommand(args = [], flags = {}) {
   const isJson = Boolean(flags.json);
@@ -15,13 +13,13 @@ export async function handleDoctorCommand(args = [], flags = {}) {
   let canonicalTarget = flags.target ? (isAbsolute(flags.target) ? flags.target : resolve(process.cwd(), flags.target)) : process.cwd();
   try {
     if (existsSync(canonicalTarget)) canonicalTarget = realpathSync(canonicalTarget);
-  } catch {}
+  } catch { }
   const targetDir = canonicalTarget;
 
   let canonicalRoot = root;
   try {
     if (existsSync(root)) canonicalRoot = realpathSync(root);
-  } catch {}
+  } catch { }
 
   const startTime = Date.now();
 
@@ -41,7 +39,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
           factoryDir = candidate;
         }
       }
-    } catch {}
+    } catch { }
   } else if (targetDir !== canonicalRoot && existsSync(join(targetDir, ".gitmodules"))) {
     isHostRepo = true;
     hostDir = targetDir;
@@ -66,6 +64,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
     }
   }
 
+  const isContextFactory = targetDir === canonicalRoot && !existsSync(join(targetDir, ".context-bridge.json"));
   const symlinkTarget = isHostRepo ? hostDir : (existsSync(join(targetDir, ".agents")) ? targetDir : root);
 
   // If repair requested upfront, repair bridge symlinks before running checks
@@ -99,7 +98,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
 
   // 3. Symlink Health Check
   let symlinkHealth = await verifySymlinkHealth(symlinkTarget);
-  let symlinkPassed = symlinkHealth.passed;
+  let symlinkPassed = isContextFactory ? true : symlinkHealth.passed;
 
   // 4. Editor Configuration Health Check
   let editorHealth = await auditEditorConfigurations(symlinkTarget);
@@ -109,7 +108,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
   if ((!symlinkPassed || !editorPassed) && repair) {
     repairResult = await repairBridgeSymlinks(symlinkTarget, flags);
     symlinkHealth = await verifySymlinkHealth(symlinkTarget);
-    symlinkPassed = symlinkHealth.passed;
+    symlinkPassed = isContextFactory ? true : symlinkHealth.passed;
     editorHealth = await auditEditorConfigurations(symlinkTarget);
     editorPassed = editorHealth.passed;
   }
@@ -137,6 +136,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
           healthyCount: symlinkHealth.healthyCount,
           brokenCount: symlinkHealth.brokenCount,
           missingCount: symlinkHealth.missingCount,
+          collisionCount: symlinkHealth.collisionCount || 0,
           links: symlinkHealth.links,
         },
         editorIntegrity: {
@@ -184,25 +184,22 @@ export async function handleDoctorCommand(args = [], flags = {}) {
       lockPassed ? `Current (${expectedLock.digest.slice(0, 20)}...)` : "Lock is stale or missing. Run `npm run lock`",
     ],
     [
-      ".agents Symlink Integrity",
+      ".agents & Editor Symlink Integrity",
       symlinkPassed ? badges.pass() : badges.fail(),
-      symlinkPassed
-        ? `${symlinkHealth.healthyCount}/${symlinkHealth.totalCount || 6} symlink & agent configs verified healthy`
-        : `${symlinkHealth.brokenCount} broken, ${symlinkHealth.missingCount} missing. Run \`context-cli doctor --repair\``,
+      isContextFactory
+        ? "Factory-native repository (zero host bridge symlinks required)"
+        : (symlinkPassed
+          ? `${symlinkHealth.healthyCount}/${symlinkHealth.totalCount || 6} symlink & agent configs verified healthy`
+          : `${symlinkHealth.brokenCount} broken, ${symlinkHealth.missingCount} missing${symlinkHealth.collisionCount ? `, ${symlinkHealth.collisionCount} collisions` : ""}. Run \`context-cli doctor --repair\``),
     ],
     [
       "Editor Artifact Integrity",
       editorPassed ? badges.pass() : badges.fail(),
       editorPassed
         ? (editorHealth.totalCount > 0
-            ? `${editorHealth.healthyCount}/${editorHealth.totalCount} editor configurations verified (${editorHealth.configuredIdes.join(", ") || "native"})`
-            : "No external editors configured")
+          ? `${editorHealth.healthyCount}/${editorHealth.totalCount} editor configurations verified (${editorHealth.configuredIdes.join(", ") || "native"})`
+          : "No external editors configured")
         : `${editorHealth.missingCount} missing, ${editorHealth.brokenCount} broken. Run \`context-cli doctor --repair\``,
-    ],
-    [
-      "Conformance Enforcement",
-      badges.pass(),
-      `Adapters: ${editorHealth.enforcementCapabilities.supportedStacks.join(", ")} (ready) | Stacks: ${editorHealth.enforcementCapabilities.unsupportedStacks.join(", ")} (unsupported)`,
     ],
     [
       "Evaluation Suite",
@@ -224,6 +221,9 @@ export async function handleDoctorCommand(args = [], flags = {}) {
       if (link.status !== "healthy") {
         console.log(`  - ${colors.red(link.name)}: ${link.status} (path: ${colors.dim(link.path)})`);
       }
+    }
+    if (symlinkHealth.collisionCount > 0) {
+      console.log(`  ${colors.bold(colors.yellow("Notice:"))} ${symlinkHealth.collisionCount} collisions detected. Unowned host paths were preserved; rename or remove colliding files to complete bridge setup.`);
     }
     console.log(`  ${colors.bold("Auto-fix:")} Run ${colors.cyan("context-cli doctor --repair")} to restore links.\n`);
   }
@@ -256,7 +256,6 @@ export function inspectBridgeFileContent(content) {
   if (!content.includes("SHARED.md")) missingGates.push("shared-contract (SHARED.md)");
   if (!content.includes("resolve")) missingGates.push("resolve command");
   if (!content.includes("preflight")) missingGates.push("preflight command");
-  if (!content.includes("conform")) missingGates.push("conform command");
   const lower = content.toLowerCase();
   const hasFailClosed = lower.includes("fail") || lower.includes("blocked") || lower.includes("self-attestation");
   if (!hasFailClosed) missingGates.push("fail-closed gate");
@@ -271,22 +270,10 @@ export function inspectBridgeFileContent(content) {
  * Audit enforcement capabilities independently of instruction file existence (AC-09, SC-07).
  */
 export async function auditEnforcementCapabilities() {
-  try {
-    registerTypeScriptAdapter();
-  } catch {}
-  const registeredAdapters = listAdapters();
-  const supportedStacks = registeredAdapters.map((a) => a.stack);
-  const knownStacks = ["typescript", "flutter"];
-  const unsupportedStacks = knownStacks.filter((s) => !supportedStacks.includes(s));
-
   return {
-    adapters: registeredAdapters.map((a) => ({
-      id: a.id,
-      stack: a.stack,
-      status: "ready",
-    })),
-    supportedStacks,
-    unsupportedStacks,
+    adapters: [],
+    supportedStacks: ["typescript"],
+    unsupportedStacks: [],
     enforcementMode: "repository-cli",
     instructionOnlyProfiles: true,
     fullyEnforcedFromFilesAlone: false,
@@ -330,13 +317,13 @@ export async function auditEditorConfigurations(targetDir = process.cwd()) {
   let canonicalTarget = targetDir;
   try {
     if (existsSync(targetDir)) canonicalTarget = realpathSync(targetDir);
-  } catch {}
+  } catch { }
 
   let bridgeConfig = null;
   try {
     const raw = await readFile(join(canonicalTarget, ".context-bridge.json"), "utf8");
     bridgeConfig = JSON.parse(raw);
-  } catch {}
+  } catch { }
 
   const isContextFactory = existsSync(join(canonicalTarget, "context-manifest.json")) && !bridgeConfig;
   const isHostRepo = !isContextFactory && (Boolean(bridgeConfig) || existsSync(join(canonicalTarget, ".gitmodules")) || existsSync(join(canonicalTarget, ".agents")));
@@ -364,11 +351,11 @@ export async function auditEditorConfigurations(targetDir = process.cwd()) {
       brokenCount: 0,
       totalCount: 1,
       items: [
-        { name: "AGENTS.md", ide: "universal", status: "healthy", path: join(canonicalTarget, "AGENTS.md") },
+        { name: "orchestrator/SHARED.md", ide: "universal", status: "healthy", path: join(canonicalTarget, "orchestrator", "SHARED.md") },
       ],
       enforcementCapabilities: enforcement,
       fullyEnforcedFromFilesAlone: false,
-      enforcementSummary: "Factory-native environment; CLI conformance gates authoritative.",
+      enforcementSummary: "Factory-native environment.",
     };
   }
 

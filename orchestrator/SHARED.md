@@ -15,7 +15,7 @@ This contract is model-neutral and authoritative. Model adapters must not duplic
 ## Working contract
 
 - Preserve user changes and existing conventions unless a requirement explicitly replaces them.
-- Strictly adhere to SOLID architectural principles (`rules/solid/`) across backend services, repositories, hooks, and UI components.
+- Strictly adhere to SOLID architectural principles (`knowledge/principles/`) and Context Factory rules (`rules/`) across backend services, repositories, hooks, and UI components.
 - Classify consequential claims as verified facts, assumptions, decisions, unknowns, or results and retain their evidence.
 - Prefer the smallest complete change and avoid speculative dependencies.
 - Keep architecture, rules, tests, and documentation synchronized with behavior.
@@ -40,7 +40,7 @@ Software delivery lifecycles are orchestrated across specialized subagent person
 - **UX & Design System Specialist (`agents/ux-agent` / Frontend lead):** compose accessible UI components (WCAG 2.1 AA), design token systems, interaction feedback states, and encapsulate client state in custom hooks/stores (`/ux`, `[UX]`).
 - **Security & Threat Specialist (`agents/threat-agent` / Trust verification):** execute STRIDE threat modeling, audit trust boundaries, verify authentication/authorization policies, timing safety, and secrets hygiene (`/threat`, `[THREAT]`).
 - **Developer (`skills/execute`, `skills/test`, `skills/refactor`):** author failing tests first using `test`, execute only approved review packets on the verified task branch, and preserve strict phase stops and synchronized evidence (`/exec`, `[EXEC]`, `/test`, `[TEST]`, `/refactor`, `[REFACTOR]`).
-- **Reviewer / QA (`skills/verify`, `skills/review`, `workflows/code-review-and-optimization`):** compare changed files on the task branch with each unit's allowed files, check code quality and architecture using `review`, assess query performance and tests, verify acceptance criteria against reproducible evidence, and identify regressions or risks (`/verify`, `[VERIFY]`, `/review`, `[REVIEW]`, `/optimize`, `[OPTIMIZE]`).
+- **Reviewer / QA (`skills/verify`, `skills/review`, `skills/workflows/code-review-and-optimization/SKILL.md`):** compare changed files on the task branch with each unit's allowed files, check code quality and architecture using `review`, assess query performance and tests, verify acceptance criteria against reproducible evidence, and identify regressions or risks (`/verify`, `[VERIFY]`, `/review`, `[REVIEW]`, `/optimize`, `[OPTIMIZE]`).
 - **DevOps Agent (`agents/devops-agent` / Infrastructure specialist):** automate CI/CD workflows, configure container environments (Docker, Compose), maintain secrets hygiene (`.env.example`), and verify pre-flight release readiness (`/devops`, `[DEVOPS]`, `/release`, `[RELEASE]`).
 
 Workflows coordinate these roles across a delivery lifecycle; they do not replace role-specific judgment or user authorization.
@@ -62,12 +62,11 @@ If an implementation step in a plan and an applicable language rule (`<language_
 - Changes to the same checkout run serially. `plan` alone creates the task branch after discovery release; downstream skills verify that branch before making changes.
 - Session state lifecycle is governed by `scripts/session-core.mjs`: snapshot machine state to `.context/sessions/<id>.json` and generate ultra-compact cold-start briefings to `.tmp/SESSION_RESUME.md` (<1,500 tokens) whenever context reaches ~60% saturation.
 
-### Executable Rule Conformance & Verification Receipts (ADR 0029, AC-08)
+### Rule Conformance & Verification Receipts (ADR 0029, AC-08)
 
 - **Preflight & Rule Binding Receipts:** Material code changes require a deterministic Rule Binding receipt (`binding.id`, `bindingHash`) compiled before execution (`context-cli preflight`).
-- **Conformance Evaluation Gate:** Code changes must evaluate against the active stack conformance adapter (`context-cli conform`). Successful execution requires a valid `PASS` ConformanceReport (`report.id`, `diffHash`, `bindingHash`).
-- **Fail-Closed Stop Conditions:** Reports with status `FAIL` or `BLOCKED` (e.g. missing required human evidence for `evidence-blocking` rules, or `TOOL_UNAVAILABLE`) halt progression immediately. No unit or phase may claim completion or merge without a clean `PASS` report receipt.
-- **No Self-Attestation:** LLM prose claims or self-attestation cannot substitute for persisted machine receipts. Completion claims require verified report artifacts.
+- **Fail-Closed Stop Conditions:** Unresolved blocking rules or missing required human evidence for `evidence-blocking` rules halt progression immediately. No unit or phase may claim completion or merge without clean verification.
+- **No Self-Attestation:** LLM prose claims or self-attestation cannot substitute for verified code and test evidence. Completion claims require verified test artifacts.
 - **Governed Human Waivers:** Waivers require human maintainer authorization (`authorizedBy`), active date bounds (`authorizedAt`, `expiresAt`), explicit target scopes (no wildcards), and compensating evidence. Agent or self-authorized waivers are strictly rejected.
 
 ## Context maintenance

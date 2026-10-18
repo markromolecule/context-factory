@@ -32,11 +32,18 @@ Canonical LLM knowledge lives under `knowledge/`. Each note is independently ret
 
 ### Architectural Principles (SOLID)
 
-- [[knowledge/principles/solid-srp|Single Responsibility Principle (`factory.principles.solid.srp`)]]
-- [[knowledge/principles/solid-ocp|Open/Closed Principle (`factory.principles.solid.ocp`)]]
-- [[knowledge/principles/solid-lsp|Liskov Substitution Principle (`factory.principles.solid.lsp`)]]
-- [[knowledge/principles/solid-isp|Interface Segregation Principle (`factory.principles.solid.isp`)]]
-- [[knowledge/principles/solid-dip|Dependency Inversion Principle (`factory.principles.solid.dip`)]]
+- [[knowledge/principles/single-responsibility|Single Responsibility Principle (`factory.principles.single-responsibility`)]]
+- [[knowledge/principles/open-closed|Open/Closed Principle (`factory.principles.open-closed`)]]
+- [[knowledge/principles/liskov-substitution|Liskov Substitution Principle (`factory.principles.liskov-substitution`)]]
+- [[knowledge/principles/interface-segregation|Interface Segregation Principle (`factory.principles.interface-segregation`)]]
+- [[knowledge/principles/dependency-inversion|Dependency Inversion Principle (`factory.principles.dependency-inversion`)]]
+
+### Pragmatic Design Principles
+
+- [[knowledge/principles/yagni|You Aren't Gonna Need It (`factory.principles.yagni`)]]
+- [[knowledge/principles/kiss|Keep It Simple, Stupid (`factory.principles.kiss`)]]
+- [[knowledge/principles/composition-over-inheritance|Composition over Inheritance (`factory.principles.composition-over-inheritance`)]]
+- [[knowledge/principles/law-of-demeter-tell-dont-ask|Law of Demeter and Tell, Don't Ask (`factory.principles.demeter-tell-dont-ask`)]]
 
 ## Rules
 

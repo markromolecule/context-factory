@@ -2,7 +2,7 @@
   "name": "prefix and slash commands resolve deterministic workflows",
   "request": "/fix regression in token parser",
   "expected": {
-    "workflow": "workflows/defect-resolution.md",
+    "workflow": "skills/workflows/defect-resolution/SKILL.md",
     "rules": [
       "rules/global/evidence-and-claims.md"
     ],

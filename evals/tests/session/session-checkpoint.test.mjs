@@ -23,7 +23,7 @@ describe("Session Checkpoint & LHG Minimal Input E2E Suite", () => {
 
   after(async () => {
     try {
-      await clearSessionState({ sessionId: testSessionId });
+      await clearSessionState({ sessionId: testSessionId, withHandoff: true });
     } catch {
       // Ignore
     }
@@ -67,6 +67,17 @@ describe("Session Checkpoint & LHG Minimal Input E2E Suite", () => {
       assert.match(briefingContent, /0001/);
       const briefingTokens = countTokens(briefingContent);
       assert.ok(briefingTokens < 1500, `Briefing tokens (${briefingTokens}) must be < 1,500`);
+
+      // Verify HANDOFF.md exists and contains the 6 mandatory sections
+      const handoffPath = join(root, "HANDOFF.md");
+      await access(handoffPath);
+      const handoffContent = await readFile(handoffPath, "utf8");
+      assert.match(handoffContent, /# Goal/);
+      assert.match(handoffContent, /## Current State/);
+      assert.match(handoffContent, /## Files in flight/);
+      assert.match(handoffContent, /## Changes/);
+      assert.match(handoffContent, /## Failed attempts/);
+      assert.match(handoffContent, /## Next steps/);
     });
 
     it("resumeSessionState restores saved state accurately", async () => {
@@ -138,7 +149,7 @@ describe("Session Checkpoint & LHG Minimal Input E2E Suite", () => {
       assert.match(resumeCmd.stdout, /RESUME|Resuming Session/i);
 
       // 4. Clear
-      const clearCmd = await execFileAsync("node", [cliPath, "session:clear", "cli-test-session"]);
+      const clearCmd = await execFileAsync("node", [cliPath, "session:clear", "cli-test-session", "--with-handoff"]);
       assert.match(clearCmd.stdout, /CLEARED|Session checkpoint cleared/i);
     });
   });

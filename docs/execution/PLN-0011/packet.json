@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "kind": "execution-packet",
+  "owner": "plan-review",
+  "status": "approved",
+  "reviewReference": "PLN-0011-plan-review-2026-10-17",
+  "approvalReference": "user-slash-command-2026-10-17",
+  "taskBranch": "refactor/PLN-0011-clean-ephemeral-dirs-and-conformance",
+  "targetBranch": "refactor/PLN-0010-clean-and-rebuild-typescript-factory",
+  "baseCommit": "c7524e96a0e97bacdb848bdee05abd9203ef5e96",
+  "source": {
+    "path": "docs/tasks/2026/10/2026-10-17/refactor-PLN-0011-clean-ephemeral-dirs-and-conformance/README.md",
+    "sha256": "sha256:9440070258aed06b837dca8f48b6035b66734c6f125f848d717bcc84f4f91933"
+  }
+}

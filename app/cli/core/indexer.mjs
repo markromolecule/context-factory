@@ -27,7 +27,6 @@ export async function generateRulesMoc(actualRules) {
 
   const groups = {
     global: { title: "## Global", items: [] },
-    solid: { title: "## SOLID Architecture", items: [] },
     typescriptCommon: { title: "## TypeScript\n\n### Common", items: [] },
     typescriptBackend: { title: "### Backend", items: [] },
     typescriptDatabase: { title: "### Database", items: [] },
@@ -43,7 +42,6 @@ export async function generateRulesMoc(actualRules) {
     const row = `- [[${linkPath}|${item.title}]]`;
 
     if (p.startsWith("rules/global/")) groups.global.items.push(row);
-    else if (p.startsWith("rules/solid/")) groups.solid.items.push(row);
     else if (p.startsWith("rules/typescript/common/")) groups.typescriptCommon.items.push(row);
     else if (p.startsWith("rules/typescript/backend/")) groups.typescriptBackend.items.push(row);
     else if (p.startsWith("rules/typescript/database/")) groups.typescriptDatabase.items.push(row);
@@ -100,10 +98,12 @@ export async function generateSkillsMoc(actualSkills) {
 
   const engineeringSkills = skillItems.filter((item) => item.path.startsWith("skills/engineering/"));
   const productivitySkills = skillItems.filter((item) => item.path.startsWith("skills/productivity/"));
-  const otherSkills = skillItems.filter((item) => !item.path.startsWith("skills/engineering/") && !item.path.startsWith("skills/productivity/"));
+  const workflowSkills = skillItems.filter((item) => item.path.startsWith("skills/workflows/"));
+  const otherSkills = skillItems.filter((item) => !item.path.startsWith("skills/engineering/") && !item.path.startsWith("skills/productivity/") && !item.path.startsWith("skills/workflows/"));
 
   const engRows = engineeringSkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
   const prodRows = productivitySkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
+  const wfRows = workflowSkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
   const otherRows = otherSkills.map((item) => `- [[${item.path.replace(/\.md$/, "")}|${item.name}]] — ${item.description}`);
 
   let content = `---
@@ -114,7 +114,7 @@ tags: [skills, workflows, tools]
 
 # Skills
 
-The Context Factory defines ${skillItems.length} focused procedural skills across two primary categories for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
+The Context Factory defines ${engineeringSkills.length + productivitySkills.length} focused procedural skills across two primary categories for interactive development, planning, discovery, auditing, refactoring, and knowledge grounding:
 
 ## Engineering & Coding
 *Group Index:* [[skills/engineering/README|Engineering Skills Overview]]
@@ -125,6 +125,10 @@ ${engRows.join("\n")}
 *Group Index:* [[skills/productivity/README|Productivity Skills Overview]]
 
 ${prodRows.join("\n")}`;
+
+  if (wfRows.length > 0) {
+    content += `\n\n## Canonical Workflows\n*Group Index:* First-class workflow skills defining development lifecycles ([[docs/Workflows|Workflows Overview]])\n\n${wfRows.join("\n")}`;
+  }
 
   if (otherRows.length > 0) {
     content += `\n\n## Other Skills\n\n${otherRows.join("\n")}`;
@@ -143,7 +147,7 @@ export async function generateWorkflowsMoc(actualWorkflows) {
     actualWorkflows.map(async (path) => {
       const source = await readText(path);
       const meta = frontmatter(source) ?? {};
-      const name = meta.name || path.split("/").at(-1).replace(/\.md$/, "");
+      const name = meta.name || (path.endsWith("/SKILL.md") ? path.split("/").at(-2) : path.split("/").at(-1).replace(/\.md$/, ""));
       const headingMatch = source.match(/^#\s+(.+)$/m);
       const title = headingMatch?.[1] || name.replace(/-/g, " ");
       return { path, meta, name, title, description: meta.description || "" };
@@ -185,24 +189,45 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
   if (factoryRows.length > 0) sections.push(`## Factory\n\n${factoryRows.join("\n")}`);
   if (otherRows.length > 0) sections.push(`## Custom Workflows\n\n${otherRows.join("\n")}`);
 
-  sections.push(`## Session Slash Commands & Prefix Triggers
+  sections.push(`## Host-Native Workflow Discovery (Codex & Claude Code)
 
-Use leading slash commands or bracket prefix tags for instant, deterministic workflow activation:
+Each canonical workflow is exposed as a first-class skill:
 
-- \`/new-project\`, \`[NEW_PROJECT]\` $\\rightarrow$ [[workflows/new-project-delivery|New project progressive delivery]]: progressive vertical-slice execution with grilling and 4-layer tests
-- \`/context\`, \`[CONTEXT]\`, \`[CONTEXT_SPEC]\` $\\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: author and grill context specifications in \`docs/context/\`
-- \`/grill\`, \`[DISCOVERY]\` $\\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: clarify 1 unknown at a time with \`grill\` before planning
-- \`/plan\`, \`[PLAN]\`, \`[FEATURE]\` $\\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: scaffold task under \`docs/tasks/\` with \`plan\`, stop before coding
-- \`/execute\`, \`/exec\`, \`[EXEC]\` $\\rightarrow$ [[workflows/feature-delivery|Feature delivery]]: execute approved task phases incrementally with \`execute\`
-- \`/optimize\`, \`/review-code\`, \`[OPTIMIZE]\`, \`[CODE_REVIEW]\` $\\rightarrow$ [[workflows/code-review-and-optimization|Code review and optimization]]: audit, optimize, and refactor plan-affected code
-- \`/fix\`, \`[HOTFIX]\`, \`[BUG]\` $\\rightarrow$ [[workflows/defect-resolution|Defect resolution]]: capture reproduction test before modifying code
-- \`/migrate\`, \`[MIGRATE]\`, \`[DB]\` $\\rightarrow$ [[workflows/database-migration|Database migration]]: plan forward migration, rollback script, and consumer types
-- \`/sec\`, \`[SEC]\`, \`[SECURITY]\` $\\rightarrow$ [[workflows/security-sensitive-change|Security-sensitive change]]: review auth, credentials, data isolation, and abuse cases
-- \`/arch\`, \`/adr\`, \`[ADR]\` $\\rightarrow$ [[workflows/architecture-change|Architecture change]]: scaffold durable decision under \`docs/decisions/\`
-- \`/deps\`, \`/upgrade\`, \`[UPGRADE]\` $\\rightarrow$ [[workflows/dependency-upgrade|Dependency upgrade]]: audit compatibility boundaries and run canary tests
-- \`/release\`, \`/verify\`, \`[RELEASE]\` $\\rightarrow$ [[workflows/release-readiness|Release readiness]]: verify tests, lint, typecheck, and readiness evidence
-- \`/ship\`, \`/commit-push-release\`, \`[SHIP]\` $\\rightarrow$ [[workflows/commit-push-release|Commit, push & release]]: stage, commit with conventional format, push to remote, tag release
-- \`/sync\`, \`/maintain\`, \`[MAINTENANCE]\` $\\rightarrow$ [[workflows/context-maintenance|Context maintenance]]: run \`node scripts/harness-cli.mjs lock\` and \`doctor\`
+- **Claude Code:** Project skills under \`.claude/skills/workflow-<slug>\`. Invoke directly in prompt:
+  - \`/workflow-feature-delivery\` $\\rightarrow$ [[skills/workflows/feature-delivery/SKILL|Feature delivery]]
+  - \`/workflow-defect-resolution\` $\\rightarrow$ [[skills/workflows/defect-resolution/SKILL|Defect resolution]]
+  - \`/workflow-architecture-change\` $\\rightarrow$ [[skills/workflows/architecture-change/SKILL|Architecture change]]
+  - \`/workflow-context-maintenance\` $\\rightarrow$ [[skills/workflows/context-maintenance/SKILL|Context maintenance]]
+  - \`/workflow-release-readiness\` $\\rightarrow$ [[skills/workflows/release-readiness/SKILL|Release readiness]]
+  - \`/workflow-code-review-and-optimization\` $\\rightarrow$ [[skills/workflows/code-review-and-optimization/SKILL|Code review and optimization]]
+  - \`/workflow-commit-push-release\` $\\rightarrow$ [[skills/workflows/commit-push-release/SKILL|Commit, push & release]]
+  - \`/workflow-database-migration\` $\\rightarrow$ [[skills/workflows/database-migration/SKILL|Database migration]]
+  - \`/workflow-dependency-upgrade\` $\\rightarrow$ [[skills/workflows/dependency-upgrade/SKILL|Dependency upgrade]]
+  - \`/workflow-docs\` $\\rightarrow$ [[skills/workflows/docs/SKILL|Docs]]
+  - \`/workflow-new-project-delivery\` $\\rightarrow$ [[skills/workflows/new-project-delivery/SKILL|New project progressive delivery]]
+  - \`/workflow-security-sensitive-change\` $\\rightarrow$ [[skills/workflows/security-sensitive-change/SKILL|Security-sensitive change]]
+- **Codex:** Discoverable under \`.agents/skills/workflow-<slug>\` via the \`/skills\` menu or referenced in prompt as \`$workflow-<slug>\` (e.g. \`$workflow-feature-delivery\`, \`$workflow-defect-resolution\`).
+
+Each entry provides authoritative phases, quality gates, and stop conditions directly as a first-class skill.
+
+## Internal Resolver Aliases & Prompt Triggers
+
+These slash-prefixed strings and bracket prefix tags are internal resolver keywords recognized by \`node scripts/context.mjs resolve\` and prompt matching. They are NOT registered host slash commands:
+
+- \`/new-project\`, \`[NEW_PROJECT]\` $\\rightarrow$ [[skills/workflows/new-project-delivery/SKILL|New project progressive delivery]]: progressive vertical-slice execution with grilling and 4-layer tests
+- \`/context\`, \`[CONTEXT]\`, \`[CONTEXT_SPEC]\` $\\rightarrow$ [[skills/workflows/feature-delivery/SKILL|Feature delivery]]: author and grill context specifications in \`docs/context/\`
+- \`/grill\`, \`[DISCOVERY]\` $\\rightarrow$ [[skills/workflows/feature-delivery/SKILL|Feature delivery]]: clarify 1 unknown at a time with \`grill\` before planning
+- \`/plan\`, \`[PLAN]\`, \`[FEATURE]\` $\\rightarrow$ [[skills/workflows/feature-delivery/SKILL|Feature delivery]]: scaffold task under \`docs/tasks/\` with \`plan\`, stop before coding
+- \`/execute\`, \`/exec\`, \`[EXEC]\` $\\rightarrow$ [[skills/workflows/feature-delivery/SKILL|Feature delivery]]: execute approved task phases incrementally with \`execute\`
+- \`/optimize\`, \`/review-code\`, \`[OPTIMIZE]\`, \`[CODE_REVIEW]\` $\\rightarrow$ [[skills/workflows/code-review-and-optimization/SKILL|Code review and optimization]]: audit, optimize, and refactor plan-affected code
+- \`/fix\`, \`[HOTFIX]\`, \`[BUG]\` $\\rightarrow$ [[skills/workflows/defect-resolution/SKILL|Defect resolution]]: capture reproduction test before modifying code
+- \`/migrate\`, \`[MIGRATE]\`, \`[DB]\` $\\rightarrow$ [[skills/workflows/database-migration/SKILL|Database migration]]: plan forward migration, rollback script, and consumer types
+- \`/sec\`, \`[SEC]\`, \`[SECURITY]\` $\\rightarrow$ [[skills/workflows/security-sensitive-change/SKILL|Security-sensitive change]]: review auth, credentials, data isolation, and abuse cases
+- \`/arch\`, \`/adr\`, \`[ADR]\` $\\rightarrow$ [[skills/workflows/architecture-change/SKILL|Architecture change]]: scaffold durable decision under \`docs/decisions/\`
+- \`/deps\`, \`/upgrade\`, \`[UPGRADE]\` $\\rightarrow$ [[skills/workflows/dependency-upgrade/SKILL|Dependency upgrade]]: audit compatibility boundaries and run canary tests
+- \`/release\`, \`/verify\`, \`[RELEASE]\` $\\rightarrow$ [[skills/workflows/release-readiness/SKILL|Release readiness]]: verify tests, lint, typecheck, and readiness evidence
+- \`/ship\`, \`/commit-push-release\`, \`[SHIP]\` $\\rightarrow$ [[skills/workflows/commit-push-release/SKILL|Commit, push & release]]: stage, commit with conventional format, push to remote, tag release
+- \`/sync\`, \`/maintain\`, \`[MAINTENANCE]\` $\\rightarrow$ [[skills/workflows/context-maintenance/SKILL|Context maintenance]]: run \`node scripts/harness-cli.mjs lock\` and \`doctor\`
 
 ## Selection rules
 
@@ -247,12 +272,9 @@ tags: [agents, orchestration]
 ## Entry Points & Orchestrators
 
 - [[orchestrator/SHARED|Shared contract]] — authoritative behavior and load order
-- [[AGENTS|Factory entry point]]
-- [[orchestrator/AGENTS|Codex/agent adapter]]
-- [[orchestrator/CLAUDE|Claude adapter]]
-- [[orchestrator/GEMINI|Gemini adapter]]
+- [[README|Factory entry point]]
 
-All adapters intentionally stay thin. Add shared behavior to \`SHARED.md\`, not to one model adapter.
+Orchestration is unified in \`orchestrator/SHARED.md\` and \`README.md\`.
 
 ## Coding Lifecycle Subagents
 
@@ -380,9 +402,9 @@ export async function syncFactoryInventory({ writeLock = true, updateMocs = true
 
   const actualAgents = (await filesUnder("agents")).filter((p) => extname(p) === ".md").sort();
   const actualRules = (await filesUnder("rules")).filter((p) => extname(p) === ".md" && p !== "rules/README.md").sort();
-  const actualSkills = (await filesUnder("skills")).filter((p) => p.endsWith("/SKILL.md")).sort();
-  const actualSkillResources = (await filesUnder("skills")).filter((p) => !p.endsWith("/SKILL.md") && !p.endsWith("README.md")).sort();
-  const actualWorkflows = (await filesUnder("workflows")).filter((p) => extname(p) === ".md").sort();
+  const actualSkills = (await filesUnder("skills")).filter((p) => p.endsWith("/SKILL.md") && !p.startsWith("skills/workflows/")).sort();
+  const actualSkillResources = (await filesUnder("skills")).filter((p) => !p.endsWith("/SKILL.md") && !p.endsWith("README.md") && !p.startsWith("skills/workflows/")).sort();
+  const actualWorkflows = (await filesUnder("skills/workflows")).filter((p) => p.endsWith("/SKILL.md")).sort();
   const actualKnowledge = (await filesUnder("knowledge")).filter((p) => extname(p) === ".md").sort();
   const actualSchemas = (await filesUnder("schemas")).filter((p) => extname(p) === ".json").sort();
   const actualTemplates = (await filesUnder("docs/templates")).filter((p) => extname(p) === ".md").sort();

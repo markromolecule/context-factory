@@ -13,7 +13,7 @@ alwaysApply: false
 
 ## Design
 
-- [directive:cf.quality.solid-compliance][mode:evidence-blocking][verifier:human-evidence] Strictly adhere to the 5 SOLID principles (`rules/solid/`): Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion across backend services, repositories, and React UI components.
+- [directive:cf.quality.solid-compliance][mode:evidence-blocking][verifier:human-evidence] Strictly adhere to the 5 SOLID principles (`knowledge/principles/`): Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion across backend services, repositories, and React UI components.
 - [directive:cf.quality.directional-dependencies][mode:automated-blocking][verifier:linter] Keep modules cohesive and dependencies directional; do not create circular imports.
 - [directive:cf.quality.explicit-interfaces][mode:automated-blocking][verifier:typechecker] Prefer explicit inputs, return types at public boundaries, and dependency injection over hidden mutable globals.
 - [directive:cf.quality.no-any-or-swallowed-errors][mode:automated-blocking][verifier:typechecker] Avoid `any`, unchecked type assertions, swallowed errors, boolean parameter traps, and speculative abstractions.

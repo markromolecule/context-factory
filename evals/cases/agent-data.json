@@ -3,7 +3,7 @@
   "request": "/data create tenant billing schema with rollback script",
   "expected": {
     "agent": "data-agent",
-    "workflow": "workflows/database-migration.md",
+    "workflow": "skills/workflows/database-migration/SKILL.md",
     "rules": [
       "rules/typescript/database/schema-db.md",
       "rules/typescript/database/data-access-via-db.md",

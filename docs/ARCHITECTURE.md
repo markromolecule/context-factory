@@ -15,14 +15,13 @@ The factory separates stable project knowledge from task-specific context so age
 | Layer                   | Source                                           | Responsibility                                                                                  |
 | ----------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
 | Inventory               | `context-manifest.json`                          | Versioned list of canonical context files                                                       |
-| Entry points            | `README.md`, `AGENTS.md`                         | Discovery and minimum startup instructions                                                      |
+| Entry points            | `README.md`                                      | Discovery and minimum startup instructions                                                      |
 | Orchestration           | `orchestrator/SHARED.md`                         | Model-neutral load order, execution contract, and working rules                                 |
 | Execution Runner        | `orchestrator/runner.mjs`                        | Pluggable provider execution (`openai`, `anthropic`, `gemini`), 3-stage hooks, and mock replay  |
 | Output Validator        | `orchestrator/validator.mjs`                     | Pure ESM JSON Schema validator enforcing output contracts                                       |
-| Adapters                | `orchestrator/{AGENTS,CLAUDE,GEMINI}.md`         | Thin model-specific presentation guidance                                                       |
-| Rules                   | `rules/{global,solid,typescript,laravel}/`       | Scoped engineering constraints selected by explicit project stack declarations                  |
+| Rules                   | `rules/{global,solid,typescript}/`               | Scoped engineering constraints for the TypeScript ecosystem                                     |
 | Skills                  | `skills/*/SKILL.md`, references, agents          | Triggered procedures with progressively disclosed resources and synchronized interface metadata |
-| Workflows               | `workflows/*.md`                                 | Multi-stage lifecycle orchestration, quality gates, and stop conditions                         |
+| Workflows               | `skills/workflows/*/SKILL.md`                    | Multi-stage lifecycle orchestration, quality gates, and stop conditions as first-class skills    |
 | Knowledge               | `knowledge/*.md`, `docs/`                        | Attributable LLM knowledge, Obsidian maps, tasks, and decisions                                 |
 | Schemas                 | `schemas/*.json`                                 | Output contracts (`run-result`, `evaluation-report`, `claim-evidence`) and knowledge schemas    |
 | Templates and decisions | `docs/templates/`, `docs/decisions/`             | Valid artifact shapes and durable architectural history                                         |
@@ -59,7 +58,7 @@ flowchart LR
 
 - The root directory is the Obsidian vault.
 - The manifest contains every orchestrator, rule, skill, skill resource, and index note.
-- Model adapters defer to one shared contract.
+- Orchestration contract in orchestrator/SHARED.md is model-neutral and authoritative.
 - Skill frontmatter contains only `name` and `description`.
 - Workflow frontmatter contains `name`, `description`, and `scope`; workflow inventory and map match disk.
 - Rule descriptions state scope; bodies state enforceable behavior and verification.

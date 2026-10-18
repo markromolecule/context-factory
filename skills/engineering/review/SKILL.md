@@ -52,7 +52,7 @@ Run this review on the recorded task branch before declaring the unit verified. 
 
 ### Gate 3: SOLID Architecture Audit
 
-Audit newly written or modified classes and modules against Context Factory SOLID rules (`rules/solid/`):
+Audit newly written or modified classes and modules against Context Factory SOLID principles (`knowledge/principles/`):
 
 1. **Single Responsibility (SRP):**
    - Does each new class/module have exactly one reason to change?

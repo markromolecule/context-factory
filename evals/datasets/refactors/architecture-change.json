@@ -4,7 +4,7 @@
   "domain": "refactors",
   "request": "Design and implement a new cross-module architecture and migrate its consumers",
   "expected": {
-    "workflow": "workflows/architecture-change.md",
+    "workflow": "skills/workflows/architecture-change/SKILL.md",
     "rules": [
       "rules/global/architecture-conformance.md",
       "rules/global/code-quality.md",
@@ -16,7 +16,7 @@
     ]
   },
   "goldenOutput": {
-    "workflow": "workflows/architecture-change.md",
+    "workflow": "skills/workflows/architecture-change/SKILL.md",
     "status": "completed"
   }
 }

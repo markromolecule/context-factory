@@ -1,0 +1,114 @@
+{
+  "id": "report-binding-adhoc-00-00-542005f7f809-1791639483082",
+  "bindingId": "binding-adhoc-00-00-542005f7f809",
+  "bindingHash": "sha256:542005f7f8094c2e731bffb9b88be2f8fdca07d10489e52761fe2facda09b18f",
+  "diffHash": "sha256:3cc9aba8cf9862a1885e56b7a3ed4d3a0c2e332116fbbf8b292987a37a88f8e2",
+  "verdict": "PASS",
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "waived": 0,
+    "notAutomatable": 0,
+    "toolUnavailable": 0,
+    "unsupported": 0,
+    "total": 8
+  },
+  "results": [
+    {
+      "directiveId": "cf.evidence.completion",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T13:38:03.081Z"
+    },
+    {
+      "directiveId": "cf.evidence.grounding",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T13:38:03.081Z"
+    },
+    {
+      "directiveId": "cf.evidence.integrity",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T13:38:03.081Z"
+    },
+    {
+      "directiveId": "cf.evidence.scope-fencing",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T13:38:03.081Z"
+    },
+    {
+      "directiveId": "cf.evidence.verification",
+      "mode": "automated-blocking",
+      "status": "PASS",
+      "evidence": {
+        "verifierType": "human-compensation",
+        "outputFragment": "No TypeScript verifier is implemented for automated directive cf.evidence.verification; named human compensation recorded.",
+        "humanEvidence": "Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified."
+      },
+      "evaluatedAt": "2026-10-10T13:38:03.081Z"
+    },
+    {
+      "directiveId": "cf.global.1-3-1-compare-options",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T13:38:03.081Z"
+    },
+    {
+      "directiveId": "cf.global.1-3-1-define",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T13:38:03.081Z"
+    },
+    {
+      "directiveId": "cf.global.1-3-1-recommend",
+      "status": "PASS",
+      "mode": "evidence-blocking",
+      "evidence": {
+        "verifierType": "human-judgment",
+        "humanEvidence": "Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified.",
+        "outputFragment": "Architectural boundary verified: Joseph reviewed Unit 01.01 canonical knowledge notes for YAGNI, KISS, Composition over Inheritance, and Law of Demeter / Tell Don't Ask; definitions, distinctions, TypeScript examples, and documented exceptions are verified."
+      },
+      "durationMs": 5,
+      "evaluatedAt": "2026-10-10T13:38:03.081Z"
+    }
+  ],
+  "generatedAt": "2026-10-10T13:38:03.082Z"
+}

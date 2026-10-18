@@ -3,11 +3,9 @@
   "request": "/architect design microservice boundaries and audit solid rules",
   "expected": {
     "agent": "architect-agent",
-    "workflow": "workflows/architecture-change.md",
+    "workflow": "skills/workflows/architecture-change/SKILL.md",
     "rules": [
       "rules/global/architecture-conformance.md",
-      "rules/solid/single-responsibility.md",
-      "rules/solid/dependency-inversion.md",
       "rules/typescript/backend/module-architecture.md"
     ],
     "skills": [

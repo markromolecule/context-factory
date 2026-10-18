@@ -3,7 +3,7 @@
   "request": "/threat audit api key secrets storage and timing safety",
   "expected": {
     "agent": "threat-agent",
-    "workflow": "workflows/security-sensitive-change.md",
+    "workflow": "skills/workflows/security-sensitive-change/SKILL.md",
     "rules": [
       "rules/global/security-guardrails.md",
       "rules/global/evidence-and-claims.md"

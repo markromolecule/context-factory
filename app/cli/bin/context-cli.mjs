@@ -12,7 +12,6 @@ import { handleInitCommand } from "../commands/init.mjs";
 import { handleLintCommand } from "../commands/lint.mjs";
 import { handleLockCommand } from "../commands/lock.mjs";
 import { handlePreflightCommand } from "../commands/preflight.mjs";
-import { handleConformCommand } from "../commands/conform.mjs";
 import { handlePullCommand } from "../commands/pull.mjs";
 import { handleRepairCommand } from "../commands/repair.mjs";
 import { handleResolveCommand } from "../commands/resolve.mjs";
@@ -36,10 +35,9 @@ export function showHelp(options = {}) {
       ["1. Bridge", "context-cli init", "Interactive setup to bridge Context Factory into your repo"],
       ["2. Validate", "context-cli doctor", "Run full diagnostic health check across rules & skills"],
       ["3. Preflight", "context-cli preflight", "Compile and verify rule bindings before making edits"],
-      ["4. Conform", "context-cli conform", "Evaluate code changes against active rule bindings"],
-      ["5. Sync", "context-cli sync", "Auto-discover context files, refresh manifest and lockfile"],
-      ["6. Plan", "context-cli task new", "Scaffold phased task, milestones, and unit execution files"],
-      ["7. Checkpoint", "context-cli session save", "Save state before context window reaches saturation (>60%)"],
+      ["4. Sync", "context-cli sync", "Auto-discover context files, refresh manifest and lockfile"],
+      ["5. Plan", "context-cli task new", "Scaffold phased task, milestones, and unit execution files"],
+      ["6. Checkpoint", "context-cli session save", "Save state before context window reaches saturation (>60%)"],
     ]));
     console.log();
 
@@ -69,9 +67,8 @@ export function showHelp(options = {}) {
     ], { icon: "🛠️", badgeColor: "blue" }));
     console.log();
 
-    console.log(commandCard("QUALITY GATES & CONFORMANCE", [
+    console.log(commandCard("QUALITY GATES", [
       ["preflight", "Verify descriptor and rule bindings for prompt/scope", '"<prompt>" --scope <files>'],
-      ["conform", "Evaluate changes against active rule bindings and persist report", '"<task>" --scope <files>'],
     ], { icon: "⚖️", badgeColor: "magenta" }));
     console.log();
 
@@ -98,10 +95,9 @@ export function showHelp(options = {}) {
 
     console.log(`${colors.bold("PRIMARY COMMANDS:")}
   ${colors.bold(colors.green("init"))}            Initialize and bridge Context Factory into host repository
-  ${colors.bold(colors.green("status"))}          Display host integration, factory health, and conformance
+  ${colors.bold(colors.green("status"))}          Display host integration, factory health, and status
   ${colors.bold(colors.green("doctor"))}          Run full diagnostic health check across rules & skills
   ${colors.bold(colors.green("preflight"))}       Compile and verify rule bindings before code generation
-  ${colors.bold(colors.green("conform"))}         Evaluate code changes against active rule bindings
   ${colors.bold(colors.green("hook"))}            Install non-clobbering git pre-commit quality gate
   ${colors.bold(colors.green("sync"))}            Auto-discover files, refresh manifest and lockfile
   ${colors.bold(colors.green("task new"))}        Scaffold phased task plan and milestone units
@@ -126,10 +122,7 @@ export function showHelp(options = {}) {
   ${colors.dim("# Compile preflight rule bindings before making code changes")}
   ${colors.white('context-cli preflight "implement stripe webhook" --stack typescript --scope "src/webhook.ts"')}
 
-  ${colors.dim("# Evaluate changed files against active rule bindings")}
-  ${colors.white('context-cli conform "verify stripe webhook" --stack typescript --scope "src/webhook.ts"')}
-
-  ${colors.dim("# Check host setup, factory health, and code conformance status")}
+  ${colors.dim("# Check host setup and factory health status")}
   ${colors.white("context-cli status")}
 `);
 
@@ -216,10 +209,6 @@ export async function main(argv = process.argv.slice(2)) {
 
     case "preflight":
       return handlePreflightCommand(args, flags);
-
-    case "conform":
-    case "conformance":
-      return handleConformCommand(args, flags);
 
     case "run":
     case "exec":

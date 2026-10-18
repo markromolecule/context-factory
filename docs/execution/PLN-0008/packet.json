@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "kind": "execution-packet",
+  "owner": "plan-review",
+  "status": "approved",
+  "reviewReference": "PLN-0008-plan-review-2026-10-10",
+  "approvalReference": "user-approval-2026-10-10",
+  "taskBranch": "feat/PLN-0008-typescript-pragmatic-design-rules",
+  "targetBranch": "master",
+  "baseCommit": "298768ee210189f2f2221f3cf8f041bce2ad26bf",
+  "source": {
+    "path": "docs/tasks/2026/10/2026-10-10/feat-PLN-0008-typescript-pragmatic-design-rules/README.md",
+    "sha256": "sha256:2f94b223f5347ae4a59af42225eb85e9d293550608936709d4d5f6001fe48df2"
+  }
+}

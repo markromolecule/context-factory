@@ -16,14 +16,6 @@ tags: [rules, engineering]
 - [[rules/global/naming-conventions|Naming Conventions]]
 - [[rules/global/security-guardrails|Security Guardrails]]
 
-## SOLID Architecture
-
-- [[rules/solid/dependency-inversion|Dependency Inversion Principle (DIP)]]
-- [[rules/solid/interface-segregation|Interface Segregation Principle (ISP)]]
-- [[rules/solid/liskov-substitution|Liskov Substitution Principle (LSP)]]
-- [[rules/solid/open-closed|Open/Closed Principle (OCP)]]
-- [[rules/solid/single-responsibility|Single Responsibility Principle (SRP)]]
-
 ## TypeScript
 
 ### Common
@@ -32,6 +24,7 @@ tags: [rules, engineering]
 - [[rules/typescript/common/error-handling|Error Handling and Result Types]]
 - [[rules/typescript/common/module-and-imports|Module Resolution and Import Discipline]]
 - [[rules/typescript/common/next-react-project-structure|React and Next.js Project Structure]]
+- [[rules/typescript/common/pragmatic-design|Pragmatic Design Principles]]
 - [[rules/typescript/common/runtime-validation|Runtime Validation and Boundaries]]
 - [[rules/typescript/common/type-safety|Type Safety]]
 
@@ -39,8 +32,10 @@ tags: [rules, engineering]
 
 - [[rules/typescript/backend/controllers-and-routes|Controllers and Routes]]
 - [[rules/typescript/backend/data-access-via-api|Data Access via API]]
+- [[rules/typescript/backend/dto-and-serialization|DTO and Serialization]]
 - [[rules/typescript/backend/module-architecture|Backend Module Architecture]]
 - [[rules/typescript/backend/service-layer|Service Layer]]
+- [[rules/typescript/backend/testing|Backend Testing]]
 
 ### Database
 

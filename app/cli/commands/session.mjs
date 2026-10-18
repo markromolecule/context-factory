@@ -1,4 +1,6 @@
-import { clearSession, listSessions, loadSession, saveSession } from "../../../scripts/session-core.mjs";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { clearSession, getSessionProjectRoot, listSessions, loadSession, saveSession } from "../../../scripts/session-core.mjs";
 import { badges, colors, table } from "../core/formatter.mjs";
 
 export async function handleSessionCommand(args = [], flags = {}) {
@@ -22,13 +24,16 @@ export async function handleSessionCommand(args = [], flags = {}) {
 
     console.log(`\n${badges.done("SAVED")} Session checkpoint saved: ${colors.bold(result.sessionId)}\n`);
     console.log(`  ${colors.bold("State File:")}   ${colors.cyan(result.sessionPath)}`);
+    if (result.handoffPath) {
+      console.log(`  ${colors.bold("Handoff File:")} ${colors.cyan(result.handoffPath)}`);
+    }
     console.log(`  ${colors.bold("Resume File:")}  ${colors.cyan(result.resumePath)}`);
     console.log(`  ${colors.bold("Token Budget:")} ${colors.green(String(result.tokenEstimate) + " tokens")} (well under 1,500 token ceiling)`);
     console.log(`  ${colors.bold("Branch:")}        ${colors.yellow(result.data.gitState.branch)}`);
     if (result.data.taskPointer?.taskId) {
       console.log(`  ${colors.bold("Active Task:")}   ${colors.magenta(result.data.taskPointer.taskId)} (${result.data.taskPointer.unitFile || "in-progress"})`);
     }
-    console.log(`\n${colors.dim("To resume in a fresh IDE session: run 'context.mjs session:resume' or paste .tmp/SESSION_RESUME.md")}\n`);
+    console.log(`\n${colors.dim("To resume in a fresh IDE session: trigger session clear, then run 'context.mjs session:resume' or inspect HANDOFF.md")}\n`);
     return 0;
   }
 
@@ -53,6 +58,10 @@ export async function handleSessionCommand(args = [], flags = {}) {
       }
       if (session.gitState.modifiedFiles?.length > 0) {
         console.log(`  ${colors.bold("Modified:")}    ${colors.white(session.gitState.modifiedFiles.join(", "))}`);
+      }
+      const handoffPath = join(getSessionProjectRoot(), "HANDOFF.md");
+      if (existsSync(handoffPath)) {
+        console.log(`  ${colors.bold("Handoff File:")} ${colors.cyan("HANDOFF.md")}`);
       }
       console.log(`\n${colors.bold("Cold-Start Prompt:")}\n`);
       console.log(colors.cyan(session.coldStartPrompt));
@@ -93,7 +102,7 @@ export async function handleSessionCommand(args = [], flags = {}) {
 
   if (subCommand === "clear") {
     const targetId = flags.all ? "all" : (args[1] || "latest");
-    const result = await clearSession(targetId);
+    const result = await clearSession(targetId, flags);
 
     if (flags.json) {
       console.log(JSON.stringify(result, null, 2));

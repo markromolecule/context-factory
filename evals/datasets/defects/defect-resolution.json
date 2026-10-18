@@ -4,7 +4,7 @@
   "domain": "defects",
   "request": "Fix the checkout defect that charges an order twice when the request is retried",
   "expected": {
-    "workflow": "workflows/defect-resolution.md",
+    "workflow": "skills/workflows/defect-resolution/SKILL.md",
     "rules": [
       "rules/global/architecture-conformance.md",
       "rules/global/code-quality.md",
@@ -15,7 +15,7 @@
     ]
   },
   "goldenOutput": {
-    "workflow": "workflows/defect-resolution.md",
+    "workflow": "skills/workflows/defect-resolution/SKILL.md",
     "status": "completed"
   }
 }

@@ -2,7 +2,7 @@
   "name": "architecture work selects architecture controls",
   "request": "Design and implement a new cross-module authorization architecture and migrate its consumers",
   "expected": {
-    "workflow": "workflows/architecture-change.md",
+    "workflow": "skills/workflows/architecture-change/SKILL.md",
     "rules": [
       "rules/global/architecture-conformance.md",
       "rules/global/evidence-and-claims.md"

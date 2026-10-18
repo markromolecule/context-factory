@@ -15,7 +15,7 @@
 
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -28,7 +28,6 @@ const { compileRuleBinding } = await import(
 );
 const SCOPED_DIRS = [
   join(REPO_ROOT, "rules/global"),
-  join(REPO_ROOT, "rules/solid"),
 ];
 
 const VALID_MODES = new Set(["automated-blocking", "evidence-blocking", "advisory"]);
@@ -43,11 +42,6 @@ const MIN_LINES: Record<string, number> = {
   "git-commit.md": 50,
   "naming-conventions.md": 25,
   "security-guardrails.md": 30,
-  "dependency-inversion.md": 80,
-  "interface-segregation.md": 80,
-  "liskov-substitution.md": 80,
-  "open-closed.md": 80,
-  "single-responsibility.md": 80,
 };
 
 function collectMarkdownFiles(dir: string): string[] {
@@ -166,24 +160,20 @@ describe("Unit 05.03 — Global and SOLID Directive Migration", () => {
     });
   });
 
-  describe("SOLID over-selection prevention (AC-02)", () => {
-    it("all SOLID rules have alwaysApply: false", () => {
-      const solidFiles = collectMarkdownFiles(join(REPO_ROOT, "rules/solid"));
-      for (const f of solidFiles) {
-        const content = readFileSync(f, "utf8");
-        assert.match(
-          content,
-          /^alwaysApply:\s+false/m,
-          `${f} must have alwaysApply: false to avoid universal prompt bloat`
-        );
-      }
+  describe("SOLID retirement and knowledge unification", () => {
+    it("confirms rules/solid is retired in favor of canonical knowledge/principles", () => {
+      assert.equal(
+        existsSync(join(REPO_ROOT, "rules/solid")),
+        false,
+        "rules/solid directory must be eliminated; principles live under knowledge/principles"
+      );
     });
 
-    it("does not bind global or SOLID directives when only catalog Markdown changes", async () => {
+    it("does not bind global directives when only catalog Markdown changes", async () => {
       const { descriptors } = await parseRuleCatalog(join(REPO_ROOT, "rules"));
       const { binding } = compileRuleBinding({
         stack: "typescript",
-        affectedScope: ["rules/solid/single-responsibility.md"],
+        affectedScope: ["knowledge/principles/single-responsibility.md"],
         descriptors,
       });
 
