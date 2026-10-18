@@ -8,7 +8,7 @@ export async function handleBridgeCommand(args = [], flags = {}) {
   const pm = flags.pm || flags.packageManager || null;
   const dryRun = Boolean(flags.dryRun || flags["dry-run"] || flags.preview);
   const force = Boolean(flags.force || flags.repair);
-  const addNpmScripts = flags.npm !== false;
+  const addPackageScripts = flags.packageScripts !== false && flags["package-scripts"] !== false;
 
   // Handle IDE profiles (--ide or --agents)
   const ideRaw = flags.ide || flags.i || flags.agents || "all";
@@ -21,7 +21,7 @@ export async function handleBridgeCommand(args = [], flags = {}) {
     console.log(`  ${colors.bold("Target Directory:")}   ${colors.cyan(target)}`);
     console.log(`  ${colors.bold("Factory Path:")}       ${colors.cyan(factoryPath || "(auto-detected)")}`);
     console.log(`  ${colors.bold("Integration Mode:")}   ${colors.magenta(method)}`);
-    console.log(`  ${colors.bold("Package Manager:")}    ${colors.magenta(pm || "auto-detect (pnpm/npm/yarn/bun)")}`);
+    console.log(`  ${colors.bold("Package Manager:")}    ${colors.magenta(pm || "pnpm")}`);
     console.log(`  ${colors.bold("Target IDEs:")}        ${colors.magenta(ide.join(", "))}`);
     if (flags.repair) console.log(`  ${colors.bold("Action Mode:")}        ${colors.yellow("Repair / Force Re-link")}`);
     if (dryRun) console.log(`  ${colors.bold("Execution Mode:")}     ${badges.dryRun()}`);
@@ -38,7 +38,7 @@ export async function handleBridgeCommand(args = [], flags = {}) {
       packageManager: pm,
       dryRun,
       force,
-      addNpmScripts,
+      addPackageScripts,
     });
   } catch (err) {
     if (isJson) {

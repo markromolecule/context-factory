@@ -134,7 +134,7 @@ describe("Unit 02.01: Safe, non-clobbering local git hook (AC-02)", () => {
       const hooksDir = join(gitDir, "hooks");
       await mkdir(hooksDir, { recursive: true });
 
-      const customScript = "#!/bin/sh\n# Custom project hook\necho 'running lint'\nnpm run lint\n";
+      const customScript = "#!/bin/sh\n# Custom project hook\necho 'running lint'\npnpm run lint\n";
       const preCommitPath = join(hooksDir, "pre-commit");
       await writeFile(preCommitPath, customScript, "utf8");
 

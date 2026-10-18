@@ -10,9 +10,9 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 
 ## Delivery
 
-- [[skills/workflows/feature-delivery/SKILL|Feature Delivery]] — Deliver a product capability from scoped outcome through implementation, verification, documentation, and handoff (including greenfield systems and user capabilities).
-- [[skills/workflows/defect-resolution/SKILL|Defect Resolution]] — Resolve a defect by reproducing it, establishing root cause, adding regression evidence, and applying the smallest safe fix.
 - [[skills/workflows/commit-push-release/SKILL|Commit, Push & Release]] — Safely stage, craft conventional commits, push to remote repository, tag releases, and execute release verification.
+- [[skills/workflows/defect-resolution/SKILL|Defect Resolution]] — Resolve a defect by reproducing it, establishing root cause, adding regression evidence, and applying the smallest safe fix.
+- [[skills/workflows/feature-delivery/SKILL|Feature Delivery]] — Deliver a product capability from scoped outcome through implementation, verification, documentation, and handoff.
 
 ## Architecture & Data Safety
 

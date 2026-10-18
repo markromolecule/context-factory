@@ -762,7 +762,7 @@ export async function validatePlanDoneCheck(taskDirPath, units, graph) {
 
   const acceptance = sectionContent(content, "Acceptance criteria");
   const acRows = acceptance.split("\n").filter((line) => /^\|\s*AC-\d+/i.test(line));
-  if (acRows.length === 0 || acRows.some((row) => !/\b\d{2}\.\d{2}\b/.test(row) || !/\b(node|npm|pnpm|git|context-cli)\b/i.test(row))) {
+  if (acRows.length === 0 || acRows.some((row) => !/\b\d{2}\.\d{2}\b/.test(row) || !/\b(node|pnpm|git|context-cli)\b/i.test(row))) {
     diagnostics.push(planDoneDiagnostic("acceptance", "Acceptance criteria need a unit ID and concrete verification command.", "Map every AC-XX row to a unit and command."));
   }
 

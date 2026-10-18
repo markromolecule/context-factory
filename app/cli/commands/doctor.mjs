@@ -181,7 +181,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
     [
       "Lockfile Integrity",
       lockPassed ? badges.pass() : badges.fail(),
-      lockPassed ? `Current (${expectedLock.digest.slice(0, 20)}...)` : "Lock is stale or missing. Run `npm run lock`",
+      lockPassed ? `Current (${expectedLock.digest.slice(0, 20)}...)` : "Lock is stale or missing. Run `pnpm run lock`",
     ],
     [
       ".agents & Editor Symlink Integrity",
@@ -242,7 +242,7 @@ export async function handleDoctorCommand(args = [], flags = {}) {
     console.log(`  ${badges.done("HEALTHY")} ${colors.bold(colors.green("Context Factory is completely synchronized, valid, and healthy."))}\n`);
   } else {
     console.log(`  ${badges.warn("ATTENTION")} ${colors.bold(colors.yellow("Context Factory has findings requiring attention."))}`);
-    console.log(`  Remediation: Run ${colors.bold(colors.cyan("context-cli doctor --repair"))} or ${colors.bold(colors.cyan("npm run sync"))}.\n`);
+    console.log(`  Remediation: Run ${colors.bold(colors.cyan("context-cli doctor --repair"))} or ${colors.bold(colors.cyan("pnpm run sync"))}.\n`);
   }
 
   return allPassed ? 0 : 1;

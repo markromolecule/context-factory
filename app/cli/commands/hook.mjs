@@ -17,7 +17,7 @@ fi
 
 EXIT_CODE=$?
 if [ $EXIT_CODE -ne 0 ]; then
-  echo "\\033[1;31m[context-factory] Pre-commit health check failed. Run 'pnpm run sync' or 'npm run sync' to reconcile.\\033[0m"
+  echo "\\033[1;31m[context-factory] Pre-commit health check failed. Run 'pnpm run sync' to reconcile.\\033[0m"
   exit 1
 fi
 `;

@@ -8,6 +8,8 @@ tags: [context-factory, index]
 
 This repository is the source of truth for agent behavior, engineering rules, reusable skills, development workflows, and project knowledge.
 
+Context Factory uses pnpm 10.28.1 for package scripts and Node.js for execution. There are no declared package dependencies. Run `pnpm run doctor` to verify a checkout. Host projects must use pnpm before running `context-cli init` or `bridge`.
+
 ## Start here
 
 1. Read [[docs/Home|Home]].

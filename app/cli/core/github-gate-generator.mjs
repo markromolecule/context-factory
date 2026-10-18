@@ -20,11 +20,20 @@ export const GITHUB_GATE_MARKER = "Context Factory Strict Conformance Gate";
 export function renderGitHubWorkflow(options = {}) {
   const {
     submodulePath = ".context-factory",
-    packageManager = "npm",
+    packageManager = "pnpm",
     nodeVersion = "22",
     testCommand = null,
     lintCommand = null,
   } = options;
+
+  if (packageManager !== "pnpm") {
+    throw new Error(`Context Factory requires pnpm; received ${packageManager}.`);
+  }
+  for (const command of [testCommand, lintCommand]) {
+    if (command && /\b(?:npm|npx|yarn|bun)\b/.test(command)) {
+      throw new Error("Host CI commands must use pnpm or a direct runtime command.");
+    }
+  }
 
   const hostLintSection = lintCommand
     ? `      - name: Host Lint
@@ -63,6 +72,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${nodeVersion}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.28.1
+
+      - name: Install host dependencies when locked
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          fi
 
       - name: Verify Context Factory Health
         run: |
@@ -204,7 +224,7 @@ export async function installGitHubWorkflow(options = {}) {
   const {
     targetDir = process.cwd(),
     submodulePath = ".context-factory",
-    packageManager = "npm",
+    packageManager = "pnpm",
     nodeVersion = "22",
     testCommand = null,
     lintCommand = null,

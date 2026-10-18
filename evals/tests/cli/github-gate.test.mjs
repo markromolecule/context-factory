@@ -26,6 +26,8 @@ describe("Unit 04.01: Opt-in GitHub Actions quality gate generator (AC-02, AC-04
       assert.ok(yml.includes("submodules: recursive"), "Should checkout submodules recursively");
       assert.ok(yml.includes("actions/checkout@v4"), "Should use actions/checkout@v4");
       assert.ok(yml.includes("actions/setup-node@v4"), "Should use actions/setup-node@v4");
+      assert.ok(yml.includes("pnpm/action-setup@v6"), "Should set up pnpm");
+      assert.ok(yml.includes("pnpm install --frozen-lockfile"), "Should install locked host dependencies");
       assert.ok(yml.includes("node-version: 22"), "Should specify node version");
 
       // Health check (AC-07)
@@ -67,12 +69,17 @@ describe("Unit 04.01: Opt-in GitHub Actions quality gate generator (AC-02, AC-04
     it("includes host test and lint steps when explicitly configured (AC-10)", () => {
       const yml = renderGitHubWorkflow({
         submodulePath: ".context-factory",
-        testCommand: "npm test",
-        lintCommand: "npm run lint",
+        testCommand: "pnpm test",
+        lintCommand: "pnpm run lint",
       });
 
-      assert.ok(yml.includes("npm test"), "Should include host test command");
-      assert.ok(yml.includes("npm run lint"), "Should include host lint command");
+      assert.ok(yml.includes("pnpm test"), "Should include host test command");
+      assert.ok(yml.includes("pnpm run lint"), "Should include host lint command");
+    });
+
+    it("rejects host CI commands using another package manager", () => {
+      assert.throws(() => renderGitHubWorkflow({ testCommand: "npm test" }), /must use pnpm/);
+      assert.throws(() => renderGitHubWorkflow({ packageManager: "bun" }), /requires pnpm/);
     });
   });
 

@@ -14,7 +14,7 @@ MCP configurations are maintained at the repository root in `.mcp.json` and gove
 
 ### 1. GitHub Connector (`github`)
 
-- **Package / Command:** `npx -y @modelcontextprotocol/server-github`
+- **Package / Command:** `pnpm dlx @modelcontextprotocol/server-github`
 - **Scope & Purpose:** Querying and managing GitHub issues, pull requests, commits, branches, releases, CI workflow runs, and repository state.
 - **Authentication:** `GITHUB_PERSONAL_ACCESS_TOKEN: ${GITHUB_TOKEN}` (strictly passed via environment variable per `rules/global/security-guardrails.md`).
 - **Use Cases:**

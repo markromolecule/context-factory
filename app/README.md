@@ -20,9 +20,9 @@ This directory contains the operational tools, applications, and CLI utilities f
 # Run CLI directly
 node app/cli/bin/context-cli.mjs --help
 
-# Or via npm scripts
-npm run cli -- --help
-npm run bridge -- --help
-npm run doctor
-npm run build
+# Or via pnpm scripts
+pnpm run cli --help
+pnpm run bridge --dry-run --target .
+pnpm run doctor
+pnpm run build
 ```

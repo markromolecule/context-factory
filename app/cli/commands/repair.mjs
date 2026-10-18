@@ -53,7 +53,7 @@ export async function handleRepairCommand(args = [], flags = {}) {
     try {
       const bridgeResult = await repairBridgeSymlinks(targetDir, {
         force: true,
-        addNpmScripts: true,
+        addPackageScripts: true,
         ...flags,
       });
 

@@ -27,7 +27,7 @@ The `test` skill enforces an uncompromising Test-Driven Development (TDD) discip
 2. Locate the `## Verification` section and extract:
    - **Declared Test Type(s):** unit, integration, architecture, contract, migration.
    - **Required Test Cases:** Happy path, edge cases, error conditions, and boundary behaviors.
-   - **Verification Command(s):** The exact CLI command used to execute the test suite (e.g. `node --test tests/feature.test.mjs`, `npm test`, `php artisan test`).
+   - **Verification Command(s):** The exact CLI command used to execute the test suite (e.g. `node --test tests/feature.test.mjs`, `pnpm test`, `php artisan test`).
 3. Cross-reference the unit's `## Scope` section (`**In scope:**` and `**Out of scope:**`). The tests must verify only what is declared in scope without bleeding into unallocated components.
 
 ### Stage 2: Red (Author Failing Test)

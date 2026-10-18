@@ -6,7 +6,7 @@ A zero-dependency, pure ESM command-line interface for maintaining, validating, 
 
 ## Installation & Execution
 
-The CLI is written in pure Node.js ESM without external dependencies. It works immediately out of the box with zero `npm install` requirements.
+The CLI is written in pure Node.js ESM without external dependencies. It also works through the pinned pnpm scripts without installing packages.
 
 ### Direct Node Invocation
 
@@ -14,30 +14,30 @@ The CLI is written in pure Node.js ESM without external dependencies. It works i
 node app/cli/bin/context-cli.mjs <command> [options]
 ```
 
-### Global CLI (via `npm link`)
+### Global CLI (via `pnpm link`)
 
 ```sh
-npm link
+pnpm link --global
 context-cli --help
 context-cli init
 context-cli status
 context-cli pull
 ```
 
-### Via Root NPM Scripts
+### Via Root pnpm Scripts
 
 ```sh
-npm run cli -- <command>
-npm run init
-npm run bridge
-npm run pull
-npm run build
-npm run doctor
-npm run lint
-npm run eval
-npm run sync
-npm run lock
-npm run diff
+pnpm run cli <command>
+pnpm run init
+pnpm run bridge
+pnpm run pull
+pnpm run build
+pnpm run doctor
+pnpm run lint
+pnpm run eval
+pnpm run sync
+pnpm run lock
+pnpm run diff
 ```
 
 ---

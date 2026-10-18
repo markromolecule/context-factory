@@ -162,16 +162,36 @@ export function parseIdeChoices(input = "", detectedDefaults = []) {
   return result.size > 0 ? Array.from(result) : ["all"];
 }
 
-/**
- * Detects the package manager used in the target directory by checking lockfiles.
- * Returns 'pnpm', 'yarn', 'bun', or 'npm'.
- */
+/** Requires a pnpm host before generating any bridge artifacts. */
 export function detectPackageManager(targetDir = process.cwd()) {
-  if (existsSync(join(targetDir, "pnpm-lock.yaml"))) return "pnpm";
-  if (existsSync(join(targetDir, "yarn.lock"))) return "yarn";
-  if (existsSync(join(targetDir, "bun.lockb")) || existsSync(join(targetDir, "bun.lock"))) return "bun";
-  if (existsSync(join(targetDir, "package-lock.json"))) return "npm";
-  return "npm";
+  const otherLockfiles = ["package-lock.json", "npm-shrinkwrap.json", "yarn.lock", "bun.lock", "bun.lockb"];
+  const found = otherLockfiles.find((name) => existsSync(join(targetDir, name)));
+  if (found) {
+    throw new Error(`Host has ${found}. Migrate the host to pnpm and remove the old lockfile before bridging.`);
+  }
+  const manifestPath = join(targetDir, "package.json");
+  if (existsSync(manifestPath)) {
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    if (manifest.packageManager && !/^pnpm@/.test(manifest.packageManager)) {
+      throw new Error(`Host packageManager must be pnpm; found ${manifest.packageManager}.`);
+    }
+    const devManager = manifest.devEngines?.packageManager;
+    const devManagerName = typeof devManager === "string" ? devManager.split("@")[0] : devManager?.name;
+    if (devManagerName && devManagerName !== "pnpm") {
+      throw new Error(`Host devEngines.packageManager must be pnpm; found ${devManagerName}.`);
+    }
+    const oldScripts = Object.entries(manifest.scripts || {})
+      .filter(([name, command]) => name.startsWith("context:") && /\b(?:npm|npx|yarn|bun)\b/.test(String(command)));
+    if (oldScripts.length > 0) {
+      throw new Error(`Host context scripts use another package manager (${oldScripts.map(([name]) => name).join(", ")}). Migrate them to pnpm before bridging.`);
+    }
+    const hasDependencies = ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"]
+      .some((key) => Object.keys(manifest[key] || {}).length > 0);
+    if (hasDependencies && !existsSync(join(targetDir, "pnpm-lock.yaml"))) {
+      throw new Error("Host has dependencies but no pnpm-lock.yaml. Run pnpm install and commit the lockfile before bridging.");
+    }
+  }
+  return "pnpm";
 }
 
 /**
@@ -510,7 +530,7 @@ export async function generateBridge({
   pm = null,
   dryRun = false,
   force = false,
-  addNpmScripts = true,
+  addPackageScripts = true,
   stacks = null,
   stack = null,
 } = {}) {
@@ -529,8 +549,12 @@ export async function generateBridge({
     }
   } catch {}
 
-  const activePm = (packageManager || pm || detectPackageManager(targetDir)).toLowerCase();
-  const pmRun = activePm === "yarn" ? "yarn" : (activePm === "bun" ? "bun run" : `${activePm} run`);
+  const activePm = (packageManager || pm || "pnpm").toLowerCase();
+  if (activePm !== "pnpm") {
+    throw new Error(`Context Factory requires pnpm; received ${activePm}.`);
+  }
+  detectPackageManager(targetDir);
+  const pmRun = "pnpm run";
 
   // Compute absolute and relative paths to context-factory
   let absFactoryPath;
@@ -1083,7 +1107,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
       }
     }
 
-    if (modified && addNpmScripts) {
+    if (modified && addPackageScripts) {
       if (!dryRun) {
         await writeFile(hostPkgPath, `${JSON.stringify(pkg, null, 2)}\n`, "utf8");
       }
@@ -1358,6 +1382,6 @@ export async function repairBridgeSymlinks(targetDir = process.cwd(), flags = {}
     ide: ide || ["all"],
     method: method || "submodule",
     force: true,
-    addNpmScripts: true,
+    addPackageScripts: true,
   });
 }

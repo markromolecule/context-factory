@@ -35,6 +35,17 @@ export async function handleInitCommand(args = [], flags = {}) {
   const defaultTarget = submodCtx.isInsideSubmodule ? submodCtx.hostDir : ".";
   const resolvedTarget = resolve(process.cwd(), target || defaultTarget);
 
+  try {
+    detectPackageManager(resolvedTarget);
+    if (pm && String(pm).toLowerCase() !== "pnpm") {
+      throw new Error(`Context Factory requires pnpm; received ${pm}.`);
+    }
+  } catch (error) {
+    if (isJson) console.log(JSON.stringify({ success: false, error: error.message }, null, 2));
+    else console.error(`${badges.fail()} ${error.message}`);
+    return 1;
+  }
+
   const isInteractive = input.isTTY && !flags.quiet && !flags.json && !flags.nonInteractive && !flags["non-interactive"];
 
   if (!flags.json) {
@@ -152,23 +163,6 @@ export async function handleInitCommand(args = [], flags = {}) {
         }
       }
 
-      // 6. Package manager prompt
-      if (!pm) {
-        const detected = detectPackageManager(resolvedTarget);
-        console.log(`\n  ${colors.bold("Select Package Manager:")}`);
-        console.log(`    ${colors.cyan("1)")} Auto-detect (${detected})`);
-        console.log(`    ${colors.cyan("2)")} pnpm`);
-        console.log(`    ${colors.cyan("3)")} npm`);
-        console.log(`    ${colors.cyan("4)")} yarn`);
-        console.log(`    ${colors.cyan("5)")} bun`);
-        const answer = await rl.question(`  ${colors.bold("Choice")} ${colors.dim("[1-5, default: 1]")}: `);
-        const choice = answer.trim();
-        if (choice === "2") pm = "pnpm";
-        else if (choice === "3") pm = "npm";
-        else if (choice === "4") pm = "yarn";
-        else if (choice === "5") pm = "bun";
-        else pm = detected;
-      }
     } finally {
       rl.close();
     }

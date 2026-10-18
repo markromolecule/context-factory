@@ -1,6 +1,7 @@
 {
   "name": "context-factory",
   "version": "5.0.0",
+  "packageManager": "pnpm@10.28.1",
   "description": "Source of truth for agent behavior, engineering rules, reusable skills, development workflows, and cross-repo bridging",
   "type": "module",
   "main": "app/cli/index.mjs",
@@ -33,7 +34,7 @@
     "context:resolve": "node scripts/context.mjs resolve",
     "context:bundle": "node scripts/context.mjs bundle",
     "context:doctor": "node scripts/context.mjs doctor",
-    "context:update": "git submodule update --remote --merge . && npm run context:doctor",
+    "context:update": "git submodule update --remote --merge . && pnpm run context:doctor",
     "context:bridge": "node app/cli/bin/context-cli.mjs bridge --target .",
     "context:cli": "node app/cli/bin/context-cli.mjs"
   },

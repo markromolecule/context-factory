@@ -8,6 +8,8 @@ tags: [guide, integration, submodule, workspace, multi-repo, cli, antigravity, s
 
 This guide covers how to integrate and use **Context Factory** across multiple projects and repositories. It explains how to bridge host projects so AI agents (especially **Antigravity**) natively discover skills, rules, and workflows via `.agents/` symlinks, how to use `context-cli init` and `context-cli bridge`, how to scope generated documentation to the host repository, and how to maintain health synchronization across workspaces.
 
+**Prerequisite:** Host projects use pnpm. Migrate any other lockfile and existing `context:*` package scripts before running `init` or `bridge`; the CLI rejects conflicting package manager state without changing the host.
+
 ---
 
 ## 1. Quick Start: Submodule-First Onboarding
@@ -111,7 +113,7 @@ Run `doctor` inside any bridged project to verify manifest synchronization, lock
 
 ```sh
 # Run doctor diagnostic
-npm run context:doctor
+pnpm run context:doctor
 # Or via CLI:
 context-cli doctor
 
@@ -123,8 +125,8 @@ context-cli doctor --repair
 In a host project with a Git submodule, pull latest upstream updates and auto-heal symlinks:
 
 ```sh
-# Run pull via npm script or CLI:
-npm run context:update
+# Run pull via pnpm script or CLI:
+pnpm run context:update
 # Or:
 context-cli pull
 ```
@@ -145,5 +147,5 @@ When other team members or CI runners clone a bridged repository:
 git clone --recurse-submodules <host-repo-url>
 
 # Verify health
-npm run context:doctor
+pnpm run context:doctor
 ```

@@ -3,9 +3,62 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { generateBridge, normalizeIdeProfiles } from "../../app/cli/core/bridge-generator.mjs";
+import { detectPackageManager, generateBridge, normalizeIdeProfiles } from "../../app/cli/core/bridge-generator.mjs";
 
 describe("Unit 01.01: Multi-Editor Bridge Generator Core", () => {
+  it("requires pnpm and refuses other host lockfiles before writing bridge files", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "pnpm-host-test-"));
+    try {
+      for (const lockfile of ["package-lock.json", "npm-shrinkwrap.json", "yarn.lock", "bun.lock", "bun.lockb"]) {
+        await writeFile(join(tempDir, lockfile), "{}\n");
+        assert.throws(() => detectPackageManager(tempDir), /Migrate the host to pnpm/);
+        await assert.rejects(generateBridge({ target: tempDir, ide: ["vscode"] }), /Migrate the host to pnpm/);
+        await assert.rejects(readFile(join(tempDir, ".context-bridge.json")), { code: "ENOENT" });
+        await rm(join(tempDir, lockfile));
+      }
+      await assert.rejects(generateBridge({ target: tempDir, ide: ["vscode"], packageManager: "bun" }), /requires pnpm/);
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("requires a pnpm lockfile for dependency-bearing hosts", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "pnpm-lock-test-"));
+    try {
+      await writeFile(join(tempDir, "package.json"), JSON.stringify({ dependencies: { example: "1.0.0" } }));
+      assert.throws(() => detectPackageManager(tempDir), /no pnpm-lock.yaml/);
+      await writeFile(join(tempDir, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+      assert.equal(detectPackageManager(tempDir), "pnpm");
+      await writeFile(join(tempDir, "package.json"), JSON.stringify({ devEngines: { packageManager: { name: "bun", version: "1.0.0" } } }));
+      assert.throws(() => detectPackageManager(tempDir), /devEngines.packageManager must be pnpm/);
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects legacy Context Factory host scripts before changing the host", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "pnpm-script-test-"));
+    try {
+      await writeFile(join(tempDir, "package.json"), JSON.stringify({ scripts: { "context:update": "npm run context:doctor" } }));
+      await assert.rejects(generateBridge({ target: tempDir, ide: ["vscode"] }), /Migrate them to pnpm/);
+      await assert.rejects(readFile(join(tempDir, ".context-bridge.json")), { code: "ENOENT" });
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("generates pnpm host helper scripts", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "pnpm-bridge-test-"));
+    try {
+      await writeFile(join(tempDir, "package.json"), JSON.stringify({ name: "host", scripts: {} }));
+      await generateBridge({ target: tempDir, ide: ["vscode"], method: "submodule" });
+      const manifest = JSON.parse(await readFile(join(tempDir, "package.json"), "utf8"));
+      assert.match(manifest.scripts["context:update"], /pnpm run context:doctor$/);
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
   it("normalizeIdeProfiles maps vscode and trae correctly", () => {
     const res = normalizeIdeProfiles(["vscode", "trae"]);
     assert.ok(res.includes("vscode"), "Must include vscode");
@@ -24,7 +77,7 @@ describe("Unit 01.01: Multi-Editor Bridge Generator Core", () => {
       const res = await generateBridge({
         target: tempDir,
         ide: ["trae"],
-        addNpmScripts: false,
+        addPackageScripts: false,
       });
 
       const traeFile = res.files.find((f) => f.id === ".trae/rules/project_rules.md");
@@ -56,7 +109,7 @@ describe("Unit 01.01: Multi-Editor Bridge Generator Core", () => {
       const res = await generateBridge({
         target: tempDir,
         ide: ["vscode"],
-        addNpmScripts: false,
+        addPackageScripts: false,
       });
 
       const copilotFile = res.files.find((f) => f.id === ".github/copilot-instructions.md");
@@ -84,7 +137,7 @@ describe("Unit 01.01: Multi-Editor Bridge Generator Core", () => {
       const res = await generateBridge({
         target: tempDir,
         ide: ["cursor"],
-        addNpmScripts: false,
+        addPackageScripts: false,
       });
 
       const legacyCursor = res.files.find((f) => f.id === ".cursorrules");

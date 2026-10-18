@@ -173,7 +173,8 @@
     "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md",
     "docs/decisions/0037-operation-first-backend-modules.md",
     "docs/decisions/0038-host-native-workflow-entries.md",
-    "docs/decisions/0039-first-class-workflow-skills-and-typescript-consolidation.md"
+    "docs/decisions/0039-first-class-workflow-skills-and-typescript-consolidation.md",
+    "docs/decisions/0040-pnpm-only-package-manager.md"
   ],
   "tools": [
     "evals/run-evals.mjs",

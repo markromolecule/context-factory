@@ -44,7 +44,7 @@ export async function handleDiffCommand(args = [], flags = {}) {
   if (rows.length > 0) {
     console.log(table(headers, rows));
     console.log("");
-    console.log(`  ${colors.bold("Fix:")} Run ${colors.bold(colors.cyan("npm run sync"))} or ${colors.bold(colors.cyan("node app/cli/bin/context-cli.mjs sync"))} to reconcile.\n`);
+    console.log(`  ${colors.bold("Fix:")} Run ${colors.bold(colors.cyan("pnpm run sync"))} or ${colors.bold(colors.cyan("node app/cli/bin/context-cli.mjs sync"))} to reconcile.\n`);
   }
 
   return 1;

@@ -61,7 +61,7 @@ describe("Unit 01.01: Schema and Validation Contracts", () => {
             contentHash: "sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
             verifier: {
               type: "typechecker",
-              command: "npm run typecheck"
+              command: "pnpm run typecheck"
             },
             applicability: {
               paths: ["**/*.ts", "**/*.tsx"],

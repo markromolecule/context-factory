@@ -75,7 +75,7 @@ When refactoring targets specific non-functional code smells or architectural de
 - Run all existing unit, integration, and regression test suites to guarantee strict behavioral equivalence:
 
   ```bash
-  npm test
+  pnpm test
   ```
 
 - If any test fails, inspect and fix the extraction or revert cleanly.

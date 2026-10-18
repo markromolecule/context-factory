@@ -16,5 +16,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - uses: pnpm/action-setup@v6
       - name: Verify context lock, structure, and behavior
-        run: node scripts/context.mjs doctor
+        run: pnpm run doctor

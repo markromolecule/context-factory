@@ -96,7 +96,7 @@ Record the command or inspection, outcome, and the acceptance criterion it suppo
 
 | Stage | Branch or merge | Commit SHA | Conformance Report | Verification Command |
 |---|---|---|---|---|
-| Phase 01 Verification | `{{task_branch}}` | pending | pending | `npm test` |
+| Phase 01 Verification | `{{task_branch}}` | pending | pending | `pnpm test` |
 | Task Finalization | `{{task_branch}}` to `{{target_branch}}` | pending | pending | `node scripts/context.mjs doctor` |
 
 ## Result

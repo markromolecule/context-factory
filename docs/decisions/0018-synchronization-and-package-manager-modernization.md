@@ -8,6 +8,8 @@ tags: [adr, cli, pnpm, sync, moc, workflows, git-hook, resolution]
 
 # Context Factory Synchronization and Package Manager Modernization
 
+> The package manager compatibility policy in this decision is amended by [[docs/decisions/0040-pnpm-only-package-manager|ADR 0040 — pnpm-only package management]]. The synchronization and workflow decisions remain in force.
+
 ## Context
 
 As Context Factory scaled to 35 rules, 10 skills, 11 workflows, 23 agents, and multiple bridged host repositories:

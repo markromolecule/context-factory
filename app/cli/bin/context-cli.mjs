@@ -255,7 +255,7 @@ export async function main(argv = process.argv.slice(2)) {
   }
 }
 
-// Direct execution check for both direct script invocation and npm link bin alias
+// Direct execution check for both direct script invocation and pnpm link bin alias
 const scriptPath = fileURLToPath(import.meta.url);
 const invokedPath = process.argv[1];
 const isDirectExecution = invokedPath && (

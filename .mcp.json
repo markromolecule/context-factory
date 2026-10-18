@@ -1,9 +1,9 @@
 {
   "mcpServers": {
     "github": {
-      "command": "npx",
+      "command": "pnpm",
       "args": [
-        "-y",
+        "dlx",
         "@modelcontextprotocol/server-github"
       ],
       "env": {
