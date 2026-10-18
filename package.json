@@ -22,6 +22,7 @@
     "repair": "node app/cli/bin/context-cli.mjs repair",
     "eval": "node app/cli/bin/context-cli.mjs eval",
     "test": "node app/cli/bin/context-cli.mjs eval",
+    "test:unit": "node --test tests/**/*.test.mjs",
     "diff": "node app/cli/bin/context-cli.mjs diff",
     "lock": "node app/cli/bin/context-cli.mjs lock",
     "sync": "node app/cli/bin/context-cli.mjs sync",

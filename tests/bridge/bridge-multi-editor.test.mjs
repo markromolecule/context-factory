@@ -8,11 +8,11 @@ import {
   mergeJsonFile,
   detectSubmoduleContext,
   checkHostSubmoduleStatus,
-} from "../app/cli/core/bridge-generator.mjs";
+} from "../../app/cli/core/bridge-generator.mjs";
 import {
   auditEditorConfigurations,
   handleDoctorCommand,
-} from "../app/cli/commands/doctor.mjs";
+} from "../../app/cli/commands/doctor.mjs";
 
 const FIXTURES_DIR = join(process.cwd(), "tests", "fixtures", "mock-multi-editor-host");
 

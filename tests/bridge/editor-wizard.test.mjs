@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { detectInstalledIdes, parseIdeChoices } from "../app/cli/core/bridge-generator.mjs";
+import { detectInstalledIdes, parseIdeChoices } from "../../app/cli/core/bridge-generator.mjs";
 
 describe("Unit 02.02: Installed IDE Folder Scanner & Numbered Multi-Select Onboarding Menu", () => {
   it("detectInstalledIdes scans project directory and detects existing editor configurations", async () => {

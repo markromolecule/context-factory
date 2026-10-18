@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { scaffoldTask } from "../scripts/task-workflow.mjs";
+import { scaffoldTask } from "../../scripts/task-workflow.mjs";
 
 describe("Unit 01.01: scaffoldTask Nested Phase and Unit Structure", () => {
   it("scaffolds nested phase directories and starter units in dryRun mode", async () => {

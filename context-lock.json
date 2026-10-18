@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:d01bffba60115652683211b3b7e90c4dec4009dd6b79b7f60b408cbab72c7c30",
+  "digest": "sha256:0add1733ccd4bc67bfcac029ab89931116d258b206bfafc767e7aa766486d1d3",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:582feee41d980b280e64299eeb2baccf2fe6bc4baf386195599c51d02abeb44f",
     "README.md": "sha256:d41bb72953e18efd387df0d96ffbd59d07a689cb7eb5c5695facd860e425a073",
@@ -159,7 +159,7 @@
     "knowledge/principles/open-closed.md": "sha256:76c37a836ed59892ec8c7a5b64b37d75ab6f3d7cde095f80c9ed1e702c68e075",
     "knowledge/principles/single-responsibility.md": "sha256:644869efc868c12b4d8d5a0f9ce03ab97f1bc70839d6a09c67d333668e4644fc",
     "knowledge/principles/yagni.md": "sha256:463267ba919ce76a0d3e0b2578a376ea0f45d5d4318cce635482f7e7243608e7",
-    "orchestrator/SHARED.md": "sha256:16fb5c18caa190711206e883e4c6c227b2a39310cecc606843e1183b9a04015f",
+    "orchestrator/SHARED.md": "sha256:c6affc5c4ca3d35c575ca3f3c402edf0b031c12ca2fb153b47e57417c7374bb4",
     "orchestrator/rules/binding-compiler.mjs": "sha256:d7b48209d7426380b30fdd4dc1082e15d274c337eb14524005f7ea98f0678a87",
     "orchestrator/rules/descriptor-parser.mjs": "sha256:da5dae67785e30820767a1eb1c005238093408bd79b37d020c4cdceeec3ea263",
     "orchestrator/rules/prompt-compiler.mjs": "sha256:35177c03d50f5374a0f09c5a7a62d6784903b623159eee65914247f069c466bc",

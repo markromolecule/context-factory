@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { mkdir, rm, writeFile, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { existsSync } from "node:fs";
-import { auditEditorConfigurations, handleDoctorCommand } from "../app/cli/commands/doctor.mjs";
-import { generateBridge } from "../app/cli/core/bridge-generator.mjs";
+import { auditEditorConfigurations, handleDoctorCommand } from "../../app/cli/commands/doctor.mjs";
+import { generateBridge } from "../../app/cli/core/bridge-generator.mjs";
 
 const FIXTURES_DIR = join(process.cwd(), "tests", "fixtures", "mock-doctor-host");
 

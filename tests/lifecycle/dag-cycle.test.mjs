@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildDependencyGraph, detectCycles } from "../scripts/plan-check.mjs";
+import { buildDependencyGraph, detectCycles } from "../../scripts/plan-check.mjs";
 
 test("buildDependencyGraph constructs valid adjacency list and in-degree map", () => {
   const units = [

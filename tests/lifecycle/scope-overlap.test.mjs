@@ -6,7 +6,7 @@ import {
   checkDisjointScopes,
   checkPlanScopes,
   buildDependencyGraph,
-} from "../scripts/plan-check.mjs";
+} from "../../scripts/plan-check.mjs";
 
 describe("extractDeclaredScopes", () => {
   it("extracts backticked file paths and excludes function names inside parentheses", () => {

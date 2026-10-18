@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { generateBridge, normalizeIdeProfiles } from "../app/cli/core/bridge-generator.mjs";
+import { generateBridge, normalizeIdeProfiles } from "../../app/cli/core/bridge-generator.mjs";
 
 describe("Unit 01.01: Multi-Editor Bridge Generator Core", () => {
   it("normalizeIdeProfiles maps vscode and trae correctly", () => {

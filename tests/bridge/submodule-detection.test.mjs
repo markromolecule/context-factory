@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { detectSubmoduleContext, checkHostSubmoduleStatus } from "../app/cli/core/bridge-generator.mjs";
+import { detectSubmoduleContext, checkHostSubmoduleStatus } from "../../app/cli/core/bridge-generator.mjs";
 
 describe("Unit 02.01: Submodule Environment Auto-Detection and Hybrid Assistant", () => {
   it("detectSubmoduleContext identifies when CWD is inside a submodule directory", async () => {
