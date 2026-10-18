@@ -2,6 +2,9 @@ import { resolveContext, sha256 } from "../scripts/context-core.mjs";
 import { compilePrompt, validatePromptIntegrity } from "./rules/prompt-compiler.mjs";
 import { assertValid, loadSchema, validateSchema } from "./validator.mjs";
 
+/**
+ * Standard provider invocation error.
+ */
 export class ProviderError extends Error {
   constructor(message, status = 500, details = null) {
     super(message);
@@ -12,7 +15,7 @@ export class ProviderError extends Error {
 }
 
 /**
- * Mock Provider for offline, deterministic testing and golden dataset assertions.
+ * Deterministic Mock Provider for offline execution, golden datasets, and testing.
  */
 export async function mockProvider({ prompt, systemPrompt, selection, binding, fixture, model = "mock-v1" }) {
   if (fixture) {
@@ -23,7 +26,6 @@ export async function mockProvider({ prompt, systemPrompt, selection, binding, f
     };
   }
 
-  // Generate deterministic synthetic response based on matched context and compiled binding
   const output = {
     workflow: selection?.workflow?.path ?? null,
     rules: selection?.rules?.map((r) => r.path) ?? [],
@@ -61,7 +63,7 @@ export function buildOpenAIPayload({ prompt, systemPrompt, model = "gpt-4o", tem
 }
 
 /**
- * Native fetch OpenAI-compatible Provider
+ * Native fetch OpenAI-compatible Provider.
  */
 export async function openAIProvider({
   prompt,
@@ -124,7 +126,7 @@ export function buildAnthropicPayload({ prompt, systemPrompt, model = "claude-3-
 }
 
 /**
- * Native fetch Anthropic Provider
+ * Native fetch Anthropic Provider.
  */
 export async function anthropicProvider({
   prompt,
@@ -187,7 +189,7 @@ export function buildGeminiPayload({ prompt, systemPrompt, model = "gemini-2.0-f
 }
 
 /**
- * Native fetch Gemini Provider
+ * Native fetch Gemini Provider.
  */
 export async function geminiProvider({
   prompt,
@@ -286,7 +288,7 @@ export async function executeRun({
 
     const targetBinding = binding ?? runOptions.binding ?? selection?.binding ?? null;
 
-    // Mandatory Prompt Compilation (occurs before user onPromptPrepare hook)
+    // Mandatory Prompt Compilation
     const compiled = compilePrompt({
       request: processedRequest,
       systemPrompt,
@@ -313,7 +315,7 @@ export async function executeRun({
       }
     }
 
-    // Post-hook Prompt Integrity Validation (ensures custom hooks did not remove directives or hash)
+    // Post-hook Prompt Integrity Validation
     validatePromptIntegrity({
       prompt: preparedPrompt,
       systemPrompt: preparedSystemPrompt,

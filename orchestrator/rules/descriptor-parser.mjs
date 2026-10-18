@@ -23,6 +23,9 @@ function computeSha256(content) {
   return `sha256:${hash}`;
 }
 
+/**
+ * Pure, dependency-free YAML frontmatter parser for rule descriptors.
+ */
 function parseFrontmatter(markdown) {
   const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return { meta: {}, body: markdown };
@@ -41,15 +44,12 @@ function parseFrontmatter(markdown) {
     const key = trimmed.slice(0, colonIdx).trim();
     const val = trimmed.slice(colonIdx + 1).trim();
 
-    // Parse array if [ ... ]
     if (val.startsWith("[") && val.endsWith("]")) {
       const inner = val.slice(1, -1).trim();
       meta[key] = inner
         ? inner.split(",").map((item) => item.trim().replace(/^["']|["']$/g, ""))
         : [];
-    } else if (val.startsWith('"') && val.endsWith('"')) {
-      meta[key] = val.slice(1, -1);
-    } else if (val.startsWith("'") && val.endsWith("'")) {
+    } else if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
       meta[key] = val.slice(1, -1);
     } else if (val === "true") {
       meta[key] = true;
@@ -96,7 +96,7 @@ export function parseRuleDescriptor(markdownContent, rulePath, options = {}) {
   const seenDirectiveIds = new Set();
 
   const sourceHash = computeSha256(markdownContent);
-  const { meta, body } = parseFrontmatter(markdownContent);
+  const { meta } = parseFrontmatter(markdownContent);
 
   const stack = inferStack(rulePath, meta.stack);
   const defaultRuleId = meta.ruleId || `cf-rule-${meta.name || basename(rulePath, extname(rulePath))}`;
@@ -153,7 +153,7 @@ export function parseRuleDescriptor(markdownContent, rulePath, options = {}) {
     if (!tags.directive) {
       unsupported.push({
         line: lineNum,
-        statement: statement || bulletContent,
+        statement: statement || "",
         reason: "Missing directive ID tag"
       });
       continue;
@@ -200,9 +200,8 @@ export function parseRuleDescriptor(markdownContent, rulePath, options = {}) {
       continue;
     }
 
-    // Derive concise title from first sentence or statement
     const firstSentence = statement.split(/(?<=[.?!])\s+/)[0] || statement;
-    const directiveTitle = tags.title || (firstSentence.length > 70 ? firstSentence.slice(0, 67) + "..." : firstSentence);
+    const directiveTitle = tags.title || (firstSentence.length > 70 ? `${firstSentence.slice(0, 67)}...` : firstSentence);
 
     const contentHash = computeSha256(statement);
 
@@ -221,7 +220,6 @@ export function parseRuleDescriptor(markdownContent, rulePath, options = {}) {
       directive.verifier.command = tags.command;
     }
 
-    // Applicability mapping from rule metadata or defaults
     const applicability = {};
     if (Array.isArray(meta.frameworks) && meta.frameworks.length > 0) {
       applicability.frameworks = meta.frameworks;
@@ -279,7 +277,6 @@ export async function parseRuleCatalog(rulesDir, options = {}) {
       if (entry.isDirectory()) {
         await walk(fullPath);
       } else if (entry.isFile() && entry.name.endsWith(".md")) {
-        // Skip README or index MOCs if appropriate
         if (entry.name === "README.md") continue;
 
         totalRules++;

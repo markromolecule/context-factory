@@ -1,7 +1,7 @@
 ---
 title: "Rebuild Orchestrator Engine"
 type: task
-status: draft
+status: complete
 plan_contract_version: 3
 plan_id: "PLN-0012"
 created: "2026-10-18"
@@ -76,11 +76,11 @@ Key terms:
 
 | ID | Source goal/scenario/decision | Criterion | Implementation | Verification | Status |
 |---|---|---|---|---|---|
-| AC-01 | SC-02, D-01 | `orchestrator/validator.mjs` rebuilt with pure ESM JSON schema validation supporting types, required, enums, regex pattern, format, min/max length, min/max items, uniqueItems, and additionalProperties. | `orchestrator/validator.mjs` | `node --test evals/tests/rules/rule-contract-schema.test.mjs` | Planned |
-| AC-02 | SC-01, D-01 | `orchestrator/rules/descriptor-parser.mjs` parses rule frontmatter and inline directive markers cleanly and builds full catalog without regex crashes. | `orchestrator/rules/descriptor-parser.mjs` | `node --test evals/tests/rules/rule-descriptor-parser.test.mjs` | Planned |
-| AC-03 | SC-01, D-01 | `orchestrator/rules/binding-compiler.mjs` and `prompt-compiler.mjs` compile bindings, match globs, render directives, and validate prompt integrity deterministically. | `orchestrator/rules/binding-compiler.mjs`, `prompt-compiler.mjs` | `node --test evals/tests/rules/rule-binding.test.mjs`, `prompt-compiler.test.mjs` | Planned |
-| AC-04 | SC-03, D-01 | `orchestrator/runner.mjs` implements clean 3-stage lifecycle (`beforeContext`, `onPromptPrepare`, `afterResponseValidate`), native fetch providers (OpenAI, Anthropic, Gemini), and deterministic mock provider. | `orchestrator/runner.mjs` | `node --test evals/tests/rules/code-generation-evaluation.test.mjs` | Planned |
-| AC-05 | SC-04, D-01 | Full evaluation suite (`npm test`) passes 27/27 evaluations and `context:resolve` produces valid outputs without regression. | System-wide verification | `npm test` & `node scripts/context.mjs resolve "auth webhook"` | Planned |
+| AC-01 | SC-02, D-01 | `orchestrator/validator.mjs` rebuilt with pure ESM JSON schema validation supporting types, required, enums, regex pattern, format, min/max length, min/max items, uniqueItems, and additionalProperties. | `orchestrator/validator.mjs` | `node --test evals/tests/rules/rule-contract-schema.test.mjs` | verified |
+| AC-02 | SC-01, D-01 | `orchestrator/rules/descriptor-parser.mjs` parses rule frontmatter and inline directive markers cleanly and builds full catalog without regex crashes. | `orchestrator/rules/descriptor-parser.mjs` | `node --test evals/tests/rules/rule-descriptor-parser.test.mjs` | verified |
+| AC-03 | SC-01, D-01 | `orchestrator/rules/binding-compiler.mjs` and `prompt-compiler.mjs` compile bindings, match globs, render directives, and validate prompt integrity deterministically. | `orchestrator/rules/binding-compiler.mjs`, `prompt-compiler.mjs` | `node --test evals/tests/rules/rule-binding.test.mjs`, `prompt-compiler.test.mjs` | verified |
+| AC-04 | SC-03, D-01 | `orchestrator/runner.mjs` implements clean 3-stage lifecycle (`beforeContext`, `onPromptPrepare`, `afterResponseValidate`), native fetch providers (OpenAI, Anthropic, Gemini), and deterministic mock provider. | `orchestrator/runner.mjs` | `node --test evals/tests/rules/code-generation-evaluation.test.mjs` | verified |
+| AC-05 | SC-04, D-01 | Full evaluation suite (`npm test`) passes 27/27 evaluations and `context:resolve` produces valid outputs without regression. | System-wide verification | `npm test` & `node scripts/context.mjs resolve "auth webhook"` | verified |
 
 ## Scope
 
@@ -127,9 +127,9 @@ Key terms:
 
 ## Phases
 
-- [ ] `phase-01-boundary-analysis/phase.md` — Phase 1 — Current State Mapping and Contract Pinning
-- [ ] `phase-02-vertical-slice-refactoring/phase.md` — Phase 2 — Vertical Slice Refactoring
-- [ ] `phase-03-integration-tests/phase.md` — Phase 3 — Comprehensive Integration and Verification
+- [x] `phase-01-boundary-analysis/phase.md` — Phase 1 — Current State Mapping and Contract Pinning
+- [x] `phase-02-vertical-slice-refactoring/phase.md` — Phase 2 — Vertical Slice Refactoring
+- [x] `phase-03-integration-tests/phase.md` — Phase 3 — Comprehensive Integration and Verification
 
 ## Verification
 
@@ -145,15 +145,15 @@ Key terms:
 
 ## Plan done-check
 
-- [ ] Acceptance criteria map to units and verification.
-- [ ] Blockers are resolved or absent.
-- [ ] Risks and dependencies are recorded.
-- [ ] Task branch and target base are verified.
+- [x] Acceptance criteria map to units and verification.
+- [x] Blockers are resolved or absent.
+- [x] Risks and dependencies are recorded.
+- [x] Task branch and target base are verified.
 
 ## Finalization & Merge Ledger
 
 | Stage | Branch or merge | Commit SHA | Conformance Report | Verification Command |
 |---|---|---|---|---|
-| Phase 01 Verification | `refactor/PLN-0012-rebuild-orchestrator-engine` | pending | pending | `npm test` |
-| Phase 02 Verification | `refactor/PLN-0012-rebuild-orchestrator-engine` | pending | pending | `node --test evals/tests/rules/*.test.mjs` |
-| Phase 03 Verification | `refactor/PLN-0012-rebuild-orchestrator-engine` | pending | pending | `npm test && node scripts/context.mjs resolve "auth webhook"` |
+| Phase 01 Verification | `refactor/PLN-0012-rebuild-orchestrator-engine` | `59b1601` | PASS | `npm test` |
+| Phase 02 Verification | `refactor/PLN-0012-rebuild-orchestrator-engine` | pending | PASS | `node --test evals/tests/rules/*.test.mjs` |
+| Phase 03 Verification | `refactor/PLN-0012-rebuild-orchestrator-engine` | pending | PASS | `npm test && node scripts/context.mjs resolve "auth webhook"` |

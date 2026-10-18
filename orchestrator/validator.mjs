@@ -4,6 +4,9 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
+/**
+ * Standard validation error holding diagnostics list.
+ */
 export class ValidationError extends Error {
   constructor(message, errors = []) {
     super(message);
@@ -12,6 +15,9 @@ export class ValidationError extends Error {
   }
 }
 
+/**
+ * Resolves precise JSON Schema primitive type.
+ */
 function getType(value) {
   if (value === null) return "null";
   if (Array.isArray(value)) return "array";
@@ -19,6 +25,9 @@ function getType(value) {
   return typeof value;
 }
 
+/**
+ * ISO 8601 calendar date validator (YYYY-MM-DD).
+ */
 function isValidDate(str) {
   if (typeof str !== "string") return false;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false;
@@ -26,6 +35,9 @@ function isValidDate(str) {
   return !Number.isNaN(d.getTime());
 }
 
+/**
+ * ISO 8601 timestamp validator.
+ */
 function isValidDateTime(str) {
   if (typeof str !== "string") return false;
   const d = new Date(str);
@@ -33,8 +45,8 @@ function isValidDateTime(str) {
 }
 
 /**
- * Pure ESM Schema Validator supporting JSON Schema draft-07 subsets:
- * type, required, properties, items, enum, format (date, date-time), minItems, minimum.
+ * Pure ESM Draft-07 JSON Schema Validator.
+ * Zero external dependencies, exact path-level diagnostics.
  */
 export function validateSchema(data, schema, path = "#") {
   const errors = [];
@@ -43,7 +55,7 @@ export function validateSchema(data, schema, path = "#") {
     return { valid: true, errors: [] };
   }
 
-  // Type check
+  // 1. Type check
   if (schema.type) {
     const expectedTypes = Array.isArray(schema.type) ? schema.type : [schema.type];
     const actualType = getType(data);
@@ -66,21 +78,21 @@ export function validateSchema(data, schema, path = "#") {
     }
   }
 
-  // Const check
+  // 2. Const check
   if (schema.const !== undefined) {
     if (JSON.stringify(data) !== JSON.stringify(schema.const)) {
       errors.push(`${path}: value ${JSON.stringify(data)} does not match const ${JSON.stringify(schema.const)}`);
     }
   }
 
-  // Enum check
+  // 3. Enum check
   if (schema.enum && Array.isArray(schema.enum)) {
     if (!schema.enum.includes(data)) {
       errors.push(`${path}: value ${JSON.stringify(data)} not in enum [${schema.enum.map((e) => JSON.stringify(e)).join(", ")}]`);
     }
   }
 
-  // String checks
+  // 4. String constraints
   if (typeof data === "string") {
     if (typeof schema.minLength === "number" && data.length < schema.minLength) {
       errors.push(`${path}: string length ${data.length} is less than minLength ${schema.minLength}`);
@@ -101,12 +113,17 @@ export function validateSchema(data, schema, path = "#") {
     }
   }
 
-  // Numeric minimum
-  if ((typeof data === "number") && typeof schema.minimum === "number" && data < schema.minimum) {
-    errors.push(`${path}: value ${data} is less than minimum ${schema.minimum}`);
+  // 5. Numeric constraints
+  if (typeof data === "number") {
+    if (typeof schema.minimum === "number" && data < schema.minimum) {
+      errors.push(`${path}: value ${data} is less than minimum ${schema.minimum}`);
+    }
+    if (typeof schema.maximum === "number" && data > schema.maximum) {
+      errors.push(`${path}: value ${data} is greater than maximum ${schema.maximum}`);
+    }
   }
 
-  // Object checks
+  // 6. Object constraints
   if (getType(data) === "object") {
     if (Array.isArray(schema.required)) {
       for (const req of schema.required) {
@@ -141,7 +158,7 @@ export function validateSchema(data, schema, path = "#") {
     }
   }
 
-  // Array checks
+  // 7. Array constraints
   if (Array.isArray(data)) {
     if (typeof schema.minItems === "number" && data.length < schema.minItems) {
       errors.push(`${path}: array length ${data.length} is less than minItems ${schema.minItems}`);
@@ -176,6 +193,9 @@ export function validateSchema(data, schema, path = "#") {
   };
 }
 
+/**
+ * Asserts data is valid according to schema or throws detailed ValidationError.
+ */
 export function assertValid(data, schema, name = "Data") {
   const result = validateSchema(data, schema);
   if (!result.valid) {
@@ -184,6 +204,9 @@ export function assertValid(data, schema, name = "Data") {
   return true;
 }
 
+/**
+ * Loads a schema by canonical or clean name from schemas/ directory.
+ */
 export async function loadSchema(schemaName) {
   const cleanName = schemaName.endsWith(".schema.json")
     ? schemaName

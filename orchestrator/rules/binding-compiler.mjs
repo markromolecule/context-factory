@@ -19,7 +19,7 @@ export function matchesGlob(filePath, pattern) {
   // Exact match
   if (normPath === normPattern) return true;
 
-  // Convert glob to regex
+  // Convert glob pattern to regular expression
   let regexStr = "^";
   let i = 0;
   while (i < normPattern.length) {
@@ -138,8 +138,11 @@ export function compileRuleBinding({
         matchesAnyGlob(path, applicability.paths)
         && applicability.frameworks.some((framework) => frameworksByPath[path]?.includes(framework))
       )) {
-        excluded.push({ directiveId: dir.id, rulePath: descriptor.rulePath,
-          reason: "framework-mismatch: no matching framework in the affected package" });
+        excluded.push({
+          directiveId: dir.id,
+          rulePath: descriptor.rulePath,
+          reason: "framework-mismatch: no matching framework in the affected package"
+        });
         continue;
       }
 
