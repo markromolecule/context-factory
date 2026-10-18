@@ -141,6 +141,7 @@
   "templates": [
     "docs/templates/Context.md",
     "docs/templates/Decision.md",
+    "docs/templates/Handoff.md",
     "docs/templates/Knowledge.md",
     "docs/templates/Phase.md",
     "docs/templates/Report.md",

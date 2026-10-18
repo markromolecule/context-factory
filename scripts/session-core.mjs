@@ -223,7 +223,58 @@ ${workingMemory.activeConstraints?.length > 0 ? workingMemory.activeConstraints.
 }
 
 /**
- * Save session state to .context/sessions/<id>.json and .tmp/SESSION_RESUME.md
+ * Generate human/LLM-readable handoff briefing markdown adhering to the 6 core sections
+ */
+export function generateHandoffContent(session, options = {}) {
+  const { sessionId, timestamp, taskPointer, gitState, workingMemory, verificationState, coldStartPrompt } = session;
+
+  const goal = options.goal || (taskPointer?.taskId
+    ? `Task ${taskPointer.taskId}${taskPointer.unit ? ` (Unit: ${taskPointer.unit})` : ""}: ${taskPointer.unitFile || "in-progress"}`
+    : "Active task execution and continuous development");
+
+  const currentState = options.currentState || `- **Branch:** \`${gitState.branch}\` (HEAD: \`${gitState.headCommit}\`)\n- **Verification Status:** \`${verificationState.status}\`${verificationState.latestCommand ? ` (\`${verificationState.latestCommand}\`)` : ""}\n- **Task Unit:** ${taskPointer.unitFile ? `\`${taskPointer.unitFile}\`` : "_None_"}\n- **Checkpoint:** \`${sessionId}\` (${timestamp})`;
+
+  const modifiedList = [...new Set([...(gitState.modifiedFiles || []), ...(gitState.stagedFiles || [])])];
+  const filesInFlight = options.filesInFlight || (modifiedList.length > 0
+    ? modifiedList.map((f) => `- \`${f}\``).join("\n")
+    : "- None (working tree clean).");
+
+  const changes = options.changes || (workingMemory.decisions?.length > 0
+    ? workingMemory.decisions.map((d) => `- ${d}`).join("\n")
+    : (gitState.diffSummary && gitState.diffSummary !== "clean working tree"
+      ? `\`\`\`diff\n${gitState.diffSummary}\n\`\`\``
+      : "- Session state snapshot captured; baseline working tree verified."));
+
+  const failedAttempts = options.failedAttempts || (workingMemory.blockers?.length > 0
+    ? workingMemory.blockers.map((b) => `- ${b}`).join("\n")
+    : "- None recorded.");
+
+  const nextSteps = options.nextSteps || options.nextStep || coldStartPrompt || (taskPointer.unitFile
+    ? `Inspect \`${taskPointer.unitFile}\` and resume execution.`
+    : "Review active task state and continue development.");
+
+  return `# Goal - what we're trying to build
+${goal}
+
+## Current State - where the work stands right now
+${currentState}
+
+## Files in flight - active files being modified
+${filesInFlight}
+
+## Changes - what's been touched this session
+${changes}
+
+## Failed attempts - why didnt work and why
+${failedAttempts}
+
+## Next steps - the single next thing to try
+${nextSteps}
+`;
+}
+
+/**
+ * Save session state to .context/sessions/<id>.json, .tmp/SESSION_RESUME.md, and HANDOFF.md
  */
 export async function saveSession(options = {}) {
   const cwd = options.cwd || process.cwd();
@@ -257,7 +308,7 @@ export async function saveSession(options = {}) {
   };
 
   const coldStartPrompt = options.coldStartPrompt
-    || `Read \`.tmp/SESSION_RESUME.md\`, inspect active unit \`${taskPointer.unitFile || "docs/tasks/"}\`, and proceed with execution.`;
+    || `Read \`.tmp/SESSION_RESUME.md\` or \`HANDOFF.md\`, inspect active unit \`${taskPointer.unitFile || "docs/tasks/"}\`, and proceed with execution.`;
 
   const sessionPayload = {
     schemaVersion: 1,
@@ -302,6 +353,13 @@ export async function saveSession(options = {}) {
   const resumePath = join(tmpDir, "SESSION_RESUME.md");
   await writeFile(resumePath, resumeBriefing, "utf8");
 
+  // Persist HANDOFF.md in projectRoot
+  const handoffContent = generateHandoffContent(sessionPayload, options);
+  const handoffPath = join(projectRoot, "HANDOFF.md");
+  if (options.writeHandoff !== false) {
+    await writeFile(handoffPath, handoffContent, "utf8");
+  }
+
   // Heuristic token estimate (~4 chars per token)
   const tokenEstimate = Math.ceil(resumeBriefing.length / 4);
 
@@ -309,6 +367,7 @@ export async function saveSession(options = {}) {
     sessionId,
     sessionPath,
     resumePath,
+    handoffPath,
     tokenEstimate,
     data: sessionPayload,
   };
@@ -401,6 +460,14 @@ export async function clearSession(id = "latest", options = {}) {
     await rm(tmpResumePath, { force: true });
   }
 
+  // Clear HANDOFF.md only when explicitly requested (e.g. task completed/abandoned via --all or --with-handoff)
+  if (options.all || options.withHandoff || id === "all") {
+    const handoffPath = join(projectRoot, "HANDOFF.md");
+    if (existsSync(handoffPath)) {
+      await rm(handoffPath, { force: true });
+    }
+  }
+
   return { cleared: true, removedCount };
 }
 
@@ -410,7 +477,8 @@ export const resumeSessionState = loadSession;
 export const inspectSessionStatus = async () => ({ sessions: await listSessions() });
 export const clearSessionState = async (options = "latest") => {
   const targetId = typeof options === "object" && options !== null ? (options.sessionId || "latest") : options;
-  const res = await clearSession(targetId);
+  const opts = typeof options === "object" && options !== null ? options : {};
+  const res = await clearSession(targetId, opts);
   return { ...res, clearedId: targetId };
 };
 export function countTokens(text = "") {
