@@ -461,29 +461,29 @@ export async function validateContext() {
   if (!sameMembers(actualEvaluations, manifest.evaluations)) error("Evaluation inventory differs from context-manifest.json");
   if (!sameMembers(actualDatasets, manifest.datasets ?? [])) error("Dataset inventory differs from context-manifest.json");
 
-  const rulesMap = await readText("docs/Rules.md");
-  const skillsMap = await readText("docs/Skills.md");
-  const agentsMap = await readText("docs/Agents.md");
+  const rulesMap = await readText("docs/RULES.md");
+  const skillsMap = await readText("docs/SKILLS.md");
+  const agentsMap = await readText("docs/AGENTS.md");
 
-  const workflowsMap = await readText("docs/Workflows.md");
-  const wikiMap = await readText("docs/Wiki.md");
+  const workflowsMap = await readText("docs/WORKFLOWS.md");
+  const wikiMap = await readText("docs/WIKI.md");
   for (const path of manifest.agents ?? []) {
     if (path.endsWith("/AGENT.md")) {
-      if (!agentsMap.includes(`[[${path.slice(0, -3)}`)) error(`Agent is missing from docs/Agents.md: ${path}`);
+      if (!agentsMap.includes(`[[${path.slice(0, -3)}`)) error(`Agent is missing from docs/AGENTS.md: ${path}`);
     }
   }
   for (const path of manifest.rules) {
-    if (!rulesMap.includes(`[[${path.slice(0, -3)}`)) error(`Rule is missing from docs/Rules.md: ${path}`);
+    if (!rulesMap.includes(`[[${path.slice(0, -3)}`)) error(`Rule is missing from docs/RULES.md: ${path}`);
   }
   for (const path of manifest.skills) {
-    if (!skillsMap.includes(`[[${path.slice(0, -3)}`)) error(`Skill is missing from docs/Skills.md: ${path}`);
+    if (!skillsMap.includes(`[[${path.slice(0, -3)}`)) error(`Skill is missing from docs/SKILLS.md: ${path}`);
   }
 
   for (const path of manifest.workflows) {
-    if (!workflowsMap.includes(`[[${path.slice(0, -3)}`)) error(`Workflow is missing from docs/Workflows.md: ${path}`);
+    if (!workflowsMap.includes(`[[${path.slice(0, -3)}`)) error(`Workflow is missing from docs/WORKFLOWS.md: ${path}`);
   }
   for (const path of manifest.knowledge) {
-    if (!wikiMap.includes(`[[${path.slice(0, -3)}`)) error(`Knowledge is missing from docs/Wiki.md: ${path}`);
+    if (!wikiMap.includes(`[[${path.slice(0, -3)}`)) error(`Knowledge is missing from docs/WIKI.md: ${path}`);
   }
 
   const knowledgeIds = new Map();

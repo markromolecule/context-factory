@@ -56,7 +56,7 @@ Invoke the DevOps Agent whenever you encounter:
 ### Outputs & Deliverables
 
 - **CI/CD Workflows:** `.github/workflows/*.yml` (lint, test, build, deploy pipelines).
-- **MCP Connectors:** `.mcp.json` and tool integrations (governed per `docs/Connectors.md`).
+- **MCP Connectors:** `.mcp.json` and tool integrations (governed per `docs/CONNECTORS.md`).
 - **Container Configurations:** `Dockerfile`, `.dockerignore`, `docker-compose.yml`.
 - **Environment Templates:** Clean `.env.example` files (strictly zero actual secrets or private keys).
 - **Release Verification Reports:** Passing pre-flight checklists, health checks, and rollback runbooks.

@@ -93,7 +93,7 @@ flowchart TD
 - **Key Actions:**
   - Structures relational and document schemas with strict typing (`rules/typescript/database/schema-db.md`).
   - Plans composite indexes via the **ESR rule** (Equality -> Sort -> Range) and mandates cursor pagination (`rules/typescript/database/query-optimization-and-pagination.md`).
-  - Authors forward migration scripts paired with tested, non-destructive rollback scripts (`workflows/database-migration.md`).
+  - Authors forward migration scripts paired with tested, non-destructive rollback scripts (`skills/workflows/database-migration/SKILL.md`).
   - Enforces repository isolation (`rules/typescript/database/data-access-via-db.md`).
 
 ### [[agents/pm-agent/AGENT|Project Manager Agent (`pm-agent`)]]
@@ -120,19 +120,19 @@ flowchart TD
 - **Slash Commands & Prefixes:** `/threat`, `[THREAT]`
 - **When to Use:** When implementing authentication/authorization, handling webhooks/tokens, reviewing trust boundaries, or preparing security-sensitive changes.
 - **Key Actions:**
-  - Performs **STRIDE threat modeling** (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) (`skills/security/SKILL.md`).
+  - Performs **STRIDE threat modeling** (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) (`skills/engineering/security/SKILL.md`).
   - Enforces constant-time cryptographic comparisons (`crypto.timingSafeEqual`) and secrets hygiene in `.env.example` (`rules/global/security-guardrails.md`).
   - Authors adversarial negative test cases expecting 401/403/400.
 
 ### [[agents/devops-agent/AGENT|DevOps & Infrastructure Agent (`devops-agent`)]]
 - **Role:** DevOps Engineer & Infrastructure Specialist.
-- **Slash Commands & Prefixes:** `/devops`, `[DEVOPS]`, `/release`, `[RELEASE]`
+- **Slash Commands & Prefixes:** `/devops`, `[DEVOPS]`, `/release`, `[RELEASE]`, `/ship`, `[SHIP]`
 - **When to Use:** When automating builds, setting up CI/CD, configuring containers, managing environment configs, or preparing production releases.
 - **Key Actions:**
   - Authors GitHub Actions workflows (`.github/workflows/ci.yml`, `deploy.yml`).
   - Writes production-ready `Dockerfile` (multi-stage, non-root user) and `docker-compose.yml`.
   - Enforces `.env.example` hygiene and protects against accidental secrets exposure (`rules/global/security-guardrails.md`).
-  - Executes `workflows/release-readiness.md` and pre-flight checklists.
+  - Executes `skills/workflows/commit-push-release/SKILL.md` and pre-flight checklists.
 
 ---
 

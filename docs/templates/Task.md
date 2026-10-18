@@ -25,7 +25,7 @@ Link the canonical glossary; do not duplicate implementation details here.
 
 ### Language stack and applicable rules
 
-- **Declared Stack:** e.g. `typescript`, `laravel`, `flutter`
+- **Declared Stack:** e.g. `typescript`
 - **Rule Binding ID & Hash:** `binding-{{task_id}}` (`sha256:...`) compiled via `context-cli preflight`
 - **Active Directives:**
 

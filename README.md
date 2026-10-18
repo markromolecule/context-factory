@@ -12,13 +12,13 @@ Context Factory uses pnpm 10.28.1 for package scripts and Node.js for execution.
 
 ## Start here
 
-1. Read [[docs/Home|Home]].
+1. Read [[docs/HOME|Home]].
 2. Follow [[orchestrator/SHARED|Shared Orchestration Contract]].
-3. Select relevant rules through [[docs/Rules|Rules Map]].
-4. Select lifecycle orchestration through [[docs/Workflows|Workflows Map]].
-5. Invoke specialized procedures through [[docs/Skills|Skills Map]].
-6. Inspect tool integrations through [[docs/Connectors|Connectors Map]] and [.mcp.json](.mcp.json).
-7. Ground durable knowledge through [[docs/Wiki|LLM Wiki]].
+3. Select relevant rules through [[docs/RULES|Rules Map]].
+4. Select lifecycle orchestration through [[docs/WORKFLOWS|Workflows Map]].
+5. Invoke specialized procedures through [[docs/SKILLS|Skills Map]].
+6. Inspect tool integrations through [[docs/CONNECTORS|Connectors Map]] and [.mcp.json](.mcp.json).
+7. Ground durable knowledge through [[docs/WIKI|LLM Wiki]].
 8. Record durable decisions in [[docs/decisions/README|Architecture Decisions]] and work in [[docs/tasks/README|Tasks]].
 9. Integrate into host repositories using [[docs/guide/cross-workspace-integration|Cross-Workspace Integration Guide]] or `context-cli init`.
 

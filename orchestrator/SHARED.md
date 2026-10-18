@@ -91,7 +91,7 @@ Load in this order, stopping when the task is covered:
 
 **Context receipt.** `[policy]` For T2 and T3, record what was loaded and why (resolver output, rules, workflow, knowledge IDs). A reviewer must be able to reproduce the selection.
 
-**Rule binding.** `[gate]` Before editing code in any stack, resolve rules with explicit stack and file scope and read the selected rule text. Stack-specific pre-edit steps live in [`docs/Rules.md`](docs/Rules.md).
+**Rule binding.** `[gate]` Before editing code in any stack, resolve rules with explicit stack and file scope and read the selected rule text. Stack-specific pre-edit steps live in [`docs/RULES.md`](docs/RULES.md).
 
 ---
 

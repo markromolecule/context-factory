@@ -11,12 +11,12 @@ The vault root is `context-factory/`, so Obsidian can index the full factory rat
 ## Maps of content
 
 - [[docs/ARCHITECTURE|Architecture]]
-- [[docs/Agents|Agents]]
-- [[docs/Rules|Rules]]
-- [[docs/Skills|Skills]]
-- [[docs/Connectors|Connectors]]
-- [[docs/Wiki|LLM Wiki]]
-- [[docs/Workflows|Workflows]]
+- [[docs/AGENTS|Agents]]
+- [[docs/RULES|Rules]]
+- [[docs/SKILLS|Skills]]
+- [[docs/CONNECTORS|Connectors]]
+- [[docs/WIKI|LLM Wiki]]
+- [[docs/WORKFLOWS|Workflows]]
 - [[docs/context/README|Context Specifications]]
 - [[docs/tasks/README|Tasks]]
 - [[docs/decisions/README|Architecture Decisions]]

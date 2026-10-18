@@ -89,7 +89,7 @@ The `agents/` directory is designed to be extensible. To add a new specialized a
 2. Populate the YAML frontmatter (`name`, `title`, `role`, `description`, `lifecycleStage`, `aliases`, `defaultWorkflow`, `skills`, `workflows`, `rules`, `handoffs`).
 3. Create prompt templates under `agents/<new-agent-name>/prompts/` (`subagent-invocation.md`, `system-prompt.md`).
 4. Update `context-manifest.json` under the `"agents"` inventory.
-5. Link the new agent in `docs/Agents.md` and this `README.md`.
+5. Link the new agent in `docs/AGENTS.md` and this `README.md`.
 6. Run `node scripts/context.mjs lock && node scripts/context.mjs doctor`.
 
 For full guidance on using these agents in day-to-day coding sessions across IDEs, consult the [[docs/guide/subagents-lifecycle|Subagents Lifecycle Guide]].

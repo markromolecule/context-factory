@@ -8,7 +8,7 @@ tags: [context, specifications, planning]
 
 The `docs/context/` directory stores **raw feature briefs, product requirements, bug reports, and domain contexts** before converting them into actionable implementation plans.
 
-Writing a dedicated `.md` context file allows you or your AI IDE agent to inspect complete requirements, trace constraints, and automatically trigger the `implementation-plan` skill to generate phased tasks under `docs/tasks/`.
+Writing a dedicated `.md` context file allows you or your AI IDE agent to inspect complete requirements, trace constraints, and automatically trigger the `plan` skill to generate phased tasks under `docs/tasks/`.
 
 ---
 
@@ -18,12 +18,12 @@ Writing a dedicated `.md` context file allows you or your AI IDE agent to inspec
 graph LR
     A[Raw Idea / Brief] -->|/context Skill<br/>Author & Grill| B[Context Specification<br/>docs/context/... status: ready]
     B -->|/plan Skill<br/>Phase Breakdown| C[Implementation Plan<br/>docs/tasks/YYYY/MM/...]
-    C -->|/execution Skill<br/>Approved Execution| D[Code & Tests<br/>web/ / api/ / mobile/]
+    C -->|/execute Skill<br/>Approved Execution| D[Code & Tests<br/>web/ / api/ / mobile/]
 ```
 
 1. **Author & Grill Context:** Invoke the `/context` skill to create a `.md` specification under `docs/context/` (using [[docs/templates/Context|Context Template]]). The skill conducts an embedded `grill` discovery session to resolve goals, actors, edge cases, and technical constraints one question at a time before marking `status: ready`.
 2. **Synchronize with `/plan`:** Invoke `/plan` to ingest the grilled context file. The agent inspects codebase boundaries and decomposes the requirements into structured tasks and phases under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`.
-3. **Execute:** Execute the generated phase files (`phase-01-*.md`, `phase-02-*.md`) via `/execution` with verification gates.
+3. **Execute:** Execute the generated phase files (`phase-01-*.md`, `phase-02-*.md`) via `/execute` with verification gates.
 
 ---
 
@@ -129,4 +129,4 @@ Once your context file is created in `docs/context/`, use one of the prompt patt
 - **Template:** [[docs/templates/Context|Context Specification Template]]
 - **Tasks Archive:** [[docs/tasks/README|Tasks Index]]
 - **Decision Records:** [[docs/decisions/README|Architecture Decision Records]]
-- **Skills Reference:** [[docs/Skills|Skills]]
+- **Skills Reference:** [[docs/SKILLS|Skills]]

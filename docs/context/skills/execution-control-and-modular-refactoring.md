@@ -134,5 +134,5 @@ feature: "execution-control-and-modular-refactoring"
 - [[docs/templates/Phase|Phase Execution Template]]
 - [[docs/decisions/0013-streamline-procedural-skills-inventory|ADR 0013 — Streamline Procedural Skills Inventory]]
 - [[docs/decisions/0014-context-specification-skill-with-embedded-grilling|ADR 0014 — Context Specification Authoring Skill]]
-- [[docs/Skills|Skills Master Map]]
-- [[docs/Workflows|Workflows Master Map]]
+- [[docs/SKILLS|Skills Master Map]]
+- [[docs/WORKFLOWS|Workflows Master Map]]

@@ -1,13 +1,17 @@
 ---
-title: "Skill & Workflow Taxonomy and Ergonomics Optimization"
+title: "Skill & Workflow Taxonomy and Ergonomics Optimization (Superseded)"
 type: context
-status: draft
+status: superseded
 created: "2026-08-21"
-tags: [context, skills, workflows, orchestration, slash-commands, taxonomy]
+tags: [context, skills, workflows, orchestration, slash-commands, taxonomy, superseded]
 feature: "skill-and-workflow-optimization"
+superseded_by: "docs/decisions/0039-first-class-workflow-skills-and-typescript-consolidation.md"
 ---
 
 # Skill & Workflow Taxonomy and Ergonomics Optimization Context Specification
+
+> [!NOTE]
+> **Superseded Historical Context:** This early taxonomy specification from 2026-08-21 was implemented via task `2026-08-21-0001` (ADR 0012) and subsequently consolidated by [[docs/decisions/0039-first-class-workflow-skills-and-typescript-consolidation|ADR 0039]]. Declarative code standards (e.g. Zod validation, backend module architecture, TypeScript type safety) reside exclusively in `rules/`, workflows are consolidated as first-class skills under `skills/workflows/`, and procedural skills are organized into 12 core skills across `skills/engineering/` and `skills/productivity/`.
 
 ## 1. Overview & Objective
 
@@ -105,20 +109,24 @@ feature: "skill-and-workflow-optimization"
 
 | Slash Trigger | Primary Skill / Workflow | Description |
 | :--- | :--- | :--- |
-| `/execution` | `skills/execution` | Execute approved implementation phases step-by-step with verification |
-| `/plan` | `skills/plan` | Generate phased implementation breakdown (`docs/tasks/`) |
-| `/grill` | `skills/grill` | Interactive discovery grilling to resolve ambiguities before planning |
-| `/verify` | `skills/verify` | Independent QA audit of acceptance criteria and test evidence |
-| `/adr` | `skills/adr` | 1-3-1 architectural decision record drafting (`docs/decisions/`) |
-| `/backend` | `skills/backend-module` | Scaffold or refactor vertical backend modules |
-| `/zod` | `skills/zod` | Design runtime schemas, DTOs, and boundary validation |
-| `/tsc` | `skills/typescript` | Debug TypeScript compiler errors and circular types |
-| `/sec` | `skills/security` | Threat modeling, authorization audit, and vulnerability review |
-| `/explore` | `skills/explore` | Codebase architecture and dependency discovery |
-| `/playground` | `skills/playground` | Isolated frontend craftsmanship and anti-LLM styling |
-| `/new-project` | `workflows/new-project-delivery.md` | Vertical-slice scaffolding with 4-layer inner/outer test loops |
-| `/fix` | `workflows/defect-resolution.md` | Defect reproduction, root cause, and regression fix |
-| `/migrate` | `workflows/database-migration.md` | Expand-and-contract schema migrations and backfills |
+| `/execute` | `skills/engineering/execute` | Execute an approved reviewed packet with test-first verification and phase checkpoints |
+| `/plan` | `skills/productivity/plan` | Scaffolds evidence-backed phased technical plan under `docs/tasks/` |
+| `/grill` | `skills/productivity/grill` | Interactive discovery grilling to resolve ambiguities before planning |
+| `/context` | `skills/productivity/context` | Author, discover, and structure a comprehensive grilled context specification |
+| `/adr` | `skills/productivity/adr` | 1-3-1 architectural decision record drafting (`docs/decisions/`) |
+| `/sec` | `skills/engineering/security` | Threat modeling, authorization audit, and security boundary review |
+| `/perf` | `skills/engineering/perf` | Profile and fix runtime bottlenecks, N+1 queries, ESR indexes |
+| `/refactor` | `skills/engineering/refactor` | Refactor lengthy, multi-responsibility code into single-responsibility modules |
+| `/test` | `skills/engineering/test` | Author test-first assertions for units (architecture, contract, migration) |
+| `/grounding` | `skills/productivity/grounding` | Retrieve canonical LLM Wiki knowledge with authority and provenance |
+| `/session` | `skills/productivity/session` | Capture, persist, inspect, and resume active task execution state |
+| `/plan-review` | `skills/productivity/plan-review` | Independently audit plans and issue approved execution packets |
+| `/feature` | `skills/workflows/feature-delivery` | End-to-end product capability delivery |
+| `/fix` | `skills/workflows/defect-resolution` | Defect reproduction, root cause, and regression fix |
+| `/migrate` | `skills/workflows/database-migration` | Expand-and-contract schema migrations and backfills |
+| `/arch` | `skills/workflows/architecture-change` | System boundaries, dependency direction, and shared contracts |
+| `/ship` | `skills/workflows/commit-push-release` | Stage, conventional commit, push to remote, tag release |
+| `/sync` | `skills/workflows/context-maintenance` | Evolve context-factory rules, skills, workflows without drift |
 
 ---
 
@@ -159,5 +167,5 @@ feature: "skill-and-workflow-optimization"
 - [[docs/templates/Context|Context Template Specification]]
 - [[docs/templates/Task|Task Template Specification]]
 - [[docs/templates/Decision|Decision Record Template Specification]]
-- [[docs/Skills|Skills Map of Content]]
-- [[docs/Workflows|Workflows Map of Content]]
+- [[docs/SKILLS|Skills Map of Content]]
+- [[docs/WORKFLOWS|Workflows Map of Content]]

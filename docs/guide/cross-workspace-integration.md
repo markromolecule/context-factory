@@ -32,7 +32,7 @@ node .context-factory/app/cli/bin/context-cli.mjs init
 ### Step 3: Select Your Preferred AI Code Editor(s)
 The wizard scans your repository for existing editor directories (`.vscode/`, `.cursor/`, `.trae/`, `.agents/`) and presents a numbered multi-select prompt:
 - `[1] VS Code` — Scaffolds `.github/copilot-instructions.md`, non-destructive `.vscode/settings.json`, and `.vscode/extensions.json`.
-- `[2] Antigravity` — Scaffolds `.agents/` live symlinks (`skills/`, `rules/`, `agents/`, `workflows/`, `AGENTS.md`, `GEMINI.md`) and `.agents/skills.json`.
+- `[2] Antigravity` — Scaffolds `.agents/` live symlinks (`skills/`, `rules/`, `agents/`, `workflows/`) and `.agents/skills.json`.
 - `[3] Cursor` — Scaffolds modern `.cursor/rules/context-factory.mdc` (with `alwaysApply: true`) and `.cursorrules`.
 - `[4] Trae` — Scaffolds `.trae/rules/project_rules.md` referencing Context Factory orchestrator contracts and rules.
 - `[5] All IDEs` — Bridges all supported editors for mixed-editor teams.
@@ -63,7 +63,7 @@ Context Factory provisions:
 - Legacy `.cursorrules` in the root directory for backward compatibility.
 
 ### Antigravity & Gemini
-Context Factory establishes native `.agents/` symlinks linking rules, workflows, agents, and individual skills directly into the Antigravity discovery root, alongside `GEMINI.md`.
+Context Factory establishes native `.agents/` symlinks linking rules, workflows, agents, and individual skills directly into the Antigravity discovery root with `.agents/skills.json`.
 
 ---
 

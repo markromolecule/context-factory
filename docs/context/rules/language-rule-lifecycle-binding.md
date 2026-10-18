@@ -12,12 +12,12 @@ feature: "language-rule-lifecycle-binding"
 ## 1. Overview & Objective
 
 - **Problem Statement:** 
-  When AI agent tasks follow a strong procedural workflow (`context` → `plan` → `execute` → `review`), LLMs heavily focus on satisfying the procedural milestones (scaffolding phases, unit files, git worktrees, task checkboxes) while treating language- and framework-specific rules (`rules/typescript/*`, `rules/laravel/*`, `rules/flutter/*`) as passive background noise. Because language rules are not actively bound into each procedural step and lack explicit precedence, models frequently produce code that violates framework conventions, naming rules, type safety, or architectural boundaries.
+  When AI agent tasks follow a strong procedural workflow (`context` → `plan` → `execute` → `review`), LLMs heavily focus on satisfying the procedural milestones (scaffolding phases, unit files, git worktrees, task checkboxes) while treating language-specific rules (`rules/typescript/*`, `rules/solid/*`) as passive background noise. Because language rules are not actively bound into each procedural step and lack explicit precedence, models frequently produce code that violates framework conventions, naming rules, type safety, or architectural boundaries.
 
 - **Business / User Value:** 
   - Prevents language and framework rule drift across long multi-phase agent sessions.
   - Eliminates post-execution rewrites and human code-review corrections for language idiomaticity.
-  - Ensures deterministic compliance with declared project stacks (e.g., Laravel Eloquent conventions or TypeScript strict typing) across all generated units.
+  - Ensures deterministic compliance with declared project stacks (e.g., TypeScript strict typing, runtime validation, and module boundaries) across all generated units.
 
 - **Success Criteria:**
   - Language rules are actively bound into every phase of the lifecycle (`context`, `plan`, `execute`, `review`/`verify`).
@@ -43,7 +43,7 @@ feature: "language-rule-lifecycle-binding"
 ### User Stories / Scenarios
 
 - *As a developer in a TypeScript project*, I want `/plan` to embed the relevant TypeScript rules (`type-safety`, `runtime-validation`, `error-handling`) directly into each unit's context packet inside `<language_rules>`, so that the execution session produces strictly typed code without `any` or loose schemas.
-- *As a developer in a Laravel project*, I want `/execute` to treat Laravel naming and Eloquent rules as higher priority than plan task text, so that controllers remain thin and business logic is placed into dedicated actions/models rather than monolithic handlers.
+- *As a full-stack TypeScript developer*, I want `/execute` to treat TypeScript module architecture and runtime validation rules as higher priority than plan task text, so that route handlers remain thin and business logic is placed into dedicated domain services and Zod schemas.
 - *As a code reviewer*, I want `/review` to audit the worktree diff against the unit's bound `<language_rules>` at Gate 4, so that rule violations are flagged and fixed before the batch checkpoint is presented to the user.
 
 ### Scenario Coverage
@@ -67,7 +67,7 @@ feature: "language-rule-lifecycle-binding"
 ### Edge Cases & Failure Modes
 
 - **Rule Dilution from Over-Inlining:** If a unit inlines 20 full rule files, prompt context balloons and dilutes attention. *Mitigation:* Units must bind only the *scoped subset* of rules matching touched files, with checkable directives.
-- **Vague Rule Directives:** Rules phrased as "write clean code" cannot be verified. *Mitigation:* Extract concrete, checkable constraints (e.g., "no implicit any", "FormRequest validation required", "Zod safeParse").
+- **Vague Rule Directives:** Rules phrased as "write clean code" cannot be verified. *Mitigation:* Extract concrete, checkable constraints (e.g., "no implicit any", "Zod safeParse validation required", "explicit return types").
 - **Language Rule vs Task Requirement Conflict:** When a task genuinely requires deviating from a standard rule. *Mitigation:* Require an explicit documented exception in the unit's Decision Ledger with user/ADR authority.
 
 ---
@@ -97,14 +97,15 @@ feature: "language-rule-lifecycle-binding"
   - Updating skill procedures for `context`, `plan`, `plan-review`, `execute`, and `review`.
   - Updating `orchestrator/SHARED.md` to clarify the conflict resolution hierarchy.
 - **Out of Scope:**
-  - Modifying individual rule markdown contents in `rules/typescript/`, `rules/laravel/`, or `rules/flutter/`.
+  - Modifying individual rule markdown contents in `rules/typescript/` or `rules/solid/`.
   - Introducing heavy runtime AST parsers or external linters into the pure Node.js core scripts.
 
 ---
 
 ## 5. References & External Context
 
-- [[docs/decisions/0021-explicit-language-stack-selection|ADR 0021: Explicit Language Stack Selection]]
+- [[docs/decisions/0021-explicit-language-stack-selection|ADR 0021: Explicit Language Stack Selection (Historical)]]
+- [[docs/decisions/0036-decommission-laravel-php-stack-focus-typescript|ADR 0036: Decommission Laravel / PHP Stack and Dedicate Context Factory to TypeScript Ecosystem]]
 - [[docs/decisions/0024-unit-execution-review-and-testing-skills|ADR 0024: Unit Lifecycle Primitives: Plan Review, Test-Driven Execution, and Diff Review]]
 - [[docs/decisions/0027-language-rule-lifecycle-binding-and-verification|ADR 0027: Language Rule Lifecycle Binding, Precedence, and Verification]]
 - [[orchestrator/SHARED|Shared Orchestration Contract]]

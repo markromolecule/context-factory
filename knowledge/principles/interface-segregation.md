@@ -11,7 +11,7 @@ lastVerified: 2026-10-17
 reviewAfter: 2027-04-17
 appliesTo: [rules/global/architecture-conformance.md, rules/global/code-quality.md, rules/typescript/ui/code-organization.md, skills/engineering/refactor/**, skills/productivity/plan/**]
 supersedes: []
-sources: [docs/Wiki.md, schemas/knowledge.schema.json]
+sources: [docs/WIKI.md, schemas/knowledge.schema.json]
 tags: [solid, isp, interface-segregation, architecture, principles]
 ---
 

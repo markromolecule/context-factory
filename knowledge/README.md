@@ -11,7 +11,7 @@ lastVerified: 2026-07-25
 reviewAfter: 2027-01-25
 appliesTo: [knowledge/**]
 supersedes: []
-sources: [docs/Wiki.md, schemas/knowledge.schema.json]
+sources: [docs/WIKI.md, schemas/knowledge.schema.json]
 tags: [knowledge, index]
 ---
 

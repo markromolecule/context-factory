@@ -33,7 +33,7 @@ feature: "language-scoped-rules-restructure"
 - [ ] Group existing root `rules/typescript/*.md` files (`type-safety.md`, `runtime-validation.md`, `error-handling.md`, `async-discipline.md`, `module-and-imports.md`) into a dedicated subfolder (e.g. `rules/typescript/common/` or `rules/typescript/general/`).
 - [ ] Relocate `rules/ui/` into `rules/typescript/ui/` (or determine its target hierarchy).
 - [ ] Update `context-manifest.json` inventory with exact new paths.
-- [ ] Update Obsidian Map of Content [[docs/Rules|docs/Rules.md]] with new wikilinks and section structure.
+- [ ] Update Obsidian Map of Content [[docs/RULES|docs/RULES.md]] with new wikilinks and section structure.
 - [ ] Update all root and orchestrator contract files (`AGENTS.md`, `GEMINI.md`, `CLAUDE.md`, `CODEX.md`, `.cursorrules`, `.windsurfrules`).
 - [ ] Update evaluation test fixtures and datasets (e.g., `evals/cases/frontend-styling.json`).
 - [ ] Regenerate `context-lock.json` and verify `node scripts/context.mjs doctor` passes cleanly.

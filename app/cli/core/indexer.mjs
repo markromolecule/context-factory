@@ -127,7 +127,7 @@ ${engRows.join("\n")}
 ${prodRows.join("\n")}`;
 
   if (wfRows.length > 0) {
-    content += `\n\n## Canonical Workflows\n*Group Index:* First-class workflow skills defining development lifecycles ([[docs/Workflows|Workflows Overview]])\n\n${wfRows.join("\n")}`;
+    content += `\n\n## Canonical Workflows\n*Group Index:* First-class workflow skills defining development lifecycles ([[docs/WORKFLOWS|Workflows Overview]])\n\n${wfRows.join("\n")}`;
   }
 
   if (otherRows.length > 0) {
@@ -446,12 +446,12 @@ export async function syncFactoryInventory({ writeLock = true, updateMocs = true
     const decisionsMoc = await generateDecisionsMoc(actualDecisions);
     const wikiMoc = await generateWikiMoc(actualKnowledge);
 
-    await writeFile(join(root, "docs/Rules.md"), rulesMoc, "utf8");
-    await writeFile(join(root, "docs/Skills.md"), skillsMoc, "utf8");
-    await writeFile(join(root, "docs/Workflows.md"), workflowsMoc, "utf8");
-    await writeFile(join(root, "docs/Agents.md"), agentsMoc, "utf8");
+    await writeFile(join(root, "docs/RULES.md"), rulesMoc, "utf8");
+    await writeFile(join(root, "docs/SKILLS.md"), skillsMoc, "utf8");
+    await writeFile(join(root, "docs/WORKFLOWS.md"), workflowsMoc, "utf8");
+    await writeFile(join(root, "docs/AGENTS.md"), agentsMoc, "utf8");
     await writeFile(join(root, "docs/decisions/README.md"), decisionsMoc, "utf8");
-    await writeFile(join(root, "docs/Wiki.md"), wikiMoc, "utf8");
+    await writeFile(join(root, "docs/WIKI.md"), wikiMoc, "utf8");
     mocsUpdatedCount = 6;
   }
 

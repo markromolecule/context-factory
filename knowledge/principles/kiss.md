@@ -11,7 +11,7 @@ lastVerified: 2026-10-10
 reviewAfter: 2027-04-10
 appliesTo: [rules/typescript/common/pragmatic-design.md, skills/productivity/plan/SKILL.md]
 supersedes: []
-sources: [docs/Wiki.md, schemas/knowledge.schema.json, docs/discovery/pragmatic-design-principles-and-rule-alignment/brief.md]
+sources: [docs/WIKI.md, schemas/knowledge.schema.json, docs/discovery/pragmatic-design-principles-and-rule-alignment/brief.md]
 tags: [kiss, principles, architecture, typescript, clean-code]
 ---
 
@@ -94,6 +94,6 @@ export function validateSignupInput(input: unknown): SignupInput {
 
 ## Cross-References
 
-- Rules Index: [[docs/Rules|Rules Index]]
+- Rules Index: [[docs/RULES|Rules Index]]
 - Planning: [[skills/productivity/plan/SKILL|Plan Skill]]
 - Companion Concept: [[knowledge/principles/yagni|You Aren't Gonna Need It (YAGNI)]]

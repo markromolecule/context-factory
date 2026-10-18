@@ -1,13 +1,17 @@
 ---
-title: "Laravel Common Conventions and Artisan Command Standards"
+title: "Laravel Common Conventions and Artisan Command Standards (Superseded)"
 type: context
-status: ready
+status: superseded
 created: "2026-09-18"
-tags: [context, rules, laravel, naming-conventions, artisan, common]
+tags: [context, rules, laravel, naming-conventions, artisan, common, superseded]
 feature: "laravel-common-and-artisan-standards"
+superseded_by: "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md"
 ---
 
 # Laravel Common Conventions and Artisan Command Standards Context Specification
+
+> [!NOTE]
+> **Superseded Historical Context:** The Laravel / PHP ecosystem stack was fully decommissioned per [[docs/decisions/0036-decommission-laravel-php-stack-focus-typescript|ADR 0036]]. Context Factory is now exclusively dedicated to the TypeScript ecosystem. This document is preserved for historical provenance.
 
 ## 1. Overview & Objective
 
@@ -109,7 +113,7 @@ feature: "laravel-common-and-artisan-standards"
 
 ## 6. References & External Context
 
-- [[docs/Rules|Rules Map]]
+- [[docs/RULES|Rules Map]]
 - [[docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards|ADR 0022]]
 - `rules/laravel/foundation/conventions` (decommissioned in ADR 0036)
 - `rules/laravel/application/business-logic-and-actions` (decommissioned in ADR 0036)

@@ -11,7 +11,7 @@ lastVerified: 2026-10-10
 reviewAfter: 2027-04-10
 appliesTo: [rules/typescript/common/pragmatic-design.md]
 supersedes: []
-sources: [docs/Wiki.md, schemas/knowledge.schema.json, docs/discovery/pragmatic-design-principles-and-rule-alignment/brief.md]
+sources: [docs/WIKI.md, schemas/knowledge.schema.json, docs/discovery/pragmatic-design-principles-and-rule-alignment/brief.md]
 tags: [composition, inheritance, principles, architecture, typescript, clean-code]
 ---
 
@@ -106,6 +106,6 @@ export async function updateUserEmail(
 
 ## Cross-References
 
-- Rules Index: [[docs/Rules|Rules Index]]
+- Rules Index: [[docs/RULES|Rules Index]]
 - Open/Closed Principle: [[knowledge/principles/open-closed|Open/Closed Principle]]
 - Companion Concept: [[knowledge/principles/law-of-demeter-tell-dont-ask|Law of Demeter & Tell, Don't Ask]]

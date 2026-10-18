@@ -1,13 +1,17 @@
 ---
-title: "Laravel Modular Domain Architecture & Unified Naming Conventions"
+title: "Laravel Modular Domain Architecture & Unified Naming Conventions (Superseded)"
 type: context
-status: ready
+status: superseded
 created: "2026-09-27"
-tags: [context, rules, laravel, php, modular-architecture, naming-conventions]
+tags: [context, rules, laravel, php, modular-architecture, naming-conventions, superseded]
 feature: "laravel-modular-architecture-and-conventions"
+superseded_by: "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md"
 ---
 
 # Laravel Modular Domain Architecture & Unified Naming Conventions Context Specification
+
+> [!NOTE]
+> **Superseded Historical Context:** The Laravel / PHP ecosystem stack was fully decommissioned per [[docs/decisions/0036-decommission-laravel-php-stack-focus-typescript|ADR 0036]]. Context Factory is now exclusively dedicated to the TypeScript ecosystem. This document is preserved for historical provenance.
 
 ## 1. Overview & Objective
 

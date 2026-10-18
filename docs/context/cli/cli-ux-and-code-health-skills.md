@@ -64,7 +64,7 @@ feature: "cli-ux-and-code-health-skills"
 - **Narrow Terminals (< 60 columns):** If terminal columns are restricted or stdout is piped to a file, suppress the multi-line mascot graphic and display a streamlined single-line header.
 - **NO_COLOR / Non-TTY Environments:** When `process.env.NO_COLOR` is set or stdout is not a TTY (e.g. CI logs), render clean monochrome text without ANSI escapes.
 - **Missing or Corrupt Image Asset:** If protocol-based image rendering is used and the file cannot be loaded, seamlessly fall back to ANSI block art without throwing errors.
-- **Multi-Stack Type Hardening:** While TypeScript is the primary static typing target, `types` must gracefully handle static types across Dart/Flutter and PHP 8.2+ (Laravel strict types, DTOs, generics via Psalm/PHPStan).
+- **TypeScript Strict Type Hardening:** Ensure type hardening rigorously enforces TypeScript strict mode, eliminates `any` casts, validates runtime boundaries via Zod schemas, and provides discriminated unions.
 
 ---
 

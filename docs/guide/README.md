@@ -23,7 +23,7 @@ graph TD
 ```
 
 1. **Rules (`rules/`)**: Strict engineering constraints that enforce coding standards, naming conventions, security guardrails, and architecture.
-2. **Workflows (`workflows/`)**: Stage-by-stage lifecycles that guide multi-phase tasks (e.g., feature delivery, defect resolution) with quality gates and stop conditions.
+2. **Workflows (`skills/workflows/`)**: First-class lifecycle skills that guide multi-phase tasks (e.g., feature delivery, defect resolution) with quality gates and stop conditions.
 3. **Skills (`skills/`)**: Specialized procedures with predefined instructions, YAML prompts, and reference assets designed to help agents perform complex tasks.
 4. **Knowledge (`knowledge/`)**: Attributable facts, contracts, and runbooks containing provenance and authority levels to ground agent claims.
 

@@ -35,7 +35,7 @@ feature: "loop-engineering-integration"
   - `docs/tasks/INBOX.md` serves as a live ledger for newly triaged findings before PM Agent task scaffolding.
   - `scripts/worktree.mjs` provides deterministic creation, listing, removal, and cleanup of git worktrees with zero orphaned branches.
   - `orchestrator/SHARED.md` mandates worktree isolation for concurrent agent dispatch.
-  - `docs/Connectors.md` and `.mcp.json` document and configure MCP tool integration (GitHub at minimum) owned by `agents/devops-agent`.
+  - `docs/CONNECTORS.md` and `.mcp.json` document and configure MCP tool integration (GitHub at minimum) owned by `agents/devops-agent`.
   - `node scripts/context.mjs doctor` passes with all evaluations green and lockfile synchronized.
 
 ### Decision Ledger
@@ -46,7 +46,7 @@ feature: "loop-engineering-integration"
 | D-02 | decided | Implement `.github/workflows/discovery.yml` mirroring `context-factory.yml` structure with cron schedule (`0 6 * * *`) and `workflow_dispatch`. | Enables automated CI discovery without human initiation while supporting manual trigger. |
 | D-03 | decided | Maintain `docs/tasks/INBOX.md` as a persistent ledger capturing un-promoted findings with states (`new`, `triaged`, `promoted`, `dismissed`). | Decouples raw anomaly discovery from formalized multi-phase task folders in `docs/tasks/`. |
 | D-04 | decided | Build `scripts/worktree.mjs` as a zero-dependency ES module managing `.worktrees/<agent-id>` directories and branches. | Ensures concurrent lifecycle agents (`agents/`) operate in isolated workspaces without merge conflicts or state pollution. |
-| D-05 | decided | Standardize MCP connectors via `docs/Connectors.md` Map of Content and `.mcp.json` repo configuration, assigned to `agents/devops-agent`. | Provides standard, model-neutral tool connectivity for GitHub and external services. |
+| D-05 | decided | Standardize MCP connectors via `docs/CONNECTORS.md` Map of Content and `.mcp.json` repo configuration, assigned to `agents/devops-agent`. | Provides standard, model-neutral tool connectivity for GitHub and external services. |
 
 ---
 
@@ -57,7 +57,7 @@ feature: "loop-engineering-integration"
 - *As an autonomous workflow, I want scheduled discovery to scan repository health and file findings into `docs/tasks/INBOX.md`, so that issues and maintenance needs are caught early.*
 - *As a PM Agent, I want to read `docs/tasks/INBOX.md` before task creation, so that I can promote triaged findings into structured task plans.*
 - *As an orchestrator dispatching parallel agents, I want each agent to execute in an isolated git worktree via `scripts/worktree.mjs`, so that file modifications do not collide.*
-- *As a DevOps Agent, I want a repo-level `.mcp.json` and `docs/Connectors.md`, so that agents can interact with GitHub issues and PRs through standard MCP protocols.*
+- *As a DevOps Agent, I want a repo-level `.mcp.json` and `docs/CONNECTORS.md`, so that agents can interact with GitHub issues and PRs through standard MCP protocols.*
 
 ### Scenario Coverage
 
@@ -66,7 +66,7 @@ feature: "loop-engineering-integration"
 | S-01 | Scheduled CI runs `discovery.yml`. | Executes triage discovery, finds potential drift or check statuses, logs structured entry into `docs/tasks/INBOX.md`. | Graceful exit if no new anomalies; errors logged without breaking main CI. |
 | S-02 | Multiple lifecycle agents dispatched simultaneously. | `scripts/worktree.mjs create <agent-id>` spins up an isolated worktree under `.worktrees/<agent-id>`. | If branch exists or directory is dirty, returns explicit error; cleanup command available. |
 | S-03 | Agent finishes execution in worktree. | `scripts/worktree.mjs remove <agent-id> --delete-branch` tears down the worktree and cleans up branch with zero orphaned references. | Worktree prune and force flag handle uncommitted checkouts cleanly. |
-| S-04 | Developer inspects MCP tooling capabilities. | Consults `docs/Connectors.md` linked from `README.md` and verifies server configs in `.mcp.json`. | Config validated via JSON schema and doctor diagnostic. |
+| S-04 | Developer inspects MCP tooling capabilities. | Consults `docs/CONNECTORS.md` linked from `README.md` and verifies server configs in `.mcp.json`. | Config validated via JSON schema and doctor diagnostic. |
 
 ### Functional Requirements
 
@@ -77,10 +77,10 @@ feature: "loop-engineering-integration"
 - [ ] Create `scripts/worktree.mjs` supporting `create`, `remove`, `list`, and `cleanup` operations.
 - [ ] Update `orchestrator/SHARED.md` to mandate worktree isolation for concurrent agent dispatches.
 - [ ] Add `.worktrees/` to `.gitignore`.
-- [ ] Create `docs/Connectors.md` Map of Content documenting MCP tools.
+- [ ] Create `docs/CONNECTORS.md` Map of Content documenting MCP tools.
 - [ ] Create `.mcp.json` containing GitHub MCP server configuration.
 - [ ] Update `agents/devops-agent/AGENT.md` to establish ownership of `.mcp.json` and MCP configs.
-- [ ] Update `README.md` and `docs/Home.md` to link `docs/Connectors.md` and `.mcp.json`.
+- [ ] Update `README.md` and `docs/HOME.md` to link `docs/CONNECTORS.md` and `.mcp.json`.
 - [ ] Update `context-manifest.json`, synchronize MOCs, and regenerate `context-lock.json`.
 - [ ] Verify 100% pass rate in `node scripts/context.mjs doctor` and `node evals/run-evals.mjs`.
 
@@ -94,9 +94,9 @@ feature: "loop-engineering-integration"
   - `scripts/triage.mjs` & `scripts/worktree.mjs` (Zero-dependency CLI toolchain)
   - `docs/tasks/INBOX.md` (State spine)
   - `orchestrator/SHARED.md` (Authoritative orchestration contract)
-  - `docs/Connectors.md` & `.mcp.json` (MCP tool mapping and configuration)
+  - `docs/CONNECTORS.md` & `.mcp.json` (MCP tool mapping and configuration)
   - `agents/devops-agent/AGENT.md` (DevOps role scope)
-  - `README.md` & `docs/Home.md` (Vault indexing & navigation)
+  - `README.md` & `docs/HOME.md` (Vault indexing & navigation)
   - `context-manifest.json` & `context-lock.json` (Inventory and integrity digest)
 
 - **Security & Concurrency Guardrails:**
@@ -120,9 +120,9 @@ feature: "loop-engineering-integration"
 
 ## 5. References & External Context
 
-- [[docs/Home|Home]]
+- [[docs/HOME|Home]]
 - [[orchestrator/SHARED|Shared Orchestration Contract]]
-- [[docs/Skills|Skills Map]]
-- [[docs/Rules|Rules Map]]
-- [[docs/Workflows|Workflows Map]]
+- [[docs/SKILLS|Skills Map]]
+- [[docs/RULES|Rules Map]]
+- [[docs/WORKFLOWS|Workflows Map]]
 - [[docs/decisions/0018-synchronization-and-package-manager-modernization|ADR 0018: Sync & PM Modernization]]

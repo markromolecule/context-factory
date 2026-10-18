@@ -51,7 +51,7 @@ Invoke the BA Agent whenever you encounter:
 ### Inputs
 
 - **User Prompt / Feature Request:** Raw requirements or initial ideas.
-- **Existing Knowledge & Context:** `knowledge/README.md`, relevant business docs in `docs/Wiki.md`.
+- **Existing Knowledge & Context:** `knowledge/README.md`, relevant business docs in `docs/WIKI.md`.
 - **Existing Schemas & Domain Models:** `schemas/` and current database schemas if extending an existing system.
 
 ### Outputs & Deliverables

@@ -22,16 +22,14 @@ When an action is detected, the context resolver matches a workflow using:
 1. **Routing Hints (High Priority):**
    The harness tests the request against regex hints. If a hint matches, it immediately selects the associated workflow.
 
-   | Request Matches Regex | Selected Workflow |
+   | Request Matches Regex / Trigger | Selected Workflow |
    |---|---|
-   | `defect`, `bug`, `broken`, `regression`, `fix` | `defect-resolution` |
-   | `architecture`, `cross-module`, `dependency direction`, `system boundary` | `architecture-change` |
-   | `webhook`, `credential`, `secret`, `authorization`, `security`, `replay` | `security-sensitive-change` |
-   | `database migration`, `schema migration`, `backfill` | `database-migration` |
-   | `dependency`, `package`, `library`, `upgrade`, `update` | `dependency-upgrade` |
-   | `frontend`, `interface`, `dialog`, `form`, `ux`, `redesign` | `feature-delivery` |
-   | `release`, `readiness`, `production handoff` | `release-readiness` |
-   | `context factory`, `rule`, `skill`, `workflow`, `manifest`, `sync` | `context-maintenance` |
+   | `defect`, `bug`, `broken`, `regression`, `fix`, `hotfix`, `/fix`, `[BUG]` | `defect-resolution` |
+   | `architecture`, `cross-module`, `dependency direction`, `system boundary`, `refactor`, `solid`, `/arch`, `/refactor`, `/adr`, `/deps`, `/upgrade` | `architecture-change` |
+   | `commit and push`, `commit push release`, `push to remote`, `tag release`, `ship changes`, `release readiness`, `/ship`, `/release`, `/deploy`, `[SHIP]` | `commit-push-release` |
+   | `database migration`, `schema migration`, `backfill`, `/migrate`, `/db`, `/schema` | `database-migration` |
+   | `feature`, `product capability`, `user story`, `frontend`, `interface`, `dialog`, `form`, `ux`, `webhook`, `credential`, `secret`, `authorization`, `security`, `/plan`, `/feature`, `/grill`, `/context` | `feature-delivery` |
+   | `context factory`, `rule`, `skill`, `workflow`, `manifest`, `sync`, `lock`, `maintain`, `/sync`, `/maintain` | `context-maintenance` |
 
 2. **Relevance Scoring (Fallback):**
    If no routing hint matches, the context harness scores terms against the name, description, and scope of each workflow file. The highest-scoring workflow with a score of **4 or higher** is selected.
@@ -40,25 +38,25 @@ When an action is detected, the context resolver matches a workflow using:
 
 ### Workflow Inventory
 
-#### Delivery Workflows
-* **`feature-delivery`:** The default workflow for building new system capabilities, feature work, or pre-planned templates.
-* **`defect-resolution`:** Focuses on reproducing, diagnosing, fixing, and verifying software defects using fresh evidence.
-* **`architecture-change`:** Coordinates changes to system boundaries, module contracts, or shared libraries.
-* **`release-readiness`:** Conducts a final review of code health, test coverage, and documentation before pushing to production.
+The 6 canonical first-class workflows reside under `skills/workflows/<slug>/SKILL.md`:
 
-#### Risk-Specific Workflows
-* **`security-sensitive-change`:** Threat-models and gates modifications affecting authentication, credentials, data privacy, or sensitive boundary conditions.
-* **`database-migration`:** Handles schema evolution, indexing, data backfills, and rollback recovery.
-* **`dependency-upgrade`:** Evaluates compatibility and checks for breaking API changes when updating external packages.
+#### 1. Delivery
+* **`feature-delivery` (`skills/workflows/feature-delivery`):** The primary lifecycle for delivering product capabilities from scoped outcome through implementation, verification, documentation, and handoff. Incorporates pre-planning, grilling, planning, and execution gates.
+* **`defect-resolution` (`skills/workflows/defect-resolution`):** Focuses on reproducing, diagnosing, root-causing, and verifying defects with regression tests before applying the smallest safe fix.
+* **`commit-push-release` (`skills/workflows/commit-push-release`):** Manages pre-flight verification, conventional commits, pushing to remote, tagging releases, and deployment readiness handoffs.
 
-#### Factory Maintenance
-* **`context-maintenance`:** The internal workflow used to add, edit, or remove context-factory rules, skills, workflows, or lock files without creating drift.
+#### 2. Architecture & Data Safety
+* **`architecture-change` (`skills/workflows/architecture-change`):** Coordinates changes to system boundaries, dependency direction, SOLID compliance, shared contracts, and dependency upgrades via ADRs.
+* **`database-migration` (`skills/workflows/database-migration`):** Governs schema evolution, composite indexing, data backfills, contract types, and non-destructive rollbacks.
+
+#### 3. Factory Maintenance
+* **`context-maintenance` (`skills/workflows/context-maintenance`):** Evolve Context Factory rules, skills, workflows, orchestration contracts, and context locks without duplication or drift.
 
 ---
 
 ## Rules
 
-**Rules** represent strict, enforceable engineering constraints. They ensure code quality, security practices, and consistent architecture.
+**Rules** represent strict, enforceable engineering constraints for the TypeScript ecosystem. They ensure code quality, security practices, and consistent architecture.
 
 ### How Rules Trigger
 Rules are loaded into context in two ways:
@@ -71,7 +69,7 @@ Rules are loaded into context in two ways:
    - `rules/global/evidence-and-claims.md`
    - `rules/global/security-guardrails.md`
 
-2. **Contextual Rules (Backend/Frontend):**
+2. **Contextual Rules (Backend/Frontend/SOLID):**
    If a rule does not have `alwaysApply: true`, it is scored against the request terms. If the score is **4 or higher**, it is loaded.
    - *Example:* If your prompt mentions "React hooks" or "CSS", the resolver automatically pulls in frontend rules (e.g., `query-hooks`, `mutation-hooks`, `frontend`). If it mentions "Prisma" or "Hono", it pulls in backend rules (e.g., `schema-db`, `service-layer`).
 
@@ -79,6 +77,8 @@ Rules are loaded into context in two ways:
 
 ### Rule Inventory
 
-* **Global:** Core rules that apply to every change (naming conventions, commit formatting, evidence standards, and code quality).
-* **Backend:** Standards for Prisma/Kysely schemas, DB queries, controllers, route handlers, service layers, and data-layer unit tests.
-* **Frontend:** Standards for React components, Next.js routing, form validation, Zustand stores, state updates, loading states, and custom styling.
+* **Global (`rules/global/`):** Core engineering standards that apply to every change (naming conventions, commit formatting, evidence standards, security guardrails, and code quality).
+* **SOLID (`rules/solid/`):** The five foundational object-oriented and structural design principles (Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, Dependency Inversion).
+* **TypeScript Common (`rules/typescript/common/`):** Universal TypeScript standards (strict typing, error handling, runtime validation via Zod, async discipline, module imports).
+* **TypeScript Backend & Database (`rules/typescript/backend/`, `rules/typescript/database/`):** Standards for Prisma/Kysely schemas, ESR query optimization, cursor pagination, vertical domain modules, controllers, route handlers, and service layers.
+* **TypeScript UI & Hooks (`rules/typescript/ui/`, `rules/typescript/hooks/`):** Standards for React/Next.js components, accessibility (WCAG 2.1 AA), design systems, dialogs/overlays, forms, custom hooks, and Zustand stores.

@@ -1,13 +1,17 @@
 ---
-title: "Laravel Rules and Language-Aware Factory Context"
+title: "Laravel Rules and Language-Aware Factory Context (Superseded)"
 type: context
-status: ready
+status: superseded
 created: "2026-09-18"
-tags: [context, rules, laravel, php, architecture]
+tags: [context, rules, laravel, php, architecture, superseded]
 feature: "laravel-language-aware-factory"
+superseded_by: "docs/decisions/0036-decommission-laravel-php-stack-focus-typescript.md"
 ---
 
 # Laravel Rules and Language-Aware Factory Context Specification
+
+> [!NOTE]
+> **Superseded Historical Context:** The Laravel / PHP ecosystem stack was fully decommissioned per [[docs/decisions/0036-decommission-laravel-php-stack-focus-typescript|ADR 0036]]. Context Factory is now exclusively dedicated to the TypeScript ecosystem. This document is preserved for historical provenance.
 
 ## 1. Overview & Objective
 
@@ -78,7 +82,7 @@ feature: "laravel-language-aware-factory"
 
 ## 7. References & External Context
 
-- [[docs/Rules|Rules Map]]
+- [[docs/RULES|Rules Map]]
 - [[docs/decisions/README|Architecture Decisions]]
 - [[docs/decisions/0021-explicit-language-stack-selection|Explicit Language Stack Selection]]
 - [[docs/decisions/0022-pragmatic-laravel-rule-taxonomy-and-standards|Pragmatic Laravel Rule Taxonomy, Anti-Overengineering Architecture, and Dynamic Multi-Language Alignment]]
