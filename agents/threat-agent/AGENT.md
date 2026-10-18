@@ -5,9 +5,9 @@ role: Security & Threat Modeling Specialist
 description: Conducts STRIDE threat modeling, audits trust boundaries, validates authentication/authorization policies, ensures secrets hygiene, and enforces security verification gates.
 lifecycleStage: Security, Threat Modeling & Trust Verification
 aliases: ["/threat", "[THREAT]"]
-defaultWorkflow: security-sensitive-change
+defaultWorkflow: feature-delivery
 skills: [security, test]
-workflows: [security-sensitive-change, feature-delivery, database-migration, release-readiness]
+workflows: [feature-delivery, database-migration]
 rules:
   - rules/global/1-3-1-rule.md
   - rules/global/architecture-conformance.md
@@ -37,7 +37,7 @@ The **Security & Threat Modeling Specialist Agent** is responsible for conductin
 
 Invoke the Threat Agent whenever you encounter:
 
-- Implementing or changing authentication, OAuth2, session tokens, JWTs, or password hashing (`workflows/security-sensitive-change.md`).
+- Implementing or changing authentication, OAuth2, session tokens, JWTs, or password hashing (`rules/global/security-guardrails.md`, `skills/engineering/security/SKILL.md`).
 - Adding webhook endpoints, payment callbacks, external API integrations, or signature verifications (`rules/global/security-guardrails.md`).
 - Reviewing role-based access control (RBAC), multi-tenant data isolation, or object-level authorization (IDOR protection).
 - Auditing secrets management, `.env.example` hygiene, API key rotation, or encryption-at-rest/in-transit.
@@ -67,10 +67,9 @@ Invoke the Threat Agent whenever you encounter:
 
 | Type | Name | Purpose |
 | :--- | :--- | :--- |
-| **Workflow** | `workflows/security-sensitive-change.md` | Guiding the 4-phase security lifecycle (Threat Model, Boundary Implementation, Adversarial Verification, Release Controls). |
-| **Workflow** | `workflows/release-readiness.md` | Security and secret hygiene pre-flight checks. |
-| **Workflow** | `workflows/database-migration.md` | Auditing sensitive data migrations and tenant partition safety. |
-| **Skill** | `skills/security/SKILL.md` | Threat modeling, secrets exposure checks, and boundary reviews. |
+| **Workflow** | `skills/workflows/feature-delivery/SKILL.md` | Delivering secure capabilities with explicit threat modeling and test verification. |
+| **Workflow** | `skills/workflows/database-migration/SKILL.md` | Auditing sensitive data migrations and tenant partition safety. |
+| **Skill** | `skills/engineering/security/SKILL.md` | Threat modeling, secrets exposure checks, and boundary reviews. |
 | **Skill** | `skills/engineering/test/SKILL.md` | Auditing adversarial test execution and negative test assertions. |
 
 ---
@@ -85,7 +84,7 @@ flowchart TD
     D -- Yes --> E["Formulate Strict Security Invariants & Defenses"]
     E --> F["Design Adversarial Tests (Auth bypass, Tampering, Replay)"]
     D -- No --> F
-    F --> G["Execute Security-Sensitive Change Workflow Gates"]
+    F --> G["Execute Security Verification Gates (rules/global/security-guardrails)"]
     G --> H["Verify Zero Secrets in Git (.env.example Hygiene)"]
     H --> I["Handoff Verified Threat Mitigation to DevOps / PM"]
 ```

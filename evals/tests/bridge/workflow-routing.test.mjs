@@ -104,20 +104,14 @@ describe("Unit 03.01: Resolver Boundaries and Host Guidance (AC-03, AC-07)", () 
     assert.ok(codexArch.workflow?.reason.includes("architecture-change"));
     assert.equal(codexArch.skills.some((s) => s.path.startsWith("skills/workflow-entries/")), false);
 
-    // All 12 canonical slugs via Claude Code and Codex syntax
+    // All 6 canonical slugs via Claude Code and Codex syntax
     const allSlugs = [
       "architecture-change",
-      "code-review-and-optimization",
       "commit-push-release",
       "context-maintenance",
       "database-migration",
       "defect-resolution",
-      "dependency-upgrade",
-      "docs",
       "feature-delivery",
-      "new-project-delivery",
-      "release-readiness",
-      "security-sensitive-change",
     ];
 
     for (const slug of allSlugs) {
@@ -134,14 +128,14 @@ describe("Unit 03.01: Resolver Boundaries and Host Guidance (AC-03, AC-07)", () 
       { cmd: "/fix regression in parser", expected: "skills/workflows/defect-resolution/SKILL.md" },
       { cmd: "/arch update system boundaries", expected: "skills/workflows/architecture-change/SKILL.md" },
       { cmd: "/migrate add user indexes", expected: "skills/workflows/database-migration/SKILL.md" },
-      { cmd: "/sec audit authentication flow", expected: "skills/workflows/security-sensitive-change/SKILL.md" },
-      { cmd: "/optimize query performance", expected: "skills/workflows/code-review-and-optimization/SKILL.md" },
-      { cmd: "/deps upgrade lodash", expected: "skills/workflows/dependency-upgrade/SKILL.md" },
+      { cmd: "/sec audit authentication flow", expected: "skills/workflows/feature-delivery/SKILL.md" },
+      { cmd: "/optimize query performance", expected: "skills/workflows/feature-delivery/SKILL.md" },
+      { cmd: "/deps upgrade lodash", expected: "skills/workflows/architecture-change/SKILL.md" },
       { cmd: "/ship deploy release tag", expected: "skills/workflows/commit-push-release/SKILL.md" },
-      { cmd: "/release verify release readiness", expected: "skills/workflows/release-readiness/SKILL.md" },
+      { cmd: "/release verify release readiness", expected: "skills/workflows/commit-push-release/SKILL.md" },
       { cmd: "/sync update manifest and lockfile", expected: "skills/workflows/context-maintenance/SKILL.md" },
-      { cmd: "/new-project build greenfield service", expected: "skills/workflows/new-project-delivery/SKILL.md" },
-      { cmd: "/doc generate system report", expected: "skills/workflows/docs/SKILL.md" },
+      { cmd: "/new-project build greenfield service", expected: "skills/workflows/feature-delivery/SKILL.md" },
+      { cmd: "/doc generate system report", expected: "skills/workflows/feature-delivery/SKILL.md" },
       { cmd: "/plan scaffold new service", expected: "skills/workflows/feature-delivery/SKILL.md" },
       { cmd: "[BUG] crash on null token", expected: "skills/workflows/defect-resolution/SKILL.md" },
       { cmd: "[ADR] storage format choice", expected: "skills/workflows/architecture-change/SKILL.md" },

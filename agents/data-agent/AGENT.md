@@ -7,7 +7,7 @@ lifecycleStage: Data Modeling & Persistence
 aliases: ["/data", "[DATA]"]
 defaultWorkflow: database-migration
 skills: [perf, grounding, plan]
-workflows: [database-migration, feature-delivery, security-sensitive-change]
+workflows: [database-migration, feature-delivery]
 rules:
   - rules/global/1-3-1-rule.md
   - rules/global/architecture-conformance.md
@@ -73,9 +73,8 @@ Invoke the Data Agent whenever you encounter:
 
 | Type | Name | Purpose |
 | :--- | :--- | :--- |
-| **Workflow** | `workflows/database-migration.md` | Guiding the 3-phase database migration lifecycle (Forward, Rollback, Consumer Verification). |
-| **Workflow** | `workflows/feature-delivery.md` | Data modeling within feature delivery Phase 2. |
-| **Workflow** | `workflows/security-sensitive-change.md` | Protecting sensitive data, encryption-at-rest, and tenant isolation. |
+| **Workflow** | `skills/workflows/database-migration/SKILL.md` | Guiding the database migration lifecycle (Forward, Rollback, Consumer Verification). |
+| **Workflow** | `skills/workflows/feature-delivery/SKILL.md` | Data modeling within feature delivery Phase 2. |
 | **Skill** | `skills/engineering/perf/SKILL.md` | Auditing query performance, index coverage (ESR), and N+1 prevention. |
 | **Skill** | `skills/plan/SKILL.md` | Breaking database changes into backward-compatible rollout phases. |
 | **Skill** | `skills/grounding/SKILL.md` | Grounding entity definitions against project terminology. |

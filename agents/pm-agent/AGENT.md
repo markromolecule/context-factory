@@ -7,7 +7,7 @@ lifecycleStage: Planning & Phase Orchestration
 aliases: ["/pm", "[PM]"]
 defaultWorkflow: feature-delivery
 skills: [plan, plan-review, execute, adr, refactor]
-workflows: [feature-delivery, architecture-change, defect-resolution, code-review-and-optimization, docs]
+workflows: [feature-delivery, architecture-change, defect-resolution]
 rules:
   - rules/global/1-3-1-rule.md
   - rules/global/architecture-conformance.md
@@ -72,8 +72,8 @@ Invoke the PM Agent whenever you encounter:
 | **Skill** | `skills/refactor/SKILL.md` | Decomposing complex, multi-responsibility code into modular files. |
 | **Skill** | `skills/adr/SKILL.md` | Recording trade-offs and structural choices in `docs/decisions/`. |
 | **Skill** | `skills/productivity/plan-review/SKILL.md` | Auditing plans and execution packets against acceptance criteria. |
-| **Workflow** | `workflows/feature-delivery.md` | Coordinating Phase 2 (Planning) and Phase 3 (Execution Oversight). |
-| **Workflow** | `workflows/code-review-and-optimization.md` | Post-implementation review and optimization guardrail. |
+| **Workflow** | `skills/workflows/feature-delivery/SKILL.md` | Coordinating Phase 2 (Planning) and Phase 3 (Execution Oversight). |
+| **Workflow** | `skills/workflows/architecture-change/SKILL.md` | Aligning multi-phase architectural migrations. |
 
 ---
 

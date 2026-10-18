@@ -5,9 +5,9 @@ role: DevOps Engineer & Site Reliability Specialist
 description: Manages CI/CD automation pipelines, containerization (Docker, Compose), environment configuration hygiene, deployment workflows, release verification, and security guardrails.
 lifecycleStage: Deployment, Infrastructure & Release
 aliases: ["/devops", "[DEVOPS]"]
-defaultWorkflow: release-readiness
-skills: [security, test]
-workflows: [release-readiness, security-sensitive-change, dependency-upgrade]
+defaultWorkflow: commit-push-release
+skills: [security, test, execute]
+workflows: [commit-push-release]
 rules:
   - rules/global/architecture-conformance.md
   - rules/global/code-quality.md
@@ -67,11 +67,10 @@ Invoke the DevOps Agent whenever you encounter:
 
 | Type | Name | Purpose |
 | :--- | :--- | :--- |
-| **Workflow** | `workflows/release-readiness.md` | Pre-flight release verification, health checks, rollback plans, and deployment sign-off. |
-| **Workflow** | `workflows/security-sensitive-change.md` | Handling secrets, authentication keys, credentials, and webhook endpoints safely. |
-| **Workflow** | `workflows/dependency-upgrade.md` | Systematic dependency upgrades and vulnerability patching. |
+| **Workflow** | `skills/workflows/commit-push-release/SKILL.md` | Staging changes atomically, crafting conventional commits, pushing upstream, and tagging releases. |
 | **Skill** | `skills/security/SKILL.md` | Auditing authorization, secrets exposure, and infrastructure boundaries. |
 | **Skill** | `skills/engineering/test/SKILL.md` | Verifying automated test suites and build outputs before deployment. |
+| **Skill** | `skills/engineering/execute/SKILL.md` | Executing verified infrastructure and configuration changes. |
 
 ---
 

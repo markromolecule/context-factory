@@ -263,54 +263,42 @@ const EXECUTION_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(exis
 const ROUTING_HINTS = [
   // 0. Host-Native Workflow Commands (/workflow-<slug> for Claude Code, $workflow-<slug> for Codex)
   { test: /^[/\\$]workflow-architecture-change\b/i, workflow: "architecture-change" },
-  { test: /^[/\\$]workflow-code-review-and-optimization\b/i, workflow: "code-review-and-optimization" },
   { test: /^[/\\$]workflow-commit-push-release\b/i, workflow: "commit-push-release" },
   { test: /^[/\\$]workflow-context-maintenance\b/i, workflow: "context-maintenance" },
   { test: /^[/\\$]workflow-database-migration\b/i, workflow: "database-migration" },
   { test: /^[/\\$]workflow-defect-resolution\b/i, workflow: "defect-resolution" },
-  { test: /^[/\\$]workflow-dependency-upgrade\b/i, workflow: "dependency-upgrade" },
-  { test: /^[/\\$]workflow-docs\b/i, workflow: "docs" },
   { test: /^[/\\$]workflow-feature-delivery\b/i, workflow: "feature-delivery" },
-  { test: /^[/\\$]workflow-new-project-delivery\b/i, workflow: "new-project-delivery" },
-  { test: /^[/\\$]workflow-release-readiness\b/i, workflow: "release-readiness" },
-  { test: /^[/\\$]workflow-security-sensitive-change\b/i, workflow: "security-sensitive-change" },
 
   // 1. Explicit Agent Commands (Highest Precedence)
   { test: /^\/architect\b|^\[ARCHITECT\]/i, workflow: "architecture-change" },
   { test: /^\/data\b|^\[DATA\]/i, workflow: "database-migration" },
   { test: /^\/ux\b|^\[UX\]/i, workflow: "feature-delivery" },
-  { test: /^\/threat\b|^\[THREAT\]/i, workflow: "security-sensitive-change" },
+  { test: /^\/threat\b|^\[THREAT\]/i, workflow: "feature-delivery" },
   { test: /^\/ba\b|^\[BA\]/i, workflow: "feature-delivery" },
   { test: /^\/pm\b|^\[PM\]/i, workflow: "feature-delivery" },
-  { test: /^\/devops\b|^\[DEVOPS\]/i, workflow: "release-readiness" },
+  { test: /^\/devops\b|^\[DEVOPS\]/i, workflow: "commit-push-release" },
 
   // 2. Explicit Slash Commands and Bracket Prefix Tags
   { test: /^\/(?:fix|hotfix|bug)\b|^\[(?:BUG|HOTFIX|DEFECT)\]/i, workflow: "defect-resolution" },
   { test: /^\/(?:migrate|db|schema)\b|^\[(?:MIGRATE|DB|SCHEMA)\]/i, workflow: "database-migration" },
-  { test: /^\/(?:sec|security|auth)\b|^\[(?:SEC|SECURITY|AUTH)\]/i, workflow: "security-sensitive-change" },
-  { test: /^\/(?:optimize|review-code)\b|^\[(?:OPTIMIZE|CODE_REVIEW)\]/i, workflow: "code-review-and-optimization" },
+  { test: /^\/(?:sec|security|auth)\b|^\[(?:SEC|SECURITY|AUTH)\]/i, workflow: "feature-delivery" },
+  { test: /^\/(?:optimize|review-code)\b|^\[(?:OPTIMIZE|CODE_REVIEW)\]/i, workflow: "feature-delivery" },
   { test: /^\/(?:arch|refactor|adr)\b|^\[(?:ARCH|REFACTOR|ADR)\]/i, workflow: "architecture-change" },
-  { test: /^\/(?:upgrade|deps)\b|^\[(?:DEPS|UPGRADE)\]/i, workflow: "dependency-upgrade" },
-  { test: /^\/(?:ship|commit-push-release)\b|^\[(?:SHIP|COMMIT_PUSH_RELEASE)\]/i, workflow: "commit-push-release" },
-  { test: /^\/(?:release|ready|deploy)\b|^\[(?:RELEASE|DEPLOY)\]/i, workflow: "release-readiness" },
+  { test: /^\/(?:upgrade|deps)\b|^\[(?:DEPS|UPGRADE)\]/i, workflow: "architecture-change" },
+  { test: /^\/(?:ship|commit-push-release|release|ready|deploy)\b|^\[(?:SHIP|COMMIT_PUSH_RELEASE|RELEASE|DEPLOY)\]/i, workflow: "commit-push-release" },
   { test: /^\/(?:sync|lock|maintain)\b|^\[(?:SYNC|LOCK|MAINTENANCE)\]/i, workflow: "context-maintenance" },
-  { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "new-project-delivery" },
-  { test: /^\/(?:doc|docs|documentation|report)\b|^\[(?:DOC|DOCS|DOCUMENTATION|REPORT)\]/i, workflow: "docs" },
+  { test: /^\/(?:new-project|progressive)\b|^\[(?:NEW_PROJECT|PROGRESSIVE)\]/i, workflow: "feature-delivery" },
+  { test: /^\/(?:doc|docs|documentation|report)\b|^\[(?:DOC|DOCS|DOCUMENTATION|REPORT)\]/i, workflow: "feature-delivery" },
   { test: /^\/(?:plan|feature|grill|discovery|context)\b|^\[(?:PLAN|FEATURE|GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i, workflow: "feature-delivery" },
   { test: /^\/(?:session|session-save|session-resume)\b|^\[SESSION\]/i, workflow: null },
 
   // 3. Keyword & Concept matchers
   { test: /\b(defect|bug|broken|regression|fix|hotfix)\b/i, workflow: "defect-resolution" },
-  { test: /\b(optimize|code review|review code|clean code|code quality guardrail)\b/i, workflow: "code-review-and-optimization" },
-  { test: /\b(commit and push|commit push release|push to remote|tag release|ship changes)\b/i, workflow: "commit-push-release" },
+  { test: /\b(commit and push|commit push release|push to remote|tag release|ship changes|release readiness|production handoff)\b/i, workflow: "commit-push-release" },
   { test: /\b(architecture|cross-module|dependency direction|system boundary|refactor|solid|srp|ocp|lsp|isp|dip)\b/i, workflow: "architecture-change" },
-  { test: /\b(webhook|credential|secret|authorization|authentication|security|signature|replay)\b/i, workflow: "security-sensitive-change" },
   { test: /\b(database migration|schema migration|backfill)\b/i, workflow: "database-migration" },
-  { test: /\b(dependency|package|library|framework).*\b(upgrade|update|migrate)\b/i, workflow: "dependency-upgrade" },
-  { test: /\b(feature|product capability|user story|frontend|interface|dialog|form|responsive|accessibility|ux|redesign)\b/i, workflow: "feature-delivery" },
-  { test: /\b(release|readiness|production handoff)\b/i, workflow: "release-readiness" },
   { test: /\b(?:context[- ]factory|manifest)\b.*\b(?:add|change|update|maintain|sync)\b|\b(?:add|change|update|maintain|sync)\b.*\b(?:context[- ]factory|manifest)\b|\b(?:maintain|sync)\s+(?:context[- ]factory|rules?|skills?|workflows?)\b/i, workflow: "context-maintenance" },
-  { test: /\b(report|summary|mitigation|post-mortem)\b/i, workflow: "docs" },
+  { test: /\b(feature|product capability|user story|frontend|interface|dialog|form|responsive|accessibility|ux|redesign|webhook|credential|secret|authorization|authentication|security|signature|replay|report|summary|mitigation|post-mortem)\b/i, workflow: "feature-delivery" },
   { test: PREPLANNING_TEST, workflow: "feature-delivery" },
 ];
 
@@ -430,6 +418,17 @@ export async function resolveContext(request, options = {}) {
           : `matched: ${entry.relevance.matches.join(", ")}`,
     }));
 
+  const isSecuritySensitive = /\b(security|authentication|authorization|credential|secret|threat|vulnerability|abuse|signature|webhook|replay)\b/i.test(request);
+  if (isSecuritySensitive) {
+    const secRule = candidateRuleEntries.find((e) => e.meta.name === "security-guardrails");
+    if (secRule && !selectedRules.some((r) => r.path === secRule.path)) {
+      selectedRules.push({
+        path: secRule.path,
+        reason: "matched security-sensitive terms in request",
+      });
+    }
+  }
+
   if (selectedAgent && Array.isArray(selectedAgent.meta.rules)) {
     const selectedRulePaths = new Set(selectedRules.map((item) => item.path));
     for (const rulePath of selectedAgent.meta.rules) {
@@ -445,20 +444,27 @@ export async function resolveContext(request, options = {}) {
     .filter((entry) => !entry.path.startsWith("skills/workflow-entries/") && !entry.path.startsWith("skills/workflows/"))
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
     .filter((entry) => (
-      entry.relevance.score >= 6
-      && (
-        (entry.meta.name !== "execute" && entry.meta.name !== "execution" && entry.meta.name !== "execution-plan")
-        || EXECUTION_TEST.test(request)
-      )
-      && (
-        (entry.meta.name !== "security" && entry.meta.name !== "security-review")
-        || /\b(security|authentication|authorization|credential|secret|threat|vulnerability|abuse)\b/i.test(request)
+      (
+        entry.relevance.score >= 6
+        && (
+          (entry.meta.name !== "execute" && entry.meta.name !== "execution" && entry.meta.name !== "execution-plan")
+          || EXECUTION_TEST.test(request)
+        )
+        && (
+          (entry.meta.name !== "security" && entry.meta.name !== "security-review")
+          || isSecuritySensitive
+        )
+      ) || (
+        (entry.meta.name === "security" || entry.meta.name === "security-review")
+        && isSecuritySensitive
       )
     ))
     .sort((a, b) => b.relevance.score - a.relevance.score || a.path.localeCompare(b.path))
     .map((entry) => ({
       path: entry.path,
-      reason: `matched: ${entry.relevance.matches.join(", ")}`,
+      reason: (entry.meta.name === "security" && entry.relevance.score < 6)
+        ? "matched security-sensitive terms in request"
+        : `matched: ${entry.relevance.matches.join(", ")}`,
     }));
 
   if (selectedAgent && Array.isArray(selectedAgent.meta.skills)) {

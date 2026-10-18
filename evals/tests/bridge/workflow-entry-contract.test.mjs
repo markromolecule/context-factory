@@ -13,7 +13,7 @@ import {
 test("Unit 01.01: Canonical Workflow Skill and Host Entry Contract (AC-01, AC-07)", async (t) => {
   const manifest = await readJson("context-manifest.json");
   const workflows = manifest.workflows ?? [];
-  assert.ok(workflows.length >= 12, "Manifest must contain at least 12 canonical workflows");
+  assert.ok(workflows.length >= 6, "Manifest must contain at least 6 canonical workflows");
 
   const existingProceduralSkillNames = new Set(
     (manifest.skills ?? [])

@@ -7,7 +7,7 @@ lifecycleStage: UX, Design System & Frontend Architecture
 aliases: ["/ux", "[UX]"]
 defaultWorkflow: feature-delivery
 skills: [grounding, refactor, test]
-workflows: [feature-delivery, code-review-and-optimization]
+workflows: [feature-delivery]
 rules:
   - rules/global/1-3-1-rule.md
   - rules/global/architecture-conformance.md
@@ -79,8 +79,7 @@ Invoke the UX Agent whenever you encounter:
 
 | Type | Name | Purpose |
 | :--- | :--- | :--- |
-| **Workflow** | `workflows/feature-delivery.md` | User flow and frontend architecture in Phase 2/3. |
-| **Workflow** | `workflows/code-review-and-optimization.md` | Auditing frontend component modularity, re-render performance, and accessibility. |
+| **Workflow** | `skills/workflows/feature-delivery/SKILL.md` | User flow and frontend architecture in Phase 2/3. |
 | **Skill** | `skills/grounding/SKILL.md` | Grounding UI tokens and design vocabulary against project standards. |
 | **Skill** | `skills/engineering/test/SKILL.md` | Validating component render tests, accessibility assertions, and layout integrity. |
 | **Skill** | `skills/refactor/SKILL.md` | Decomposing oversized "god-components" into clean subcomponents and hooks. |
