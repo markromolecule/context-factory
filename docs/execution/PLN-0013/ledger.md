@@ -3,7 +3,7 @@
 Task branch: `refactor/PLN-0013-harden-typescript-harness`
 Target base: `master` at `e53ab5b1489618bedeee44292716acd1cd91249c`
 Approved packet: `docs/execution/PLN-0013/packet.json`
-Batch: ready units 01.01 and 01.04; checkpoint ready for developer inspection. Phase 01 remains open.
+Latest batch: unit 01.03; Phase 01 checkpoint ready for developer inspection. Full evaluation failures remain open.
 
 ## Handoff and context
 
@@ -63,3 +63,21 @@ Starting revision: `1b56271e28736d23dfe32b66682856f976741229`. The packet, relea
 | Inventory and plan | `node scripts/context.mjs lock`: exit 0, digest `sha256:a29f6650e76cc7c89f802eb536fc3ead4c19553d2edc0d9a767cc299febbe465`; final `plan:check ... --json`: exit 0. |
 
 Modified files: `app/cli/index.mjs`, `app/cli/core/github-gate-generator.mjs`, `app/cli/README.md`, `evals/tests/cli/github-gate.test.mjs`, `context-lock.json`, and this ledger. `scripts/harness-cli.mjs` was inspected and had no dead `conform` dispatcher/help entry, so it was not changed. The factory package has no configured typecheck script. Full evaluation tests were not run for this unit; the prior 203/207 baseline remains open for later units. Human decision evidence is in the released brief. Phase 01 remains open, and this batch stops for developer inspection under the execute skill.
+
+## Unit 01.03 scope note before edits
+
+The user invoked `execute` again after the 01.02 checkpoint, authorizing the next ready Phase 01 batch, unit 01.03. The approved packet has no unit list; the reviewed 01.03 file was read under the user's earlier explicit permission to use reviewed unit files. The unit owns `app/cli/commands/preflight.mjs`, `scripts/harness-cli.mjs`, and new `tests/cli/preflight.test.mjs`. The harness dispatcher already delegates to the same handler, so it may need no edit. If a tracked canonical path changes, refresh `context-lock.json` before verification; no other implementation scope is planned. Material preflight will require TypeScript file coverage and a nonempty binding, while direct informational questions may return an explicit information-only receipt. Unsupported JS/JSX paths retain applicable global/security directive information when present and cannot be labelled TypeScript-ready.
+
+## Unit 01.03 — fail-closed preflight selection
+
+Starting revision: `0e7b1c7`. Approved packet and released brief verified (exit 0); exact task branch, clean checkout, and `master` base `e53ab5b1489618bedeee44292716acd1cd91249c` matched before edits. `plan:check ... --json` exited 0 with 11 units and valid language rules, done-check, and handoff. Pre-edit selection for the `.mjs` source and test exited 0 with binding `binding-adhoc-00-00-1df0a2363737`, hash `sha256:1df0a236373736f132fd6e2461bf86157f9dc48b6ba4b9c0fa0dd9b045f4a37d`, and 47 directives. This is selection evidence only: the old command wrongly labelled JavaScript scope TypeScript and said PASS.
+
+| Evidence | Result |
+| --- | --- |
+| Test-first negative cases | `node --test tests/cli/preflight.test.mjs`: exit 1 against the old handler; no-scope, JS/JSX, zero-directive, and harness-dispatch cases exposed false PASS/exit 0. |
+| Focused CLI contract | Same command after implementation: exit 0, 10/10. Empty and material no-scope requests return BLOCKED/exit 2; JS/JSX and mixed scopes return UNSUPPORTED/exit 2; zero directives return BLOCKED/exit 2; scoped TypeScript returns READY with binding identity and `codeVerification: NOT_RUN`; direct questions return INFORMATION. Applicable global/security IDs remain visible on supported JavaScript descriptor matches. |
+| Host and catalog checks | `pnpm run test:unit`: exit 0, 50/50; `pnpm run lint`: exit 0; `pnpm run eval`: exit 0, 27/27; `pnpm run build --out /tmp/pln0013-unit0103-bundle.json`: exit 0; `node scripts/validate-context.mjs`: exit 0; `node scripts/context.mjs doctor`: exit 0, 27/27; `git diff --check`: exit 0. No typecheck script is configured. |
+| Lock and plan | `node scripts/context.mjs lock`: exit 0, digest `sha256:4bca6e70a5c4a463a170dc25b2d1cf0794d8b1fa09abed1b945c2dd05cd961bf`; final `plan:check ... --json`: exit 0. |
+| Broader evaluation suite | `node --test evals/tests/**/*.test.mjs`: exit 1, 210/215. Three underlying assertions fail in host bridge/discovery and execution-skill wording tests. Those read files were unchanged in 01.03; they are unresolved suite findings, not a PASS claim. The host integration work is assigned to a later unit, while the execution-skill expectation needs reconciliation. |
+
+Modified files: `app/cli/commands/preflight.mjs`, `scripts/harness-cli.mjs`, new `tests/cli/preflight.test.mjs`, `context-lock.json`, and this ledger. The dispatcher logic itself was already shared with the public CLI, so only its help text changed. AC-03 has positive and negative executable evidence. Human decision evidence is in the released brief. The Phase 01 unit set reaches its checkpoint here; no merge or push is claimed, and the failing broader evaluation suite remains open for developer inspection.

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:a29f6650e76cc7c89f802eb536fc3ead4c19553d2edc0d9a767cc299febbe465",
+  "digest": "sha256:4bca6e70a5c4a463a170dc25b2d1cf0794d8b1fa09abed1b945c2dd05cd961bf",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
     "README.md": "sha256:e1836546e6da382288bb383363c77f4fc744f2ade8404ec7e778029d7817e234",
@@ -217,7 +217,7 @@
     "scripts/context.mjs": "sha256:3ab8c1e11c3528a9227cfe11e10632894ced6ab8b2a3cbfcad5caa757342b0f2",
     "scripts/framework-scope.mjs": "sha256:a33e6db3152c907cf48c4887319951179980bef6a1774fbe93d31a74bd292ca3",
     "scripts/handoff-contract.mjs": "sha256:e89fdb4addf6602ccd176cedbba61aab2711980eaf2567733ca2a50d82f93211",
-    "scripts/harness-cli.mjs": "sha256:d287f1cd1db11e6020c0b9043c72ec738acce1b3d419b9af4fe31de0daa9a326",
+    "scripts/harness-cli.mjs": "sha256:990fdefc575afbc7637fbe6afc8fef9505bb68fdef9a1d8f2d7c9419a87fe273",
     "scripts/plan-check.mjs": "sha256:98169d4b2c1ee8ece565e2f9dcd7d945d7877dda619a408faea9f31fe5eac89a",
     "scripts/plan-id-reservation.mjs": "sha256:0888e2151dce46720d25f152eb5bb0e4355114bea844f11b63767c90e6f66fde",
     "scripts/session-core.mjs": "sha256:379a902d140810a5534a38183c8bc8429c8b6367a374c0080f7e49388209863b",
