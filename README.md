@@ -27,7 +27,7 @@ Context Factory uses pnpm 10.28.1 for package scripts and Node.js for execution.
 Context Factory provides first-class, non-destructive bridging for modern AI coding editors:
 
 - **VS Code:** Scaffolds `.github/copilot-instructions.md`, `.vscode/extensions.json`, and merges `.vscode/settings.json` non-destructively.
-- **Claude Code:** Provisions `.claude/skills/workflow-<slug>` discovery symlinks for all 12 canonical workflows, natively invokable via `/workflow-<slug>` (e.g. `/workflow-feature-delivery`, `/workflow-defect-resolution`).
+- **Claude Code:** Provisions `.claude/skills/workflow-<slug>` discovery symlinks for the 6 canonical workflows, natively invokable via `/workflow-<slug>` (e.g. `/workflow-feature-delivery`, `/workflow-defect-resolution`).
 - **Codex:** Provisions `.agents/skills/workflow-<slug>` discovery symlinks, discoverable via `/skills` or `$workflow-<slug>` without deprecated custom prompts.
 - **Antigravity:** Live `.agents/` symlinks (`skills/`, `rules/`, `workflows/`, `agents/`), `.agents/skills.json`, and `GEMINI.md`.
 - **Cursor:** Provisions modern `.cursor/rules/context-factory.mdc` (`alwaysApply: true`) and root `.cursorrules`.

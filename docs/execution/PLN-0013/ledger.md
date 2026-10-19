@@ -194,3 +194,19 @@ Starting revision: `9378f72e2db4cd378b55b512ac3c8f0411132a19`. The approved pack
 | Inventory | `node scripts/context.mjs lock`: exit 0, digest `sha256:899f4ea315c6fef26746135a07fc277301253d7d5cbba021411e4d402118afa9`. 254 paths pinned. |
 
 Modified files: `app/cli/core/host-state.mjs`, `app/cli/commands/status.mjs`, `evals/tests/cli/host-status.test.mjs`, `tests/cli/doctor-editor-audit.test.mjs`, `context-lock.json`, and this ledger. AC-09 has positive, negative, and audit executable evidence. Human decision evidence is in the released brief. This completes unit 03.02 and stops for developer inspection.
+
+## Unit 03.03 scope note before edits
+
+The user authorized continuing execution of unit 03.03 via `continue`. The approved packet, released brief, exact task branch `refactor/PLN-0013-harden-typescript-harness`, clean checkout at `32c03e8`, `master` merge base `e53ab5b1489618bedeee44292716acd1cd91249c`, committed 03.02 receipt, and `plan:check` (11 units valid) were verified. Reviewed scope for unit 03.03 covers `context-manifest.json`, `context-lock.json`, `README.md`, `app/cli/README.md`, `evals/tests/bridge/bridge-conformance.test.mjs`, and this ledger. Scope is JavaScript implementation and Markdown catalog configuration; no TypeScript-only directive is claimed for `.mjs` source.
+
+## Unit 03.03 execution receipt and checkpoint
+
+Starting revision: `32c03e85aa7237e04c57a380d768bee36e8fce34`. The approved packet, released brief, exact task branch, clean checkout, target `master` base, committed 03.02 receipt, and `plan:check` (11 valid units) were verified. The unit's `.mjs` and Markdown implementation is outside TypeScript preflight scope; no TypeScript code-verification PASS is claimed. Applicable rule hashes remain `cf.evidence.scope-fencing` and `cf.evidence.verification` at `sha256:de1623af4b2ce5c31b5b242dd0c20aa0df701469bd9900bf2909c74656bda622`, and `cf.quality.tests-for-behavior-changes` at `sha256:e6541ae8c0d45302fb3237af77b20d2aa58c551a60e5c989f093eecff7b820fe`.
+
+| Evidence | Result |
+| --- | --- |
+| Integrated evaluation suite & AC-10 | `node --test evals/tests/**/*.test.mjs`: exit 0, 246/246 pass across 58 suites. Reconciled `evals/tests/bridge/bridge-conformance.test.mjs` with Decision D-01 (substituting removed runtime `conform` assertions with authoritative host verification checks) and updated discovery expectations to match the canonical 6 workflows (`architecture-change`, `commit-push-release`, `context-maintenance`, `database-migration`, `defect-resolution`, `feature-delivery`). Corrected `README.md` workflow documentation. Zero test failures or regressions remain across the repository. |
+| Host and integrity checks | `pnpm run lint`: exit 0 (36 rules, 12 skills, 6 workflows, 554 Markdown files); `pnpm run test:unit`: exit 0, 57/57 pass; `pnpm run build`: exit 0 (`dist/context-bundle.json` compiled); `node scripts/context.mjs doctor`: exit 0, 27/27 evaluations pass (HEALTHY); `node scripts/validate-context.mjs`: exit 0 (254 pinned canonical paths); `node -e 'import("./app/cli/index.mjs")'`: exit 0 (CLI public index imports cleanly); `node --test evals/tests/cli/github-gate.test.mjs`: exit 0, 17/17 pass (generated CI fixture execution); `git diff --check`: exit 0; `node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-19/refactor-PLN-0013-harden-typescript-harness --json`: exit 0 (11 valid units, acyclic, done-check complete). |
+| Inventory | `node scripts/context.mjs lock`: exit 0, digest `sha256:2043fb7ea94a796b3a9cba3b0cab4d3a1ff866db0277038122bf4e1f4cb262b6`. 254 paths pinned. |
+
+Modified files: `README.md`, `evals/tests/bridge/bridge-conformance.test.mjs`, `context-lock.json`, and this ledger. AC-10 has whole-diff integration and full test suite evidence without regressions. Human decision evidence is in the released brief. This completes unit 03.03 and Phase 03 integration testing, bringing the full PLN-0013 implementation plan to completion.

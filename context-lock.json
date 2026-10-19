@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:899f4ea315c6fef26746135a07fc277301253d7d5cbba021411e4d402118afa9",
+  "digest": "sha256:2043fb7ea94a796b3a9cba3b0cab4d3a1ff866db0277038122bf4e1f4cb262b6",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
-    "README.md": "sha256:e1836546e6da382288bb383363c77f4fc744f2ade8404ec7e778029d7817e234",
+    "README.md": "sha256:bcdf2e4377e409c3c86191d9914e234e557f29e57b8b9d2c528e524f7e005a27",
     "agents/README.md": "sha256:229102c77ac8ce250bfeb827f209666073e65f0a781e8b11b048e643c1812d51",
     "agents/architect-agent/AGENT.md": "sha256:e78edb280285ed5e6adcbfaf0608222be620f5880ccc67490c820b921390bd45",
     "agents/architect-agent/prompts/subagent-invocation.md": "sha256:56b61708ee7101864f731b894644bc9baac89fccaa813a93d6abe95f7a4441f9",
@@ -121,7 +121,7 @@
     "evals/datasets/features/typescript-web-codegen.json": "sha256:f31e4cd7737affc203fe49797cf9c8aac159c3ffc87e9625604195bc741b0073",
     "evals/datasets/refactors/architecture-change.json": "sha256:9a746e4f9400d1512aec75c96d5b76540581ed608acdb6b6b816a4a4730c1e9a",
     "evals/run-evals.mjs": "sha256:8b93d75d016e37e4b662843bda981e45beefdcbccb1f5225961bf698534396b8",
-    "evals/tests/bridge/bridge-conformance.test.mjs": "sha256:0ab90204343227da05b208eae77434ba8a08bf1310987e63f55ab1b3ce4acd81",
+    "evals/tests/bridge/bridge-conformance.test.mjs": "sha256:c9e6015d6c747c0883cc9e64646a96a74306fa7129add6b4861bcbb3e6959936",
     "evals/tests/bridge/workflow-entry-contract.test.mjs": "sha256:d9fa89e3d2522d3ad3823003c7dd02c35ba6b87b017708c38fad9b9bc7f62235",
     "evals/tests/bridge/workflow-routing.test.mjs": "sha256:2a602801ea1777e46a7961dfb429a85906ee14c9584e8537d70e0b6b6e44228d",
     "evals/tests/cli/active-contract.test.mjs": "sha256:5c6a2e3e153c04b9e22bc9e9c64a67985dc2ab5523fabd9ff53ea12a219b7cfe",
