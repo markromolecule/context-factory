@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:e2e32e5dd12862b1f3fff4ac43b1c405dd1485503d4263b916a7e1a338295f0f",
+  "digest": "sha256:899f4ea315c6fef26746135a07fc277301253d7d5cbba021411e4d402118afa9",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
     "README.md": "sha256:e1836546e6da382288bb383363c77f4fc744f2ade8404ec7e778029d7817e234",
@@ -128,7 +128,7 @@
     "evals/tests/cli/github-gate.test.mjs": "sha256:1cd5b1c554a98f16ce692ea3a62aa81b263b2e83ed8316761db4206763a1c62a",
     "evals/tests/cli/help-output.test.mjs": "sha256:1d704db61c096a3b0e2c225723dacfeb56c39b3e41d8aec7feb9f8b93c73c9f7",
     "evals/tests/cli/hook-safety.test.mjs": "sha256:52cfec4d76dcc228c8056c6d87d34c92822aa9e2df8484a1dc9c8ca849fda5e7",
-    "evals/tests/cli/host-status.test.mjs": "sha256:e1fb66b7189a933f06f1ccc4d0ae3a3731fadf77d340f3721c01c9d8ff567283",
+    "evals/tests/cli/host-status.test.mjs": "sha256:82f084adfdcf6d41ab2e9b8b7824cce28dfd033de10a0aac69e296d02f77a9fe",
     "evals/tests/cli/init-preview.test.mjs": "sha256:2e2ba4f5d8c7de40b82dff10d3799eac17dbc30cd70b05111ec4607a579c9b15",
     "evals/tests/lifecycle/discovery-handoff.test.mjs": "sha256:977b6d65c4b007ab3408fc3a057e8a64ffa0228cbf558e55d44b3a7c47be2a78",
     "evals/tests/lifecycle/execution-handoff.test.mjs": "sha256:d4fc685cc96ae6da0e692bdca1cfc080b3abc49bc4e75c0e3d31eaf94867a810",

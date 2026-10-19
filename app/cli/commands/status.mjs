@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { createLock, readJson, root } from "../../../scripts/context-core.mjs";
 import { listTasks } from "../../../scripts/task-workflow.mjs";
 import { badges, colors, table } from "../core/formatter.mjs";
@@ -18,7 +18,14 @@ export async function handleStatusCommand(args = [], flags = {}) {
 
   const isLockCurrent = Boolean(actualLock && JSON.stringify(actualLock) === JSON.stringify(expectedLock));
   const tasks = await listTasks();
-  const hostState = await probeHostState({ hostDir: process.cwd(), factoryDir: root });
+  const targetHostDir = flags.target ? resolve(process.cwd(), flags.target) : process.cwd();
+  const hostState = await probeHostState({
+    hostDir: targetHostDir,
+    factoryDir: root,
+    scope: flags.scope ? flags.scope.split(",").map((s) => s.trim()) : null,
+    binding: flags.binding || null,
+    revision: flags.revision || null,
+  });
 
   if (flags.json) {
     console.log(JSON.stringify({

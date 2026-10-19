@@ -59,4 +59,29 @@ test("Unit 03.01: Doctor Health Audit & Auto-Repair for All Editors", async (t) 
     assert.strictEqual(recheck.passed, true);
     assert.strictEqual(recheck.missingCount, 0);
   });
+
+  await t.test("doctor claims remain narrow to catalog health and editor integrity (AC-09)", async () => {
+    const logs = [];
+    const origLog = console.log;
+    console.log = (...args) => logs.push(args.join(" "));
+
+    try {
+      const exitCode = await handleDoctorCommand([], { target: FIXTURES_DIR, json: true });
+      assert.strictEqual(exitCode, 0);
+      assert.strictEqual(logs.length, 1);
+      const data = JSON.parse(logs[0]);
+
+      // Narrow claims
+      assert.ok(data.checks.manifestAndLint, "manifestAndLint check present");
+      assert.ok(data.checks.lockSync, "lockSync check present");
+      assert.ok(data.checks.editorIntegrity, "editorIntegrity check present");
+      assert.ok(data.checks.evaluations, "evaluation case check present");
+
+      // Must not claim code conformance or host test suite PASS
+      assert.strictEqual(data.checks.codeConformance, undefined, "Doctor must not claim code conformance");
+      assert.strictEqual(data.checks.hostTestSuite, undefined, "Doctor must not claim host test suite execution");
+    } finally {
+      console.log = origLog;
+    }
+  });
 });

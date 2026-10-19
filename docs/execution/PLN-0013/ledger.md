@@ -178,3 +178,19 @@ Starting revision: `b4aa8447814b77f98501e79124be30daeb307436`. The approved pack
 | Inventory | `node scripts/context.mjs lock`: exit 0, digest `sha256:e2e32e5dd12862b1f3fff4ac43b1c405dd1485503d4263b916a7e1a338295f0f`. 254 paths pinned. |
 
 Modified files: `.agents/skills.json`, `.claude/CLAUDE.md`, `app/cli/core/bridge-generator.mjs`, `scripts/validate-context.mjs`, `tests/bridge/bridge-generator.test.mjs`, `context-lock.json`, and this ledger. AC-08 has positive, negative, and audit executable evidence. Human decision evidence is in the released brief. This completes unit 03.01 and stops for developer inspection.
+
+## Unit 03.02 scope note before edits
+
+The user authorized continuing execution of unit 03.02 via `proceed`. The approved packet, released brief, exact task branch `refactor/PLN-0013-harden-typescript-harness`, clean checkout at `9378f72`, `master` merge base `e53ab5b1489618bedeee44292716acd1cd91249c`, committed 03.01 receipt, and `plan:check` (11 units valid) were verified. Reviewed scope for unit 03.02 covers `app/cli/core/host-state.mjs`, `app/cli/commands/status.mjs`, `app/cli/commands/doctor.mjs`, `evals/tests/cli/host-status.test.mjs`, `tests/cli/doctor-editor-audit.test.mjs`, and `context-lock.json`. Scope is JavaScript implementation and Markdown catalog configuration; no TypeScript-only directive is claimed for `.mjs` source.
+
+## Unit 03.02 execution receipt and checkpoint
+
+Starting revision: `9378f72e2db4cd378b55b512ac3c8f0411132a19`. The approved packet, released brief, exact task branch, clean checkout, target `master` base, committed 03.01 receipt, and `plan:check` (11 valid units) were verified. The unit's `.mjs` and Markdown implementation is outside TypeScript preflight scope; no TypeScript code-verification PASS is claimed. Applicable rule hashes remain `cf.evidence.scope-fencing` and `cf.evidence.verification` at `sha256:de1623af4b2ce5c31b5b242dd0c20aa0df701469bd9900bf2909c74656bda622`, and `cf.quality.tests-for-behavior-changes` at `sha256:e6541ae8c0d45302fb3237af77b20d2aa58c551a60e5c989f093eecff7b820fe`.
+
+| Evidence | Result |
+| --- | --- |
+| Host status, identity evaluation & AC-09 | `node --test evals/tests/cli/host-status.test.mjs tests/cli/doctor-editor-audit.test.mjs`: exit 0, 17/17 pass. Enforces evidence-bound status and doctor claims: `probeHostState` discovers reports host-first and never adopts factory-local reports; `evaluateReportIdentity` strictly validates the full identity tuple (`hostRoot`, `scope`, `bindingHash`, `revision`) and rejects missing, foreign, stale, or mismatched reports with explicit actionable reasons (`foreign`, `scope_mismatch`, `binding_mismatch`, `stale`, `no_report`) pointing to `pnpm test`. Doctor claims remain strictly narrow to catalog health (manifest, lock), editor configurations, and evaluation test cases without claiming code conformance or host test suite PASS. |
+| Host and integrity checks | `pnpm run lint`: exit 0; `pnpm run test:unit`: exit 0, 57/57; `pnpm run build`: exit 0 (`dist/context-bundle.json` compiled); `node scripts/context.mjs doctor`: exit 0, 27/27 evaluations pass; `node scripts/validate-context.mjs`: exit 0 (36 rules, 12 skills, 6 workflows, 254 pinned paths); `git diff --check`: exit 0; `node scripts/context.mjs plan:check docs/tasks/2026/10/2026-10-19/refactor-PLN-0013-harden-typescript-harness --json`: exit 0 (11 valid units, acyclic, done-check complete). |
+| Inventory | `node scripts/context.mjs lock`: exit 0, digest `sha256:899f4ea315c6fef26746135a07fc277301253d7d5cbba021411e4d402118afa9`. 254 paths pinned. |
+
+Modified files: `app/cli/core/host-state.mjs`, `app/cli/commands/status.mjs`, `evals/tests/cli/host-status.test.mjs`, `tests/cli/doctor-editor-audit.test.mjs`, `context-lock.json`, and this ledger. AC-09 has positive, negative, and audit executable evidence. Human decision evidence is in the released brief. This completes unit 03.02 and stops for developer inspection.
