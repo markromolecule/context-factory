@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, rm, readFile, writeFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { spawnSync } from "node:child_process";
 import {
   GITHUB_GATE_WORKFLOW_FILE,
   GITHUB_GATE_MARKER,
@@ -15,7 +16,7 @@ import { handleInitCommand } from "../../../app/cli/commands/init.mjs";
 
 describe("Unit 04.01: Opt-in GitHub Actions quality gate generator (AC-02, AC-04, AC-07, AC-08, AC-09, AC-10)", () => {
   describe("Workflow Template Generation (AC-07, AC-08, AC-09, AC-10)", () => {
-    it("renders workflow with recursive submodule checkout, health check, and conformance verification (AC-07, AC-08)", () => {
+    it("renders workflow with recursive submodule checkout and executable health check", () => {
       const yml = renderGitHubWorkflow({
         submodulePath: ".context-factory",
         packageManager: "pnpm",
@@ -37,23 +38,10 @@ describe("Unit 04.01: Opt-in GitHub Actions quality gate generator (AC-02, AC-04
         "Should run doctor health check"
       );
 
-      // Conformance evaluation and persistence
-      assert.ok(
-        yml.includes("conform") && yml.includes(".context-runs/conformance-report.json"),
-        "Should execute conformance and output report to .context-runs/"
-      );
-
-      // Conformance verification step (AC-07, AC-08)
-      assert.ok(
-        yml.includes("conform verify .context-runs/conformance-report.json"),
-        "Should verify persisted conformance report receipt against checkout"
-      );
-
-      // Report artifact upload
-      assert.ok(yml.includes("actions/upload-artifact@v4"), "Should upload report artifact");
+      assert.doesNotMatch(yml, /\bconform\b|conformance-report/);
     });
 
-    it("marks host test and lint as unconfigured when omitted, avoiding empty or failing steps (AC-10)", () => {
+    it("marks all host checks unconfigured when omitted, without empty run steps", () => {
       const yml = renderGitHubWorkflow({
         submodulePath: ".context-factory",
         testCommand: null,
@@ -61,25 +49,93 @@ describe("Unit 04.01: Opt-in GitHub Actions quality gate generator (AC-02, AC-04
       });
 
       // Should indicate test and lint are unconfigured and NOT generate run steps with empty commands
-      assert.ok(yml.includes("unconfigured"), "Should document unconfigured host checks");
+      for (const check of ["lint", "typecheck", "test", "build"]) {
+        assert.ok(yml.includes(`Host ${check}: unconfigured`));
+      }
       assert.ok(!yml.includes("run: \n"), "Must not have empty run command");
       assert.ok(!yml.includes("run: ''"), "Must not have empty string run command");
     });
 
-    it("includes host test and lint steps when explicitly configured (AC-10)", () => {
+    it("includes all explicitly configured pnpm host checks", () => {
       const yml = renderGitHubWorkflow({
         submodulePath: ".context-factory",
         testCommand: "pnpm test",
         lintCommand: "pnpm run lint",
+        typecheckCommand: "pnpm run typecheck",
+        buildCommand: "pnpm run build",
       });
 
       assert.ok(yml.includes("pnpm test"), "Should include host test command");
       assert.ok(yml.includes("pnpm run lint"), "Should include host lint command");
+      assert.ok(yml.includes("pnpm run typecheck"));
+      assert.ok(yml.includes("pnpm run build"));
     });
 
     it("rejects host CI commands using another package manager", () => {
       assert.throws(() => renderGitHubWorkflow({ testCommand: "npm test" }), /must use pnpm/);
       assert.throws(() => renderGitHubWorkflow({ packageManager: "bun" }), /requires pnpm/);
+      assert.throws(() => renderGitHubWorkflow({ lintCommand: "pnpm run lint; echo unsafe" }), /pnpm script/);
+    });
+
+    it("imports the public CLI index", async () => {
+      const result = await import("../../../app/cli/index.mjs");
+      assert.equal(typeof result.main, "function");
+    });
+
+    it("runs every emitted shell block for a host with four configured scripts", async () => {
+      const tempDir = await mkdtemp(join(tmpdir(), "cf-ci-execute-"));
+      try {
+        await mkdir(join(tempDir, ".context-factory", "scripts"), { recursive: true });
+        await writeFile(join(tempDir, ".context-factory", "scripts", "context.mjs"),
+          "if (process.argv[2] !== 'doctor') process.exit(2);\n");
+        const scripts = Object.fromEntries(["lint", "typecheck", "test", "build"].map((name) =>
+          [name, `node -e \"require('fs').writeFileSync('${name}.passed', 'yes')\"`]));
+        await writeFile(join(tempDir, "package.json"), JSON.stringify({ private: true, scripts }));
+        const lock = spawnSync("pnpm", ["install", "--lockfile-only", "--offline"], { cwd: tempDir, encoding: "utf8" });
+        assert.equal(lock.status, 0, lock.stderr);
+        const result = await installGitHubWorkflow({ targetDir: tempDir });
+        assert.equal(result.success, true);
+        const workflow = await readFile(result.workflowPath, "utf8");
+        const blocks = [...workflow.matchAll(/^        run: \|\n((?:          .*\n|\n)+)|^        run: (.+)$/gm)]
+          .map((match) => match[2] || match[1].replace(/^          /gm, ""));
+        assert.equal(blocks.length, 6, workflow);
+        for (const block of blocks) {
+          const executed = spawnSync("sh", ["-c", block], { cwd: tempDir, encoding: "utf8" });
+          assert.equal(executed.status, 0, `${block}\n${executed.stderr}`);
+        }
+        for (const name of Object.keys(scripts)) {
+          assert.equal(await readFile(join(tempDir, `${name}.passed`), "utf8"), "yes");
+        }
+      } finally {
+        await rm(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    it("rejects requested absent scripts and preserves failing script status", async () => {
+      const tempDir = await mkdtemp(join(tmpdir(), "cf-ci-negative-"));
+      try {
+        await writeFile(join(tempDir, "package.json"), JSON.stringify({ private: true, scripts: { test: "node -e 'process.exit(7)'" } }));
+        await writeFile(join(tempDir, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\nimporters:\n  .: {}\n");
+        await assert.rejects(installGitHubWorkflow({ targetDir: tempDir, lintCommand: "pnpm run lint" }), /lint.*not configured/);
+        const result = await installGitHubWorkflow({ targetDir: tempDir });
+        assert.equal(result.success, true);
+        const workflow = await readFile(result.workflowPath, "utf8");
+        assert.ok(workflow.includes("Host lint: unconfigured"));
+        const failed = spawnSync("sh", ["-c", "pnpm run test"], { cwd: tempDir, encoding: "utf8" });
+        assert.notEqual(failed.status, 0);
+      } finally {
+        await rm(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    it("fails generation when configured scripts have no pnpm lockfile", async () => {
+      const tempDir = await mkdtemp(join(tmpdir(), "cf-ci-unlocked-"));
+      try {
+        await writeFile(join(tempDir, "package.json"), JSON.stringify({ scripts: { lint: "node -e ''" } }));
+        await assert.rejects(installGitHubWorkflow({ targetDir: tempDir }), /require pnpm-lock.yaml/);
+      } finally {
+        await rm(tempDir, { recursive: true, force: true });
+      }
     });
   });
 
@@ -166,6 +222,20 @@ describe("Unit 04.01: Opt-in GitHub Actions quality gate generator (AC-02, AC-04
       }
     });
 
+    it("treats the former conformance workflow as a migration conflict", async () => {
+      const tempDir = await mkdtemp(join(tmpdir(), "cf-ci-legacy-"));
+      try {
+        const path = join(tempDir, GITHUB_GATE_WORKFLOW_FILE);
+        await mkdir(join(tempDir, ".github", "workflows"), { recursive: true });
+        await writeFile(path, "# Context Factory Strict Conformance Gate\nname: Former gate\n");
+        const result = await installGitHubWorkflow({ targetDir: tempDir });
+        assert.equal(result.action, "conflict");
+        assert.match(await readFile(path, "utf8"), /Former gate/);
+      } finally {
+        await rm(tempDir, { recursive: true, force: true });
+      }
+    });
+
     it("supports preview / dry-run without writing files to disk (AC-01, AC-02)", async () => {
       const tempDir = await mkdtemp(join(tmpdir(), "cf-ci-preview-"));
       try {
@@ -202,8 +272,7 @@ describe("Unit 04.01: Opt-in GitHub Actions quality gate generator (AC-02, AC-04
       assert.equal(guidance.provider, "gitlab");
       assert.ok(Array.isArray(guidance.commands), "Should return array of command strings");
       assert.ok(guidance.commands.some((cmd) => cmd.includes("doctor")), "Commands should include doctor");
-      assert.ok(guidance.commands.some((cmd) => cmd.includes("conform")), "Commands should include conform");
-      assert.ok(guidance.commands.some((cmd) => cmd.includes("conform verify")), "Commands should include conform verify");
+      assert.ok(guidance.commands.every((cmd) => !/\bconform\b/.test(cmd)));
     });
   });
 

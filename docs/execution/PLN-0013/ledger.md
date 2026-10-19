@@ -45,3 +45,21 @@ Modified files: ADRs 0029, 0035, 0039, new 0041, decision index, task and unit t
 ## Batch checkpoint
 
 AC-01 and AC-11 have focused positive and negative evidence. No later unit or phase has started. No merge, push, or full evaluation-suite completion is claimed; the prior 203/207 full-evaluation baseline remains to be addressed by later units. Pre-edit selection chronology is an explicit process limitation for this batch, not a claimed PASS. The current packet hashes the master plan but not individual unit files; branch/base and user-authorized unit reading were checked, while unit-content binding remains a handoff limitation for future review.
+
+## Unit 01.02 scope note before edits
+
+The reviewed unit owns the public CLI export, GitHub CI generator, its focused test, harness dispatcher, and CLI README. Updating tracked source hashes will also require `context-lock.json`; that generated lock is the only anticipated scope addition. The existing dispatcher has no `conform` command or help entry, so it may need no edit. The generator will inspect host `package.json` scripts while installing a workflow, emit configured pnpm checks, and reject an explicitly requested check whose script is absent. This preserves `app/cli/commands/init.mjs` outside the reviewed unit scope.
+
+## Unit 01.02 — CLI exports and generated CI
+
+Starting revision: `1b56271e28736d23dfe32b66682856f976741229`. The packet, released brief, exact task branch, clean checkout, and unchanged `master` base were verified before edits. `plan:check ... --json` exited 0 with 11 units, valid language rules, done-check, and handoff. Pre-edit `context-cli preflight ... --stack typescript --scope app/cli/index.mjs,app/cli/core/github-gate-generator.mjs,evals/tests/cli/github-gate.test.mjs --require-binding --json` exited 0 with binding `binding-adhoc-00-00-aaa149a7d1ee`, hash `sha256:aaa149a7d1ee75df419731264c4bf056bfcb52c2199e4894f1b1e75f971a1752`, and 47 directives. The `.mjs` scope was incorrectly labelled TypeScript by current preflight; this is selection evidence only and remains assigned to later scope work.
+
+| Evidence | Result |
+| --- | --- |
+| Test-first regression against original CLI/CI | `node --test evals/tests/cli/github-gate.test.mjs`: exit 1; missing public export, dead `conform` steps, missing configured checks, and false green for absent scripts were exposed. |
+| Focused contract and executable fixture after implementation | Same command: exit 0, 17/17; temporary host ran every emitted shell block, including dependency install, doctor, and four pnpm checks. Negative cases covered missing script, missing lock, failing script, foreign manager, unsafe command, and legacy workflow conflict. |
+| Public import | `node --input-type=module -e 'import("./app/cli/index.mjs")'`: exit 0. |
+| Factory checks | `pnpm run lint`: exit 0; `pnpm run test:unit`: exit 0, 40/40; `pnpm run build --out /tmp/pln0013-unit0102-bundle.json`: exit 0; `node scripts/validate-context.mjs`: exit 0; `node scripts/context.mjs doctor`: exit 0, 27/27; `git diff --check`: exit 0. |
+| Inventory and plan | `node scripts/context.mjs lock`: exit 0, digest `sha256:a29f6650e76cc7c89f802eb536fc3ead4c19553d2edc0d9a767cc299febbe465`; final `plan:check ... --json`: exit 0. |
+
+Modified files: `app/cli/index.mjs`, `app/cli/core/github-gate-generator.mjs`, `app/cli/README.md`, `evals/tests/cli/github-gate.test.mjs`, `context-lock.json`, and this ledger. `scripts/harness-cli.mjs` was inspected and had no dead `conform` dispatcher/help entry, so it was not changed. The factory package has no configured typecheck script. Full evaluation tests were not run for this unit; the prior 203/207 baseline remains open for later units. Human decision evidence is in the released brief. Phase 01 remains open, and this batch stops for developer inspection under the execute skill.

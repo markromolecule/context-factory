@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:0b671870197ad12ca8cb6aaaf320a9b766a5b3dad9ba802b2d24ec5a3b7724e2",
+  "digest": "sha256:a29f6650e76cc7c89f802eb536fc3ead4c19553d2edc0d9a767cc299febbe465",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
     "README.md": "sha256:e1836546e6da382288bb383363c77f4fc744f2ade8404ec7e778029d7817e234",
@@ -125,7 +125,7 @@
     "evals/tests/bridge/workflow-entry-contract.test.mjs": "sha256:875bf698099b3c00779239fcb346be58ba3b9ff19e23f2f18c3ee16f16ef81b2",
     "evals/tests/bridge/workflow-routing.test.mjs": "sha256:0b46c6f86b9cb51fe6c6f60fb8ee98bc58da77cf5ffcecd3917005620fb4a05c",
     "evals/tests/cli/active-contract.test.mjs": "sha256:5c6a2e3e153c04b9e22bc9e9c64a67985dc2ab5523fabd9ff53ea12a219b7cfe",
-    "evals/tests/cli/github-gate.test.mjs": "sha256:dba8284cddc12e7ff398c3cb076432e5a1c89f9ee6199cfe2d448f56758d5685",
+    "evals/tests/cli/github-gate.test.mjs": "sha256:1cd5b1c554a98f16ce692ea3a62aa81b263b2e83ed8316761db4206763a1c62a",
     "evals/tests/cli/help-output.test.mjs": "sha256:1d704db61c096a3b0e2c225723dacfeb56c39b3e41d8aec7feb9f8b93c73c9f7",
     "evals/tests/cli/hook-safety.test.mjs": "sha256:52cfec4d76dcc228c8056c6d87d34c92822aa9e2df8484a1dc9c8ca849fda5e7",
     "evals/tests/cli/host-status.test.mjs": "sha256:e1fb66b7189a933f06f1ccc4d0ae3a3731fadf77d340f3721c01c9d8ff567283",
