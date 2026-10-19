@@ -5,6 +5,12 @@ description: Create an evidence-backed, phased implementation plan without chang
 
 # Create an Implementation Plan
 
+## Access declaration
+
+- **Reads:** released discovery brief, grounding evidence, repository code, tests, configuration, and existing decisions.
+- **Writes:** the task branch and plan artifacts under `docs/tasks/`.
+- **Exposes to:** `plan-review` through the master plan and self-contained unit artifacts.
+
 Do not implement the feature while this skill is active unless the user explicitly expands the request.
 
 ## Why break plans into units

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:17c19e18f11eb20b611959dc4add8f27ab50f5dc4f3c189001cfbee1fe47c99f",
+  "digest": "sha256:0b671870197ad12ca8cb6aaaf320a9b766a5b3dad9ba802b2d24ec5a3b7724e2",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
     "README.md": "sha256:e1836546e6da382288bb383363c77f4fc744f2ade8404ec7e778029d7817e234",
@@ -246,7 +246,7 @@
     "skills/productivity/grounding/SKILL.md": "sha256:4d0b95535dc0420a7d0d88ff5970f4e97199222c0e674bfb9be390fc3d94ab6b",
     "skills/productivity/plan-review/SKILL.md": "sha256:dd88e42f9a3ea37a26a86e52dd68ac498050b5a996e7159cf3c1f735288aa921",
     "skills/productivity/plan-review/agents/openai.yaml": "sha256:5dedbf44f3c21cc4912f001c9990f4df98506a33edbfc1ee964a80f65185098f",
-    "skills/productivity/plan/SKILL.md": "sha256:23ba0f1cf13fb11d4d7bea0c867aba5cdd94120178ee7acf71455f250451d754",
+    "skills/productivity/plan/SKILL.md": "sha256:e4bdb1f3ddce85283a9f469f8c788dcc0eddd92cde1cde51172704e83c3e0781",
     "skills/productivity/plan/agents/openai.yaml": "sha256:14d0833d975634a5f605bf12900bbf437233866a28191de6438d8d7142a24bec",
     "skills/productivity/session/SKILL.md": "sha256:3f77877c7a22ee223ff7e4c49e72648f81ab7dd8e416e724fef6b5b6854df017",
     "skills/workflows/architecture-change/SKILL.md": "sha256:5b3419df41d2c92502f597638797c13d93c88cf69b0689556b5d2e7c94c56a03",
