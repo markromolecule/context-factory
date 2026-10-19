@@ -229,6 +229,13 @@ export function terms(value) {
   )];
 }
 
+function scopeLanguage(path) {
+  const extension = extname(path).toLowerCase();
+  if ([".ts", ".tsx", ".mts", ".cts"].includes(extension)) return "typescript";
+  if ([".js", ".jsx", ".mjs", ".cjs"].includes(extension)) return "javascript";
+  return "other";
+}
+
 function scoreEntry(requestTerms, path, meta) {
   const nameTerms = terms(`${meta.name ?? ""} ${path.split("/").at(-2) ?? ""}`);
   const descriptionTerms = terms(meta.description ?? "");
@@ -335,13 +342,15 @@ export async function resolveContext(request, options = {}) {
   const rawScopeArr = (Array.isArray(rawScope) ? rawScope : [rawScope])
     .flatMap((value) => typeof value === "string" ? value.split(",").map((p) => p.trim()).filter(Boolean) : []);
   const frameworkScope = await discoverFrameworkScope({ hostDir: effectiveHost, scope: rawScopeArr, request });
-  const appliesToScope = (meta) => {
-    const paths = rawScopeArr.length ? rawScopeArr : [""];
-    return paths.some((path) =>
-      (!rawScopeArr.length || !meta.appliesTo?.length || meta.appliesTo.some((glob) => matchesGlob(path, glob)))
-      && (!meta.frameworks?.length || meta.frameworks.some((f) => frameworkScope.byPath[path.replaceAll("\\", "/").replace(/^\.\//, "")]?.includes(f)))
-    );
+  const appliesToPath = (meta, path) => {
+    const normalized = path.replaceAll("\\", "/").replace(/^\.\//, "");
+    const extension = extname(normalized).toLowerCase();
+    return (!path || meta.stack !== "typescript" || [".ts", ".tsx"].includes(extension))
+      && (!path || !meta.appliesTo?.length || meta.appliesTo.some((glob) => matchesGlob(normalized, glob)))
+      && (!meta.frameworks?.length || meta.frameworks.some((framework) => frameworkScope.byPath[normalized]?.includes(framework)));
   };
+  const appliesToScope = (meta) => (rawScopeArr.length ? rawScopeArr : [""])
+    .some((path) => appliesToPath(meta, path));
 
   // Stack determination:
   // 1. Explicit options.stacks (array) or options.stack (string)
@@ -429,6 +438,30 @@ export async function resolveContext(request, options = {}) {
 
   // 2. Rule selection (scored + alwaysApply + agent declared rules, filtered by stack)
   const candidateRuleEntries = ruleEntries.filter((entry) => isRuleAllowed(entry.path) && allowedRulePaths.has(entry.path));
+  const coveragePaths = rawScopeArr.map((path) => {
+    const language = scopeLanguage(path);
+    const typescriptRulePaths = candidateRuleEntries
+      .filter((entry) => entry.meta.stack === "typescript" && appliesToPath(entry.meta, path))
+      .map((entry) => entry.path);
+    const supported = language === "typescript" && typescriptRulePaths.length > 0;
+    return {
+      path,
+      language,
+      status: supported ? "SUPPORTED" : "UNSUPPORTED",
+      typescriptRulePaths,
+      reason: supported
+        ? null
+        : language === "typescript"
+          ? "No TypeScript rule matches this path and package scope."
+          : "TypeScript directives do not apply to this file language; run applicable global and security checks.",
+    };
+  });
+  const coverage = {
+    status: coveragePaths.length === 0
+      ? "UNSCOPED"
+      : coveragePaths.every((item) => item.status === "SUPPORTED") ? "SUPPORTED" : "UNSUPPORTED",
+    paths: coveragePaths,
+  };
   const selectedRules = candidateRuleEntries
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
     .filter((entry) => (
@@ -706,6 +739,9 @@ export async function resolveContext(request, options = {}) {
     contextVersion: manifest.contextVersion,
     stacks: declaredStacks,
     frameworks: frameworkScope.frameworks,
+    frameworkPackages: frameworkScope.packageByPath,
+    frameworkSources: frameworkScope.sourceByPath,
+    coverage,
     request,
     requestTerms,
     agent: selectedAgent ? {

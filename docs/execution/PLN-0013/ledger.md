@@ -3,7 +3,7 @@
 Task branch: `refactor/PLN-0013-harden-typescript-harness`
 Target base: `master` at `e53ab5b1489618bedeee44292716acd1cd91249c`
 Approved packet: `docs/execution/PLN-0013/packet.json`
-Latest batch: unit 01.03; Phase 01 checkpoint ready for developer inspection. Full evaluation failures remain open.
+Latest batch: unit 02.02; Phase 02 in progress. Full evaluation failures remain open.
 
 ## Handoff and context
 
@@ -104,3 +104,21 @@ Starting revision: `dbcccb3`. The approved packet, released brief, exact task br
 | Broader suite | `node --test evals/tests/**/*.test.mjs`: exit 1, 218/223. Five failures are the same three underlying host discovery and execution-skill wording assertions present before 02.01. No broader-suite PASS, push, tag, or release is claimed; shipping remains gated until they are resolved. |
 
 Modified files: `scripts/context-core.mjs`, new `evals/tests/resolver/intent-routing.test.mjs`, `context-manifest.json`, `context-lock.json`, and this ledger. AC-04 has positive and negative executable evidence. The released brief contains the required human decisions. This completes only the ready 02.01 batch and stops for its developer checkpoint.
+
+## Unit 02.02 scope note before edits
+
+The user invoked `execute` after the 02.01 checkpoint, authorizing the next ready batch, unit 02.02. The approved packet and released brief verified; branch `refactor/PLN-0013-harden-typescript-harness` is clean at `4c9f915`, its `master` merge base remains `e53ab5b1489618bedeee44292716acd1cd91249c`, and `plan:check` passed with 11 valid units. An initial `plan:check` attempt pointed at the master `.md` file and failed `ENOTDIR`; rerunning it against the task directory passed. The reviewed 02.02 unit depends on the committed 02.01 receipt and owns `scripts/framework-scope.mjs`, `scripts/context-core.mjs`, and new `evals/tests/resolver/framework-scope.test.mjs`. Registering the new test requires `context-manifest.json`; synchronizing canonical source hashes requires `context-lock.json`. These inventory files and this ledger are the only anticipated scope additions. The `.mjs` source is outside TypeScript preflight support, so no TypeScript conformance claim will be made for this unit.
+
+## Unit 02.02 execution receipt and checkpoint
+
+Starting revision: `4c9f9151e102646ea3ce075d318f8df5a9cd9eec`. The approved packet, released brief, exact task branch, clean checkout, target `master` base, committed 02.01 receipt, and final `plan:check` (11 valid units) were verified. The unit's `.mjs` implementation is unsupported by TypeScript preflight; no code conformance PASS is claimed. Applicable rule hashes remain `cf.evidence.scope-fencing` and `cf.evidence.verification` at `sha256:ed699151d7d034cb2ce4b00fbf10236fd8bf2b7f701761d4f6f17bc7486d88af`, and `cf.quality.tests-for-behavior-changes` at `sha256:4c42d15b81106b8bb6c117edd3d88808740db4f09f175f0112588990d887fa25`.
+
+| Evidence | Result |
+| --- | --- |
+| Test-first integration cases | New `node --test evals/tests/resolver/framework-scope.test.mjs`: exit 1, 0/6 against baseline. It exposed prompt-only scoped framework inference, TypeScript rule leakage into JS/JSX, and absent package/coverage receipts. After implementation and fixture coverage: exit 0, 9/9. Adjacent intent/workflow routing: exit 0, combined 23/23. |
+| Package and language behavior | Fixture root Next, sibling React/Solid/plain, and nested Next packages resolve each affected TS/TSX file to its owning `package.json`; sibling and prompt words do not cross the package boundary. React hook `.ts` selects React guidance. Scoped JS/JSX returns `UNSUPPORTED` TypeScript coverage, mixed TSX+JS reports each path separately, and `.mts` without matching TypeScript rules reports explicit unsupported coverage. Applicable global/security selection remains on `.js`; the current global rule metadata does not list `.jsx`, a catalog applicability gap for later rules work. Unscoped prompt hints are marked `request-hint`, never presented as package evidence. |
+| Compatibility and host checks | The first implementation regressed no-scope selection (`pnpm run test`: 21/27, then 26/27); preserving provisional hints only without affected scope restored exit 0, 27/27. Final `pnpm run lint`: exit 0; `pnpm run test:unit`: exit 0, 50/50; `pnpm run build`: exit 0; `node scripts/context.mjs doctor`: exit 0, 27/27; `node scripts/validate-context.mjs`: exit 0; `git diff --check`: exit 0. No typecheck script is configured for this JavaScript unit. |
+| Inventory | `node scripts/context.mjs lock`: exit 0, digest `sha256:a291f2d99db2ce2a5c2956af6e24e0bc3b8b0138e3416ad2f8e44f11d6c76e87`; the new resolver test is registered in `context-manifest.json`. |
+| Broader suite | `node --test evals/tests/**/*.test.mjs`: exit 1, 227/232. Five failures remain the same three underlying host discovery and execution-skill wording assertions seen before 02.02. This unit makes no broader-suite PASS, push, tag, or release claim. |
+
+Modified files: `scripts/framework-scope.mjs`, `scripts/context-core.mjs`, new `evals/tests/resolver/framework-scope.test.mjs`, `context-manifest.json`, `context-lock.json`, and this ledger. AC-05 has package, language, and unsupported-coverage evidence. The released brief contains the required human decisions. This completes only the ready 02.02 batch and stops for developer inspection.

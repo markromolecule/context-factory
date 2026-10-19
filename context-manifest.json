@@ -195,6 +195,7 @@
     "evals/tests/lifecycle/plan-id-reservation.test.mjs",
     "evals/tests/lifecycle/skill-access-check.test.mjs",
     "evals/tests/lifecycle/task-scaffold.test.mjs",
+    "evals/tests/resolver/framework-scope.test.mjs",
     "evals/tests/resolver/intent-routing.test.mjs",
     "evals/tests/rules/backend-dto-serialization.test.mjs",
     "evals/tests/rules/backend-module-architecture.test.mjs",
