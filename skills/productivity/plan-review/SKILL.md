@@ -19,4 +19,4 @@ Issue a packet only after review and human approval:
 node scripts/context.mjs handoff:issue-packet <plan> <packet> --review <review-reference> --approval <approval-reference>
 ```
 
-The packet is the sole plan-derived input exposed to execute. A stale brief, failed review, missing approval, failed done-check, or wrong branch stops review. Include the verified task branch and target base in the packet.
+The packet is the approval and branch/base handoff exposed to execute. The reviewed unit files carry their own exact write scopes and must match the packet's branch/base identity; execute does not read the master plan. A stale brief, failed review, missing approval, failed done-check, or wrong branch stops review. Include the verified task branch and target base in the packet.

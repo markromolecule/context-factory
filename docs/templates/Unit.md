@@ -56,9 +56,8 @@ Copied in, not referenced — this is what lets the unit run without the master 
   - Test type(s): unit / integration / architecture / contract / migration / other — one line justifying each, per the criteria in the `plan` skill.
   - Cases: specific scenarios, not "add tests"
   - Commands: how to run them
-- **Conformance Gate:**
-  - Command: `context-cli conform --scope <modified-files> --out .context-runs/<report-id>/conformance-report.json`
-  - Conformance Report: `[report.id]` (Verdict: PASS | Diff Hash: `sha256:...` | Binding Hash: `sha256:...`)
+- **Host checks:** List each configured, applicable pnpm lint, typecheck, test, or build command with host root, scope, revision, exit code, and receipt path. Mark absent optional checks `unconfigured`; a missing required check blocks the unit.
+- **Human evidence:** Name any evidence-blocking directive or lifecycle checkpoint and its human receipt. A rule-selection binding is not code verification.
 
 ## Rollback
 
@@ -71,4 +70,4 @@ How to revert this unit alone.
 - [ ] Changes committed cleanly to the task branch
 - [ ] Zero scope leaks confirmed via `/review`
 - [ ] All listed verification passes
-- [ ] Conformance report passes (PASS) with zero blocking violations
+- [ ] Configured host checks pass, required checks are present, and evidence-blocking human receipts are attached

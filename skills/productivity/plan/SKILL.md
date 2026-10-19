@@ -59,7 +59,7 @@ Include:
 - the task branch and its verified target base and base commit in the plan and every unit;
 - finalization lifecycle from task branch to target branch;
 - modular unit breakdowns with concrete files, functions, and checklists, each carrying its own standalone context packet;
-- unit-scoped language rule binding (`<language_rules>`) carrying stable directive IDs, explicit enforcement modes (`automated-blocking`, `evidence-blocking`, `advisory`), content hashes, and explicit rule-satisfaction mapping in unit steps;
+- unit-scoped language rule binding (`<language_rules>`) carrying stable directive IDs, explicit enforcement modes (`automated-blocking`, `evidence-blocking`, `advisory`), content hashes, and explicit rule-satisfaction mapping in unit steps; describe this as selection evidence, not code verification;
 - a test plan per unit, typed (unit/integration/architecture/contract/migration/etc.) and justified by what the unit actually changes;
 - migration, environment, security, observability, and rollback impact when relevant — at the unit level where the impact is unit-scoped, at the phase level where it isn't;
 - dependencies and blockers;

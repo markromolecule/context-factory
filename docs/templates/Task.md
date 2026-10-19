@@ -26,7 +26,7 @@ Link the canonical glossary; do not duplicate implementation details here.
 ### Language stack and applicable rules
 
 - **Declared Stack:** e.g. `typescript`
-- **Rule Binding ID & Hash:** `binding-{{task_id}}` (`sha256:...`) compiled via `context-cli preflight`
+- **Rule selection receipt:** record scope, directive IDs, source hashes, and binding ID/hash when `context-cli preflight` supports the scope. A binding selects rules; it does not verify changed code.
 - **Active Directives:**
 
 | Directive ID | Mode | Rule Path | Verifier |
@@ -94,7 +94,7 @@ Record the command or inspection, outcome, and the acceptance criterion it suppo
 
 ## Finalization & Merge Ledger
 
-| Stage | Branch or merge | Commit SHA | Conformance Report | Verification Command |
+| Stage | Branch or merge | Commit SHA | Host checks and human evidence | Verification Command |
 |---|---|---|---|---|
 | Phase 01 Verification | `{{task_branch}}` | pending | pending | `pnpm test` |
 | Task Finalization | `{{task_branch}}` to `{{target_branch}}` | pending | pending | `node scripts/context.mjs doctor` |
