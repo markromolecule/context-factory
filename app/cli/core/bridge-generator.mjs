@@ -482,14 +482,14 @@ export function buildSharedEnforcementDirectives({
       text: `For material code changes, run \`${cliCmd} preflight "<task description>" --stack <stack> --scope <files>\` before editing.`,
     },
     {
-      key: "authoritative-conformance",
-      title: "Authoritative Conformance",
-      text: `After material code changes, run \`${cliCmd} conform "<task description>" --stack <stack> --scope <files>\`.`,
+      key: "host-verification",
+      title: "Host Verification",
+      text: `After material code changes, execute configured host verification checks (lint, typecheck, test, build). Stop on failure.`,
     },
     {
       key: "fail-closed",
       title: "Fail-Closed Gate",
-      text: `Stop on FAIL or BLOCKED. Do not replace test or conformance evidence with self-attestation; waivers require human authorization.`,
+      text: `Stop on FAIL or BLOCKED. Do not replace test or verification evidence with self-attestation; waivers require human authorization.`,
     },
     {
       key: "completion",
@@ -509,7 +509,6 @@ export function buildSharedEnforcementDirectives({
       `| \`/plan\`, \`[PLAN]\` | Scaffold phased plan in \`./docs/tasks/\` | \`${scriptCmd} task:new "<title>" --base <target-branch>\` |`,
       `| \`/resolve\` | Resolve matching context rules & skills | \`${scriptCmd} resolve "<prompt>"\` |`,
       `| \`/preflight\` | Verify descriptor and rule bindings | \`${cliCmd} preflight "<prompt>"\` |`,
-      `| \`/conform\` | Execute stack conformance evaluation | \`${cliCmd} conform "<prompt>"\` |`,
       `| \`/doctor\` | Verify context and lock health | \`${scriptCmd} doctor\` |`,
     ].join("\n");
   }
@@ -694,7 +693,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
 
 This repository connects to **Context Factory** at \`${normalizedFactoryPath}\` for engineering standards, workflows, and subagent orchestration contracts.
 
-## Mandatory Guidelines & Conformance Gates
+## Mandatory Guidelines & Quality Gates
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
 `;
@@ -712,7 +711,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
 
 This repository connects to Context Factory at \`${normalizedFactoryPath}\`.
 
-## Mandatory Directives & Conformance Gates
+## Mandatory Directives & Quality Gates
 
 ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPrefix, format: "bullet" })}
 `;
@@ -809,6 +808,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
       entries: [
         { path: `${skillsRelDir}/engineering` },
         { path: `${skillsRelDir}/productivity` },
+        { path: `${skillsRelDir}/workflows` },
       ],
     };
 
@@ -890,11 +890,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
         ? wfPath.split("/").at(-2)
         : basename(wfPath, ".md");
       const adapterName = `workflow-${slug}`;
-      const relWfDir = existsSync(join(absFactoryPath, `skills/workflows/${slug}`))
-        ? `skills/workflows/${slug}`
-        : (existsSync(join(absFactoryPath, `skills/workflow-entries/workflow-${slug}`))
-            ? `skills/workflow-entries/workflow-${slug}`
-            : `skills/workflows/${slug}`);
+      const relWfDir = `skills/workflows/${slug}`;
       const linkPath = join(dotAgentsSkillsDir, adapterName);
       const sourcePath = existsSync(join(absFactoryPath, relWfDir))
         ? join(absFactoryPath, relWfDir)
@@ -919,11 +915,7 @@ ${buildSharedEnforcementDirectives({ normalizedFactoryPath, scriptPrefix, cliPre
         const slug = wfPath.endsWith("/SKILL.md")
           ? wfPath.split("/").at(-2)
           : basename(wfPath, ".md");
-        const relDir = existsSync(join(absFactoryPath, `skills/workflows/${slug}`))
-          ? `skills/workflows/${slug}`
-          : (existsSync(join(absFactoryPath, `skills/workflow-entries/workflow-${slug}`))
-              ? `skills/workflow-entries/workflow-${slug}`
-              : `skills/workflows/${slug}`);
+        const relDir = `skills/workflows/${slug}`;
         workflowEntries.push({
           adapterName: `workflow-${slug}`,
           sourceRelDir: relDir,

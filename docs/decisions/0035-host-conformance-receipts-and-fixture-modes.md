@@ -1,7 +1,8 @@
 ---
 title: Host Conformance Receipts and Offline Fixture Modes
 type: decision
-status: accepted
+status: superseded
+superseded_by: "0041-runtime-conformance-removal-and-host-checks"
 created: "2026-10-09"
 tags: [adr, conformance, typescript, receipts, fixtures]
 ---

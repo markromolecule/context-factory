@@ -57,9 +57,11 @@ Launches the streamlined setup wizard to onboard and bridge Context Factory into
    - `[4] Trae` — Scaffolds `.trae/rules/project_rules.md` and `AGENTS.md`.
    - `[5] All IDEs` — Bridges all supported editors for mixed-editor teams.
 4. **Local Hook Opt-In:** Optionally installs an atomic, non-clobbering git pre-commit hook.
-5. **CI Quality Gate Opt-In:** Optionally installs a GitHub Actions workflow (`.github/workflows/context-factory-gate.yml`) with recursive submodule checkout, health check, and conformance verification.
+5. **CI Quality Gate Opt-In:** Optionally installs a GitHub Actions workflow (`.github/workflows/context-factory-gate.yml`) with recursive submodule checkout, factory health, and configured pnpm lint, typecheck, test, and build scripts. Unconfigured checks are labelled as skipped; an explicitly requested missing script fails installation.
 
 > **Migration Note for CI & Automation:** When running non-interactively in repositories without detected editor folders, `init` requires an explicit `--ide <profile>` (e.g. `--ide vscode`, `--ide cursor`, or `--ide all`). The previous silent fallback to all IDEs has been removed to prevent accidental file scaffolding. Existing automation should pass `--ide all` explicitly.
+
+The CI generator reads `package.json` and emits `pnpm run lint`, `typecheck`, `test`, and `build` only for scripts the host declares. Configured checks require `pnpm-lock.yaml`; an explicit `--lint-command` or `--test-command` must name an existing pnpm script. Existing generated workflows with the former conformance marker conflict with the new gate: inspect the diff, then use `--force` to replace one intentionally.
 
 ```sh
 # Interactive guided setup (smart scanner & multi-select menu)

@@ -7,6 +7,8 @@ tags: [adr, typescript, workflows, skills, cleanup, model-neutral]
 supersedes: "0038-host-native-workflow-entries"
 ---
 
+> The runtime `conform` clause below was superseded by [[docs/decisions/0041-runtime-conformance-removal-and-host-checks|ADR 0041]]. The workflow and TypeScript catalog decisions remain active.
+
 # 0039 — First-Class Workflow Skills and Dedicated TypeScript Consolidation
 
 ## Context
@@ -34,7 +36,7 @@ Adopt **Option 3**:
 1. **First-Class Workflow Skills:** Consolidate all 12 workflows into `skills/workflows/<slug>/SKILL.md`. Each file contains valid skill frontmatter and the full lifecycle orchestration policy.
 2. **Symlink Collision Avoidance:** In `.agents/skills/` and `.claude/skills/`, workflow skills are symlinked as `workflow-<slug>` (pointing to `skills/workflows/<slug>`), while procedural skills are symlinked by their short name (e.g., `docs`, `execute`, `plan`). This avoids filesystem collisions (e.g., `skills/productivity/docs` vs `skills/workflows/docs`) while preserving native host discovery (`/workflow-<slug>`, `$workflow-<slug>`).
 3. **Model-Neutral Root:** Remove `AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `GEMINI.md`, `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md`, and `orchestrator/{AGENTS,CLAUDE,CODEX,GEMINI}.md`. `orchestrator/SHARED.md` and `README.md` are the single authoritative contracts.
-4. **Dedicated TypeScript Stack:** Hardcode `typescript` as the sole native environment across `conform`, `preflight`, and `resolve`. Remove `flutter` and `laravel` from schemas and doctor diagnostics. Non-TypeScript requests fail closed with informative BLOCKED diagnostics.
+4. **Dedicated TypeScript Stack:** Hardcode `typescript` as the sole native environment across the then-planned `conform`, `preflight`, and `resolve` commands. Remove `flutter` and `laravel` from schemas and doctor diagnostics. Non-TypeScript requests fail closed with informative BLOCKED diagnostics. ADR 0041 supersedes the runtime `conform` portion of this historical decision.
 
 ## Consequences
 

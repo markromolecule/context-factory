@@ -47,3 +47,4 @@ Store durable decisions as `NNNN-kebab-case-title.md`. Start from [[docs/templat
 - [[docs/decisions/0038-host-native-workflow-entries|Host-Native Entries for Canonical Workflows]]
 - [[docs/decisions/0039-first-class-workflow-skills-and-typescript-consolidation|First-Class Workflow Skills and Dedicated TypeScript Consolidation]]
 - [[docs/decisions/0040-pnpm-only-package-manager|pnpm-only package management]]
+- [[docs/decisions/0041-runtime-conformance-removal-and-host-checks|Runtime Conformance Removal and Explicit Host Checks]]

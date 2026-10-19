@@ -26,6 +26,7 @@ export function usage() {
 Usage:
   node scripts/harness-cli.mjs init [<target>] [--ide <name>] [--method <submodule|linked>]
   node scripts/harness-cli.mjs resolve <request>
+  node scripts/harness-cli.mjs preflight <request> --scope <paths> [--stack typescript] [--json]  # selection only
   node scripts/harness-cli.mjs bundle <request> [--out <path>]
   node scripts/harness-cli.mjs explain <run-id-or-bundle-path>
   node scripts/harness-cli.mjs run <request> [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>] [--stack <name>] [--scope <paths>] [--require-binding]

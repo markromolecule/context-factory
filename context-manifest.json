@@ -174,13 +174,15 @@
     "docs/decisions/0037-operation-first-backend-modules.md",
     "docs/decisions/0038-host-native-workflow-entries.md",
     "docs/decisions/0039-first-class-workflow-skills-and-typescript-consolidation.md",
-    "docs/decisions/0040-pnpm-only-package-manager.md"
+    "docs/decisions/0040-pnpm-only-package-manager.md",
+    "docs/decisions/0041-runtime-conformance-removal-and-host-checks.md"
   ],
   "tools": [
     "evals/run-evals.mjs",
     "evals/tests/bridge/bridge-conformance.test.mjs",
     "evals/tests/bridge/workflow-entry-contract.test.mjs",
     "evals/tests/bridge/workflow-routing.test.mjs",
+    "evals/tests/cli/active-contract.test.mjs",
     "evals/tests/cli/github-gate.test.mjs",
     "evals/tests/cli/help-output.test.mjs",
     "evals/tests/cli/hook-safety.test.mjs",
@@ -193,6 +195,8 @@
     "evals/tests/lifecycle/plan-id-reservation.test.mjs",
     "evals/tests/lifecycle/skill-access-check.test.mjs",
     "evals/tests/lifecycle/task-scaffold.test.mjs",
+    "evals/tests/resolver/framework-scope.test.mjs",
+    "evals/tests/resolver/intent-routing.test.mjs",
     "evals/tests/rules/backend-dto-serialization.test.mjs",
     "evals/tests/rules/backend-module-architecture.test.mjs",
     "evals/tests/rules/backend-testing.test.mjs",

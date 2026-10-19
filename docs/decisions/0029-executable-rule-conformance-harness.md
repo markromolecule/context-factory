@@ -1,7 +1,8 @@
 ---
 title: "Executable Rule Conformance Harness"
 type: decision
-status: accepted
+status: superseded
+superseded_by: "0041-runtime-conformance-removal-and-host-checks"
 created: "2026-10-06"
 tags: [adr, rules, harness, conformance, validation, adapters, evidence, llm]
 ---

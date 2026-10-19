@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { readFile, readdir } from "node:fs/promises";
+import { readFile, readdir, lstat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { createLock, readJson, root } from "../../../scripts/context-core.mjs";
 
@@ -30,30 +30,113 @@ async function inspectGitmodules(hostDir) {
 }
 
 /**
- * Finds the latest conformance report file if one exists.
+ * Evaluates whether a report matches the required identity tuple:
+ * hostRoot, scope, bindingHash, revision.
+ *
+ * @param {object} report
+ * @param {object} criteria
+ * @returns {{ matches: boolean, status?: string, reason?: string }}
+ */
+export function evaluateReportIdentity(report, criteria = {}) {
+  if (!report || typeof report !== "object") {
+    return { matches: false, status: "invalid_report", reason: "Corrupted report object" };
+  }
+
+  // 1. Host Root validation
+  if (criteria.hostDir && report.hostRoot) {
+    const normTarget = resolve(criteria.hostDir).replaceAll("\\", "/");
+    const normReportHost = resolve(report.hostRoot).replaceAll("\\", "/");
+    if (normTarget !== normReportHost) {
+      return {
+        matches: false,
+        status: "foreign",
+        reason: `Report was generated for a different host (${normReportHost})`,
+      };
+    }
+  }
+
+  // 2. Scope validation
+  if (criteria.scope && Array.isArray(criteria.scope) && criteria.scope.length > 0) {
+    const reportScope = Array.isArray(report.scope)
+      ? report.scope
+      : (Array.isArray(report.scopedFiles) ? report.scopedFiles : (typeof report.scope === "string" ? report.scope.split(",") : []));
+    const normTargetScope = [...criteria.scope].map((s) => s.trim().replaceAll("\\", "/")).sort();
+    const normReportScope = reportScope.map((s) => s.trim().replaceAll("\\", "/")).sort();
+    if (normReportScope.length === 0 || JSON.stringify(normTargetScope) !== JSON.stringify(normReportScope)) {
+      return {
+        matches: false,
+        status: "scope_mismatch",
+        reason: "Report scope does not match target scope",
+      };
+    }
+  }
+
+  // 3. Binding Hash validation
+  if (criteria.binding) {
+    const reportBinding = report.bindingHash || report.binding;
+    if (!reportBinding || reportBinding !== criteria.binding) {
+      return {
+        matches: false,
+        status: "binding_mismatch",
+        reason: `Report binding does not match target binding (${criteria.binding})`,
+      };
+    }
+  }
+
+  // 4. Revision / Diff Hash validation
+  if (criteria.revision) {
+    const reportRevision = report.revision || report.gitCommit || report.diffHash;
+    if (!reportRevision || reportRevision !== criteria.revision) {
+      return {
+        matches: false,
+        status: "stale",
+        reason: `Report revision (${reportRevision || "unknown"}) does not match target revision (${criteria.revision})`,
+      };
+    }
+  }
+
+  return { matches: true };
+}
+
+/**
+ * Finds all conformance/verification reports in a directory, ordered newest first.
  *
  * @param {string} searchDir
- * @returns {Promise<object | null>}
+ * @returns {Promise<Array<object>>}
  */
-async function findLatestConformanceReport(searchDir) {
+async function findReportsInDirectory(searchDir) {
   const runsDir = join(searchDir, ".context-runs");
   if (!existsSync(runsDir)) {
-    return null;
+    return [];
   }
 
   try {
     const entries = await readdir(runsDir, { recursive: true });
-    const reportFiles = entries.filter((entry) => entry.endsWith("conformance-report.json"));
+    const reportFiles = entries.filter((entry) => entry.endsWith("conformance-report.json") || entry.endsWith("report.json"));
     if (reportFiles.length === 0) {
-      return null;
+      return [];
     }
 
-    // Pick first available report file for receipt inspection
-    const reportPath = join(runsDir, reportFiles[0]);
-    const reportContent = await readFile(reportPath, "utf8");
-    return JSON.parse(reportContent);
+    const loaded = [];
+    for (const relPath of reportFiles) {
+      const fullPath = join(runsDir, relPath);
+      try {
+        const content = await readFile(fullPath, "utf8");
+        const parsed = JSON.parse(content);
+        const stat = await lstat(fullPath).catch(() => null);
+        const rawTime = parsed.timestamp || parsed.generatedAt || parsed.createdAt;
+        const timeMs = rawTime ? Date.parse(rawTime) : (stat?.mtimeMs || 0);
+        loaded.push({
+          report: parsed,
+          timeMs: Number.isNaN(timeMs) ? 0 : timeMs,
+        });
+      } catch { }
+    }
+
+    loaded.sort((a, b) => b.timeMs - a.timeMs);
+    return loaded.map((item) => item.report);
   } catch {
-    return null;
+    return [];
   }
 }
 
@@ -73,6 +156,9 @@ async function findLatestConformanceReport(searchDir) {
 export async function probeHostState(options = {}) {
   const hostDir = resolve(options.hostDir || process.cwd());
   const factoryDir = resolve(options.factoryDir || root);
+  const scope = options.scope || options.scopedFiles || null;
+  const binding = options.binding || options.bindingHash || null;
+  const revision = options.revision || options.gitCommit || options.diffHash || null;
 
   // 1. Host Setup Probe
   let setupState = {
@@ -171,21 +257,47 @@ export async function probeHostState(options = {}) {
   }
 
   // 3. Code Conformance Probe (Never inferred from editor or doctor)
+  // Host-first discovery: search hostDir first; never adopt factoryDir reports when hostDir !== factoryDir
+  let availableReports = await findReportsInDirectory(hostDir);
+  if (availableReports.length === 0 && hostDir === factoryDir) {
+    availableReports = await findReportsInDirectory(factoryDir);
+  }
+
   let conformanceState = {
     status: "no_report",
     reason: "No authoritative code-conformance report found for current changes",
-    nextCommand: 'context-cli conform "<task-description>"',
+    nextCommand: "pnpm test",
     reportId: null,
   };
 
-  const latestReport = await findLatestConformanceReport(factoryDir) || await findLatestConformanceReport(hostDir);
-  if (latestReport) {
-    conformanceState = {
-      status: latestReport.verdict || "UNKNOWN",
-      reason: `Conformance verdict is ${latestReport.verdict || "UNKNOWN"} (report: ${latestReport.reportId || "unidentified"})`,
-      nextCommand: latestReport.verdict === "PASS" ? "context-cli status" : 'context-cli conform "<task-description>"',
-      reportId: latestReport.reportId || null,
-    };
+  if (availableReports.length > 0) {
+    const latestReport = availableReports[0];
+    const identityResult = evaluateReportIdentity(latestReport, {
+      hostDir,
+      scope,
+      binding,
+      revision,
+    });
+
+    if (!identityResult.matches) {
+      conformanceState = {
+        status: identityResult.status || "UNKNOWN",
+        reason: identityResult.reason || "Report identity mismatch",
+        nextCommand: "pnpm test",
+        reportId: latestReport.reportId || null,
+      };
+    } else {
+      const verdict = latestReport.verdict || "UNKNOWN";
+      const isPass = verdict.toUpperCase() === "PASS";
+      conformanceState = {
+        status: isPass ? "PASS" : verdict,
+        reason: isPass
+          ? `Code verification PASSED (report: ${latestReport.reportId || "unidentified"})`
+          : `Code verification verdict is ${verdict} (report: ${latestReport.reportId || "unidentified"})`,
+        nextCommand: isPass ? "context-cli status" : "pnpm test",
+        reportId: latestReport.reportId || null,
+      };
+    }
   }
 
   // 4. Determine Single Next Action

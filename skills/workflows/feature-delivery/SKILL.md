@@ -23,6 +23,12 @@ skills:
 
 Use when a request adds or materially changes user-visible or system behavior. Compose this workflow with a more specific workflow when security, migration, or dependency risk is central.
 
+- **T0 (Direct Questions / Factual Inquiries):** Inquiries regarding existing features, code explanation, or factual questions require no workflow; answer directly from inspected evidence.
+- **T1 (Small Isolated Changes):** Single-file modifications with no public API, schema, authorization, or dependency impact require proportional tests and direct implementation without a multi-phase task plan.
+- **T2 (Scoped Feature Delivery):** Multi-file feature delivery or changes affecting public API surfaces. Requires context resolution, a task plan under `docs/tasks/`, preflight receipt, and phased execution.
+- **T3 (New System / Product / Ambiguous Capability):** Greenfield services, new products, or materially ambiguous capabilities. Requires pre-planning discovery with `context` or `grill` first, releasing a verified brief, implementation planning with `plan`, and explicit plan approval via `plan-review` before production execution begins.
+
+
 ## Required inputs
 
 - Desired outcome, actors, and measurable acceptance criteria.

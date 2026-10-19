@@ -91,7 +91,7 @@ Load in this order, stopping when the task is covered:
 
 **Context receipt.** `[policy]` For T2 and T3, record what was loaded and why (resolver output, rules, workflow, knowledge IDs). A reviewer must be able to reproduce the selection.
 
-**Rule binding.** `[gate]` Before editing code in any stack, resolve rules with explicit stack and file scope and read the selected rule text. Stack-specific pre-edit steps live in [`docs/RULES.md`](docs/RULES.md).
+**Rule selection.** `[policy]` Before editing code, resolve applicable rules for the actual file scope and read the selected rule text. Record the scope and source hashes. `preflight` is a selection receipt where supported; it does not verify code, and its current PASS label must not be reused as a TypeScript code PASS for JavaScript or JSX. Stack-specific pre-edit steps live in [`docs/RULES.md`](docs/RULES.md).
 
 ---
 
@@ -119,7 +119,7 @@ Multi-stage work follows these stages. Stages may be skipped only where the tier
 | **DESIGN** (as needed) | Architect, Data, UX, Threat | Boundary, schema, UI, or trust-boundary impact | ADR, migration design, interaction spec, or threat model | Owner records the output; conflicts follow §8 |
 | **PLAN** | PM | Discovery released | Phased plan in `docs/tasks/`; task branch created (`plan` alone creates it) | PM |
 | **PLAN_REVIEW** | PM | Plan exists | `node scripts/context.mjs plan:check` passes; approval recorded | User approval (required for T3) |
-| **EXEC** | Developer | Approved review packet; task branch verified; preflight receipt valid | Failing test first, then change confined to the unit's allowed files | Verification evidence for the unit |
+| **EXEC** | Developer | Approved review packet; task branch verified; reviewed unit scope and rule selection recorded | Failing test first, then change confined to the unit's allowed files | Host-check and human evidence for the unit |
 | **TEST** | Reviewer/QA (independent, §8) | Unit complete | Changed files checked against allowed files; acceptance criteria verified against reproducible evidence | Reviewer |
 | **SHIP** | DevOps | TEST clean | Commit, push, release verification | Explicit user authorization (§7) |
 
@@ -181,7 +181,7 @@ Role definitions live in `agents/` and workflows in `skills/workflows/`. Slash c
 
 Workflows coordinate roles. They do not replace role judgment or user authorization.
 
-**Handoff.** `[policy]` Every handoff states the task ID, allowed files (write scope), inputs, and expected output, validated against `/schemas` where a schema exists. Each file has one writer at a time. Every role returns its artifact plus its claim ledger (§5).
+**Handoff.** `[policy]` The review packet records approval, task branch, and target base. The matching reviewed unit artifact states the task ID, allowed files (write scope), inputs, and expected output. Execute checks both before editing. Each file has one writer at a time. Every role returns its artifact plus its claim ledger (§5).
 
 **Arbitration.**
 
@@ -196,7 +196,9 @@ Workflows coordinate roles. They do not replace role judgment or user authorizat
 
 ## 9. Evidence, receipts, and waivers
 
-**Rule-binding receipt.** `[gate]` Material code changes require a deterministic receipt (`binding.id`, `bindingHash`) compiled before execution with `context-cli preflight`. A receipt is stale when any governed file changes after it was issued; recompile before continuing.
+**Rule-selection receipt.** `[policy]` Record affected scope, applicable directive IDs, source hashes, and a binding ID/hash when `context-cli preflight` supports that scope. Missing scope or directive coverage cannot be called a material TypeScript PASS. A selection receipt is stale when governed inputs change and must be refreshed; it never proves changed code conforms.
+
+**Host-check receipts.** `[policy]` For each applicable configured pnpm lint, typecheck, test, and build check, record the command, host root, scope, revision or diff identity, exit code, and result. A missing required check blocks progress; an absent optional check is `unconfigured`, never PASS. Keep evidence-blocking human receipts separate. Doctor and preflight cannot substitute for either kind of evidence (ADR 0041).
 
 **No self-attestation.** `[gate]` Completion claims require verified test artifacts.
 
@@ -209,7 +211,7 @@ Workflows coordinate roles. They do not replace role judgment or user authorizat
 
 Agent-authored or self-authorized waivers are rejected. Authorization MUST be verifiable outside the agent's own output (for example, a commit by the maintainer or a CODEOWNERS-protected file), not just a string field.
 
-References: ADR 0029, AC-08 (link to `docs/decisions/` entries).
+References: ADR 0041 and historical ADR 0029.
 
 ---
 

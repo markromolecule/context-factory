@@ -168,4 +168,54 @@ describe("Unit 03.01: Resolver Boundaries and Host Guidance (AC-03, AC-07)", () 
       );
     }
   });
+
+  it("routes direct information requests and small T1 changes without forcing heavy workflows (AC-07)", async () => {
+    // Direct information queries (T0)
+    const whereRes = await resolveContext("where is the preflight command defined?");
+    assert.equal(whereRes.workflow, null, "factual location query must not force a workflow");
+
+    // Small comment/helper changes (T1)
+    const typoRes = await resolveContext("typo in documentation comment");
+    assert.equal(typoRes.workflow, null, "comment typo must not force a workflow");
+
+    const helperRes = await resolveContext("rename private variable in internal helper");
+    assert.equal(helperRes.workflow, null, "small private helper rename must not force a workflow");
+  });
+
+  it("routes material changes (T2/T3) to coordinating workflows with required inputs (AC-07)", async () => {
+    // Material feature delivery (T2/T3)
+    const featRes = await resolveContext("implement new OAuth2 authentication provider across api and frontend");
+    assert.equal(featRes.workflow?.path, "skills/workflows/feature-delivery/SKILL.md");
+    assert.ok(featRes.workflow?.reason, "workflow reason must be inspectable");
+
+    // Material database migration (T2/T3)
+    const dbRes = await resolveContext("restructure database tables and add backfill migration");
+    assert.equal(dbRes.workflow?.path, "skills/workflows/database-migration/SKILL.md");
+    assert.ok(dbRes.workflow?.reason, "workflow reason must be inspectable");
+
+    // Material architecture change (T2/T3)
+    const archRes = await resolveContext("change architecture and dependency direction");
+    assert.equal(archRes.workflow?.path, "skills/workflows/architecture-change/SKILL.md");
+    assert.ok(archRes.workflow?.reason, "workflow reason must be inspectable");
+  });
+
+  it("enforces stop conditions and blocks phase advancement without required human receipt or approved packet (AC-07)", async () => {
+    const { issueExecutionPacket, verifyExecutionPacket } = await import("../../../scripts/handoff-contract.mjs");
+
+    // Missing human approval prevents packet issuance
+    await assert.rejects(
+      () =>
+        issueExecutionPacket({
+          planPath: "docs/tasks/2026/10/2026-10-19/refactor-PLN-0013-harden-typescript-harness.md",
+          packetPath: "docs/execution/PLN-0013/mock-packet.json",
+          reviewReference: "REV-TEST",
+        }),
+      /approval/,
+      "Issuing execution packet without human approval reference must throw"
+    );
+
+    // Missing or tampered packet fails verification closed
+    const invalidPacketVerification = await verifyExecutionPacket("docs/execution/non-existent-packet.json");
+    assert.equal(invalidPacketVerification.valid, false, "Missing or invalid packet must fail verification closed");
+  });
 });

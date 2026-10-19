@@ -16,7 +16,6 @@ export { handleInitCommand } from "./commands/init.mjs";
 export { handleLintCommand } from "./commands/lint.mjs";
 export { handleLockCommand } from "./commands/lock.mjs";
 export { handlePreflightCommand } from "./commands/preflight.mjs";
-export { handleConformCommand } from "./commands/conform.mjs";
 export { handlePullCommand } from "./commands/pull.mjs";
 export { handleRepairCommand } from "./commands/repair.mjs";
 export { handleResolveCommand } from "./commands/resolve.mjs";

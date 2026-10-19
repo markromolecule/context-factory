@@ -39,9 +39,10 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     assert.match(numbered, /\.context-factory\/orchestrator\/SHARED\.md/);
     assert.match(numbered, /node \.context-factory\/scripts\/context\.mjs resolve/);
     assert.match(numbered, /node \.context-factory\/app\/cli\/bin\/context-cli\.mjs preflight/);
-    assert.match(numbered, /node \.context-factory\/app\/cli\/bin\/context-cli\.mjs conform/);
+    assert.match(numbered, /Host Verification/);
+    assert.match(numbered, /execute configured host verification checks/);
     assert.match(numbered, /Stop on FAIL or BLOCKED/);
-    assert.match(numbered, /Do not replace test or conformance evidence with self-attestation/);
+    assert.match(numbered, /Do not replace test or verification evidence with self-attestation/);
 
     const bullet = buildSharedEnforcementDirectives({
       normalizedFactoryPath: ".",
@@ -51,7 +52,7 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     });
     assert.match(bullet, /- \*\*Shared Contract:\*\*/);
     assert.match(bullet, /- \*\*Preflight Verification:\*\*/);
-    assert.match(bullet, /- \*\*Authoritative Conformance:\*\*/);
+    assert.match(bullet, /- \*\*Host Verification:\*\*/);
     assert.match(bullet, /- \*\*Fail-Closed Gate:\*\*/);
     assert.match(bullet, /doctor checks factory health, not task completion/);
     assert.match(bullet, /plan:check/);
@@ -62,8 +63,8 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
     });
     assert.match(table, /\|\s*`\/resolve`\s*\|/);
     assert.match(table, /\|\s*`\/preflight`\s*\|/);
-    assert.match(table, /\|\s*`\/conform`\s*\|/);
     assert.match(table, /\|\s*`\/doctor`\s*\|/);
+    assert.doesNotMatch(table, /\|\s*`\/conform`\s*\|/);
   });
 
   await t.test("inspectBridgeFileContent validates required authoritative gates and detects omissions", () => {
@@ -137,7 +138,7 @@ test("Unit 04.02: Cross-Editor Bridge and Doctor Conformance Parity (AC-09, SC-0
       assert.match(content, /SHARED\.md/, `${profile.file} must reference SHARED.md`);
       assert.match(content, /resolve/, `${profile.file} must require context resolution`);
       assert.match(content, /preflight/, `${profile.file} must require preflight verification`);
-      assert.match(content, /conform/, `${profile.file} must require conformance evaluation`);
+      assert.match(content, /Host Verification|lint, typecheck, test, build/i, `${profile.file} must require host verification`);
       assert.match(content, /fail|FAIL|BLOCKED|self-attestation/i, `${profile.file} must declare fail-closed policy`);
       assert.match(content, /doctor checks factory health, not task completion/, `${profile.file} must distinguish factory health from task completion`);
       assert.doesNotMatch(content, /intra-worktree|isolated worktrees/i, `${profile.file} must not instruct obsolete task checkout behavior`);
@@ -300,17 +301,11 @@ test("Unit 02.01: Ownership-Aware Host Bridge and Repair (AC-04, AC-05, AC-06)",
 
     const expectedWorkflows = [
       "workflow-architecture-change",
-      "workflow-code-review-and-optimization",
       "workflow-commit-push-release",
       "workflow-context-maintenance",
       "workflow-database-migration",
       "workflow-defect-resolution",
-      "workflow-dependency-upgrade",
-      "workflow-docs",
       "workflow-feature-delivery",
-      "workflow-new-project-delivery",
-      "workflow-release-readiness",
-      "workflow-security-sensitive-change",
     ];
 
     for (const slug of expectedWorkflows) {

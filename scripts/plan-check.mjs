@@ -1,5 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { frontmatter, root } from "./context-core.mjs";
 import { parseRuleCatalog } from "../orchestrator/rules/descriptor-parser.mjs";
 import { verifyDiscoveryBrief } from "./handoff-contract.mjs";
@@ -693,15 +693,32 @@ function sectionContent(content, heading) {
 }
 
 async function findTaskMaster(taskDirPath) {
+  const masters = [];
   const entries = await readdir(taskDirPath, { withFileTypes: true });
   for (const entry of entries) {
     if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
     const path = join(taskDirPath, entry.name);
     const content = await readFile(path, "utf8");
     const meta = frontmatter(content) || {};
-    if (meta.type === "task") return { path, content, meta };
+    if (meta.type === "task") masters.push({ path, content, meta });
   }
-  return null;
+
+  const taskName = basename(resolve(taskDirPath));
+  const scaffolded = /^[a-z]+-PLN-\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(taskName);
+  if (scaffolded) {
+    const siblingPath = join(dirname(resolve(taskDirPath)), `${taskName}.md`);
+    try {
+      const content = await readFile(siblingPath, "utf8");
+      const meta = frontmatter(content) || {};
+      if (meta.type !== "task") throw new Error(`Scaffolded plan master is not a task: ${siblingPath}`);
+      masters.push({ path: siblingPath, content, meta });
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+    }
+    if (masters.length === 0) throw new Error(`Scaffolded plan master is missing for ${taskDirPath}`);
+  }
+  if (masters.length > 1) throw new Error(`Ambiguous plan masters for ${taskDirPath}`);
+  return masters[0] || null;
 }
 
 function planDoneDiagnostic(failureClass, message, remediation) {
@@ -802,7 +819,7 @@ export async function validatePlanHandoff(taskDirPath) {
   const master = await findTaskMaster(taskDirPath);
   const briefPath = master?.meta?.discovery_brief;
   if (!briefPath) return { applicable: false, valid: true, diagnostics: [] };
-  const result = await verifyDiscoveryBrief(resolve(taskDirPath, briefPath));
+  const result = await verifyDiscoveryBrief(resolve(dirname(master.path), briefPath));
   return result.valid ? { applicable: true, valid: true, diagnostics: [] } : { applicable: true, valid: false, diagnostics: [{ failureClass: "handoff", message: result.message, remediation: "Release a fresh grill brief before planning." }] };
 }
 

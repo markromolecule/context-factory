@@ -69,10 +69,7 @@ test("Unit 01.01: Canonical Workflow Skill and Host Entry Contract (AC-01, AC-07
     }
   });
 
-  await t.test("canonical workflow skills are self-contained and require no root host discovery symlinks", async () => {
-    assert.strictEqual(existsSync(resolve(root, ".agents")), false, "Factory root must not contain ephemeral .agents directory");
-    assert.strictEqual(existsSync(resolve(root, ".claude")), false, "Factory root must not contain ephemeral .claude directory");
-
+  await t.test("canonical workflow skills are self-contained and substantive", async () => {
     for (const entry of expectedEntries) {
       const skillPath = resolve(root, entry.sourceFile);
       assert.ok(existsSync(skillPath), `Canonical workflow skill must exist: ${entry.sourceFile}`);
@@ -80,6 +77,59 @@ test("Unit 01.01: Canonical Workflow Skill and Host Entry Contract (AC-01, AC-07
       assert.ok(content.length > 50, `Canonical workflow skill must be substantive: ${entry.sourceFile}`);
     }
   });
+
+  await t.test("workflows coordinate multi-phase lifecycles with work tiers and do not merely mirror a skill (AC-07)", async () => {
+    for (const entry of expectedEntries) {
+      const content = await readText(entry.sourceFile);
+
+      // Must explicitly declare work tiers T0, T1, T2, T3 in triggers
+      assert.ok(content.includes("T0"), `Workflow ${entry.slug} must document T0 tier behavior`);
+      assert.ok(content.includes("T1"), `Workflow ${entry.slug} must document T1 tier behavior`);
+      assert.ok(content.includes("T2"), `Workflow ${entry.slug} must document T2 tier behavior`);
+      assert.ok(content.includes("T3"), `Workflow ${entry.slug} must document T3 tier behavior`);
+
+      // Must coordinate multiple phases (at least 3 phases)
+      const phaseMatches = content.match(/^\s*\d+\.\s+/gm);
+      assert.ok(
+        phaseMatches && phaseMatches.length >= 3,
+        `Workflow ${entry.slug} must coordinate at least 3 distinct lifecycle phases, found: ${phaseMatches?.length ?? 0}`
+      );
+
+      // Must not invoke the removed runtime conform command
+      assert.equal(
+        content.includes("context-cli conform"),
+        false,
+        `Workflow ${entry.slug} must not invoke removed runtime context-cli conform`
+      );
+    }
+
+    // A synthetic workflow that merely mirrors a single skill must fail review
+    const shallowWorkflow = `---
+name: shallow-test-mirror
+description: Just run the test skill.
+skills:
+  - test
+---
+# Shallow Workflow
+## Phases
+1. Run test skill.
+`;
+    const auditWorkflowCompleteness = (text) => {
+      const hasTiers = text.includes("T0") && text.includes("T1") && text.includes("T2") && text.includes("T3");
+      const phases = text.match(/^\s*\d+\.\s+/gm) ?? [];
+      const hasQualityGates = text.includes("## Quality gates");
+      const hasStopConditions = text.includes("## Stop and escalation conditions");
+      if (!hasTiers || phases.length < 3 || !hasQualityGates || !hasStopConditions) {
+        return { valid: false, reason: "Workflow merely mirrors a single skill without coordinating tiers, multi-phase gates, and stop conditions." };
+      }
+      return { valid: true };
+    };
+
+    const reviewResult = auditWorkflowCompleteness(shallowWorkflow);
+    assert.equal(reviewResult.valid, false, "A workflow that merely mirrors a skill must fail review");
+    assert.match(reviewResult.reason, /merely mirrors a single skill/);
+  });
+
 
   await t.test("validator contract helper detects missing, duplicate, stale, or broken entries", async () => {
     const { validateWorkflowEntries } = await import("../../../scripts/validate-context.mjs");

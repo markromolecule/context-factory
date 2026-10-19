@@ -144,4 +144,140 @@ describe("Unit 01.01: Host state and actionable status (AC-04, AC-06)", () => {
       console.log = originalLog;
     }
   });
+
+  it("does not adopt factory report into a host repository that has no report (AC-09)", async () => {
+    const hostDir = await mkdtemp(join(tmpdir(), "cf-test-host-isolated-"));
+    const factoryDir = await mkdtemp(join(tmpdir(), "cf-test-factory-isolated-"));
+    try {
+      // Factory has a PASS report
+      const factoryRuns = join(factoryDir, ".context-runs", "run-factory");
+      await mkdir(factoryRuns, { recursive: true });
+      await writeFile(
+        join(factoryRuns, "conformance-report.json"),
+        JSON.stringify({ reportId: "fac-1", verdict: "PASS", hostRoot: factoryDir }, null, 2),
+        "utf8"
+      );
+
+      // Host has no reports
+      const state = await probeHostState({ hostDir, factoryDir });
+      assert.equal(state.conformance.status, "no_report", "Host must not adopt factory-local report");
+      assert.notEqual(state.conformance.status, "PASS");
+    } finally {
+      await rm(hostDir, { recursive: true, force: true });
+      await rm(factoryDir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a foreign report with mismatched hostRoot (AC-09)", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "cf-test-foreign-"));
+    try {
+      const runsDir = join(tempDir, ".context-runs", "run-foreign");
+      await mkdir(runsDir, { recursive: true });
+      await writeFile(
+        join(runsDir, "conformance-report.json"),
+        JSON.stringify({ reportId: "rep-f", verdict: "PASS", hostRoot: "/other/host/repo" }, null, 2),
+        "utf8"
+      );
+
+      const state = await probeHostState({ hostDir: tempDir, factoryDir: tempDir });
+      assert.equal(state.conformance.status, "foreign", "Must reject foreign hostRoot");
+      assert.match(state.conformance.reason, /host/i);
+      assert.notEqual(state.conformance.status, "PASS");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a stale report with mismatched revision (AC-09)", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "cf-test-stale-"));
+    try {
+      const runsDir = join(tempDir, ".context-runs", "run-stale");
+      await mkdir(runsDir, { recursive: true });
+      await writeFile(
+        join(runsDir, "conformance-report.json"),
+        JSON.stringify({ reportId: "rep-s", verdict: "PASS", hostRoot: tempDir, revision: "commit-abc1" }, null, 2),
+        "utf8"
+      );
+
+      const state = await probeHostState({ hostDir: tempDir, factoryDir: tempDir, revision: "commit-xyz9" });
+      assert.equal(state.conformance.status, "stale", "Must reject mismatched revision");
+      assert.match(state.conformance.reason, /revision/i);
+      assert.notEqual(state.conformance.status, "PASS");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a report with mismatched scope (AC-09)", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "cf-test-scope-"));
+    try {
+      const runsDir = join(tempDir, ".context-runs", "run-scope");
+      await mkdir(runsDir, { recursive: true });
+      await writeFile(
+        join(runsDir, "conformance-report.json"),
+        JSON.stringify({ reportId: "rep-sc", verdict: "PASS", hostRoot: tempDir, scope: ["src/a.ts"] }, null, 2),
+        "utf8"
+      );
+
+      const state = await probeHostState({ hostDir: tempDir, factoryDir: tempDir, scope: ["src/b.ts"] });
+      assert.equal(state.conformance.status, "scope_mismatch", "Must reject mismatched scope");
+      assert.match(state.conformance.reason, /scope/i);
+      assert.notEqual(state.conformance.status, "PASS");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a report with mismatched binding (AC-09)", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "cf-test-binding-"));
+    try {
+      const runsDir = join(tempDir, ".context-runs", "run-bind");
+      await mkdir(runsDir, { recursive: true });
+      await writeFile(
+        join(runsDir, "conformance-report.json"),
+        JSON.stringify({ reportId: "rep-b", verdict: "PASS", hostRoot: tempDir, bindingHash: "sha256:aaa111" }, null, 2),
+        "utf8"
+      );
+
+      const state = await probeHostState({ hostDir: tempDir, factoryDir: tempDir, binding: "sha256:bbb222" });
+      assert.equal(state.conformance.status, "binding_mismatch", "Must reject mismatched binding");
+      assert.match(state.conformance.reason, /binding/i);
+      assert.notEqual(state.conformance.status, "PASS");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("accepts matching report identity tuple and returns PASS (AC-09)", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "cf-test-match-"));
+    try {
+      const runsDir = join(tempDir, ".context-runs", "run-ok");
+      await mkdir(runsDir, { recursive: true });
+      await writeFile(
+        join(runsDir, "conformance-report.json"),
+        JSON.stringify({
+          reportId: "rep-ok",
+          verdict: "PASS",
+          hostRoot: tempDir,
+          scope: ["src/feature.ts"],
+          bindingHash: "sha256:bind123",
+          revision: "rev-456",
+          timestamp: new Date().toISOString(),
+        }, null, 2),
+        "utf8"
+      );
+
+      const state = await probeHostState({
+        hostDir: tempDir,
+        factoryDir: tempDir,
+        scope: ["src/feature.ts"],
+        binding: "sha256:bind123",
+        revision: "rev-456",
+      });
+      assert.equal(state.conformance.status, "PASS", "Must accept matching identity tuple");
+      assert.equal(state.conformance.reportId, "rep-ok");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
 });

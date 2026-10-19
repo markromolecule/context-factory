@@ -20,6 +20,12 @@ skills:
 
 Use for diagnosis-and-fix requests. For diagnosis-only requests, complete evidence and root-cause analysis but do not mutate production code.
 
+- **T0 (Defect Inquiries / Bug Exploration):** Inquiries asking about symptoms, error logs, or potential causes require no workflow; inspect and diagnose without code modification.
+- **T1 (Isolated Defect Fix):** Single-file bug fix with clear reproduction and no public contract, schema, or authorization impact. Add a regression test and fix directly without a multi-phase plan.
+- **T2 (Multi-Module Defect / Subtle Regression):** Bugs spanning multiple files, auth defects, or regressions with subtle blast radius. Requires task plan under `docs/tasks/`, reproduction, failing test, minimal fix, and verification.
+- **T3 (Systemic Architectural Defect):** Deep reliability failure or defect requiring architecture trade-offs or breaking schema/contract changes. Requires discovery with `grill`, an ADR if durable design options exist, and a phased implementation plan.
+
+
 ## Required inputs
 
 - Observed behavior, expected behavior, environment, and reproduction information.
