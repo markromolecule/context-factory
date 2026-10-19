@@ -587,6 +587,47 @@ export async function validateContext() {
     error(msg);
   }
 
+  // Validate factory host discovery entries (.agents/skills.json and .claude/CLAUDE.md)
+  if (await exists(".agents/skills.json")) {
+    try {
+      const skillsJson = await readJson(".agents/skills.json");
+      if (!skillsJson || !Array.isArray(skillsJson.entries)) {
+        error(".agents/skills.json must contain an 'entries' array");
+      } else {
+        const declaredPaths = new Set(skillsJson.entries.map((e) => e?.path));
+        const expectedPaths = ["skills/engineering", "skills/productivity", "skills/workflows"];
+        for (const exp of expectedPaths) {
+          if (!declaredPaths.has(exp)) {
+            error(`.agents/skills.json is missing required entry: ${exp}`);
+          }
+        }
+        for (const entry of skillsJson.entries) {
+          if (!entry?.path || typeof entry.path !== "string") {
+            error(`.agents/skills.json has an invalid entry: ${JSON.stringify(entry)}`);
+          } else {
+            try {
+              const st = await lstat(resolve(root, entry.path));
+              if (!st.isDirectory()) {
+                error(`.agents/skills.json path is not a directory: ${entry.path}`);
+              }
+            } catch {
+              error(`.agents/skills.json references nonexistent path: ${entry.path}`);
+            }
+          }
+        }
+      }
+    } catch {
+      error(".agents/skills.json is not valid JSON");
+    }
+  }
+
+  if (await exists(".claude/CLAUDE.md")) {
+    const claudeMd = await readText(".claude/CLAUDE.md");
+    if (/\bnpm (?:run|test|install)\b/.test(claudeMd)) {
+      error(".claude/CLAUDE.md contains npm instructions; must use pnpm per ADR 0040");
+    }
+  }
+
   try {
     const actualLock = await readJson("context-lock.json");
     const expectedLock = await createLock(manifest);

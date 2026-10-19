@@ -1,9 +1,15 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile, mkdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { mkdtemp, readFile, rm, writeFile, mkdir, lstat, symlink } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { detectPackageManager, generateBridge, normalizeIdeProfiles } from "../../app/cli/core/bridge-generator.mjs";
+import {
+  buildSharedEnforcementDirectives,
+  detectPackageManager,
+  generateBridge,
+  normalizeIdeProfiles,
+} from "../../app/cli/core/bridge-generator.mjs";
 
 describe("Unit 01.01: Multi-Editor Bridge Generator Core", () => {
   it("requires pnpm and refuses other host lockfiles before writing bridge files", async () => {
@@ -148,6 +154,142 @@ describe("Unit 01.01: Multi-Editor Bridge Generator Core", () => {
 
       const content = await readFile(join(tempDir, ".cursor/rules/context-factory.mdc"), "utf8");
       assert.match(content, /alwaysApply:\s*true/);
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("buildSharedEnforcementDirectives emits host-verification instead of runtime conform (D-01, AC-08)", () => {
+    const bulletOutput = buildSharedEnforcementDirectives({ format: "bullet" });
+    assert.match(bulletOutput, /Host Verification/i);
+    assert.match(bulletOutput, /lint, typecheck, test, build/);
+    assert.doesNotMatch(bulletOutput, /\bconform\b/i);
+
+    const tableOutput = buildSharedEnforcementDirectives({ format: "table" });
+    assert.doesNotMatch(tableOutput, /\/conform/);
+  });
+
+  it("generateBridge generates .agents/skills.json including workflows (AC-08)", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "antigravity-test-"));
+    try {
+      await generateBridge({
+        target: tempDir,
+        factoryPath: process.cwd(),
+        ide: ["antigravity"],
+        addPackageScripts: false,
+      });
+
+      const skillsJsonPath = join(tempDir, ".agents", "skills.json");
+      assert.ok(existsSync(skillsJsonPath), "Must generate .agents/skills.json");
+      const skillsConfig = JSON.parse(await readFile(skillsJsonPath, "utf8"));
+      assert.ok(Array.isArray(skillsConfig.entries), "entries must be an array");
+
+      const paths = skillsConfig.entries.map((e) => e.path);
+      assert.ok(paths.some((p) => p.endsWith("skills/engineering")), "Must include skills/engineering");
+      assert.ok(paths.some((p) => p.endsWith("skills/productivity")), "Must include skills/productivity");
+      assert.ok(paths.some((p) => p.endsWith("skills/workflows")), "Must include skills/workflows");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("factory .agents/skills.json and .claude/CLAUDE.md comply with inventory and pnpm (AC-08)", async () => {
+    const factorySkillsJson = JSON.parse(await readFile(join(process.cwd(), ".agents", "skills.json"), "utf8"));
+    const paths = factorySkillsJson.entries.map((e) => e.path);
+    assert.ok(paths.includes("skills/engineering"), "Factory skills.json must contain skills/engineering");
+    assert.ok(paths.includes("skills/productivity"), "Factory skills.json must contain skills/productivity");
+    assert.ok(paths.includes("skills/workflows"), "Factory skills.json must contain skills/workflows");
+
+    const claudeMd = await readFile(join(process.cwd(), ".claude", "CLAUDE.md"), "utf8");
+    assert.match(claudeMd, /pnpm test/);
+    assert.match(claudeMd, /pnpm run eval/);
+    assert.doesNotMatch(claudeMd, /\bnpm (?:run|test)\b/);
+  });
+
+  it("generateBridge handles profile-specific Codex and Claude discovery symlinks (AC-08)", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "profile-test-"));
+    try {
+      // Codex profile
+      const codexDir = join(tempDir, "codex-host");
+      await mkdir(codexDir, { recursive: true });
+      await generateBridge({
+        target: codexDir,
+        factoryPath: process.cwd(),
+        ide: ["codex"],
+        addPackageScripts: false,
+      });
+
+      assert.ok(existsSync(join(codexDir, ".agents", "skills")), "Codex profile must create .agents/skills");
+      assert.ok(existsSync(join(codexDir, ".agents", "skills", "plan")), "Codex profile must link procedural skill");
+      assert.ok(existsSync(join(codexDir, ".agents", "skills", "workflow-feature-delivery")), "Codex profile must link workflow");
+      assert.strictEqual(existsSync(join(codexDir, ".claude")), false, "Codex-only profile must NOT create .claude");
+
+      // Claude profile
+      const claudeDir = join(tempDir, "claude-host");
+      await mkdir(claudeDir, { recursive: true });
+      await generateBridge({
+        target: claudeDir,
+        factoryPath: process.cwd(),
+        ide: ["claude"],
+        addPackageScripts: false,
+      });
+
+      assert.ok(existsSync(join(claudeDir, ".claude", "skills")), "Claude profile must create .claude/skills");
+      assert.ok(existsSync(join(claudeDir, ".claude", "skills", "workflow-feature-delivery")), "Claude profile must link workflow");
+      assert.strictEqual(existsSync(join(claudeDir, ".agents")), false, "Claude-only profile must NOT create .agents");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("generateBridge detects unowned collisions and does not overwrite user files (AC-08)", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "collision-test-"));
+    try {
+      await mkdir(join(tempDir, ".agents", "skills"), { recursive: true });
+      const userFile = join(tempDir, ".agents", "skills", "plan");
+      await writeFile(userFile, "USER CONTENT - DO NOT OVERWRITE", "utf8");
+
+      const res = await generateBridge({
+        target: tempDir,
+        factoryPath: process.cwd(),
+        ide: ["codex"],
+        addPackageScripts: false,
+      });
+
+      assert.strictEqual(res.hasCollisions, true, "Must flag hasCollisions when unowned file exists");
+      const collisionItem = res.symlinks.find((s) => s.id === ".agents/skills/plan");
+      assert.ok(collisionItem, "Collision item must be recorded in symlinks");
+      assert.strictEqual(collisionItem.collision, true, "collision property must be true");
+
+      const survivingContent = await readFile(userFile, "utf8");
+      assert.strictEqual(survivingContent, "USER CONTENT - DO NOT OVERWRITE", "User content must not be overwritten");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("generateBridge is idempotent across repeat executions (AC-08)", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "idempotence-test-"));
+    try {
+      const run1 = await generateBridge({
+        target: tempDir,
+        factoryPath: process.cwd(),
+        ide: ["vscode", "antigravity", "codex", "claude"],
+        addPackageScripts: false,
+      });
+      assert.strictEqual(run1.hasCollisions, false);
+
+      const run2 = await generateBridge({
+        target: tempDir,
+        factoryPath: process.cwd(),
+        ide: ["vscode", "antigravity", "codex", "claude"],
+        addPackageScripts: false,
+      });
+      assert.strictEqual(run2.hasCollisions, false);
+
+      // Verify links and files still healthy
+      assert.ok(existsSync(join(tempDir, ".agents", "skills.json")));
+      assert.ok(existsSync(join(tempDir, ".claude", "skills", "workflow-feature-delivery")));
     } finally {
       await rm(tempDir, { recursive: true, force: true });
     }

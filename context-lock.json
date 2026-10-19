@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:76cb05a2a36405bb85cdb33345ab7f47277a8a02691b8beb5b8a97aaa417f608",
+  "digest": "sha256:e2e32e5dd12862b1f3fff4ac43b1c405dd1485503d4263b916a7e1a338295f0f",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
     "README.md": "sha256:e1836546e6da382288bb383363c77f4fc744f2ade8404ec7e778029d7817e234",
@@ -225,7 +225,7 @@
     "scripts/session-core.mjs": "sha256:379a902d140810a5534a38183c8bc8429c8b6367a374c0080f7e49388209863b",
     "scripts/skill-access-check.mjs": "sha256:9dd3d9f8c5ae72d6a0310cbc6c88b5b13e27d8fe4b77efd2f7a8b3cca52958d3",
     "scripts/task-workflow.mjs": "sha256:d0f525d70b1a5114be0861e2e6668d580270ac5b3b6c37d73874dae9642e0f6e",
-    "scripts/validate-context.mjs": "sha256:ffdc57fb8b0b00ea2ce5eb572fef28cd7bdd2505f9dd6fe77e357118e9df5846",
+    "scripts/validate-context.mjs": "sha256:2441ec468f576b91a4767c0e79e3f2622cba455bc6a98739d4549ea28adf0bc7",
     "scripts/worktree.mjs": "sha256:8ce2a608a8bb6840ce318ff9f3bd4958c5e3fad9da9bd1b5e05444f203500d4a",
     "skills/README.md": "sha256:29ae43b3a006bb421c7704c57965be4f2324697aa0f7b4eaa99174a642e90e71",
     "skills/engineering/README.md": "sha256:5c0877a625b205315d36042b46d0daea2c0e7f56da726faf40d25af61714d602",
