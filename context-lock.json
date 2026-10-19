@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:f8b1b19914817854dd21887cee94d274b79586c5c290b8965f1ca0ec4412b89c",
+  "digest": "sha256:76cb05a2a36405bb85cdb33345ab7f47277a8a02691b8beb5b8a97aaa417f608",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
     "README.md": "sha256:e1836546e6da382288bb383363c77f4fc744f2ade8404ec7e778029d7817e234",
@@ -122,8 +122,8 @@
     "evals/datasets/refactors/architecture-change.json": "sha256:9a746e4f9400d1512aec75c96d5b76540581ed608acdb6b6b816a4a4730c1e9a",
     "evals/run-evals.mjs": "sha256:8b93d75d016e37e4b662843bda981e45beefdcbccb1f5225961bf698534396b8",
     "evals/tests/bridge/bridge-conformance.test.mjs": "sha256:0ab90204343227da05b208eae77434ba8a08bf1310987e63f55ab1b3ce4acd81",
-    "evals/tests/bridge/workflow-entry-contract.test.mjs": "sha256:875bf698099b3c00779239fcb346be58ba3b9ff19e23f2f18c3ee16f16ef81b2",
-    "evals/tests/bridge/workflow-routing.test.mjs": "sha256:0b46c6f86b9cb51fe6c6f60fb8ee98bc58da77cf5ffcecd3917005620fb4a05c",
+    "evals/tests/bridge/workflow-entry-contract.test.mjs": "sha256:d9fa89e3d2522d3ad3823003c7dd02c35ba6b87b017708c38fad9b9bc7f62235",
+    "evals/tests/bridge/workflow-routing.test.mjs": "sha256:2a602801ea1777e46a7961dfb429a85906ee14c9584e8537d70e0b6b6e44228d",
     "evals/tests/cli/active-contract.test.mjs": "sha256:5c6a2e3e153c04b9e22bc9e9c64a67985dc2ab5523fabd9ff53ea12a219b7cfe",
     "evals/tests/cli/github-gate.test.mjs": "sha256:1cd5b1c554a98f16ce692ea3a62aa81b263b2e83ed8316761db4206763a1c62a",
     "evals/tests/cli/help-output.test.mjs": "sha256:1d704db61c096a3b0e2c225723dacfeb56c39b3e41d8aec7feb9f8b93c73c9f7",
@@ -229,12 +229,12 @@
     "scripts/worktree.mjs": "sha256:8ce2a608a8bb6840ce318ff9f3bd4958c5e3fad9da9bd1b5e05444f203500d4a",
     "skills/README.md": "sha256:29ae43b3a006bb421c7704c57965be4f2324697aa0f7b4eaa99174a642e90e71",
     "skills/engineering/README.md": "sha256:5c0877a625b205315d36042b46d0daea2c0e7f56da726faf40d25af61714d602",
-    "skills/engineering/execute/SKILL.md": "sha256:caf09a13f269334f2d93e9df774d8fb13d8bed293562f8cac336f07142c934fe",
+    "skills/engineering/execute/SKILL.md": "sha256:a96a0da2443ea70e8f9d7ca1a4cba228864558adf00b404f1567e38030d21f24",
     "skills/engineering/execute/agents/openai.yaml": "sha256:f0ef0da7466787ea16763a9a060a29c7ee0af9fe743280a66636a6ad5f2bf7df",
     "skills/engineering/perf/SKILL.md": "sha256:cc3dfd6575fcc9c169eca0df21b5a7d412468a27a4dfc53dcf5f795ec7e8494f",
     "skills/engineering/refactor/SKILL.md": "sha256:563ba656f07e6c2f5d745649ff407bf675dbd2441f39ebc8fe568e055e3390e4",
     "skills/engineering/refactor/agents/openai.yaml": "sha256:6d3cf9b7ce2574f4c4f75928a3aa44363f853b8cbad3f90a2e7fb5cb22f3a736",
-    "skills/engineering/security/SKILL.md": "sha256:f3238ab7a8359fa994dbe874eb7b8949da429e38732a9ccbd69e907c66445216",
+    "skills/engineering/security/SKILL.md": "sha256:7d36a8237a306c516606e0f7733ad933c845e3526928896489a39de957f06e8a",
     "skills/engineering/test/SKILL.md": "sha256:69af9663b8ebdd77e653020eb5150cf3ce20b48c5f1c7d30df10edf0aa730e3e",
     "skills/engineering/test/agents/openai.yaml": "sha256:5dd3faeff0137ff7b620a8f41c0aeedf00128a6992c2d0966b035d522672a33e",
     "skills/productivity/README.md": "sha256:b4b37d189825177c1c7e59804cd1b2743cc3bb12224f9315a1c37b4d26317055",
@@ -251,11 +251,11 @@
     "skills/productivity/plan/SKILL.md": "sha256:e4bdb1f3ddce85283a9f469f8c788dcc0eddd92cde1cde51172704e83c3e0781",
     "skills/productivity/plan/agents/openai.yaml": "sha256:14d0833d975634a5f605bf12900bbf437233866a28191de6438d8d7142a24bec",
     "skills/productivity/session/SKILL.md": "sha256:3f77877c7a22ee223ff7e4c49e72648f81ab7dd8e416e724fef6b5b6854df017",
-    "skills/workflows/architecture-change/SKILL.md": "sha256:5b3419df41d2c92502f597638797c13d93c88cf69b0689556b5d2e7c94c56a03",
-    "skills/workflows/commit-push-release/SKILL.md": "sha256:3b1efcde37abef7c2ca574bb9baa60e713dcd28df158dfd2a6366df2b4bdef98",
-    "skills/workflows/context-maintenance/SKILL.md": "sha256:0393d636f6f61bda9513e74d72969ba33276dc6c00dc5b8a9b8ab7fa5d5e9978",
-    "skills/workflows/database-migration/SKILL.md": "sha256:888309bc4f4906b8df10d50bc3e88337d7867efa9cc627190ed3f4a6fceb2260",
-    "skills/workflows/defect-resolution/SKILL.md": "sha256:febec5cbc01a2f1245b5cdeb4fe51b44089892f1cec4ddbf615692251667dc42",
-    "skills/workflows/feature-delivery/SKILL.md": "sha256:2ade8712aaeed4f70f457a84f34e8e03343bc27fcf1caa8d2252d318e2c91b74"
+    "skills/workflows/architecture-change/SKILL.md": "sha256:6a1a8c53ee42655edf7011ec22d88002764fa090737852540af5b5f0143d55dd",
+    "skills/workflows/commit-push-release/SKILL.md": "sha256:4842e8c346129f7932fb441467a1ccfe76ebc5c94cdcd1c36c3a1fc202bddb55",
+    "skills/workflows/context-maintenance/SKILL.md": "sha256:c339cf4b2af2f28487490bca3629c44d481581169ec9e3aa077239acd60e6cdb",
+    "skills/workflows/database-migration/SKILL.md": "sha256:60cfa65ab357f44d5943e0d1789e95602b3f9e9e4fd31e2479e48ee063201597",
+    "skills/workflows/defect-resolution/SKILL.md": "sha256:e94fa1f17ec0abf884ae38d787981ce6bf2d039431c6349f1edd7e7e233344be",
+    "skills/workflows/feature-delivery/SKILL.md": "sha256:fa8beab72fb6e7c1618eaf2f3cd49d254a05cb2e1544cd0ef3929e7ca3d9b923"
   }
 }

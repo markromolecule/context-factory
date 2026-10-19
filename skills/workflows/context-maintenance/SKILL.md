@@ -18,6 +18,12 @@ skills:
 
 Use when adding, changing, renaming, or removing a rule, skill, workflow, orchestrator, canonical document, map, validator, or durable architecture decision.
 
+- **T0 (Context Queries):** Checking rule definitions, catalog contents, or manifest metadata requires no workflow; answer directly from canonical context sources.
+- **T1 (Editorial Clarifications):** Fixing typos or clarifying explanations in documentation without modifying rule directives, schema definitions, or manifests. Surgical edit, validate with `validate-context.mjs`, no multi-phase plan.
+- **T2 (Catalog Evolution):** Modifying rule directives, adding procedural skills, updating workflows, or adjusting validator/evaluation rules. Requires manifest update, lock generation (`node scripts/context.mjs lock`), doctor check, and evaluation test pass.
+- **T3 (Systemic Context Architecture):** Major version bump, restructuring orchestration contracts, or changing stack enforcement mechanisms. Requires ADR, multi-phase plan, and review approval.
+
+
 ## Required inputs
 
 - The behavior gap or conflict, affected agents/tasks, existing related context, and desired validation outcome.

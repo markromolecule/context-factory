@@ -23,6 +23,12 @@ skills:
 
 Use for any persistent schema or data-shape change. Compose with feature delivery and security-sensitive change when the migration supports new behavior or sensitive data.
 
+- **T0 (Schema Queries):** Inspecting table structures, indexes, or queries requires no workflow; answer directly from database schema files.
+- **T1:** Persistent schema alterations and production data migrations carry operational and data-loss risk and are never classified as T1.
+- **T2 (Additive Schema Changes):** Adding nullable columns, new tables, or non-blocking indexes with backwards compatibility. Requires a task plan under `docs/tasks/`, migration scripts, and automated migration/rollback tests.
+- **T3 (Destructive / Multi-Phase Migrations):** Dropping columns, modifying existing data types, large backfills, or table drops. Requires pre-planning discovery (`context` / `grill`), expand-and-contract planning, explicit data loss authorization, and staged consumer cutovers.
+
+
 ## Required inputs
 
 - Current schema, data volume/distribution, consumers, availability requirements, and deployment model.

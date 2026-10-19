@@ -19,6 +19,10 @@ skills:
 Use when a developer or agent is ready to package, commit, push, or release completed and verified work to a remote repository.
 Session triggers: `/ship`, `/commit-push-release`, `[SHIP]`, `[COMMIT_PUSH_RELEASE]`.
 
+- **T0 (VCS Inspection):** Inspecting git status, diff, branches, or commit history requires no workflow; run git commands directly.
+- **T1/T2/T3 (Finalization Gate):** Packaging, staging, committing, pushing, or tagging verified work for any completed tier. Requires clean pre-commit verification before staging, Conventional Commit authoring, and explicit user authorization before pushing to remote branches or creating release tags.
+
+
 ## Required inputs
 
 - Working directory with tested, completed changes.
