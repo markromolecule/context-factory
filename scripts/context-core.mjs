@@ -215,6 +215,7 @@ const STOP_WORDS = new Set([
 
 export function terms(value) {
   function normalize(term) {
+    if (term === "typing") return "type";
     if (term.endsWith("ies") && term.length > 4) return `${term.slice(0, -3)}y`;
     if (term.endsWith("s") && !term.endsWith("ss") && term.length > 3) return term.slice(0, -1);
     return term;
@@ -259,6 +260,30 @@ const ACTION_TERMS = new Set([
 
 const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan)|context spec(?:ification)?|author context|create context)\b|^\/(?:grill|discovery|context)\b|^\[(?:GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i;
 const EXECUTION_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b|^\/(?:exec|execute|execution)\b|^\[(?:EXEC|EXECUTE|EXECUTION)\]/i;
+const GENERIC_KNOWLEDGE_TERMS = new Set(["architecture", "clean", "code", "context", "design", "factory", "principle", "software", "typescript"]);
+const INTENT_TOKEN_BUDGETS = {
+  "direct-question": 9000,
+  investigation: 8000,
+  defect: 16000,
+  plan: 14000,
+  execution: 16000,
+  material: 18000,
+};
+
+function classifyIntent(request, isDirectQuestion) {
+  if (isDirectQuestion) return "direct-question";
+  if (EXECUTION_TEST.test(request)) return "execution";
+  if (/\b(fix|defect|bug|regression|hotfix)\b/i.test(request)) return "defect";
+  if (/\b(investigate|investigation|diagnose|inspect|analyze)\b/i.test(request)) return "investigation";
+  if (/^[/\\$]plan\b|^\[PLAN\]|\bplanning\b/i.test(request)) return "plan";
+  return "material";
+}
+
+function requestedSkillName(request, skillEntries) {
+  const match = request.match(/^(?:[/\\$]([a-z0-9-]+)|\[([a-z0-9-]+)\])/i);
+  const name = (match?.[1] || match?.[2] || "").toLowerCase();
+  return skillEntries.some((entry) => entry.meta.name === name) ? name : null;
+}
 
 const ROUTING_HINTS = [
   // 0. Host-Native Workflow Commands (/workflow-<slug> for Claude Code, $workflow-<slug> for Codex)
@@ -376,9 +401,11 @@ export async function resolveContext(request, options = {}) {
     /^(?:how (?:do|can|to|does|should|is|are)\b|what (?:is|are|does|do|can|workflows?)\b|which (?:workflow|rule|skill|command)\b|why\b|where\b|when\b|explain (?:how|what|the)?\b|tell me\b)/i.test(trimmedRequest)
     || /^(?:how|what|which|why|where|when|can you explain)\b.*\?$/i.test(trimmedRequest)
   );
+  const intent = classifyIntent(request, isDirectQuestion);
   const ruleEntries = await entries(manifest.rules);
   const skillEntries = await entries(manifest.skills);
   const workflowEntries = await entries(manifest.workflows);
+  const explicitSkillName = requestedSkillName(trimmedRequest, skillEntries);
   const agentPaths = [...new Set([...(manifest.agents ?? []), ...(await filesUnder("agents"))])].filter((p) => p.endsWith("/AGENT.md"));
   const agentEntries = await entries(agentPaths);
   const allowedRulePaths = new Set(ruleEntries.filter((entry) => appliesToScope(entry.meta)).map((entry) => entry.path));
@@ -405,9 +432,15 @@ export async function resolveContext(request, options = {}) {
   const selectedRules = candidateRuleEntries
     .map((entry) => ({ ...entry, relevance: scoreEntry(requestTerms, entry.path, entry.meta) }))
     .filter((entry) => (
-      entry.relevance.score >= 4
-      || (entry.meta.frameworks?.length && rawScopeArr.length)
-      || (entry.meta.alwaysApply === true && (hasAction || entry.meta.name === "evidence-and-claims"))
+      isDirectQuestion
+        ? entry.meta.name === "evidence-and-claims"
+        : ((intent === "investigation" || explicitSkillName) && !rawScopeArr.length && !entry.path.startsWith("rules/global/"))
+          ? false
+          : (entry.relevance.score >= 4
+            || (entry.meta.frameworks?.length && rawScopeArr.length)
+            || (entry.meta.alwaysApply === true
+              && (entry.path.startsWith("rules/global/") || rawScopeArr.length > 0)
+              && (hasAction || entry.meta.name === "evidence-and-claims")))
     ))
     .map((entry) => ({
       path: entry.path,
@@ -479,6 +512,18 @@ export async function resolveContext(request, options = {}) {
     selectedSkills.sort((a, b) => a.path.localeCompare(b.path));
   }
 
+  if (explicitSkillName) {
+    const explicit = skillEntries.find((entry) => entry.meta.name === explicitSkillName);
+    selectedSkills = [{ path: explicit.path, reason: `explicit skill trigger: ${explicitSkillName}` }];
+  } else if (isDirectQuestion) {
+    selectedSkills = selectedSkills
+      .filter((item) => {
+        const entry = skillEntries.find((candidate) => candidate.path === item.path);
+        return entry && terms(entry.meta.name).every((term) => requestTerms.includes(term));
+      })
+      .slice(0, 1);
+  }
+
   // 4. Workflow selection
   let selectedWorkflow = null;
   let selectedWorkflowSource = "";
@@ -522,22 +567,27 @@ export async function resolveContext(request, options = {}) {
       }
     }
 
-    const declaredSkills = Array.isArray(selectedWorkflowMeta.skills) ? selectedWorkflowMeta.skills : [];
-    const linkedSkillNames = new Set([
-      ...declaredSkills,
-      ...[...selectedWorkflowSource.matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]),
-    ]);
-    const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));
-    for (const entry of skillEntries) {
-      if (entry.path.startsWith("skills/workflow-entries/")) continue;
-      if ((entry.meta.name === "grill" || entry.meta.name === "grill-with-docs" || entry.meta.name === "context") && !PREPLANNING_TEST.test(request)) continue;
-      if ((entry.meta.name === "execution" || entry.meta.name === "execution-plan") && !EXECUTION_TEST.test(request)) continue;
-      if (linkedSkillNames.has(entry.meta.name) && !selectedSkillPaths.has(entry.path)) {
-        selectedSkills.push({ path: entry.path, reason: `required by ${selectedWorkflow.path}` });
-        selectedSkillPaths.add(entry.path);
+    // When affected files are still unknown, retain the workflow's default
+    // procedures. Once scope is known, load only independently matched or
+    // explicitly requested procedures for the current phase.
+    if (!rawScopeArr.length && !explicitSkillName) {
+      const declaredSkills = Array.isArray(selectedWorkflowMeta.skills) ? selectedWorkflowMeta.skills : [];
+      const linkedSkillNames = new Set([
+        ...declaredSkills,
+        ...[...selectedWorkflowSource.matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]),
+      ]);
+      const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));
+      for (const entry of skillEntries) {
+        if (entry.path.startsWith("skills/workflow-entries/")) continue;
+        if ((entry.meta.name === "grill" || entry.meta.name === "grill-with-docs" || entry.meta.name === "context") && !PREPLANNING_TEST.test(request)) continue;
+        if ((entry.meta.name === "execution" || entry.meta.name === "execution-plan") && !EXECUTION_TEST.test(request)) continue;
+        if (linkedSkillNames.has(entry.meta.name) && !selectedSkillPaths.has(entry.path)) {
+          selectedSkills.push({ path: entry.path, reason: `required by ${selectedWorkflow.path} until affected scope is known` });
+          selectedSkillPaths.add(entry.path);
+        }
       }
+      selectedSkills.sort((a, b) => a.path.localeCompare(b.path));
     }
-    selectedSkills = selectedSkills.sort((a, b) => a.path.localeCompare(b.path));
   }
 
   // 5. Host project local rules discovery (if running in bridged workspace)
@@ -569,10 +619,20 @@ export async function resolveContext(request, options = {}) {
     }
   }
 
+  const knowledgeEntries = await entries(manifest.knowledge ?? []);
+  const selectedKnowledgePaths = knowledgeEntries
+    .filter((entry) => entry.meta.status === "active" && entry.meta.authority === "canonical")
+    .filter((entry) => {
+      const candidates = terms(`${entry.meta.title ?? ""} ${(entry.meta.tags ?? []).join(" ")} ${basename(entry.path, ".md")}`)
+        .filter((term) => !GENERIC_KNOWLEDGE_TERMS.has(term));
+      return candidates.some((term) => requestTerms.includes(term));
+    })
+    .map((entry) => entry.path);
+
   const basePaths = [
     manifest.entrypoint,
     manifest.orchestrationContract,
-    ...(manifest.knowledge ?? []),
+    ...selectedKnowledgePaths,
   ];
   const selectedPaths = [...new Set([
     ...basePaths,
@@ -598,10 +658,14 @@ export async function resolveContext(request, options = {}) {
   const estimatedTokens = Math.ceil(totalChars / 4);
   const ruleAndSkillTokens = Math.ceil(ruleAndSkillChars / 4);
   const maxRecommendedRuleTokens = 8000;
+  const maxRecommendedTokens = INTENT_TOKEN_BUDGETS[intent];
   const budget = {
+    intent,
     estimatedTokens,
     ruleAndSkillTokens,
     maxRecommendedRuleTokens,
+    maxRecommendedTokens,
+    totalStatus: estimatedTokens <= maxRecommendedTokens ? "optimal" : "warning",
     densityStatus: ruleAndSkillTokens <= maxRecommendedRuleTokens ? "optimal" : "warning",
     warning: ruleAndSkillTokens > maxRecommendedRuleTokens
       ? `Resolved rules and skills (${ruleAndSkillTokens} tokens) exceed recommended ceiling (${maxRecommendedRuleTokens} tokens). Consider narrowing prompt.`
