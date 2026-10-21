@@ -36,10 +36,11 @@ Copied in, not referenced — this is what lets the unit run without the master 
 
 > **Precedence Invariant:** If a step in this unit contradicts an applicable language rule, the language rule strictly takes precedence.
 
-## Preconditions
+## Preconditions / Expected state from dependencies
 
 - `git symbolic-ref --quiet --short HEAD` exactly matches `{{task_branch}}`; stop if detached or mismatched.
-- What must already exist or be true, including outputs of dependency units.
+- **Expected state from dependencies:** Concrete files, symbols, types, or schema changes produced by predecessor units (e.g. `unit 01.01 exported IOrderService from src/orders/types.ts`).
+- If a predecessor unit altered contracts or files during execution, stop and reconcile downstream units before beginning this unit.
 
 ## Scope
 

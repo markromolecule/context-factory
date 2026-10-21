@@ -1,17 +1,17 @@
 ---
 name: plan
-description: Create an evidence-backed, phased implementation plan without changing production code, broken into atomic task units that can each be handed to a separate session or agent to execute. Every unit carries its own standalone context and a justified test plan (unit, integration, architecture, contract, or migration tests, chosen to fit what actually changes). Use when a user asks for a plan, design proposal, implementation breakdown, migration plan, or task artifact that another developer or agent will execute later (/plan, [PLAN]).
+description: Plan implementation work into atomic, self-contained task units without modifying production code. Trigger when asked to author an implementation plan, design proposal, task breakdown, migration roadmap, or task artifact intended for cross-session execution (/plan, [PLAN]).
 ---
 
 # Create an Implementation Plan
 
 ## Access declaration
 
-- **Reads:** released discovery brief, grounding evidence, repository code, tests, configuration, and existing decisions.
+- **Reads:** released discovery brief, grounding evidence, repository code, tests, configuration, existing decisions, and applicable rules (`rules/global/1-3-1-rule.md`).
 - **Writes:** the task branch and plan artifacts under `docs/tasks/`.
 - **Exposes to:** `plan-review` through the master plan and self-contained unit artifacts.
 
-Do not implement the feature while this skill is active unless the user explicitly expands the request.
+Do not write or edit production code while this skill is active. Planning stops at artifact creation and handoff; execution belongs strictly to `/execute` unless the user explicitly expands the request to implement immediately.
 
 ## Why break plans into units
 
@@ -19,70 +19,148 @@ A phase tells you *what order* things happen in. A unit tells a fresh session *e
 
 Size units by responsibility, not by line count. A unit should correspond to one coherent seam surfaced by the SOLID audit below — one responsibility, one contract, one boundary — not an arbitrary file count. If you can't describe what a unit does in one sentence, it's too big; if two units only ever make sense executed together, merge them.
 
+### Lightweight path for small tasks
+
+For small, low-complexity tasks (e.g. single-file bug fixes, isolated chores, or minor refactors), avoid excessive multi-phase ceremony. Use a collapsed **single-phase, single-unit** structure (`phase-01-<slug>/unit-01-<slug>.md` paired with a concise master plan). This satisfies task branch isolation, rule binding, and test verification without unnecessary structural overhead.
+
 ## Task branch
 
-This is the only lifecycle skill that creates the task branch. After `grounding` has validated consequential claims against the current codebase and `grill` has released a fresh brief, but before writing a plan, create one branch from the intended target base: `<type>/PLN-NNNN-<slug>`. Choose the type from `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`, `build`, `ci`, or `migration`; use the reserved plan ID and a 3–40 character lowercase ASCII slug derived from the brief, with single interior hyphens. Record the target base, task branch, and base commit in the master plan and every unit.
+This is the only lifecycle skill that creates the task branch. Create the branch and task scaffold right after grounding and brief release, before drafting detailed plan content.
 
-Check `git symbolic-ref --quiet --short HEAD` and `git status --short` first. If HEAD is detached or the checkout is dirty, stop and report the exact state; do not stash, reset, discard, or silently switch. If the task branch exists, verify its recorded brief/plan identity and ancestry from the intended base; continue on it only when it is the same task and already checked out. Otherwise stop and report the collision. If the task branch is missing, require the current branch to be the intended base and verify that base is current. Preview the reserved naming candidate with `node scripts/context.mjs task:new "<title>" --type <type> --dry-run --json`, then create with `git switch -c <task-branch> <target-base>`. Verify the exact branch name and scaffold with `node scripts/context.mjs task:new "<title>" --type <type> --base <target-base>` before writing the detailed plan. The scaffold fails closed if its atomic plan ID differs from the preview. Never create phase or unit branches. Work on one task at a time in this checkout.
+### Authoritative branch naming
+
+The task branch name follows `<type>/PLN-NNNN-<slug>`:
+
+- `<type>`: one of `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`, `build`, `ci`, or `migration`.
+- `PLN-NNNN`: the reserved 4-digit plan ID.
+- `<slug>`: a 3–40 character lowercase alphanumeric ASCII string with single interior hyphens (`[a-z0-9]+(-[a-z0-9]+)*`), derived from the brief.
+
+Never create phase or unit branches. Work on one task at a time in this checkout.
+
+### Branch creation and resume gates
+
+1. **Verify base is current:** Run `git fetch origin <target-base>` and verify the local base branch is fully synchronized with upstream (`git rev-parse HEAD` equals `git rev-parse origin/<target-base>`).
+2. **Checkout state inspection:** Inspect `git symbolic-ref --quiet --short HEAD` and `git status --short`.
+   - **New plan (on target base):** The target base checkout must be completely clean. If HEAD is detached or uncommitted changes exist, stop and report the exact state; do not stash, reset, discard, or silently switch branches.
+   - **Resuming an in-progress plan (on task branch):** If already on the matching `<task-branch>`, uncommitted markdown changes inside `docs/tasks/` for the active task are permitted. If there are uncommitted modifications outside `docs/tasks/` (especially in production source files), stop and report the dirty state.
+3. **Collision check:** If the task branch already exists locally or remotely, verify its recorded brief/plan identity and ancestry from the intended base. Continue on it only when it is the exact same task and already checked out; otherwise stop and report the collision.
+4. **Scaffolding:**
+   - Preview the naming candidate:
+
+     ```bash
+     node scripts/context.mjs task:new "<title>" --type <type> --dry-run --json
+     ```
+
+   - Create and switch:
+
+     ```bash
+     git switch -c <task-branch> <target-base>
+     ```
+
+   - Scaffold the directory structure and starter templates:
+
+     ```bash
+     node scripts/context.mjs task:new "<title>" --type <type> --base <target-base>
+     ```
+
+   The scaffold fails closed if its atomic plan ID differs from the preview. Record the target base, task branch, and base commit SHA in the master plan and every unit.
 
 ## Workflow
 
-1. Ingest and analyze the released `grill` brief end-to-end. Do not read the `context` specification directly; `grounding` validates its claims against current repository evidence and exposes them to `grill` only.
-2. Restate the requested outcome, boundaries, and measurable success criteria.
-3. Verify that `grounding` has checked consequential claims against the actual codebase, `grill` has resolved conflicts, and the released brief is fresh. Stop and trigger `context` / `grounding` / `grill` if goals, scenarios, edge cases, boundaries, or material decisions remain unresolved.
-4. Inspect relevant source files, tests, configuration, schemas, and existing conventions.
-5. Separate verified facts, assumptions, open decisions, and out-of-scope work.
-6. Use the 1-3-1 rule only for material unresolved choices; make a recommendation.
-7. Identify affected files, public contracts, data changes, consumers, and rollback risks.
-8. Audit architectural choices against SOLID principles (`knowledge/principles/`): enforce single-responsibility decomposition, open/closed extension strategies, substitutable contracts, lean client interfaces, and dependency inversion before finalizing task breakdowns. Note every boundary this audit surfaces — each is a candidate for an architecture test in step 11.
-9. Map the work as a dependency graph, not just a line of phases. For every piece of work, decide what it genuinely must wait on versus what merely happened to be written next to it. Group sequential milestones into phases; within each phase, decompose into atomic units connected by explicit `depends_on` edges. Flag units with no edge between them as logically independent, but execute them serially on the task branch.
-10. After grounding and brief release, create or verify the task branch under the gate above, before writing any plan artifact. Define the finalization path from the task branch to the target base, verified by `/review`, phase tests, full acceptance checks, and `doctor` at their applicable checkpoints.
-11. For each unit, choose its test types from what the unit actually changes, not by habit:
-    - Logic isolated in one function or module, no new collaborators → **unit tests** covering the happy path plus the edge/error cases the released brief calls out.
-    - Change crosses a component, process, or network/DB boundary → **integration tests** exercising that seam with real or realistic collaborators.
-    - Change touches dependency direction, layering, or a boundary flagged in the SOLID audit → **architecture tests**: an automated check where the stack supports one (dependency-cruiser, ArchUnit, a custom lint rule), otherwise an explicit manual review checklist.
-    - Change alters a public API, event payload, schema, or CLI surface → **contract tests**, plus a note on affected consumers.
-    - Change touches data or schema → **migration tests**, forward and rollback.
-    - Change touches auth, permissions, or input handling → add negative/abuse-case tests alongside whichever category above applies.
-    - A pure refactor with no behavior change → say so explicitly and require the existing suite to still pass; don't invent new tests to fill a checklist.
-    Justify every test type you assign in one line: what would break, undetected, without it. A test type with no justification doesn't belong on the unit.
-12. Organize and create the task directory under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<feature>/`:
-
-- **Master Plan Artifact:** `README.md` (or `<type>-<id>-<feature>.md`) using `docs/templates/Task.md` — outcome, criteria, scope, decision ledger, the phase/unit dependency graph, phase index, explicit target base, task branch, base commit, and `## Finalization & Merge Ledger`.
-- **Phase Overview Artifacts:** `phase-01-<feature>/phase.md`, `phase-02-<feature>/phase.md`, etc. using `docs/templates/Phase.md` — the goal shared by that phase's units, context common to all of them, the unit index with dependency flags, task branch declaration, and phase-level rollback.
-- **Unit Artifacts:** `phase-01-<feature>/unit-01-<slug>.md`, `unit-02-<slug>.md`, etc. using `docs/templates/Unit.md` (see below). Each unit must be self-contained: declare the task branch in frontmatter and status block, declare strict scope fences (`**In scope:**`, `**Out of scope:**`), bind the unit-scoped language rule subset into `<language_rules>` using stable directive IDs (e.g. `[directive:id][mode:automated-blocking] path`), explicit modes, and rule paths, document how the implementation satisfies each directive, cite any active human waivers if applicable, and provide a fresh session with everything needed to execute cold.
+1. **Ingest brief:** Ingest and analyze the released `grill` brief end-to-end. Do not read the `context` specification directly; `grounding` validates its claims against current repository evidence and exposes them to `grill` only.
+2. **Restate outcome:** Restate the requested outcome, boundaries, non-goals, and measurable success criteria.
+3. **Verify brief freshness & product boundary:** Verify that `grounding` has checked consequential claims against the actual codebase, `grill` has resolved conflicts, and the released brief is fresh.
+   - **Boundary rule:** Product goals, business rules, actor personas, user-facing scenarios, and scope boundaries belong strictly to `grill`. If any product or requirements question remains open, stop immediately and return to `grill`.
+4. **Create task branch and scaffold:** Follow the **Task branch** section above: verify base currency, inspect checkout state, switch to `<task-branch>`, and run `node scripts/context.mjs task:new` to scaffold the plan directory under `docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<slug>/`.
+5. **Inspect codebase:** Inspect relevant source files, existing tests, configuration, schemas, and conventions on the task branch.
+6. **Separate facts from assumptions:** Separate verified code evidence, working assumptions, open technical choices, and out-of-scope work.
+7. **Resolve technical design choices via 1-3-1:** For material unresolved *technical implementation* choices (architecture patterns, interface seams, data access approaches, library choices), apply the 1-3-1 decision framework (`rules/global/1-3-1-rule.md`):
+   - **1 — Define** (`[directive:cf.global.1-3-1-define]`): state problem, evidence, constraints, and success condition in one compact section; separate verified facts from assumptions.
+   - **3 — Compare** (`[directive:cf.global.1-3-1-compare-options]`): offer viable, materially different approaches (typically three; allow two only when a third alternative is genuinely non-viable, stating the concrete disqualification reason).
+   - **1 — Recommend** (`[directive:cf.global.1-3-1-recommend]`): choose one approach and justify it against constraints, maintenance burden, reversibility, and complexity, providing concrete next steps and validation criteria.
+   - **Approval and escalation:** Record recommended choices in the master plan's decision ledger (`docs/templates/Task.md`). Human user approval of these recommendations is **blocking** during `plan-review` before execution begins. For cross-cutting, durable, or high-blast-radius decisions, escalate to an ADR (`skills/productivity/adr/`).
+8. **Analyze impact:** Identify affected files, public contracts, data models, consumer modules, and rollback risks.
+9. **Audit architecture against SOLID:** Audit technical choices against SOLID principles (`knowledge/principles/`): enforce single-responsibility decomposition, open/closed extension strategies, substitutable contracts, lean client interfaces, and dependency inversion before finalizing unit boundaries. Note every boundary surfaced as a candidate for an architecture test.
+10. **Map dependency graph & linearize execution:** Map the work as a directed acyclic dependency graph, not just a flat list of phases. Group sequential milestones into phases; within each phase, decompose into atomic units connected by explicit `depends_on` edges. Because checkout execution is serial, compute and document an explicit **linearized execution order** (topological sort) for the entire task.
+11. **Assign and justify test types:** For each unit, assign test types based on what the unit actually changes, justifying each in one line (what would break undetected without it):
+    - Function/module logic without new collaborators → **unit tests** for happy path, boundary, and brief-specified error cases.
+    - Seams crossing component, process, or network/DB boundaries → **integration tests** with realistic collaborators.
+    - Boundary or layering changes flagged in SOLID audit → **architecture tests** (automated via dependency-cruiser/linter, or an explicit checklist).
+    - Public API, schema, event, or CLI changes → **contract tests** with affected consumer notes.
+    - Schema or data state changes → **migration tests** covering both forward migration and rollback.
+    - Auth, permissions, or untrusted input → negative and abuse-case tests.
+    - Performance-critical hot paths, latency budgets, or DB query indexing → **performance tests** with concrete thresholds/benchmarks.
+    - End-to-end user journeys or full CLI workflows → **e2e / acceptance tests**.
+    - Pure refactor with no behavioral changes → require existing tests to pass; if existing coverage is absent or inadequate, write **characterization tests** first before altering code.
+12. **Populate scaffolded task artifacts:** Populate the task directory created in step 4 (`docs/tasks/YYYY/MM/YYYY-MM-DD/<id>-<type>-<slug>/`):
+    - **Master Plan (`README.md` / `<type>-<id>-<feature>.md`):** using `docs/templates/Task.md` — outcome, criteria, scope, 1-3-1 decision ledger, dependency graph, linearized unit index, target base, task branch, base commit, and `## Finalization & Merge Ledger`.
+    - **Phase Overviews (`phase-XX/phase.md`):** using `docs/templates/Phase.md` — shared phase goal, common context, unit index with dependency edges, and phase-level rollback.
+    - **Unit Artifacts (`phase-XX/unit-YY-<slug>.md`):** using `docs/templates/Unit.md`. Each unit must be self-contained: declare task branch and status block, strict scope fences (`**In scope:**`, `**Out of scope:**`), unit-scoped `<language_rules>`, implementation steps, justified verification, and a dedicated `## Preconditions / Expected state from dependencies` section.
 
 ## Plan requirements
 
 Include:
 
-- outcome and measurable acceptance criteria;
+- outcome and measurable acceptance criteria (`AC-NN`);
 - traceability from user context, goals, scenarios, constraints, and decisions to acceptance criteria, down to the specific unit and test that verifies each one;
 - current-state evidence with verified file paths;
-- scope and non-goals, stated at both the plan level and the unit level;
-- decisions and assumptions;
-- a dependency graph distinguishing required ordering from logical independence, with serial execution on the task branch;
-- the task branch and its verified target base and base commit in the plan and every unit;
+- scope and non-goals at both plan and unit levels;
+- decisions and assumptions, structuring material technical choices according to the 1-3-1 rule (`rules/global/1-3-1-rule.md`);
+- a dependency graph distinguishing required ordering from logical independence, paired with an explicit linearized execution order;
+- the task branch, verified target base, and 40-character base commit SHA recorded across the plan and every unit;
 - finalization lifecycle from task branch to target branch;
 - modular unit breakdowns with concrete files, functions, and checklists, each carrying its own standalone context packet;
-- unit-scoped language rule binding (`<language_rules>`) carrying stable directive IDs, explicit enforcement modes (`automated-blocking`, `evidence-blocking`, `advisory`), content hashes, and explicit rule-satisfaction mapping in unit steps; describe this as selection evidence, not code verification;
-- a test plan per unit, typed (unit/integration/architecture/contract/migration/etc.) and justified by what the unit actually changes;
-- migration, environment, security, observability, and rollback impact when relevant — at the unit level where the impact is unit-scoped, at the phase level where it isn't;
-- dependencies and blockers;
-- final release and documentation checks.
+- **Expected state from dependencies:** each unit must explicitly declare what interfaces, files, or state its predecessor units produced;
+- **Dependency drift protocol:** if a unit alters contracts or decisions during execution, downstream dependent units are marked stale and must be reconciled before execution continues;
+- **Unit language rules (`<language_rules>`):** carrying stable directive IDs, rule paths, explicit enforcement modes, and content hashes:
+  - `automated-blocking`: deterministic machine checks (linters, typecheckers, test suites, `context-cli preflight`) that must pass to proceed;
+  - `evidence-blocking`: requires verifiable recorded human or artifact inspection receipt;
+  - `advisory`: non-blocking best-practice guidance;
+- **Waivers:** any intentional deviation or bypass of an applicable rule must cite an active, authorized waiver ID (e.g. `[waiver:W-NNNN]`); un-waived contradictions fail validation;
+- a test plan per unit, typed and justified by what the unit actually changes;
+- migration, environment, security, observability, and rollback impact;
+- risk and dependency register with resolved blockers;
+- completed plan done-check.
 
-Do not prescribe files that were not inspected unless clearly marked as new. Avoid vague tasks such as "handle errors"; name the boundary and expected behavior. Hold tests to the same standard: avoid vague verification such as "add tests"; name the case, the seam it exercises, and the test type that fits it.
+Do not prescribe files that were not inspected unless clearly marked as new. Avoid vague tasks such as "handle errors" or vague verification such as "add tests"; name the boundary, expected behavior, and specific test seam.
 
 ## Completion
 
-Validate that:
+Before declaring the plan complete, execute both validation tiers:
 
-- phases are executable in order, and the dependency graph between units is acyclic;
-- every unit names the same task branch, and the current checkout matches it;
-- the finalization path from task branch to target branch is clearly documented;
-- every acceptance criterion maps to a unit and to a test that verifies it;
-- every unit contains a populated `<language_rules>` block carrying concrete directive IDs, modes, and rule paths matching its touched files, verifiable via `node scripts/context.mjs plan:check <task-dir>`;
-- no open decision is disguised as an implementation step;
-- each unit's context packet is genuinely sufficient for a cold-start session — if executing it would require re-reading the master plan or this conversation, fold the missing piece into the unit instead of assuming it will be available.
+### 1. Automated Verification
 
-Return the created task folder path, task branch, base commit, and a concise summary of the phases and units.
+Run the deterministic harness validator:
+
+```bash
+node scripts/context.mjs plan:check docs/tasks/YYYY/MM/YYYY-MM-DD/<task-dir>
+```
+
+This automatically verifies:
+
+- task branch, target base, and base commit consistency across master and all units;
+- acceptance criteria table format (`AC-NN`), unit ID mapping (`XX.YY`), and concrete verification commands;
+- discovery brief presence, validity, and freshness;
+- presence of resolved blockers (`Unknowns and blockers`) and risk register;
+- plan done-check completion markers (`- [x]`);
+- unit `<language_rules>` block validity, rule file existence, stack alignment, directive hashes, and absence of un-waived contradictions;
+- acyclic dependency graph topology (`checkPlanGraph`) and disjoint parallel unit scopes (`checkPlanScopes`).
+
+### 2. Manual Verification
+
+Manually verify that:
+
+- no open product decision is disguised as an implementation step;
+- every material technical design choice is resolved via the 1-3-1 rule (`rules/global/1-3-1-rule.md`) or an ADR, and ready for user approval during plan-review;
+- every unit's context packet and dependency preconditions are genuinely sufficient for a cold-start session — if executing it would require reading the master plan or past chat history, fold the missing information directly into the unit;
+- assigned test types match what code actually changes, including characterization tests where existing coverage is absent, and performance/e2e tests where critical seams warrant them;
+- the linearized execution sequence accounts for all dependency relationships.
+
+### Output
+
+Return:
+
+1. Created task folder path (`docs/tasks/...`).
+2. Task branch name and verified base commit SHA.
+3. Concise summary of phases and units.
+4. **Linearized unit execution order** (e.g. `01.01 -> 01.02 -> 02.01 -> 02.02`).

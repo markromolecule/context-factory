@@ -16,7 +16,7 @@ Workflows coordinate rules, skills, roles, artifacts, quality gates, and stop co
 
 ## Architecture & Data Safety
 
-- [[skills/workflows/architecture-change/SKILL|Architecture Change]] — Change durable system boundaries, dependency direction, shared patterns, or public contracts with explicit evidence, decisions, migration, and conformance checks.
+- [[skills/workflows/architecture-change/SKILL|Architecture Change]] — Change durable system boundaries, dependency direction, shared patterns, or public contracts with explicit evidence, decisions, migration, and architecture verification.
 - [[skills/workflows/database-migration/SKILL|Database Migration]] — Evolve schemas and production data through compatible, reviewed, observable, and recoverable migration phases.
 
 ## Factory
