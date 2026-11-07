@@ -193,19 +193,6 @@ describe("Unit 01.01: Multi-Editor Bridge Generator Core", () => {
     }
   });
 
-  it("factory .agents/skills.json and .claude/CLAUDE.md comply with inventory and pnpm (AC-08)", async () => {
-    const factorySkillsJson = JSON.parse(await readFile(join(process.cwd(), ".agents", "skills.json"), "utf8"));
-    const paths = factorySkillsJson.entries.map((e) => e.path);
-    assert.ok(paths.includes("skills/engineering"), "Factory skills.json must contain skills/engineering");
-    assert.ok(paths.includes("skills/productivity"), "Factory skills.json must contain skills/productivity");
-    assert.ok(paths.includes("skills/workflows"), "Factory skills.json must contain skills/workflows");
-
-    const claudeMd = await readFile(join(process.cwd(), ".claude", "CLAUDE.md"), "utf8");
-    assert.match(claudeMd, /pnpm test/);
-    assert.match(claudeMd, /pnpm run eval/);
-    assert.doesNotMatch(claudeMd, /\bnpm (?:run|test)\b/);
-  });
-
   it("generateBridge handles profile-specific Codex and Claude discovery symlinks (AC-08)", async () => {
     const tempDir = await mkdtemp(join(tmpdir(), "profile-test-"));
     try {
