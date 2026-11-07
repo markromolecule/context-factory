@@ -1,0 +1,222 @@
+{
+  "main": {
+    "id": "fe7502cdd9cd2839",
+    "type": "split",
+    "children": [
+      {
+        "id": "0e1aa3f4a399e9d9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "af995c838094859c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "skills/productivity/context/SKILL.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "SKILL"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1b6eaa58ca43de92",
+    "type": "split",
+    "children": [
+      {
+        "id": "e990721d01b17bf3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "563cc3c91ca740f5",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "7cc717888aadad93",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "038cd4183aef6531",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8715c4fe1a06d043",
+    "type": "split",
+    "children": [
+      {
+        "id": "3962cbb184638423",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "43daefd505194746",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "skills/productivity/context/SKILL.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "d78699215ba96d75",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "skills/productivity/context/SKILL.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "9795538e99b54da2",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "9b6f17842c33833d",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "097efbf21ea4cee0",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "skills/productivity/context/SKILL.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "af995c838094859c",
+  "lastOpenFiles": [
+    "tests/fixtures/mock-doctor-host/rules/README.md",
+    "tests/fixtures/mock-doctor-host/rules",
+    "tests/fixtures/mock-multi-editor-host/custom-vscode-host/docs/decisions/README.md",
+    "tests/fixtures/mock-multi-editor-host/custom-vscode-host/docs/tasks/README.md",
+    "tests/fixtures/mock-multi-editor-host/custom-vscode-host/docs/tasks",
+    "tests/fixtures/mock-multi-editor-host/custom-vscode-host/docs/decisions",
+    "tests/fixtures/mock-multi-editor-host/docs/tasks/README.md",
+    "tests/fixtures/mock-multi-editor-host/docs/decisions/README.md",
+    "tests/fixtures/mock-multi-editor-host/custom-vscode-host/rules/README.md",
+    "tests/fixtures/mock-multi-editor-host/custom-vscode-host/docs",
+    "tests/fixtures/mock-multi-editor-host/rules/README.md",
+    "tests/fixtures/mock-multi-editor-host/docs/tasks",
+    "tests/fixtures/mock-multi-editor-host/docs/decisions",
+    "tests/fixtures/mock-multi-editor-host/custom-vscode-host/rules",
+    "tests/fixtures/mock-multi-editor-host/custom-vscode-host/AGENTS.md",
+    "tests/fixtures/mock-multi-editor-host/rules",
+    "tests/fixtures/mock-multi-editor-host/docs",
+    "tests/fixtures/mock-multi-editor-host/custom-vscode-host",
+    "tests/fixtures/mock-multi-editor-host/GEMINI.md",
+    "tests/fixtures/mock-multi-editor-host/AGENTS.md",
+    "tests/fixtures/mock-doctor-host/docs/tasks/README.md",
+    "tests/fixtures/mock-doctor-host/docs/decisions/README.md",
+    "tests/fixtures/mock-doctor-host/AGENTS.md",
+    "skills/productivity/context/references/spec-readiness.md",
+    "skills/productivity/context/references/handoff.md",
+    "skills/productivity/context/SKILL.md",
+    "skills/productivity/plan/references/test-matrix.md",
+    "skills/productivity/plan/SKILL.md",
+    "skills/productivity/plan/references/example-unit.md",
+    "skills/productivity/plan/references/branching.md"
+  ]
+}
