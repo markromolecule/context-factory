@@ -267,6 +267,8 @@ const ACTION_TERMS = new Set([
 
 const PREPLANNING_TEST = /\b(new system|new product|pre-?planning|before (?:we )?(?:code|coding|implement)|stress-test (?:the )?(?:idea|plan)|context spec(?:ification)?|author context|create context)\b|^\/(?:grill|discovery|context)\b|^\[(?:GRILL|DISCOVERY|CONTEXT|CONTEXT_SPEC)\]/i;
 const EXECUTION_TEST = /\b(execute|implement|carry out|follow|resume)\b.*\b(existing|approved|implementation)?\s*plan\b|\b(existing|approved|implementation)\s*plan\b.*\b(execute|implement|resume)\b|^\/(?:exec|execute|execution)\b|^\[(?:EXEC|EXECUTE|EXECUTION)\]/i;
+const PLAN_DESIGN_TEST = /^(?:how should we implement\b|break this down\b|write up the tasks\b)/i;
+const PLAN_REVIEW_TEST = /\b(?:review|audit)\b.*\b(?:implementation\s+)?plan\b|\bplan[- ]review\b/i;
 const GENERIC_KNOWLEDGE_TERMS = new Set(["architecture", "clean", "code", "context", "design", "factory", "principle", "software", "typescript"]);
 const INTENT_TOKEN_BUDGETS = {
   "direct-question": 9000,
@@ -280,6 +282,7 @@ const INTENT_TOKEN_BUDGETS = {
 function classifyIntent(request, isDirectQuestion) {
   if (isDirectQuestion) return "direct-question";
   if (EXECUTION_TEST.test(request)) return "execution";
+  if (PLAN_DESIGN_TEST.test(request)) return "plan";
   if (/\b(fix|defect|bug|regression|hotfix)\b/i.test(request)) return "defect";
   if (/\b(investigate|investigation|diagnose|inspect|analyze)\b/i.test(request)) return "investigation";
   if (/^[/\\$]plan\b|^\[PLAN\]|\bplanning\b/i.test(request)) return "plan";
@@ -405,8 +408,11 @@ export async function resolveContext(request, options = {}) {
   const requestTerms = terms(request);
   const trimmedRequest = request.trim();
   const isExplicitTrigger = /^[/\\$][a-z0-9_-]+|^\[[a-z0-9_-]+\]/i.test(trimmedRequest);
+  const isPlanDesignRequest = PLAN_DESIGN_TEST.test(trimmedRequest)
+    && !EXECUTION_TEST.test(trimmedRequest)
+    && !PLAN_REVIEW_TEST.test(trimmedRequest);
   const hasAction = requestTerms.some((term) => ACTION_TERMS.has(term)) || isExplicitTrigger;
-  const isDirectQuestion = !isExplicitTrigger && (
+  const isDirectQuestion = !isExplicitTrigger && !isPlanDesignRequest && (
     /^(?:how (?:do|can|to|does|should|is|are)\b|what (?:is|are|does|do|can|workflows?)\b|which (?:workflow|rule|skill|command)\b|why\b|where\b|when\b|explain (?:how|what|the)?\b|tell me\b)/i.test(trimmedRequest)
     || /^(?:how|what|which|why|where|when|can you explain)\b.*\?$/i.test(trimmedRequest)
   );
@@ -532,6 +538,12 @@ export async function resolveContext(request, options = {}) {
         ? "matched security-sensitive terms in request"
         : `matched: ${entry.relevance.matches.join(", ")}`,
     }));
+
+  if (!explicitSkillName && isPlanDesignRequest) {
+    selectedSkills = [{ path: "skills/productivity/plan/SKILL.md", reason: "implementation planning request" }];
+  } else if (!explicitSkillName && PLAN_REVIEW_TEST.test(trimmedRequest)) {
+    selectedSkills = [{ path: "skills/productivity/plan-review/SKILL.md", reason: "plan review request" }];
+  }
 
   if (selectedAgent && Array.isArray(selectedAgent.meta.skills)) {
     const selectedSkillPaths = new Set(selectedSkills.map((item) => item.path));

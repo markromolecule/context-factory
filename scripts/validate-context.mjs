@@ -138,8 +138,8 @@ export async function validateContext() {
     if (!meta) error(`Skill has no YAML frontmatter: ${path}`);
     else {
       const keys = Object.keys(meta).sort();
-      if (keys.join(",") !== "description,name") {
-        error(`Skill frontmatter must contain only name and description: ${path}`);
+      if (!keys.includes("name") || !keys.includes("description") || keys.some((key) => !["name", "description", "compatibility"].includes(key))) {
+        error(`Skill frontmatter may contain only name, description, and compatibility: ${path}`);
       }
       if (!meta.name || !meta.description) error(`Skill metadata is incomplete: ${path}`);
       if (meta.name !== path.split("/").at(-2)) error(`Skill name does not match its folder: ${path}`);

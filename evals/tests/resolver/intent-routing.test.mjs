@@ -51,6 +51,19 @@ describe("Unit 02.01: intent and knowledge routing", () => {
     assert.equal(selection.budget.intent, "plan");
   });
 
+  it("routes an implementation approach request to planning", async () => {
+    const selection = await resolveContext("How should we implement the billing migration?");
+    assert.equal(selection.budget.intent, "plan");
+    assert.deepEqual(paths(selection.skills), ["skills/productivity/plan/SKILL.md"]);
+  });
+
+  it("routes an existing plan review without loading the plan authoring skill", async () => {
+    for (const request of ["Review the existing implementation plan", "Perform a plan review"]) {
+      const selection = await resolveContext(request);
+      assert.deepEqual(paths(selection.skills), ["skills/productivity/plan-review/SKILL.md"]);
+    }
+  });
+
   it("routes an explicit execute trigger to execute without unrelated planning skills", async () => {
     const selection = await resolveContext("/execute approved plan for order service", {
       stack: "typescript", scope: ["src/order.ts"],

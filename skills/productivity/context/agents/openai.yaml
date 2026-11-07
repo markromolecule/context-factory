@@ -1,4 +1,4 @@
 interface:
   display_name: "Context Specification"
-  short_description: "Author and grill context specifications before planning"
-  default_prompt: "Use $context to grill requirements and author a structured context specification under docs/context/ before planning."
+  short_description: "Confirm context and release a plan-ready brief"
+  default_prompt: "Use $context to clarify and document the requirements, then complete grounding and grill handoff to a verified brief for planning."

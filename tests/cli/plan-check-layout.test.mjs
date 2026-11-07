@@ -124,6 +124,20 @@ describe("plan:check scaffolded sibling master", () => {
     }
   });
 
+  it("fails when a scaffolded plan leaves its discovery brief field blank", async () => {
+    const item = await fixture();
+    try {
+      const source = await readFile(item.planPath, "utf8");
+      await writeFile(item.planPath, source.replace("discovery_brief: brief.json", 'discovery_brief: ""'));
+      const result = await check(item.taskDir);
+      assert.equal(result.code, 1);
+      assert.equal(result.report.handoff.valid, false);
+      assert.match(result.report.handoff.diagnostics[0].message, /no released discovery brief path/);
+    } finally {
+      await rm(item.directory, { recursive: true, force: true });
+    }
+  });
+
   it("fails on an unresolved blocker or incomplete done-check", async () => {
     const blocked = await fixture({ blockers: "- Blocking decision remains open." });
     const unchecked = await fixture({ checked: false });

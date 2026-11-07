@@ -17,4 +17,6 @@ The record must name its source context path and hash, each grounding claim's pr
 
 `brief.md` is released only when the source context is `ready`, all material unknowns and conflicts are resolved, scenario coverage is complete, and the user has confirmed the shared understanding. It includes the record hash, source context hash, objectives, in-scope and non-goal boundaries, accepted decisions, affected files and dependencies, acceptance criteria, risks, and remaining non-material assumptions.
 
+For new records, `grill` prepares a version 2 draft JSON brief and uses `node scripts/context.mjs handoff:release-brief <record> <brief>`. The release gate requires a ready record and context, a confirmation reference, resolved material unknowns, and the plan-facing fields. `handoff:verify-brief` checks both source hashes. Older version 1 briefs retain their original record-hash check.
+
 Release exactly one `brief.md` per feature. When its source context, claims, or record changes, mark the brief `stale`; `plan` must wait for a newly released brief.

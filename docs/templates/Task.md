@@ -9,6 +9,7 @@ tags: [task]
 target_branch: "{{target_branch}}"
 task_branch: "{{task_branch}}"
 base_commit: "{{base_commit}}"
+discovery_brief: ""
 ---
 
 # {{title}}
@@ -16,6 +17,8 @@ base_commit: "{{base_commit}}"
 ## Outcome
 
 ## Pre-planning record
+
+Fill `discovery_brief` with the verified released brief path relative to this master file before marking the plan done.
 
 ### Actors and goals
 

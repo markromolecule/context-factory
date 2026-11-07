@@ -72,5 +72,6 @@ feature: "{{feature_name}}"
 
 - **Allowed recipients:** `grounding`, `grill`
 - **Forbidden direct recipients:** `plan`, `plan-review`, `execute`
+- **User confirmation of shared understanding:** pending; record the date or durable reference and the confirmed scope
+- **Material unknowns or conflicts:** list unresolved IDs, or `none`
 - **Ready for grill:** yes / no
-- **Context content hash:**

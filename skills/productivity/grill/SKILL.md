@@ -36,6 +36,8 @@ Conflicting claims remain `unresolved` until the evidence and decision are recor
 
 A brief may be released only when the source context is `ready`, no material unknown or unresolved conflict remains, the scenario coverage is complete, and the user has confirmed the shared understanding. Release exactly one `brief.md` per discovery feature. If new evidence changes the record, mark the brief stale and return to discovery.
 
+Prepare the plan-facing `brief.md` as a draft version 2 JSON artifact with the fields in [`context` handoff guidance](../context/references/handoff.md). Run `node scripts/context.mjs handoff:release-brief <record> <brief>` and then `node scripts/context.mjs handoff:verify-brief <brief>`. The command verifies required fields, ready context, confirmation reference, and source hashes; review the actual scenario challenges and decisions for quality before passing the verified brief path to `plan`.
+
 ## Documentation boundaries
 
 - Keep the glossary limited to canonical domain vocabulary, meanings, boundaries, and discouraged synonyms.

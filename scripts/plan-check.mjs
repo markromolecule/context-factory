@@ -818,6 +818,9 @@ export async function validatePlanDoneCheck(taskDirPath, units, graph) {
 export async function validatePlanHandoff(taskDirPath) {
   const master = await findTaskMaster(taskDirPath);
   const briefPath = master?.meta?.discovery_brief;
+  if (master?.meta && Object.hasOwn(master.meta, "discovery_brief") && !String(briefPath ?? "").trim()) {
+    return { applicable: true, valid: false, diagnostics: [{ failureClass: "handoff", message: "Plan has no released discovery brief path.", remediation: "Set discovery_brief to the verified brief path relative to the master plan." }] };
+  }
   if (!briefPath) return { applicable: false, valid: true, diagnostics: [] };
   const result = await verifyDiscoveryBrief(resolve(dirname(master.path), briefPath));
   return result.valid ? { applicable: true, valid: true, diagnostics: [] } : { applicable: true, valid: false, diagnostics: [{ failureClass: "handoff", message: result.message, remediation: "Release a fresh grill brief before planning." }] };

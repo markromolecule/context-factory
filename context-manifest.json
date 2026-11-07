@@ -89,10 +89,15 @@
     "skills/engineering/test/agents/openai.yaml",
     "skills/productivity/adr/agents/openai.yaml",
     "skills/productivity/context/agents/openai.yaml",
+    "skills/productivity/context/references/handoff.md",
+    "skills/productivity/context/references/spec-readiness.md",
     "skills/productivity/grill/agents/openai.yaml",
     "skills/productivity/grill/references/glossary-format.md",
     "skills/productivity/plan-review/agents/openai.yaml",
-    "skills/productivity/plan/agents/openai.yaml"
+    "skills/productivity/plan/agents/openai.yaml",
+    "skills/productivity/plan/references/branching.md",
+    "skills/productivity/plan/references/example-unit.md",
+    "skills/productivity/plan/references/test-matrix.md"
   ],
   "workflows": [
     "skills/workflows/architecture-change/SKILL.md",
