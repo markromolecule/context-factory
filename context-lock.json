@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:3b49ff8b09377adbf67f86f2d080e0e2f4326f87e39e4428d79710ce995c1652",
+  "digest": "sha256:65c8c03b1a52342eefacebc64fa24c84bcd637e1ecf212ee09a27bcf731ad32e",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
     "README.md": "sha256:bcdf2e4377e409c3c86191d9914e234e557f29e57b8b9d2c528e524f7e005a27",
@@ -250,9 +250,9 @@
     "skills/productivity/grounding/SKILL.md": "sha256:4d0b95535dc0420a7d0d88ff5970f4e97199222c0e674bfb9be390fc3d94ab6b",
     "skills/productivity/plan-review/SKILL.md": "sha256:dd88e42f9a3ea37a26a86e52dd68ac498050b5a996e7159cf3c1f735288aa921",
     "skills/productivity/plan-review/agents/openai.yaml": "sha256:5dedbf44f3c21cc4912f001c9990f4df98506a33edbfc1ee964a80f65185098f",
-    "skills/productivity/plan/SKILL.md": "sha256:819289318c2a5b10a888a30c9e23c0c5f4913cd7464ee8e76a1c3ef0d00472d0",
+    "skills/productivity/plan/SKILL.md": "sha256:3de076dc8d9d6d26121d0e2db5b0136319ce9cc114dc7532794835c2bbd6ce03",
     "skills/productivity/plan/agents/openai.yaml": "sha256:e747a7135f5ebf61f9985f0b40cf24dca265fe06b50ed8be8ccdfff51d71d706",
-    "skills/productivity/plan/references/branching.md": "sha256:11ec540db08cf4197923f229c02d7cb164ee020228bca0b7e1528ee00c0d9a43",
+    "skills/productivity/plan/references/branching.md": "sha256:e351ad1ff5894391b7579b647341442f2c2531b61205a394ff1ab73d7dd3a21a",
     "skills/productivity/plan/references/example-unit.md": "sha256:371ab62c9b7e44e76e5467f4b5ba696e95aa54663c6a2c4d42d25bfc7f942ebb",
     "skills/productivity/plan/references/test-matrix.md": "sha256:907922ea1e2c2ce0da47a70a4947e1f2d6863c2d0d1b1354852a1249f13d35c7",
     "skills/productivity/session/SKILL.md": "sha256:3f77877c7a22ee223ff7e4c49e72648f81ab7dd8e416e724fef6b5b6854df017",

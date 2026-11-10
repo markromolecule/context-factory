@@ -8,7 +8,7 @@ compatibility: Requires git, node, scripts/context.mjs, and docs/templates/ in C
 ## Access declaration
 
 - **Reads:** released brief, grounding evidence, repository code/tests/configuration, decisions, and applicable rules.
-- **Writes:** task branch and plan artifacts under `docs/tasks/`.
+- **Writes:** one task branch in the current checkout and plan artifacts under `docs/tasks/`.
 - **Exposes to:** `plan-review` through the master plan and unit files.
 
 Write a plan that another session can execute one unit at a time. **Do not edit production code.** If the user also asks for implementation, finish planning and obtain the required plan review before using `execute`.
@@ -32,7 +32,7 @@ Preserve user changes; do not stash, reset, or discard them. Report the exact fa
 ## Work
 
 1. Run `node scripts/context.mjs handoff:verify-brief <brief>` and read the released brief end to end. Restate the outcome, non-goals, and measurable `AC-NN` criteria. Use its grounded evidence rather than reopening the upstream `context` specification. Confirm material claims against the current repository before planning.
-2. Follow [branching.md](references/branching.md) to verify the base and checkout, preview `task:new`, create the single task branch, and scaffold. Resume an existing plan only when its identity and branch match. The scaffold records the branch and base SHA in the generated artifacts; preserve those values.
+2. Follow [branching.md](references/branching.md) to verify the base and checkout, preview `task:new`, create the single task branch in the current checkout, and scaffold. Do not create a worktree for planning. Resume an existing plan only when its identity and branch match. The scaffold records the branch and base SHA in the generated artifacts; preserve those values.
 3. Inspect affected source, tests, configuration, schemas, and consumers. Distinguish verified facts, assumptions, open technical choices, and out-of-scope work. Cite inspected paths; label proposed new files as new.
 4. For each material unresolved technical choice, follow [`rules/global/1-3-1-rule.md`](../../../rules/global/1-3-1-rule.md): define one decision, compare three viable approaches, and recommend one. Record the comparison in the master decision ledger. Do not invent a third option; if fewer than three are viable, explain the constraint for review. Route durable, cross-cutting decisions to [`adr`](../adr/SKILL.md). Product decisions return to `grill`; `plan-review` handles approval before execution.
 5. Check responsibilities and dependencies against [`knowledge/principles/`](../../../knowledge/principles/). Group units into phases, give each unit explicit `depends_on` edges, and record a topological execution order for the serial task branch.
