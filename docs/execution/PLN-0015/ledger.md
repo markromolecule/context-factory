@@ -93,3 +93,23 @@ These host checks ran on an intermediate diff before the final optional-priority
 | `git diff --check` | 0 | No whitespace errors. |
 
 **Unit 03.01 checkpoint:** Commit this scoped unit and ledger on the approved task branch, then stop for developer inspection before Unit 03.02. The selection receipt proves routing and budget estimates, not answer quality or host code behavior.
+
+## 2026-11-10 — Unit 03.02 grounded offline evaluation
+
+- **Authority and prerequisites:** The user instructed `continue` after Unit 03.01. The approved PLN-0015 packet verified, `plan:check` passed for the task directory, and the released brief verified. Branch `feat/PLN-0015-grounded-run-context-and-retrieval-evalu` started clean at committed Unit 03.01 revision `6d7c813e785889f4a48a06d1a5d6f427c5cb0e6e`; target `master` remains based at `5ec9b5f3e8204b804ad72a5e10dbd0c4524dfe1e`. Earlier Unit 01.01 and 02.01 receipts remain committed. The four unit files are `evals/run-evals.mjs`, `evals/tests/rules/prompt-compiler.test.mjs`, `.github/workflows/context-factory.yml`, and `context-lock.json`; this ledger is the permitted fifth file. Their `git diff --binary` SHA-256 before this receipt is `949086726747dc53bfe05bb2c9b4a3486d8af0ebb421711bb4a1b836e7bb5c60`.
+- **Preflight and rules:** Preflight for the four JavaScript/YAML/JSON files exited 2 with `UNSUPPORTED`, binding `binding-adhoc-00-00-941585e16b89` (`sha256:941585e16b89fac9cd6ebaaa2efff09c1961cbb81cbfd87f987022949ab76acb`), 50 selected directives, and `codeVerification: NOT_RUN`. Applicable rule sources were read and unchanged: evidence and claims `sha256:de1623af4b2ce5c31b5b242dd0c20aa0df701469bd9900bf2909c74656bda622`, code quality `sha256:e6541ae8c0d45302fb3237af77b20d2aa58c551a60e5c989f093eecff7b820fe`.
+- **Test first and source evidence:** The new deterministic provider parses the marked JSON section from actual `executeRun` provider input, validates hashes, and derives narrow KISS/YAGNI classifications from received bodies. The test holds the expected answer outside the provider. It cites only `knowledge/principles/kiss.md` (`sha256:caa4c31363d68199e25ce4e67e9ab80e0ec55588348ce31d6ca4e8808fba8405`) and `knowledge/principles/yagni.md` (`sha256:ff5bf723ec8c758403a4502b7ab4d893139d83fe4e4e7f6a7f52ae83b2634a2e`) even while other sources are included. Withholding KISS or changing its content fails the answer assertion; retaining a stale hash fails assembly; a canned answer without citations fails provenance. The initial test run exited 1 because the dataset runner still passed a golden fixture. After fixture removal, two historical benchmark JSON files exposed stale `goldenOutput.workflow` values with no declared `expected` route; those values are now reported as historical metadata, while their mock completion status remains checked. Four datasets retain declared routing and mock output checks. No dataset files or production resolver/provider code changed.
+- **CI and lock:** The pull-request workflow now runs the exact focused Node test command after doctor; the earlier failing focused command exited 1, showing the command propagates a failure before the fix. `node scripts/context.mjs lock` exited 0 and pinned 260 canonical paths with digest `sha256:50ee910f64442f2b3652e0c7051b7c3cb264f73fa4988443f5a2bcc31bbe7673`.
+
+| Command at the recorded diff | Exit | Evidence |
+| --- | ---: | --- |
+| `node --test evals/tests/rules/prompt-compiler.test.mjs evals/tests/cli/run-budget.test.mjs evals/tests/resolver/intent-routing.test.mjs` | 0 | 57/57 focused source, budget, and routing tests passed. |
+| `node scripts/context.mjs eval` | 0 | 27/27 factory evaluations passed, including all six dataset paths without fixture injection. |
+| `pnpm run lint` | 0 | Context Factory lint passed; lock synchronized. |
+| `pnpm run test` | 0 | Evaluation suite passed 27/27. |
+| `pnpm run test:unit` | 0 | Repository unit suite passed 57/57. |
+| `pnpm run build` | 0 | Bundle compiled with the refreshed lock; generated untracked `dist/context-bundle.json` was removed. |
+| `node scripts/context.mjs doctor` | 0 | Healthy; manifest/lint, lock, editor integrity, and evaluations passed. |
+| `git diff --check` | 0 | No whitespace errors. |
+
+**Phase 03 checkpoint and evidence limit:** Commit this unit and ledger, then stop for developer inspection. The new tests show that selected repository text, paths, and hashes reach an offline deterministic provider and that source removal or mutation fails a narrow answer/provenance assertion. The mock datasets prove routing and contract behavior only; historical benchmark cases check mock completion. No live-model answer quality or general reasoning claim is made.

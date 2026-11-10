@@ -19,3 +19,5 @@ jobs:
       - uses: pnpm/action-setup@v6
       - name: Verify context lock, structure, and behavior
         run: pnpm run doctor
+      - name: Verify grounded source, budget, and routing behavior
+        run: node --test evals/tests/rules/prompt-compiler.test.mjs evals/tests/cli/run-budget.test.mjs evals/tests/resolver/intent-routing.test.mjs

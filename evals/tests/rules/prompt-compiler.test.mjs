@@ -20,7 +20,9 @@ import {
   openAIProvider,
   anthropicProvider,
   geminiProvider,
+  mockProvider,
 } from "../../../orchestrator/runner.mjs";
+import { runDatasetEvaluations } from "../../run-evals.mjs";
 
 const sampleBinding = {
   id: "bind-pilot-001",
@@ -48,6 +50,105 @@ const sampleBinding = {
     },
   ],
 };
+
+describe("PLN-0015 Unit 03.02: source-dependent offline evaluations", () => {
+  const request = "Explain KISS and YAGNI";
+  const kissPath = "knowledge/principles/kiss.md";
+  const yagniPath = "knowledge/principles/yagni.md";
+  const expectedAnswer = { kiss: "implementation method", yagni: "scope decision" };
+
+  const evidenceProvider = async ({ prompt }) => {
+    const marker = prompt.indexOf(SOURCE_DATA_PREFIX);
+    if (marker < 0) throw new Error("Source section missing from provider input");
+    const { sources } = JSON.parse(prompt.slice(marker + SOURCE_DATA_PREFIX.length));
+    const relevant = sources.filter(({ path }) => path === kissPath || path === yagniPath);
+    for (const source of relevant) {
+      if (source.hash !== `sha256:${sha256(source.content)}`) throw new Error(`Stale source hash: ${source.path}`);
+    }
+    const kiss = relevant.find(({ path }) => path === kissPath)?.content ?? "";
+    const yagni = relevant.find(({ path }) => path === yagniPath)?.content ?? "";
+    return {
+      output: {
+        answer: {
+          kiss: /governs \*\*how to implement\*\*/.test(kiss) ? "implementation method" : null,
+          yagni: /governs \*\*whether to build\*\*/.test(yagni) ? "scope decision" : null,
+        },
+        citations: relevant.map(({ path, hash }) => ({ path, hash })),
+      },
+      model: "source-evidence-v1",
+    };
+  };
+
+  const assertGrounded = (output, expectedSources) => {
+    assert.deepEqual(output.answer, expectedAnswer);
+    assert.deepEqual(output.citations, expectedSources.map(({ path, hash }) => ({ path, hash })));
+  };
+
+  it("derives a cited answer from the actual executeRun provider input", async () => {
+    const result = await executeRun({ request, provider: evidenceProvider });
+    assert.equal(result.status, "success");
+    const expectedSources = await Promise.all([kissPath, yagniPath].map(async (path) => {
+      const content = await readText(path);
+      return { path, hash: `sha256:${sha256(content)}` };
+    }));
+    assertGrounded(result.output, expectedSources);
+    assert.ok(result.inputBudget.includedSources.some(({ path }) => path === kissPath));
+    assert.ok(result.inputBudget.includedSources.some(({ path }) => path === yagniPath));
+    assert.ok(result.inputBudget.includedSources.some(({ path }) => path !== kissPath && path !== yagniPath));
+    assert.ok(result.output.citations.every(({ path }) => path === kissPath || path === yagniPath));
+  });
+
+  it("fails the answer assertion when the needed KISS note is withheld", async () => {
+    const content = await readText(yagniPath);
+    const source = { path: yagniPath, hash: `sha256:${sha256(content)}`, content };
+    const assembled = assembleBoundedContext({
+      request, selection: { selectedPaths: [yagniPath] }, bundle: { sources: [source] }, maxInputTokens: 100_000,
+    });
+    const answer = await evidenceProvider({ prompt: assembled.prompt });
+    assert.throws(() => assertGrounded(answer.output, [source]), /implementation method/);
+  });
+
+  it("fails the answer assertion when a note's content changes under a fresh hash", async () => {
+    const sources = await Promise.all([kissPath, yagniPath].map(async (path) => {
+      const content = await readText(path);
+      return { path, hash: `sha256:${sha256(content)}`, content };
+    }));
+    sources[0].content = sources[0].content.replace("how to implement", "whether to build");
+    sources[0].hash = `sha256:${sha256(sources[0].content)}`;
+    const assembled = assembleBoundedContext({
+      request, selection: { selectedPaths: sources.map(({ path }) => path) }, bundle: { sources }, maxInputTokens: 100_000,
+    });
+    const answer = await evidenceProvider({ prompt: assembled.prompt });
+    assert.throws(() => assertGrounded(answer.output, sources), /implementation method/);
+  });
+
+  it("rejects a changed note with its old hash before provider dispatch", async () => {
+    const content = await readText(kissPath);
+    const source = { path: kissPath, hash: `sha256:${sha256(content)}`, content: `${content}\nChanged` };
+    assert.throws(() => assembleBoundedContext({
+      request, selection: { selectedPaths: [kissPath] }, bundle: { sources: [source] }, maxInputTokens: 100_000,
+    }), /provenance mismatch/);
+  });
+
+  it("rejects a canned golden answer with no source citations", () => {
+    assert.throws(() => assertGrounded({ answer: expectedAnswer, citations: [] }, [
+      { path: kissPath, hash: "sha256:expected-kiss" },
+      { path: yagniPath, hash: "sha256:expected-yagni" },
+    ]), { code: "ERR_ASSERTION" });
+  });
+
+  it("keeps golden output out of the offline mock provider input", async () => {
+    let receivedFixture = false;
+    const report = await runDatasetEvaluations({ provider: async (payload) => {
+      receivedFixture ||= payload.fixture != null;
+      return mockProvider(payload);
+    } });
+    assert.equal(receivedFixture, false);
+    assert.equal(report.failed, 0);
+    assert.equal(report.results.filter(({ details }) => details.evidenceClass === "routing-and-mock-contract").length, 4);
+    assert.equal(report.results.filter(({ details }) => details.evidenceClass === "historical-mock-contract").length, 2);
+  });
+});
 
 describe("Unit 02.03: Mandatory Prompt Compiler and Directive Rendering", () => {
   it("renders concise <language_rules> block with stable IDs, hashes, and precedence invariant", () => {
