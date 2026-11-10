@@ -3,13 +3,13 @@
   "kind": "execution-packet",
   "owner": "plan-review",
   "status": "approved",
-  "reviewReference": "PLN-0015-scope-reconciliation-review-2026-11-10",
-  "approvalReference": "user-proceed-scope-reconciliation-2026-11-10",
+  "reviewReference": "PLN-0015-unit-02-scope-review-2026-11-10",
+  "approvalReference": "user-approved-PLN-0015-unit-02-eval-cap-2026-11-10",
   "taskBranch": "feat/PLN-0015-grounded-run-context-and-retrieval-evalu",
   "targetBranch": "master",
   "baseCommit": "5ec9b5f3e8204b804ad72a5e10dbd0c4524dfe1e",
   "source": {
     "path": "docs/tasks/2026/11/2026-11-10/feat-PLN-0015-grounded-run-context-and-retrieval-evalu.md",
-    "sha256": "sha256:114eeafb69b4e88e0f73f0dbe88f33c6ed73c3735a9534e53a4568e8bd293b9a"
+    "sha256": "sha256:06218a91f421a3c4b0ba677f7f14a099b2c56e5cab07b7a15f64d90ee07e7700"
   }
 }

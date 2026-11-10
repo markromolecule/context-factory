@@ -117,6 +117,7 @@ Make `executeRun` send selected source text with repository-relative paths and c
 | Auth term matching overgeneralizes | False security routing | 03.01 positive and ordinary-order negative fixtures |
 | Offline mock overstates answer quality | False confidence | 03.02 source-dependent mutation/removal test, CI command, and explicit live-quality limitation |
 | Canonical context edits stale hashes/lock | Doctor failure or invalid receipt | Refresh rule hashes, manifest/lock only if inventory changes, rerun doctor |
+| Existing offline dataset exceeds the new direct-run default cap | Routing regression suite fails before comparing its fixture | 02.01 sets an explicit offline evaluation cap in `evals/run-evals.mjs`; 03.02 later removes golden-output injection while preserving the cap as test setup |
 
 ## Task branch
 
@@ -142,7 +143,7 @@ Make `executeRun` send selected source text with repository-relative paths and c
 
 ## Deviations
 
-- The user approved restoring seven staged `.DS_Store` files to clean the checkout for branch creation. The assistant-authored discovery files were temporarily moved aside for the scaffold's clean-checkout gate and restored byte-for-byte on the task branch. During Unit 01.01 execution, lint and doctor exposed that manifest-tracked code changes require a lock refresh in every affected unit; the plan also mislabeled the configured build check as unconfigured. The user instructed continuation on 2026-11-10, so the unit scopes and host checks were reconciled before reissuing the packet.
+- The user approved restoring seven staged `.DS_Store` files to clean the checkout for branch creation. The assistant-authored discovery files were temporarily moved aside for the scaffold's clean-checkout gate and restored byte-for-byte on the task branch. During Unit 01.01 execution, lint and doctor exposed that manifest-tracked code changes require a lock refresh in every affected unit; the plan also mislabeled the configured build check as unconfigured. The user instructed continuation on 2026-11-10, so the unit scopes and host checks were reconciled before reissuing the packet. During Unit 02.01, dataset `ds-feat-02` required 19,313 estimated tokens against the 18,000 default cap and made the existing routing suite fail. Unit 02.01 now includes a test-only evaluation cap in `evals/run-evals.mjs`; this does not alter direct-run default enforcement.
 
 ## Plan done-check
 
@@ -162,4 +163,4 @@ Make `executeRun` send selected source text with repository-relative paths and c
 
 ## Result
 
-Plan review passed on 2026-11-10 after reconciling manifest/lock inventory, CI coverage for focused tests, and post-hook source integrity. The initial approved packet was issued, then execution found the per-unit lock scope and configured-build gaps recorded above. The revised plan passed re-review under the user's continuation instruction and is eligible for a fresh packet before Unit 01.01 is committed.
+Plan review passed on 2026-11-10 after reconciling manifest/lock inventory, CI coverage for focused tests, and post-hook source integrity. Unit 01.01 is committed. Unit 02.01 execution exposed the offline dataset cap dependency recorded above; its revised scope passed re-review and received explicit user approval for a fresh packet on 2026-11-10.

@@ -33,6 +33,7 @@ Wire Phase 1's bounded source assembly into `executeRun` and both public run com
 - `app/cli/commands/run.mjs`, `app/cli/bin/context-cli.mjs`, `scripts/harness-cli.mjs`: run command entries and help.
 - `schemas/run-result.schema.json`: result receipt contract.
 - `evals/tests/rules/prompt-compiler.test.mjs` and new `evals/tests/cli/run-budget.test.mjs`: integration and CLI contract tests.
+- `evals/run-evals.mjs`: give routing datasets an explicit offline cap so the existing suite remains runnable after direct runs enforce the recommended default.
 - `context-manifest.json` and `context-lock.json`: register the new evaluation test and pin the updated inventory.
 
 ## Implementation Tasks
@@ -42,6 +43,7 @@ Wire Phase 1's bounded source assembly into `executeRun` and both public run com
 ## Verification & Testing
 
 - `node --test evals/tests/rules/prompt-compiler.test.mjs evals/tests/cli/run-budget.test.mjs` checks direct/custom provider capture, no-dispatch overflow, hook behavior, schema receipt, and both command paths. `node scripts/context.mjs doctor` confirms the new test is registered in the manifest and lock.
+- `pnpm run test` must pass all 27 existing evaluations with the explicit offline cap; this is test setup, not a change to the direct-run default.
 - Run configured `pnpm run lint`, `pnpm run test`, `pnpm run test:unit`, `pnpm run build`, and `node scripts/context.mjs doctor`; typecheck is unconfigured.
 
 ## Risks & Rollback
