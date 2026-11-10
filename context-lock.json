@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:65c8c03b1a52342eefacebc64fa24c84bcd637e1ecf212ee09a27bcf731ad32e",
+  "digest": "sha256:c84f27094aa95d03a18cab3926db7b051c8348db4a4a33bde09def85c7ef0814",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
     "README.md": "sha256:bcdf2e4377e409c3c86191d9914e234e557f29e57b8b9d2c528e524f7e005a27",
@@ -147,7 +147,7 @@
     "evals/tests/rules/pragmatic-backend-ui-alignment.test.mjs": "sha256:ecdf9ba044309e4b8265c5df2cff6bcecb077761003f3a1adb87ea24e8c15501",
     "evals/tests/rules/pragmatic-design.test.mjs": "sha256:2653bc71a00cd72b2e97019a94a6644a55373f944fe80a80c08bf24573596e70",
     "evals/tests/rules/pragmatic-solid-alignment.test.mjs": "sha256:535a98c3688e66f54527af8ce1e4510838de36a538f5d02f187d8a39704bb76c",
-    "evals/tests/rules/prompt-compiler.test.mjs": "sha256:8ce260c0302681073a0095d31522545ecabbdc9936ffc8a86c5f14ab1e95831e",
+    "evals/tests/rules/prompt-compiler.test.mjs": "sha256:68682f66d80f16e17c08df1386b9ee25b6495e903538e35ac62ef7219d7b599f",
     "evals/tests/rules/rule-binding.test.mjs": "sha256:3911df53b5127155042124b1b89542bf7eaaed245d18968f4aef35c73b877c7b",
     "evals/tests/rules/rule-contract-schema.test.mjs": "sha256:d2dea8c6e98bbd9714e286d43e26db09f5167ee4bde5af45d852541a1a1f219c",
     "evals/tests/rules/rule-density.test.mjs": "sha256:8db757f4536aebdd3110779330f33edb779109fd6d232a681de9f655e719da36",
@@ -167,7 +167,7 @@
     "orchestrator/SHARED.md": "sha256:434986041ec8bf8f48903356346bf55644063cf119d90fa1fc8e0d3c9f969652",
     "orchestrator/rules/binding-compiler.mjs": "sha256:d7b48209d7426380b30fdd4dc1082e15d274c337eb14524005f7ea98f0678a87",
     "orchestrator/rules/descriptor-parser.mjs": "sha256:da5dae67785e30820767a1eb1c005238093408bd79b37d020c4cdceeec3ea263",
-    "orchestrator/rules/prompt-compiler.mjs": "sha256:35177c03d50f5374a0f09c5a7a62d6784903b623159eee65914247f069c466bc",
+    "orchestrator/rules/prompt-compiler.mjs": "sha256:3be9c453e78f0f4965a8f1ee8ef45baf3e09967310c0ea8a814d673b6d7738a9",
     "orchestrator/runner.mjs": "sha256:26ea4082e26fa645b221685b130aa7ec9cdc9cba9a890d0cc750fd41ea6e3475",
     "orchestrator/validator.mjs": "sha256:b2738465c4602d499424a905a38d215290d2b9711bb9bf1e5263e8f8a46a0858",
     "rules/global/1-3-1-rule.md": "sha256:b0bc011143735650959005970de3158d874f9643e94ddfdb42d4ff1c98470e18",

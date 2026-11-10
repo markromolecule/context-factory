@@ -1,0 +1,49 @@
+# PLN-0015 execution ledger
+
+## 2026-11-10 — Unit 01.01 checkpoint: blocked by reviewed scope
+
+- **Batch authority:** The user invoked `execute` against approved packet `docs/execution/PLN-0015/packet.json`; Unit 01.01 is the sole dependency-ready unit. The packet verified with status `approved`, review reference `PLN-0015-plan-review-2026-11-10`, and approval reference `user-approved-PLN-0015-2026-11-10`.
+- **Branch/base:** `feat/PLN-0015-grounded-run-context-and-retrieval-evalu` at `5ec9b5f3e8204b804ad72a5e10dbd0c4524dfe1e`, matching the packet and Unit 01.01. Target base is `master` at the same commit. `plan:check` and `handoff:verify-brief` passed before editing.
+- **Affected scope:** `orchestrator/rules/prompt-compiler.mjs` and `evals/tests/rules/prompt-compiler.test.mjs` only. The uncommitted code diff identity is SHA-256 `c8f6204b9f26b322778e07539104575abe0283b0ee2a7ab36dfd2e1e03a1db6f` from `git diff --binary` over those files. Host root: `/Users/joseph/Development/context-factory`.
+- **Preflight selection:** `context-cli preflight "Assemble bounded selected source context" --stack typescript --scope orchestrator/rules/prompt-compiler.mjs,evals/tests/rules/prompt-compiler.test.mjs --json` exited 2 with `UNSUPPORTED` because both files are JavaScript/ESM. It selected binding `binding-adhoc-00-00-e3f83225c581` (`sha256:e3f83225c581cfef7e245eaad818a0d1ab978e0074b6fe7f1c609f8e3fc5f523`) and 50 directives, but reported `codeVerification: NOT_RUN`. Applicable global rule sources were read: evidence and claims `sha256:de1623af4b2ce5c31b5b242dd0c20aa0df701469bd9900bf2909c74656bda622`, code quality `sha256:e6541ae8c0d45302fb3237af77b20d2aa58c551a60e5c989f093eecff7b820fe`, and security guardrails `sha256:12a5ee167f7c74c9e381f7a336c5930bbe08e8da687f82dcffa39c15125cd0d3`.
+
+### Test-first and implementation evidence
+
+- Initial focused test exited 1 because the new assembler export did not exist. A later test exited 1 because authority scanning still treated source data as instructions. A real KISS/YAGNI case then failed because the first estimate and optional order omitted both notes.
+- The current assembler hashes the captured source text, rejects unsafe paths and mismatched provenance, serializes whole sources as escaped JSON data, keeps required shared/workflow/rule content, and admits optional knowledge before lower-priority material. Required overflow raises `INPUT_BUDGET_EXCEEDED` with path/hash-only receipt. The local estimate weights ASCII UTF-8 bytes at 3.5 bytes per token, non-ASCII bytes at 2 bytes per token, and adds message overhead; it is an estimate, not provider usage.
+- `node --test evals/tests/rules/prompt-compiler.test.mjs` exited 0 at the recorded diff: 27/27 tests passed. A real resolver/bundle probe for `Explain KISS and YAGNI` included both notes and their hashes at 8,054 estimated tokens under the 9,000 cap; `README.md` was omitted whole and recorded. `git diff --check` exited 0.
+- Source authority review: the source section is appended to the user prompt, never the system prompt; JSON escapes angle brackets and line breaks so a fake closing tag remains data. Integrity validation excludes only the exact assembler-produced source section while checking binding directives, and rejects a missing, duplicate, or promoted section. Developer inspection remains pending at this checkpoint.
+
+### Configured host checks and blocker
+
+| Command | Exit | Observed result |
+| --- | ---: | --- |
+| `pnpm run lint` | 1 | `context-lock.json` stale after the compiler change. |
+| `pnpm run test` | 0 | Existing evaluation suite passed 27/27. |
+| `pnpm run test:unit` | 1 | 55/57 passed; doctor audit fails because the lock is stale. |
+| `pnpm run build` | 0 | Bundle compiled; generated untracked `dist/context-bundle.json` was removed after the check. |
+| `node scripts/context.mjs doctor --json` | 1 | Evaluation 27/27 passed, but manifest/lock health failed on the stale lock. |
+
+These host checks ran on an intermediate diff before the final optional-priority adjustment. The focused 27/27 test and real-source probe ran on the recorded final diff. Required host checks must be rerun after the scope correction; no passing status is claimed for the final diff.
+
+**Checkpoint:** Unit 01.01 remains uncommitted and blocked. The reviewed Unit 01.01 write scope excludes `context-lock.json`, while canonical validation requires regenerating it when `prompt-compiler.mjs` changes. `package.json` also defines a build check, contrary to the unit's note that build is unconfigured. Reconcile Unit 01.01's exact scope and verification note through plan review, reissue the packet, then run the required checks and seek developer inspection before committing. No later unit or phase was started.
+
+## 2026-11-10 — Unit 01.01 resumed after scope reconciliation
+
+- **Authorization and handoff:** The user instructed `proceed` after the blocked checkpoint. Plan review added `context-lock.json` to Units 01.01, 03.01, and 03.02 and corrected configured build/unit-test checks across the plan. `plan:check` and `handoff:verify-brief` exited 0. The packet was reissued with review reference `PLN-0015-scope-reconciliation-review-2026-11-10` and approval reference `user-proceed-scope-reconciliation-2026-11-10`; `handoff:verify-packet` exited 0. The task branch and target-base identities still match the packet.
+- **Planning baseline:** Approved source context, discovery, revised plan, and packet were committed separately as `199c480f4ebd8eba65d6dbc7ce721831692a8a8d` (`docs(plan): record approved PLN-0015 handoff`). The Unit 01.01 commit contains only its three scoped files and this ledger.
+- **Changed scope and diff identity:** `orchestrator/rules/prompt-compiler.mjs`, `evals/tests/rules/prompt-compiler.test.mjs`, and `context-lock.json` at host root `/Users/joseph/Development/context-factory`; SHA-256 of their `git diff --binary` against the planning baseline is `3f4a4f5b9ffdba83fb6f4377d90c23a8ae71197782515c2c2066c3b05ff481b2`. `node scripts/context.mjs lock` exited 0 and pinned 259 canonical paths with digest `sha256:c84f27094aa95d03a18cab3926db7b051c8348db4a4a33bde09def85c7ef0814`.
+
+| Command at the recorded diff | Exit | Evidence |
+| --- | ---: | --- |
+| `node --test evals/tests/rules/prompt-compiler.test.mjs` | 0 | 27/27 focused tests passed, including source capture, provenance, exact cap, overflow, omission, unsafe path, instruction-like text, and real KISS/YAGNI selection. |
+| `pnpm run lint` | 0 | Context Factory lint passed; lock synchronized. |
+| `pnpm run test` | 0 | Existing evaluation suite passed 27/27. |
+| `pnpm run test:unit` | 0 | Repository unit suite passed 57/57. |
+| `pnpm run build` | 0 | Context bundle compiled with the refreshed lock; generated untracked `dist/context-bundle.json` was removed after verification. |
+| `node scripts/context.mjs doctor --json` | 0 | Healthy; manifest/lint, lock sync, editor integrity, and evaluations passed. |
+| `git diff --check` | 0 | No whitespace errors. |
+
+**Manual review evidence:** Source bodies enter the user prompt as escaped JSON data under an explicit instruction boundary. Path and hash are validated against the captured text; lexical and resolved-path guards reject traversal or links outside the repository. The assembler preserves the original order of included entries, admits optional knowledge first, and omits each rejected source whole with path/hash receipt. The KISS/YAGNI probe included both notes at 8,054 estimated tokens under a 9,000 cap and omitted only `README.md`. Required-source overflow is typed and contains no source bodies. The byte-weighted count is a conservative local estimate, not a provider tokenizer guarantee. No direct provider dispatch changes were made in Unit 01.01.
+
+**Phase 01 checkpoint:** Unit 01.01 is committed on the approved task branch in the commit containing this receipt. All required checks passed. Stop for developer inspection; Phase 02 has not started.
