@@ -333,7 +333,7 @@ const ROUTING_HINTS = [
   { test: /\b(architecture|cross-module|dependency direction|system boundary|refactor|solid|srp|ocp|lsp|isp|dip)\b/i, workflow: "architecture-change" },
   { test: /\b(database migration|schema migration|backfill)\b/i, workflow: "database-migration" },
   { test: /\b(?:context[- ]factory|manifest)\b.*\b(?:add|change|update|maintain|sync)\b|\b(?:add|change|update|maintain|sync)\b.*\b(?:context[- ]factory|manifest)\b|\b(?:maintain|sync)\s+(?:context[- ]factory|rules?|skills?|workflows?)\b/i, workflow: "context-maintenance" },
-  { test: /\b(feature|product capability|user story|frontend|interface|dialog|form|responsive|accessibility|ux|redesign|webhook|credential|secret|authorization|authentication|security|signature|replay|report|summary|mitigation|post-mortem)\b/i, workflow: "feature-delivery" },
+  { test: /\b(feature|product capability|user story|frontend|interface|dialog|form|responsive|accessibility|ux|redesign|webhook|credential|secret|authorization|authenticat(?:e|ed|ing|ion)|security|signature|replay|report|summary|mitigation|post-mortem)\b/i, workflow: "feature-delivery" },
   { test: PREPLANNING_TEST, workflow: "feature-delivery" },
 ];
 
@@ -490,7 +490,7 @@ export async function resolveContext(request, options = {}) {
           : `matched: ${entry.relevance.matches.join(", ")}`,
     }));
 
-  const isSecuritySensitive = /\b(security|authentication|authorization|credential|secret|threat|vulnerability|abuse|signature|webhook|replay)\b/i.test(request);
+  const isSecuritySensitive = /\b(security|authenticat(?:e|ed|ing|ion)|authorization|credential|secret|threat|vulnerability|abuse|signature|webhook|replay)\b/i.test(request);
   if (isSecuritySensitive) {
     const secRule = candidateRuleEntries.find((e) => e.meta.name === "security-guardrails");
     if (secRule && !selectedRules.some((r) => r.path === secRule.path)) {

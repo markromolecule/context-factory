@@ -99,3 +99,36 @@ describe("Unit 02.01: intent and knowledge routing", () => {
     assert.equal(selection.workflow?.path, "skills/workflows/feature-delivery/SKILL.md");
   });
 });
+
+describe("PLN-0015 Unit 03.01: authenticated endpoint routing", () => {
+  it("selects feature delivery and security guardrails for an authenticated orders endpoint", async () => {
+    const selection = await resolveContext("implement an authenticated orders endpoint");
+    assert.equal(selection.workflow?.path, "skills/workflows/feature-delivery/SKILL.md");
+    assert.match(selection.workflow?.reason || "", /routing hint: feature-delivery/);
+    const security = selection.rules.find(({ path }) => path === "rules/global/security-guardrails.md");
+    assert.ok(security, "Authenticated endpoint needs security guardrails");
+    assert.match(security.reason, /security-sensitive terms/);
+    assert.ok(selection.selectedPaths.includes(selection.workflow.path));
+    assert.ok(selection.selectedPaths.includes(security.path));
+    assert.deepEqual(knowledge(selection), []);
+    assert.equal(selection.budget.intent, "material");
+  });
+
+  it("does not infer security from ordinary order-domain requests", async () => {
+    for (const request of [
+      "implement an orders endpoint",
+      "list orders through an endpoint",
+      "build an order history page",
+      "What is an order endpoint?",
+    ]) {
+      const selection = await resolveContext(request);
+      assert.ok(!paths(selection.rules).includes("rules/global/security-guardrails.md"), request);
+    }
+  });
+
+  it("preserves defect routing precedence for an authenticated endpoint bug", async () => {
+    const selection = await resolveContext("fix an authenticated orders endpoint bug");
+    assert.equal(selection.workflow?.path, "skills/workflows/defect-resolution/SKILL.md");
+    assert.ok(paths(selection.rules).includes("rules/global/security-guardrails.md"));
+  });
+});

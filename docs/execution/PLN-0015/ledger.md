@@ -74,3 +74,22 @@ These host checks ran on an intermediate diff before the final optional-priority
 **Manual review evidence:** The provider input contract places source JSON only in `prompt`, never in `systemPrompt`. The post-hook check requires the exact assembled section, so path, hash, and full body remain together; missing, changed, duplicate, or promoted source sections fail before provider dispatch. The final estimated cap includes hook additions. `inputBudget` and error messages omit full source bodies, while actual provider token usage is reported separately. Built-in payload-builder tests verify the prepared prompt remains in each provider's user-message field; no live provider call or broad model-quality claim is made.
 
 **Phase 02 checkpoint:** Unit 02.01 is committed on the approved task branch in the commit containing this receipt. All required checks passed. Stop for developer inspection; Phase 03 has not started.
+
+## 2026-11-10 — Unit 03.01 authenticated endpoint routing
+
+- **Authority and scope:** The user instructed `continue` after the Unit 02.01 checkpoint. The approved PLN-0015 packet, released brief, and plan checks passed before this unit. Branch `feat/PLN-0015-grounded-run-context-and-retrieval-evalu` started this unit clean at `aa2aa857cf45c1effb20ec722fa47ed2492c15e6`; the target base remains `master` at `5ec9b5f3e8204b804ad72a5e10dbd0c4524dfe1e`. Changed files are exactly `scripts/context-core.mjs`, `evals/tests/resolver/intent-routing.test.mjs`, `context-lock.json`, and this permitted ledger. The scoped code diff SHA-256 is `6740820e2d822ea712494b29e361d0e7bf26756e1b87ca4ee4dbc021df177e02` from `git diff --binary` over the three unit files.
+- **Preflight and rules:** Preflight on the three scoped JavaScript/JSON files exited 2 with `UNSUPPORTED`, selected 50 directives, and reported `codeVerification: NOT_RUN`; it did not claim a code PASS. Applicable rule hashes: evidence and claims `sha256:de1623af4b2ce5c31b5b242dd0c20aa0df701469bd9900bf2909c74656bda622`, code quality `sha256:e6541ae8c0d45302fb3237af77b20d2aa58c551a60e5c989f093eecff7b820fe`, and security guardrails `sha256:12a5ee167f7c74c9e381f7a336c5930bbe08e8da687f82dcffa39c15125cd0d3`.
+- **Test first:** The new focused tests initially failed 2/13: the exact authenticated endpoint request selected no workflow, and an authenticated defect omitted the security rule. Extending the existing feature and security term patterns to whole-word `authenticate`, `authenticated`, `authenticating`, and `authentication` made all 13 pass. The negative order-domain cases and defect precedence pass. Word boundaries keep unrelated longer text outside these matches; generic thresholds and explicit command precedence are unchanged.
+- **Selection and budget:** `implement an authenticated orders endpoint` now selects `skills/workflows/feature-delivery/SKILL.md` with reason `routing hint: feature-delivery` and `rules/global/security-guardrails.md` with reason `matched security-sensitive terms in request`. It selects no knowledge notes. The current estimate is 13,659/18,000 total tokens (`optimal`), with 8,654/8,000 rules-and-skills tokens (`warning`). The previous selection had no workflow or security rule, so this is a larger selected set; no comparable prechange token estimate was retained. The density warning is a resolver advisory, not a dispatch-cap failure. `node scripts/context.mjs lock` exited 0 and pinned 260 canonical paths with digest `sha256:a5dbe1696faa5bc6f0a416d3261e11a9153c3b59120ebe626f98e587a9cf0926`.
+
+| Command at the recorded diff | Exit | Evidence |
+| --- | ---: | --- |
+| `node --test evals/tests/resolver/intent-routing.test.mjs` | 0 | 13/13 focused tests passed. |
+| `pnpm run lint` | 0 | Context Factory lint passed; lock synchronized. |
+| `pnpm run test` | 0 | Evaluation suite passed 27/27. |
+| `pnpm run test:unit` | 0 | Repository unit suite passed 57/57. |
+| `pnpm run build` | 0 | Bundle compiled with the refreshed lock; generated untracked `dist/context-bundle.json` was removed after verification. |
+| `node scripts/context.mjs doctor` | 0 | Healthy; manifest/lint, lock, editor integrity, and 27/27 evaluations passed. |
+| `git diff --check` | 0 | No whitespace errors. |
+
+**Unit 03.01 checkpoint:** Commit this scoped unit and ledger on the approved task branch, then stop for developer inspection before Unit 03.02. The selection receipt proves routing and budget estimates, not answer quality or host code behavior.

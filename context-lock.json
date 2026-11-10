@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contextVersion": "5.0.0",
-  "digest": "sha256:c4958b25e14bfad1c654da16a4c557a90325d5e44fc6d56f8263d8301125f972",
+  "digest": "sha256:a5dbe1696faa5bc6f0a416d3261e11a9153c3b59120ebe626f98e587a9cf0926",
   "files": {
     ".github/workflows/context-factory.yml": "sha256:755f746b98803bb4ef07ffebd9ad000fd1d318845b900c10b432f8cbead644f4",
     "README.md": "sha256:bcdf2e4377e409c3c86191d9914e234e557f29e57b8b9d2c528e524f7e005a27",
@@ -139,7 +139,7 @@
     "evals/tests/lifecycle/skill-access-check.test.mjs": "sha256:451e186d8a3e12bb2325604e03f0094160537216503d23a83f06591a19875c2f",
     "evals/tests/lifecycle/task-scaffold.test.mjs": "sha256:76a8da15cf128356e62d72c63f322fa3c3f7749dede1ed34233bf3261d20b402",
     "evals/tests/resolver/framework-scope.test.mjs": "sha256:6c9404401b3a91a34f52332c459b911d2b2c3faa6d8b8d68de2968c9cb06036a",
-    "evals/tests/resolver/intent-routing.test.mjs": "sha256:7e0fc1cf20b5b5c248dfd3341091163892c3c6339c04800f42bdc6936c50d046",
+    "evals/tests/resolver/intent-routing.test.mjs": "sha256:583e93e1c50a13377babbeaa6beb6143c93cf4243ee0d66e84111a108c6c6f1a",
     "evals/tests/rules/backend-dto-serialization.test.mjs": "sha256:1bc7bf6e348b4d5665cd44da6ef70b56fb6360a8a29dfc398cbdbfdcd0f6cdfc",
     "evals/tests/rules/backend-module-architecture.test.mjs": "sha256:3cd0012ef2515330f5d165e1dabc2155d163ff5ccacc566ef969820a53aea68c",
     "evals/tests/rules/backend-testing.test.mjs": "sha256:bc6ef9f4f126e759252cde66818282853b9da5bd689d7cc5d73a04cbe73722f3",
@@ -216,7 +216,7 @@
     "schemas/rule-waiver.schema.json": "sha256:8b6e8cbedd25341a1796d16b05c2ed47d331b5b523dcc9405a37a670bad0af67",
     "schemas/run-result.schema.json": "sha256:1a83e785d78d719b7fa7268ed96e0bb8467293320665e6dbf728423a1ea00b3e",
     "schemas/session-state.schema.json": "sha256:1cf61aaf2f1814be0b9dd9139d8efcce00575328775a8e29a37621e5e7b4dec4",
-    "scripts/context-core.mjs": "sha256:50999c5c1d04d261543024df8fe484552ea759251cae2268bf84465055ba9ffb",
+    "scripts/context-core.mjs": "sha256:9bc13fdd5c0c7c8ee8fc3200e983306cc7990f11f283e1c4375e5241be5b0cc1",
     "scripts/context.mjs": "sha256:3ab8c1e11c3528a9227cfe11e10632894ced6ab8b2a3cbfcad5caa757342b0f2",
     "scripts/framework-scope.mjs": "sha256:11d21e8ecc66f9ec32fc93bac890308f3683c2c2456f21c64b7d8d15302c71dc",
     "scripts/handoff-contract.mjs": "sha256:a3c3f4fb295afa3bf8df645e8c016cd30d188bfea449dfbae4ca3882022afc30",
