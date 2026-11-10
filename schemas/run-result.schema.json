@@ -63,6 +63,41 @@
       },
       "additionalProperties": false
     },
+    "inputBudget": {
+      "type": "object",
+      "required": ["capTokens", "estimatedTokens", "estimateMethod", "requiredPolicy", "includedSources", "omittedSources"],
+      "properties": {
+        "capTokens": { "type": "integer", "minimum": 1 },
+        "estimatedTokens": { "type": "integer", "minimum": 0 },
+        "estimateMethod": { "type": "string", "minLength": 1 },
+        "requiredPolicy": { "type": "string", "minLength": 1 },
+        "includedSources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "hash"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "omittedSources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "hash"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "durationMs": {
       "type": "number",
       "minimum": 0

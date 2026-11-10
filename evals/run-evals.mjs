@@ -2,6 +2,10 @@
 import { compareSelection, filesUnder, readJson, readText, resolveContext } from "../scripts/context-core.mjs";
 import { executeRun } from "../orchestrator/runner.mjs";
 import { assertValid, loadSchema } from "../orchestrator/validator.mjs";
+
+// Routing datasets use a declared offline cap; direct runs retain their intent default.
+const OFFLINE_EVAL_INPUT_CAP_TOKENS = 32_000;
+
 export async function runUnitEvaluations() {
   const startTime = Date.now();
   const manifest = await readJson("context-manifest.json");
@@ -65,6 +69,7 @@ export async function runDatasetEvaluations({ provider = "mock", model } = {}) {
       provider,
       model,
       fixture: dataset.goldenOutput ? { output: dataset.goldenOutput } : null,
+      maxInputTokens: OFFLINE_EVAL_INPUT_CAP_TOKENS,
     });
 
     if (runRes.status === "error") {

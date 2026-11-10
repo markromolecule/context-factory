@@ -74,7 +74,7 @@ export function showHelp(options = {}) {
 
     console.log(commandCard("AGENT ORCHESTRATION & EXECUTION", [
       ["resolve", "Resolve matching context rules & skills for a prompt"],
-      ["run", "Execute 3-stage LLM context run", "(mock/openai/anthropic/gemini)"],
+      ["run", "Execute 3-stage LLM context run", "(--provider, --max-input-tokens)"],
       ["task new", "Scaffold new phased task and milestone files", '"<title>"'],
       ["task list", "List active task plans in docs/tasks/"],
       ["validate", "Validate JSON file against registered schema"],
@@ -111,6 +111,7 @@ export function showHelp(options = {}) {
   ${colors.yellow("--quiet")}         Suppress non-error output
   ${colors.yellow("--no-color")}      Disable ANSI terminal colors
   ${colors.yellow("--detail")}        Display full categorized command catalog
+  ${colors.yellow("--max-input-tokens")}  Cap the estimated direct-run input (positive integer)
   ${colors.yellow("-h, --help")}      Show this help message
   ${colors.yellow("-v, --version")}   Show version information
 `);

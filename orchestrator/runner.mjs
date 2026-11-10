@@ -1,5 +1,12 @@
 import { resolveContext, sha256 } from "../scripts/context-core.mjs";
-import { compilePrompt, validatePromptIntegrity } from "./rules/prompt-compiler.mjs";
+import {
+  assembleBoundedContext,
+  buildContextBundle,
+  compilePrompt,
+  estimateInputTokens,
+  InputBudgetExceededError,
+  validatePromptIntegrity,
+} from "./rules/prompt-compiler.mjs";
 import { assertValid, loadSchema, validateSchema } from "./validator.mjs";
 
 /**
@@ -17,7 +24,7 @@ export class ProviderError extends Error {
 /**
  * Deterministic Mock Provider for offline execution, golden datasets, and testing.
  */
-export async function mockProvider({ prompt, systemPrompt, selection, binding, fixture, model = "mock-v1" }) {
+export async function mockProvider({ prompt, request, systemPrompt, selection, binding, fixture, model = "mock-v1" }) {
   if (fixture) {
     return {
       output: fixture.output ?? fixture,
@@ -37,7 +44,7 @@ export async function mockProvider({ prompt, systemPrompt, selection, binding, f
       directivesCount: binding.directives?.length ?? 0,
       directives: binding.directives?.map((d) => ({ id: d.id, mode: d.mode, rule: d.rulePath })) ?? [],
     } : null,
-    summary: `Executed workflow for request: "${prompt}"`,
+    summary: `Executed workflow for request: "${request ?? prompt}"`,
     status: "completed",
   };
 
@@ -262,12 +269,18 @@ export async function executeRun({
   workflow = undefined,
   requireBinding = false,
   binding = undefined,
+  maxInputTokens = undefined,
 }) {
   const startTime = Date.now();
   const hooksExecuted = [];
   const runId = sha256(`${request}:${Date.now()}:${Math.random()}`).slice(0, 16);
+  let inputBudget = null;
+  let sourceBundle = null;
 
   try {
+    if (maxInputTokens !== undefined && (!Number.isSafeInteger(maxInputTokens) || maxInputTokens < 1)) {
+      throw new RangeError("maxInputTokens must be a positive safe integer.");
+    }
     // Stage 1: beforeContext hook
     let processedRequest = request;
     if (typeof hooks.beforeContext === "function") {
@@ -297,15 +310,30 @@ export async function executeRun({
       options: runOptions,
     });
 
+    sourceBundle = await buildContextBundle({
+      request: processedRequest,
+      selection,
+      binding: compiled.binding,
+    });
+    const assembled = assembleBoundedContext({
+      request: compiled.prompt,
+      systemPrompt: compiled.systemPrompt,
+      selection,
+      bundle: sourceBundle,
+      maxInputTokens: maxInputTokens === undefined ? selection.budget.maxRecommendedTokens : maxInputTokens,
+    });
+    inputBudget = assembled.inputBudget;
+
     // Stage 2: onPromptPrepare hook
-    let preparedPrompt = compiled.prompt;
-    let preparedSystemPrompt = compiled.systemPrompt;
+    let preparedPrompt = assembled.prompt;
+    let preparedSystemPrompt = assembled.systemPrompt;
     if (typeof hooks.onPromptPrepare === "function") {
       hooksExecuted.push("onPromptPrepare");
       const prepResult = await hooks.onPromptPrepare({
         request: processedRequest,
+        prompt: assembled.prompt,
         selection,
-        systemPrompt: compiled.systemPrompt,
+        systemPrompt: assembled.systemPrompt,
         runId,
         binding: compiled.binding,
       });
@@ -320,7 +348,16 @@ export async function executeRun({
       prompt: preparedPrompt,
       systemPrompt: preparedSystemPrompt,
       binding: compiled.binding,
+      sourceSection: assembled.sourceSection,
     });
+
+    inputBudget = {
+      ...inputBudget,
+      estimatedTokens: estimateInputTokens({ prompt: preparedPrompt, systemPrompt: preparedSystemPrompt }),
+    };
+    if (inputBudget.estimatedTokens > inputBudget.capTokens) {
+      throw new InputBudgetExceededError(inputBudget);
+    }
 
     // Model / Provider Dispatch
     const providerFn = typeof provider === "function" ? provider : PROVIDERS[provider];
@@ -330,6 +367,7 @@ export async function executeRun({
 
     const providerResult = await providerFn({
       prompt: preparedPrompt,
+      request: processedRequest,
       systemPrompt: preparedSystemPrompt,
       selection,
       binding: compiled.binding,
@@ -373,6 +411,7 @@ export async function executeRun({
       prompt: processedRequest,
       output: finalOutput,
       tokens: providerResult.tokens,
+      inputBudget,
       durationMs,
       hooksExecuted,
       validationErrors,
@@ -385,16 +424,21 @@ export async function executeRun({
     return runResult;
   } catch (error) {
     const durationMs = Date.now() - startTime;
+    let errorMessage = error instanceof Error ? error.message : String(error);
+    for (const source of sourceBundle?.sources || []) {
+      if (source.content) errorMessage = errorMessage.replaceAll(source.content, "[source content redacted]");
+    }
     return {
       runId,
       status: "error",
       provider: typeof provider === "string" ? provider : "custom",
       model,
       prompt: request,
-      output: { error: error.message, stack: error.stack },
+      output: { error: errorMessage },
       durationMs,
       hooksExecuted,
-      validationErrors: [error.message],
+      validationErrors: [errorMessage],
+      ...(error?.inputBudget || inputBudget ? { inputBudget: error?.inputBudget ?? inputBudget } : {}),
       createdAt: new Date().toISOString(),
     };
   }

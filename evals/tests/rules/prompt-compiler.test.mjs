@@ -10,7 +10,8 @@ import {
   InputBudgetExceededError,
   SOURCE_DATA_PREFIX,
 } from "../../../orchestrator/rules/prompt-compiler.mjs";
-import { resolveContext, sha256 } from "../../../scripts/context-core.mjs";
+import { readText, resolveContext, sha256 } from "../../../scripts/context-core.mjs";
+import { loadSchema, validateSchema } from "../../../orchestrator/validator.mjs";
 import {
   executeRun,
   buildOpenAIPayload,
@@ -241,6 +242,144 @@ describe("PLN-0015 Unit 01.01: bounded source assembly", () => {
   });
 });
 
+describe("PLN-0015 Unit 02.01: direct provider source payload", () => {
+  const request = "Explain KISS and YAGNI";
+
+  it("sends both selected note bodies, path/hash provenance, and a separate budget receipt", async () => {
+    let captured = null;
+    const result = await executeRun({
+      request,
+      provider: async (payload) => {
+        captured = payload;
+        return {
+          output: { accepted: true },
+          tokens: { promptTokens: 7, completionTokens: 3, totalTokens: 10 },
+          model: "capture-v1",
+        };
+      },
+    });
+    assert.equal(result.status, "success");
+    assert.ok(captured);
+    assert.ok(captured.prompt.startsWith(`${request}${SOURCE_DATA_PREFIX}`));
+    const sourceData = JSON.parse(captured.prompt.slice(request.length + SOURCE_DATA_PREFIX.length));
+    for (const path of ["knowledge/principles/kiss.md", "knowledge/principles/yagni.md"]) {
+      const source = sourceData.sources.find((entry) => entry.path === path);
+      const body = await readText(path);
+      assert.equal(source.content, body);
+      assert.equal(source.hash, `sha256:${sha256(body)}`);
+      assert.ok(result.inputBudget.includedSources.some((entry) => entry.path === path && entry.hash === source.hash));
+      assert.doesNotMatch(JSON.stringify(result.inputBudget), new RegExp(body.slice(0, 24).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    }
+    assert.equal(result.prompt, request);
+    assert.equal(result.inputBudget.capTokens, 9000);
+    assert.ok(result.inputBudget.estimatedTokens <= result.inputBudget.capTokens);
+    assert.deepEqual(result.tokens, { promptTokens: 7, completionTokens: 3, totalTokens: 10 });
+    assert.equal(validateSchema(result, await loadSchema("run-result")).valid, true);
+    assert.equal(buildOpenAIPayload({ prompt: captured.prompt, systemPrompt: captured.systemPrompt }).messages.at(-1).content, captured.prompt);
+    assert.equal(buildAnthropicPayload({ prompt: captured.prompt, systemPrompt: captured.systemPrompt }).messages[0].content, captured.prompt);
+    assert.equal(buildGeminiPayload({ prompt: captured.prompt, systemPrompt: captured.systemPrompt }).contents.at(-1).parts[0].text, captured.prompt);
+  });
+
+  it("blocks required overflow and hook-added overflow before provider dispatch", async () => {
+    let dispatches = 0;
+    const provider = async () => { dispatches += 1; return { output: "unexpected" }; };
+    const requiredOverflow = await executeRun({ request, provider, maxInputTokens: 1 });
+    assert.equal(requiredOverflow.status, "error");
+    assert.equal(requiredOverflow.inputBudget.capTokens, 1);
+    assert.match(requiredOverflow.validationErrors[0], /required input exceeds/i);
+    const hookOverflow = await executeRun({
+      request,
+      provider,
+      maxInputTokens: 9000,
+      hooks: { onPromptPrepare: ({ prompt }) => ({ prompt: `${prompt}${"x".repeat(20000)}` }) },
+    });
+    assert.equal(hookOverflow.status, "error");
+    assert.ok(hookOverflow.inputBudget.estimatedTokens > hookOverflow.inputBudget.capTokens);
+    assert.equal(dispatches, 0);
+  });
+
+  it("keeps material rule directives in system text and full selected rules in source data", async () => {
+    const materialRequest = "Build user service";
+    let captured = null;
+    const result = await executeRun({
+      request: materialRequest,
+      stack: "typescript",
+      scope: "src/services/user.ts",
+      maxInputTokens: 100_000,
+      provider: async (payload) => {
+        captured = payload;
+        return { output: { accepted: true }, model: "capture-v1" };
+      },
+    });
+    assert.equal(result.status, "success");
+    assert.match(captured.systemPrompt, /<language_rules/);
+    assert.match(captured.systemPrompt, /directive:ts\./);
+    const sourceData = JSON.parse(captured.prompt.slice(materialRequest.length + SOURCE_DATA_PREFIX.length));
+    const rulePath = "rules/typescript/common/type-safety.md";
+    const rule = sourceData.sources.find(({ path }) => path === rulePath);
+    assert.equal(rule.content, await readText(rulePath));
+    assert.equal(rule.hash, `sha256:${sha256(rule.content)}`);
+  });
+
+  it("rejects hooks that remove, change, or promote selected sources", async () => {
+    const changes = [
+      ({ request: original }) => ({ prompt: original }),
+      ({ prompt }) => ({ prompt: prompt.replace(/"content":"./, '"content":"X') }),
+      ({ request: original, prompt, systemPrompt }) => ({ prompt: original, systemPrompt: `${systemPrompt}${prompt.slice(original.length)}` }),
+    ];
+    let dispatches = 0;
+    for (const onPromptPrepare of changes) {
+      const result = await executeRun({
+        request,
+        provider: async () => { dispatches += 1; return { output: "unexpected" }; },
+        hooks: { onPromptPrepare },
+      });
+      assert.equal(result.status, "error");
+      assert.match(result.validationErrors[0], /source section/i);
+    }
+    assert.equal(dispatches, 0);
+  });
+
+  it("rejects invalid explicit caps and keeps mock output free of source bodies", async () => {
+    let dispatches = 0;
+    for (const maxInputTokens of [0, -1, 1.5, Infinity, NaN, null, "9000"]) {
+      const result = await executeRun({
+        request,
+        maxInputTokens,
+        provider: async () => { dispatches += 1; return { output: "unexpected" }; },
+      });
+      assert.equal(result.status, "error");
+      assert.match(result.validationErrors[0], /maxInputTokens/i);
+    }
+    assert.equal(dispatches, 0);
+    const mock = await executeRun({ request, provider: "mock" });
+    assert.equal(mock.status, "success");
+    assert.equal(mock.output.summary, `Executed workflow for request: "${request}"`);
+    assert.doesNotMatch(mock.output.summary, /Retrieved repository sources/);
+  });
+
+  it("redacts a source body thrown by a prompt hook from the error result", async () => {
+    const body = await readText("knowledge/principles/kiss.md");
+    const result = await executeRun({
+      request,
+      hooks: { onPromptPrepare: () => { throw new Error(body); } },
+      provider: async () => ({ output: "unexpected" }),
+    });
+    assert.equal(result.status, "error");
+    assert.doesNotMatch(JSON.stringify(result), new RegExp(body.slice(0, 24).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.match(result.validationErrors[0], /source content redacted/);
+  });
+
+  it("returns a stable error result when a provider throws a non-Error value", async () => {
+    const result = await executeRun({
+      request,
+      provider: async () => { throw "provider failed"; },
+    });
+    assert.equal(result.status, "error");
+    assert.equal(result.output.error, "provider failed");
+  });
+});
+
 describe("Unit 02.03: AC-03 and Provider Dispatch Integration", () => {
   it("AC-03: default provider path receives compiled directives and provenance without custom hooks", async () => {
     let capturedPayload = null;
@@ -348,11 +487,12 @@ describe("Unit 02.03: Hook Integrity and Tamper Resistance", () => {
       provider: captureProvider,
       stack: "typescript",
       scope: "src/services/user.ts",
+      maxInputTokens: 100_000,
       hooks: {
-        onPromptPrepare: async ({ request }) => {
+        onPromptPrepare: async ({ prompt }) => {
           // Attempt to strip systemPrompt directives and block completely
           return {
-            prompt: request,
+            prompt,
             systemPrompt: "Tampered system prompt with no rules.",
           };
         },
@@ -376,12 +516,13 @@ describe("Unit 02.03: Hook Integrity and Tamper Resistance", () => {
       provider: captureProvider,
       stack: "typescript",
       scope: "src/services/user.ts",
+      maxInputTokens: 100_000,
       hooks: {
-        onPromptPrepare: async ({ request, systemPrompt, selection }) => {
+        onPromptPrepare: async ({ prompt, systemPrompt, selection }) => {
           // Keep language_rules and directives, but remove/alter all instances of the binding hash
           const stripped = systemPrompt.replaceAll(selection.binding.bindingHash, "tampered-hash-0000000000000000000000");
           return {
-            prompt: request,
+            prompt,
             systemPrompt: stripped,
           };
         },
@@ -405,11 +546,12 @@ describe("Unit 02.03: Hook Integrity and Tamper Resistance", () => {
       provider: captureProvider,
       stack: "typescript",
       scope: "src/services/user.ts",
+      maxInputTokens: 100_000,
       hooks: {
-        onPromptPrepare: async ({ request, selection }) => {
+        onPromptPrepare: async ({ prompt, selection }) => {
           // Keep binding hash but strip the directive IDs
           return {
-            prompt: request,
+            prompt,
             systemPrompt: `<language_rules binding="${selection.binding.id}" hash="${selection.binding.bindingHash}">no directives here</language_rules>`,
           };
         },
@@ -437,11 +579,12 @@ describe("Unit 02.03: Hook Integrity and Tamper Resistance", () => {
       provider: captureProvider,
       stack: "typescript",
       scope: "src/services/user.ts",
+      maxInputTokens: 100_000,
       hooks: {
-        onPromptPrepare: async ({ request, systemPrompt }) => {
+        onPromptPrepare: async ({ prompt, systemPrompt }) => {
           // Add custom prefix without stripping systemPrompt
           return {
-            prompt: `${request} - with extra note`,
+            prompt: `${prompt} - with extra note`,
             systemPrompt: `Custom Organization Preamble.\n\n${systemPrompt}`,
           };
         },

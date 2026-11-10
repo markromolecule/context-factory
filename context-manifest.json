@@ -193,6 +193,7 @@
     "evals/tests/cli/hook-safety.test.mjs",
     "evals/tests/cli/host-status.test.mjs",
     "evals/tests/cli/init-preview.test.mjs",
+    "evals/tests/cli/run-budget.test.mjs",
     "evals/tests/lifecycle/discovery-handoff.test.mjs",
     "evals/tests/lifecycle/execution-handoff.test.mjs",
     "evals/tests/lifecycle/handoff-contract.test.mjs",

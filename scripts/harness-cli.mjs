@@ -29,7 +29,7 @@ Usage:
   node scripts/harness-cli.mjs preflight <request> --scope <paths> [--stack typescript] [--json]  # selection only
   node scripts/harness-cli.mjs bundle <request> [--out <path>]
   node scripts/harness-cli.mjs explain <run-id-or-bundle-path>
-  node scripts/harness-cli.mjs run <request> [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>] [--stack <name>] [--scope <paths>] [--require-binding]
+  node scripts/harness-cli.mjs run <request> [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>] [--stack <name>] [--scope <paths>] [--require-binding] [--max-input-tokens <positive integer>]
   node scripts/harness-cli.mjs session:save [--name <id>] [--prompt <text>]
   node scripts/harness-cli.mjs session:resume [<id>]
   node scripts/harness-cli.mjs session:status
@@ -188,36 +188,15 @@ export async function handleCli(argv = process.argv.slice(2)) {
   }
 
   if (command === "run") {
-    const rawArgs = argv.slice(1);
-    const providerIndex = rawArgs.indexOf("--provider");
-    const provider = providerIndex >= 0 ? rawArgs[providerIndex + 1] : "mock";
-    const modelIndex = rawArgs.indexOf("--model");
-    const model = modelIndex >= 0 ? rawArgs[modelIndex + 1] : "mock-v1";
-    const schemaIndex = rawArgs.indexOf("--schema");
-    const schema = schemaIndex >= 0 ? rawArgs[schemaIndex + 1] : null;
-    const stackIndex = rawArgs.indexOf("--stack");
-    const stack = stackIndex >= 0 ? rawArgs[stackIndex + 1] : flags.stack;
-    const scopeIndex = rawArgs.indexOf("--scope");
-    const scope = scopeIndex >= 0 ? rawArgs[scopeIndex + 1] : flags.scope;
+    const provider = flags.provider || "mock";
+    const model = flags.model || "mock-v1";
+    const schema = flags.schema || null;
+    const stack = flags.stack || flags.stacks || undefined;
+    const scope = flags.scope || flags.paths || undefined;
     const requireBinding = Boolean(
-      flags["require-binding"] || flags.strict || flags.requireBinding ||
-      rawArgs.includes("--require-binding") || rawArgs.includes("--strict")
+      flags.requireBinding || flags.strict || scope
     );
-
-    const indicesToSkip = new Set([
-      ...(providerIndex >= 0 ? [providerIndex, providerIndex + 1] : []),
-      ...(modelIndex >= 0 ? [modelIndex, modelIndex + 1] : []),
-      ...(schemaIndex >= 0 ? [schemaIndex, schemaIndex + 1] : []),
-      ...(stackIndex >= 0 ? [stackIndex, stackIndex + 1] : []),
-      ...(scopeIndex >= 0 ? [scopeIndex, scopeIndex + 1] : []),
-    ]);
-
-    const requestTokens = rawArgs.filter((arg, idx) => {
-      if (indicesToSkip.has(idx)) return false;
-      if (arg === "--require-binding" || arg === "--strict") return false;
-      return true;
-    });
-    const request = requestTokens.join(" ").trim();
+    const request = parsedArgs.join(" ").trim();
     if (!request) throw new Error("run requires a request prompt");
 
     const result = await executeRun({
@@ -228,9 +207,10 @@ export async function handleCli(argv = process.argv.slice(2)) {
       stack,
       scope,
       requireBinding,
+      maxInputTokens: flags.maxInputTokens,
     });
     output(result);
-    return result.status === "error" ? 1 : 0;
+    return result.status === "success" ? 0 : 1;
   }
 
   if (command === "validate") {

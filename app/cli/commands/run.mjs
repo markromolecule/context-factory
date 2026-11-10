@@ -10,6 +10,7 @@ export async function handleRunCommand(args = [], flags = {}) {
   const schema = flags.schema || null;
   const isJson = Boolean(flags.json);
   const outputPath = flags.output || flags.out || null;
+  const maxInputTokens = flags.maxInputTokens;
   const stack = flags.stack || flags.stacks || undefined;
   const scope = flags.scope || flags.paths || undefined;
   const isMaterialScope = Boolean(scope);
@@ -19,7 +20,7 @@ export async function handleRunCommand(args = [], flags = {}) {
 
   const request = args.join(" ").trim();
   if (!request) {
-    throw new Error("Usage: context-cli run \"<prompt>\" [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>] [--stack <stack>] [--scope <paths>] [--require-binding]");
+    throw new Error("Usage: context-cli run \"<prompt>\" [--provider <mock|openai|anthropic|gemini>] [--model <name>] [--schema <name>] [--stack <stack>] [--scope <paths>] [--require-binding] [--max-input-tokens <positive integer>]");
   }
 
   const result = await executeRun({
@@ -30,6 +31,7 @@ export async function handleRunCommand(args = [], flags = {}) {
     stack,
     scope,
     requireBinding,
+    maxInputTokens,
   });
 
   if (outputPath) {
@@ -50,7 +52,12 @@ export async function handleRunCommand(args = [], flags = {}) {
   console.log(`  ${colors.bold("Provider:")}   ${colors.magenta(result.provider)}`);
   console.log(`  ${colors.bold("Model:")}      ${colors.white(result.model)}`);
   console.log(`  ${colors.bold("Status:")}     ${statusBadge}`);
-  console.log(`  ${colors.bold("Tokens:")}     Prompt: ${result.tokens.promptTokens} | Completion: ${result.tokens.completionTokens} | Total: ${result.tokens.totalTokens}`);
+  if (result.tokens) {
+    console.log(`  ${colors.bold("Tokens:")}     Prompt: ${result.tokens.promptTokens} | Completion: ${result.tokens.completionTokens} | Total: ${result.tokens.totalTokens}`);
+  }
+  if (result.inputBudget) {
+    console.log(`  ${colors.bold("Input estimate:")} ${result.inputBudget.estimatedTokens}/${result.inputBudget.capTokens} tokens | Included: ${result.inputBudget.includedSources.length} | Omitted: ${result.inputBudget.omittedSources.length}`);
+  }
   console.log(`  ${colors.bold("Duration:")}   ${result.durationMs}ms`);
   console.log("");
 
